@@ -1,0 +1,24 @@
+test_common_rigid_transform_preserves_results (test_m1.BenchmarkAndDomain.test_common_rigid_transform_preserves_results) ... ok
+test_domain_failures (test_m1.BenchmarkAndDomain.test_domain_failures) ... ok
+test_frozen_acceptance_and_fixed_ports (test_m1.BenchmarkAndDomain.test_frozen_acceptance_and_fixed_ports) ... ok
+test_geometry_failures (test_m1.BenchmarkAndDomain.test_geometry_failures) ... ok
+test_grazing_and_nonplanar_paths_are_withheld (test_m1.BenchmarkAndDomain.test_grazing_and_nonplanar_paths_are_withheld) ... ok
+test_vector_input_validation (test_m1.BenchmarkAndDomain.test_vector_input_validation) ... ok
+test_curved_reflection_independent_phase_screen (test_m1.GaussianReferences.test_curved_reflection_independent_phase_screen) ... ok
+test_free_propagation_closed_form_in_air_and_dielectric (test_m1.GaussianReferences.test_free_propagation_closed_form_in_air_and_dielectric) ... ok
+test_free_propagation_independent_fresnel_grid_convergence (test_m1.GaussianReferences.test_free_propagation_independent_fresnel_grid_convergence) ... ok
+test_full_two_mirror_relay_fresnel_reference (test_m1.GaussianReferences.test_full_two_mirror_relay_fresnel_reference) ... ok
+test_nonphysical_and_numerically_invalid_inputs (test_m1.GaussianReferences.test_nonphysical_and_numerically_invalid_inputs) ... ok
+test_normalization_at_every_benchmark_plane (test_m1.GaussianReferences.test_normalization_at_every_benchmark_plane) ... ok
+test_overlap_analytical_identity_width_offset_tilt_defocus (test_m1.GaussianReferences.test_overlap_analytical_identity_width_offset_tilt_defocus) ... ok
+test_overlap_independent_quadrature_with_two_curved_fields (test_m1.GaussianReferences.test_overlap_independent_quadrature_with_two_curved_fields) ... ok
+test_overlap_reciprocity_and_underflow (test_m1.GaussianReferences.test_overlap_reciprocity_and_underflow) ... ok
+test_flat_fold_equals_unfolded_propagation (test_m1.ReflectionReferences.test_flat_fold_equals_unfolded_propagation) ... ok
+test_quadratic_patch_intersection (test_m1.ReflectionReferences.test_quadratic_patch_intersection) ... ok
+test_reflection_and_frame_transport (test_m1.ReflectionReferences.test_reflection_and_frame_transport) ... ok
+test_surface_derivatives_recover_oblique_principal_powers (test_m1.ReflectionReferences.test_surface_derivatives_recover_oblique_principal_powers) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.107s
+
+OK
