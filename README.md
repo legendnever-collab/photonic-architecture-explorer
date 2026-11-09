@@ -61,3 +61,16 @@ M1에서는 Port의 medium을 homogeneous external ambient로 정의합니다.
 
 UI, topology synthesis, freeform inverse design, Maxwell solver, 특허 scoring,
 회사 기밀 데이터는 포함하지 않습니다. Main 병합에는 사용자 승인이 필요합니다.
+
+## M2 bounded diagnostics
+
+`python scripts/validate.py` also writes `results/m2_001.json`.
+[Contract](docs/M2_CONTRACT.md) and [results/limits](docs/M2_RESULTS.md) define
+8 individual curvature perturbations, 12 individual placement perturbations,
+and a 27-ray finite-wavefront diagnostic per Flat/Curved control. Independent
+Newton-surface references verify exact patch intersections. 26 tests pass.
+
+개별 곡률 ±1%의 paraxial overlap은 99.944–99.987%입니다. 반면 Curved의 2w
+finite fan은 linear reference에 비해 최대 2.680 µm의 위치 차이를 보입니다.
+이는 field coupling 또는 full-aperture worst case가 아닙니다. Placement별
+Gaussian overlap 및 actual SSC 적용성은 Uncomputed로 유지합니다.

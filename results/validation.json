@@ -9,14 +9,17 @@
   },
   "sha256": {
     "examples/m1_001.json": "40f92b746c3870776503ccce0d06c8361a5e0a812392f509bdbb9acea61321ed",
-    "scripts/validate.py": "7ef34a63a5cb46b69758429abcf21bb16e8b0b2712fa4966359465341962c9aa",
+    "scripts/validate.py": "f3d76de37727c180b75c4dbfe5a78b0130ff2f29ae457506e06298bfba9fd26d",
     "src/photonic_architecture_explorer/__init__.py": "7e5bff7a68ccad603bf3ebc3cee6c760fd17290d1f5d5c8ce611fec41f50ca15",
     "src/photonic_architecture_explorer/benchmark.py": "2b6df43b6977b79292908879093ea79c4c28a668416f5bc21ac094070bd43e66",
+    "src/photonic_architecture_explorer/diagnostics.py": "45a0f0c30c0505afb699bd48722352eee4f4d8307aad8d89a48b5f583b12e040",
     "src/photonic_architecture_explorer/gaussian.py": "908e84962d8b5ee5be793108eaf3491ddb9465b77e51ff2817d52e5caf06261d",
     "src/photonic_architecture_explorer/geometry.py": "67af248571a4ccbde2e387462b365b13dfc6b43198e65473687a5db466f0b6f2",
     "src/photonic_architecture_explorer/solver.py": "3255b530cc41b984d3bce1ccfded62796775f9ec1fd8f5974f037ad7ee136b51",
     "tests/test_m1.py": "531db2f3c7356e513a3c87967f54f9f63add8abc7446a4f48f1238207233e7ac",
+    "tests/test_m2.py": "abdb125eb62a06bdc717bd4a26ea4d35fd5f78b3da4283e15c6e2c32bc2a8b4c",
     "pyproject.toml": "0c2ffea24a573b6165ce320f5afad0812f0b836143d4d572f7b8a09ce103ed7c",
-    "docs/M1_BENCHMARK.md": "369d04812068ac0aaf9fcc5c26e4732467490a1d3d9fda5b03373ac2aac358cd"
+    "docs/M1_BENCHMARK.md": "369d04812068ac0aaf9fcc5c26e4732467490a1d3d9fda5b03373ac2aac358cd",
+    "docs/M2_CONTRACT.md": "2f24afde763d42a409e7fe9d0cef40ce30bef48c1a6122cdc0d93eff4674d6b8"
   }
 }
