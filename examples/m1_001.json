@@ -1,0 +1,14 @@
+{
+  "benchmark_id": "M1-001",
+  "wavelength_m": 0.00000131,
+  "medium_index": 1.0,
+  "sagittal_axis": [0.0, 1.0, 0.0],
+  "source": {"position_m": [0.0, 0.0, 0.0], "direction": [1.0, 0.0, 0.0], "waist_radii_m": [0.000008, 0.000012]},
+  "target": {"position_m": [0.002, 0.0, 0.002], "direction": [1.0, 0.0, 0.0], "waist_radii_m": [0.000008, 0.000012]},
+  "reflectors": [
+    {"vertex_m": [0.001, 0.0, 0.0], "normal": [-1.0, 0.0, 1.0], "half_aperture_m": [0.0007, 0.0005]},
+    {"vertex_m": [0.001, 0.0, 0.002], "normal": [1.0, 0.0, -1.0], "half_aperture_m": [0.0007, 0.0005]}
+  ],
+  "curved_focal_length_m": 0.001,
+  "spherical_curvature_per_m": 500.0
+}
