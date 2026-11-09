@@ -24,8 +24,14 @@ test_flat_fan_linear_exactness (test_m2.M2References.test_flat_fan_linear_exactn
 test_misses_and_invalid_fan_withhold_results (test_m2.M2References.test_misses_and_invalid_fan_withhold_results) ... ok
 test_nominal_chief_closes_and_surface_law_holds (test_m2.M2References.test_nominal_chief_closes_and_surface_law_holds) ... ok
 test_placement_independent_newton_reference_all_12_cases (test_m2.M2References.test_placement_independent_newton_reference_all_12_cases) ... ok
+test_blank_actual_sheet_keeps_every_physical_input_unprovided (test_m25.ExternalDomainReferences.test_blank_actual_sheet_keeps_every_physical_input_unprovided) ... ok
+test_fft_angular_moments_independent_of_q_kernel (test_m25.ExternalDomainReferences.test_fft_angular_moments_independent_of_q_kernel) ... ok
+test_independent_phase_width_formula_and_nonwaist_rejection (test_m25.ExternalDomainReferences.test_independent_phase_width_formula_and_nonwaist_rejection) ... ok
+test_missing_and_invalid_do_not_become_performance (test_m25.ExternalDomainReferences.test_missing_and_invalid_do_not_become_performance) ... ok
+test_residual_scale_is_not_loss_and_inputs_are_preserved (test_m25.ExternalDomainReferences.test_residual_scale_is_not_loss_and_inputs_are_preserved) ... ok
+test_waist_guard_boundary_and_index_scaling (test_m25.ExternalDomainReferences.test_waist_guard_boundary_and_index_scaling) ... ok
 
 ----------------------------------------------------------------------
-Ran 26 tests in 0.186s
+Ran 32 tests in 0.289s
 
 OK
