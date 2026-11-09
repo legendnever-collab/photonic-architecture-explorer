@@ -84,3 +84,17 @@ Path B는 최종 Engineering 목표 대비 최소 확장 경로이며 실물 성
 `python scripts/validate.py`가 `results/m25_001.json`도 생성합니다.
 추가 per-Port check는 divergence만 검사하며 full external adapter는 M3-A 범위입니다.
 [다음 개발 지시문](docs/NEXT_TASK.md)을 참조하세요.
+
+## M3-A external adapter
+
+[실행 가능한 Input/Result Contract](docs/M3A_ADAPTER.md)를 통해 기존 Physics Engine을
+호출합니다. 설치 후 `pae-external`을 사용하거나 다음과 같이 실행합니다.
+
+```bash
+PYTHONPATH=src python -m photonic_architecture_explorer.external examples/m3a_synthetic.json
+```
+
+MFD+Phase / Complex q, Fixed Ports, Provenance, Bounds 및 제한된 AABB 검사를 지원합니다.
+Overlap은 Approximate normalized scalar diagnostic입니다. Envelope 검사가 통과해도
+Full Package Clearance·Actual Applicability·Total Coupling은 Uncomputed입니다.
+UI는 아직 구현하지 않았습니다.

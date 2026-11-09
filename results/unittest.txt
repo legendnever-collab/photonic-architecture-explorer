@@ -1,3 +1,20 @@
+test_blank_sheet_and_cli_no_actual_coupling (test_external.ExternalAdapter.test_blank_sheet_and_cli_no_actual_coupling) ... ok
+test_body_envelope_must_contain_surface (test_external.ExternalAdapter.test_body_envelope_must_contain_surface) ... ok
+test_declared_bounds_fail_or_remain_separately_uncomputed (test_external.ExternalAdapter.test_declared_bounds_fail_or_remain_separately_uncomputed) ... ok
+test_engine_domain_rejections_preserve_frozen_guards (test_external.ExternalAdapter.test_engine_domain_rejections_preserve_frozen_guards) ... ok
+test_envelope_collisions_distance_and_chief_keepout (test_external.ExternalAdapter.test_envelope_collisions_distance_and_chief_keepout) ... ok
+test_envelope_pass_is_not_full_package_clearance_pass (test_external.ExternalAdapter.test_envelope_pass_is_not_full_package_clearance_pass) ... ok
+test_equivalence_immutable_ports_snapshot_and_roundtrip (test_external.ExternalAdapter.test_equivalence_immutable_ports_snapshot_and_roundtrip) ... ok
+test_geometry_closure_and_exactly_two_reflectors (test_external.ExternalAdapter.test_geometry_closure_and_exactly_two_reflectors) ... ok
+test_independent_nonwaist_formula_mfd_phase_and_q_only (test_external.ExternalAdapter.test_independent_nonwaist_formula_mfd_phase_and_q_only) ... ok
+test_invalid_units_provenance_nonfinite_and_unknown_fields (test_external.ExternalAdapter.test_invalid_units_provenance_nonfinite_and_unknown_fields) ... ok
+test_missing_phase_q_or_partial_components_do_not_default (test_external.ExternalAdapter.test_missing_phase_q_or_partial_components_do_not_default) ... ok
+test_missing_unsupported_package_and_frame_units (test_external.ExternalAdapter.test_missing_unsupported_package_and_frame_units) ... ok
+test_polarization_assumption_and_external_ambient_identity (test_external.ExternalAdapter.test_polarization_assumption_and_external_ambient_identity) ... ok
+test_quadratic_patch_extent_independent_dense_surface_reference (test_external.ExternalAdapter.test_quadratic_patch_extent_independent_dense_surface_reference) ... ok
+test_redundant_mode_mismatch_including_partial_inputs (test_external.ExternalAdapter.test_redundant_mode_mismatch_including_partial_inputs) ... ok
+test_reference_plane_frame_axis_and_target_direction (test_external.ExternalAdapter.test_reference_plane_frame_axis_and_target_direction) ... ok
+test_volume_uses_whole_patch_not_vertices (test_external.ExternalAdapter.test_volume_uses_whole_patch_not_vertices) ... ok
 test_common_rigid_transform_preserves_results (test_m1.BenchmarkAndDomain.test_common_rigid_transform_preserves_results) ... ok
 test_domain_failures (test_m1.BenchmarkAndDomain.test_domain_failures) ... ok
 test_frozen_acceptance_and_fixed_ports (test_m1.BenchmarkAndDomain.test_frozen_acceptance_and_fixed_ports) ... ok
@@ -32,6 +49,6 @@ test_residual_scale_is_not_loss_and_inputs_are_preserved (test_m25.ExternalDomai
 test_waist_guard_boundary_and_index_scaling (test_m25.ExternalDomainReferences.test_waist_guard_boundary_and_index_scaling) ... ok
 
 ----------------------------------------------------------------------
-Ran 32 tests in 0.289s
+Ran 49 tests in 0.506s
 
 OK

@@ -73,3 +73,10 @@ q와 C는 입력 plane에 정의한다. Beam waist에 있다고 선언할 때만
 보고해야 한다. 허용 오차는 요구 coupling/error budget에서 정해야 하며 이번에
 임의 threshold를 정하지 않는다. Intensity MFD만 있는 경우 fit 적합성 Uncomputed.
 Polarization/evanescent/high-NA/nonseparable 성분이 중요하면 Path C 검토가 필요하다.
+
+## M3-A executable specialization
+
+本ページの物理的意味を保ち、実行可能なnominal input形式を
+[M3A_ADAPTER.md](M3A_ADAPTER.md)で具体化した。既存blank sheetはそのまま保存。
+M3A-1ではreference plane/frame、ambient quantity、scalar polarization assumption、
+2つのnominal surface prescriptionsを明示する。M25-1の未提供値にdefaultを追加しない。

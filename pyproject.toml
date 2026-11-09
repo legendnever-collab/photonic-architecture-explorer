@@ -13,6 +13,7 @@ dependencies = []
 test = ["numpy>=2,<3"]
 
 [project.scripts]
+pae-external = "photonic_architecture_explorer.external:main"
 pae-benchmark = "photonic_architecture_explorer.benchmark:main"
 
 [tool.setuptools.packages.find]

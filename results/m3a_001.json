@@ -1,0 +1,1373 @@
+{
+  "assessment_id": "M3A-001",
+  "base_sha": "17bd1ad6bfa5715f6371fe0e41f52a6d1a93e199",
+  "units": "m, rad, m^-1, dimensionless n",
+  "assumptions": "synthetic external Gaussian M1-001 fields; synthetic declared package envelopes/clearance, polarization explicitly ignored",
+  "input_sha256": "a3c04f2d5d81248dcaffbfcfa57b4199894a1f2e90a1a30af62c851f29ed0faa",
+  "completion_gate": {
+    "status": "Pass",
+    "scope": "adapter controls, not actual engineering acceptance"
+  },
+  "synthetic_nominal": {
+    "input_contract": {
+      "status": "Pass",
+      "scope": "explicit nominal external Gaussian contract; field fit not certified"
+    },
+    "geometry": {
+      "status": "Pass",
+      "scope": "fixed-port specular vertex path",
+      "lengths": [
+        0.001,
+        0.002,
+        0.001
+      ],
+      "directions": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "cosines": [
+        0.7071067811865476,
+        0.7071067811865476
+      ],
+      "patch_obstruction": "Pass (chief ray, quadratic patches only)"
+    },
+    "model_domain": {
+      "status": "Pass",
+      "scope": "aligned coplanar scalar paraxial model",
+      "aperture_tail_union_estimate": 2.528310893548023e-78
+    },
+    "design_constraints": {
+      "status": "Pass",
+      "scope": "declared nominal bounds only; no tolerance/yield",
+      "checks": [
+        {
+          "path": "reflectors[0].vertex_bounds_m",
+          "status": "Pass"
+        },
+        {
+          "path": "reflectors[0].principal_curvature_bounds_per_m",
+          "status": "Pass"
+        },
+        {
+          "path": "reflectors[0].half_aperture_bounds_m",
+          "status": "Pass"
+        },
+        {
+          "path": "reflectors[0].normal_constraints",
+          "status": "Pass"
+        },
+        {
+          "path": "reflectors[1].vertex_bounds_m",
+          "status": "Pass"
+        },
+        {
+          "path": "reflectors[1].principal_curvature_bounds_per_m",
+          "status": "Pass"
+        },
+        {
+          "path": "reflectors[1].half_aperture_bounds_m",
+          "status": "Pass"
+        },
+        {
+          "path": "reflectors[1].normal_constraints",
+          "status": "Pass"
+        }
+      ]
+    },
+    "gaussian_mode_matching": {
+      "status": "Approximate",
+      "meaning": "computed within model, not a product efficiency requirement",
+      "normalized_mode_overlap": 1.0,
+      "log_overlap": 0.0,
+      "mismatch_db": -0.0,
+      "underflow": false,
+      "output_axes": [
+        {
+          "radius_m": 8e-06,
+          "curvature_per_m": 0.0,
+          "waist_radius_m": 8e-06,
+          "waist_distance_m": -0.0,
+          "rayleigh_range_m": 0.00015348238918301278,
+          "divergence_rad": 0.052123243862595724
+        },
+        {
+          "radius_m": 1.2e-05,
+          "curvature_per_m": 0.0,
+          "waist_radius_m": 1.2e-05,
+          "waist_distance_m": -0.0,
+          "rayleigh_range_m": 0.00034533537566177876,
+          "divergence_rad": 0.034748829241730485
+        }
+      ],
+      "scope": "normalized scalar paraxial Gaussian diagnostic; not total coupling",
+      "conditions": [
+        "explicit scalar-ignored polarization",
+        "finite-field aberration unvalidated",
+        "package/bounds status remains separate"
+      ]
+    },
+    "package_feasibility": {
+      "status": "Uncomputed",
+      "reason": "full finite-beam/body/support clearance not evaluated",
+      "envelope_geometry": {
+        "status": "Pass",
+        "scope": "declared world AABBs and quadratic patch extents only",
+        "checks": [
+          {
+            "path": "package.frame_id",
+            "status": "Pass"
+          },
+          {
+            "path": "package.available_volume",
+            "status": "Pass"
+          },
+          {
+            "path": "package.required_clearance_m",
+            "status": "Pass"
+          },
+          {
+            "path": "package.keepout_bodies",
+            "status": "Pass"
+          },
+          {
+            "path": "reflectors[0].body_envelope",
+            "status": "Pass"
+          },
+          {
+            "path": "reflectors[1].body_envelope",
+            "status": "Pass"
+          },
+          {
+            "path": "patch[0].volume",
+            "status": "Pass",
+            "reason": "entire quadratic patch extent"
+          },
+          {
+            "path": "body[0].patch",
+            "status": "Pass",
+            "reason": "declared total envelope must enclose entire surface"
+          },
+          {
+            "path": "body[0].volume",
+            "status": "Pass",
+            "reason": "total envelope plus boundary clearance"
+          },
+          {
+            "path": "patch[1].volume",
+            "status": "Pass",
+            "reason": "entire quadratic patch extent"
+          },
+          {
+            "path": "body[1].patch",
+            "status": "Pass",
+            "reason": "declared total envelope must enclose entire surface"
+          },
+          {
+            "path": "body[1].volume",
+            "status": "Pass",
+            "reason": "total envelope plus boundary clearance"
+          },
+          {
+            "path": "path_point[0].volume",
+            "status": "Pass",
+            "reason": "chief path points only"
+          },
+          {
+            "path": "path_point[1].volume",
+            "status": "Pass",
+            "reason": "chief path points only"
+          },
+          {
+            "path": "path_point[2].volume",
+            "status": "Pass",
+            "reason": "chief path points only"
+          },
+          {
+            "path": "path_point[3].volume",
+            "status": "Pass",
+            "reason": "chief path points only"
+          },
+          {
+            "path": "reflector_envelope_pair",
+            "status": "Pass",
+            "reason": "envelope separation, not actual-solid distance"
+          }
+        ]
+      },
+      "finite_beam_clearance": {
+        "status": "Uncomputed"
+      }
+    },
+    "physical_losses": {
+      "status": "Uncomputed",
+      "total_coupling": null,
+      "reason": "coating/device interfaces/polarization/scatter not supplied"
+    },
+    "fabrication": {
+      "status": "Uncomputed",
+      "reason": "no process or assembly constraints"
+    },
+    "actual_applicability": {
+      "status": "Uncomputed",
+      "reason": "external input adapter does not independently certify actual Port field or package performance"
+    },
+    "input_snapshot": {
+      "ambient_index": {
+        "provenance": "synthetic",
+        "quantity": "external_ambient_refractive_index",
+        "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+        "uncertainty": null,
+        "unit": "1",
+        "value": 1.0
+      },
+      "contract_version": "M3A-1",
+      "coordinate_convention": "right-handed world XYZ; t=s cross d; target d is arriving direction",
+      "description": "Synthetic external form of M1-001; not PIC or glass measured inputs",
+      "design": {
+        "reflectors": [
+          {
+            "half_aperture_ts_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                0.0007,
+                0.0005
+              ]
+            },
+            "illuminated_normal": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                -0.7071067811865475,
+                0.0,
+                0.7071067811865475
+              ]
+            },
+            "principal_curvature_ts_per_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m^-1",
+              "value": [
+                353.5533905932738,
+                707.1067811865474
+              ]
+            },
+            "vertex_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                0.001,
+                0.0,
+                0.0
+              ]
+            }
+          },
+          {
+            "half_aperture_ts_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                0.0007,
+                0.0005
+              ]
+            },
+            "illuminated_normal": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                0.7071067811865475,
+                0.0,
+                -0.7071067811865475
+              ]
+            },
+            "principal_curvature_ts_per_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m^-1",
+              "value": [
+                353.5533905932738,
+                707.1067811865474
+              ]
+            },
+            "vertex_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                0.001,
+                0.0,
+                0.002
+              ]
+            }
+          }
+        ]
+      },
+      "package": {
+        "available_volume": {
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "unit": "m",
+          "value": {
+            "max_m": [
+              0.003,
+              0.001,
+              0.003
+            ],
+            "min_m": [
+              -0.001,
+              -0.001,
+              -0.001
+            ],
+            "type": "aabb"
+          }
+        },
+        "frame_id": {
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "unit": "frame",
+          "value": "world"
+        },
+        "keepout_bodies": {
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "unit": "m",
+          "value": []
+        },
+        "required_clearance_m": {
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "unit": "m",
+          "value": 1e-05
+        }
+      },
+      "reflectors": [
+        {
+          "body_envelope": {
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null,
+            "unit": "m",
+            "value": {
+              "max_m": [
+                0.0017,
+                0.0006,
+                0.0007
+              ],
+              "min_m": [
+                0.0003,
+                -0.0006,
+                -0.0007
+              ],
+              "type": "aabb"
+            }
+          },
+          "half_aperture_bounds_m": {
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null,
+            "unit": "m",
+            "value": [
+              [
+                0.00063,
+                0.0007700000000000001
+              ],
+              [
+                0.00045000000000000004,
+                0.00055
+              ]
+            ]
+          },
+          "normal_constraints": {
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null,
+            "unit": "rad",
+            "value": {
+              "axis": [
+                -0.7071067811865475,
+                0.0,
+                0.7071067811865475
+              ],
+              "max_angle_rad": 0.0
+            }
+          },
+          "principal_curvature_bounds_per_m": {
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null,
+            "unit": "m^-1",
+            "value": [
+              [
+                350.017856687341,
+                357.08892449920654
+              ],
+              [
+                700.0357133746819,
+                714.177848998413
+              ]
+            ]
+          },
+          "surface_prescription": {
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null,
+            "unit": "model",
+            "value": "quadratic_patch"
+          },
+          "vertex_bounds_m": {
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null,
+            "unit": "m",
+            "value": [
+              [
+                0.0009,
+                -0.0001,
+                -0.0001
+              ],
+              [
+                0.0011,
+                0.0001,
+                0.0001
+              ]
+            ]
+          }
+        },
+        {
+          "body_envelope": {
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null,
+            "unit": "m",
+            "value": {
+              "max_m": [
+                0.0017,
+                0.0006,
+                0.0027
+              ],
+              "min_m": [
+                0.0003,
+                -0.0006,
+                0.0013
+              ],
+              "type": "aabb"
+            }
+          },
+          "half_aperture_bounds_m": {
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null,
+            "unit": "m",
+            "value": [
+              [
+                0.00063,
+                0.0007700000000000001
+              ],
+              [
+                0.00045000000000000004,
+                0.00055
+              ]
+            ]
+          },
+          "normal_constraints": {
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null,
+            "unit": "rad",
+            "value": {
+              "axis": [
+                0.7071067811865475,
+                0.0,
+                -0.7071067811865475
+              ],
+              "max_angle_rad": 0.0
+            }
+          },
+          "principal_curvature_bounds_per_m": {
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null,
+            "unit": "m^-1",
+            "value": [
+              [
+                350.017856687341,
+                357.08892449920654
+              ],
+              [
+                700.0357133746819,
+                714.177848998413
+              ]
+            ]
+          },
+          "surface_prescription": {
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null,
+            "unit": "model",
+            "value": "quadratic_patch"
+          },
+          "vertex_bounds_m": {
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null,
+            "unit": "m",
+            "value": [
+              [
+                0.0009,
+                -0.0001,
+                0.0019
+              ],
+              [
+                0.0011,
+                0.0001,
+                0.0021
+              ]
+            ]
+          }
+        }
+      ],
+      "source": {
+        "complex_q_ts_m": {
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "unit": "m",
+          "value": [
+            [
+              -0.0,
+              0.00015348238918301278
+            ],
+            [
+              -0.0,
+              0.0003453353756617788
+            ]
+          ]
+        },
+        "mfd_ts_m": {
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "unit": "m",
+          "value": [
+            1.6e-05,
+            2.4e-05
+          ]
+        },
+        "mode_evidence": {
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "unit": "evidence",
+          "value": {
+            "fixture": "examples/m1_001.json",
+            "kind": "synthetic_gaussian"
+          }
+        },
+        "polarization": {
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "unit": "1",
+          "value": {
+            "jones_ts": [
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "treatment": "scalar_ignored"
+          }
+        },
+        "position_m": {
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "unit": "m",
+          "value": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "propagation_direction": {
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "unit": "1",
+          "value": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        "reference_plane": {
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "unit": "plane",
+          "value": {
+            "frame_id": "world",
+            "id": "source-external",
+            "normal": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "origin_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "side": "external"
+          }
+        },
+        "sagittal_axis": {
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "unit": "1",
+          "value": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        "wavefront_curvature_ts_per_m": {
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "unit": "m^-1",
+          "value": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "target": {
+        "complex_q_ts_m": {
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "unit": "m",
+          "value": [
+            [
+              -0.0,
+              0.00015348238918301278
+            ],
+            [
+              -0.0,
+              0.0003453353756617788
+            ]
+          ]
+        },
+        "mfd_ts_m": {
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "unit": "m",
+          "value": [
+            1.6e-05,
+            2.4e-05
+          ]
+        },
+        "mode_evidence": {
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "unit": "evidence",
+          "value": {
+            "fixture": "examples/m1_001.json",
+            "kind": "synthetic_gaussian"
+          }
+        },
+        "polarization": {
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "unit": "1",
+          "value": {
+            "jones_ts": [
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "treatment": "scalar_ignored"
+          }
+        },
+        "position_m": {
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "unit": "m",
+          "value": [
+            0.002,
+            0.0,
+            0.002
+          ]
+        },
+        "propagation_direction": {
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "unit": "1",
+          "value": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        "reference_plane": {
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "unit": "plane",
+          "value": {
+            "frame_id": "world",
+            "id": "target-external",
+            "normal": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "origin_m": [
+              0.002,
+              0.0,
+              0.002
+            ],
+            "side": "external"
+          }
+        },
+        "sagittal_axis": {
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "unit": "1",
+          "value": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        "wavefront_curvature_ts_per_m": {
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "unit": "m^-1",
+          "value": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "wavelength_m": {
+        "provenance": "synthetic",
+        "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+        "uncertainty": null,
+        "unit": "m",
+        "value": 1.31e-06
+      }
+    },
+    "uncertainty_treatment": "metadata preserved; no uncertainty propagation or yield calculation",
+    "evaluated_ports": {
+      "source": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "direction": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "sagittal_axis": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "complex_q_ts_m": [
+          [
+            -0.0,
+            0.00015348238918301278
+          ],
+          [
+            -0.0,
+            0.0003453353756617788
+          ]
+        ],
+        "wavelength_m": 1.31e-06,
+        "ambient_index": 1.0
+      },
+      "target": {
+        "position_m": [
+          0.002,
+          0.0,
+          0.002
+        ],
+        "direction": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "sagittal_axis": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "complex_q_ts_m": [
+          [
+            -0.0,
+            0.00015348238918301278
+          ],
+          [
+            -0.0,
+            0.0003453353756617788
+          ]
+        ],
+        "wavelength_m": 1.31e-06,
+        "ambient_index": 1.0
+      }
+    },
+    "samples": [
+      {
+        "plane": "source",
+        "axes": [
+          {
+            "radius_m": 8e-06,
+            "curvature_per_m": 0.0,
+            "waist_radius_m": 8e-06,
+            "waist_distance_m": 0.0,
+            "rayleigh_range_m": 0.00015348238918301278,
+            "divergence_rad": 0.052123243862595724
+          },
+          {
+            "radius_m": 1.2e-05,
+            "curvature_per_m": 0.0,
+            "waist_radius_m": 1.2e-05,
+            "waist_distance_m": 0.0,
+            "rayleigh_range_m": 0.0003453353756617788,
+            "divergence_rad": 0.034748829241730485
+          }
+        ]
+      },
+      {
+        "plane": "M1_before",
+        "axes": [
+          {
+            "radius_m": 5.273359982743093e-05,
+            "curvature_per_m": 976.9853096755079,
+            "waist_radius_m": 8e-06,
+            "waist_distance_m": -0.001,
+            "rayleigh_range_m": 0.00015348238918301278,
+            "divergence_rad": 0.052123243862595724
+          },
+          {
+            "radius_m": 3.6762496292702204e-05,
+            "curvature_per_m": 893.4502329241831,
+            "waist_radius_m": 1.2e-05,
+            "waist_distance_m": -0.001,
+            "rayleigh_range_m": 0.0003453353756617788,
+            "divergence_rad": 0.034748829241730485
+          }
+        ],
+        "surface_radii_m": [
+          7.457657206870832e-05,
+          3.6762496292702204e-05
+        ],
+        "footprint_slope_3w": 0.0791003997411464,
+        "aperture_tail_union_estimate": 1.2641554467740115e-78,
+        "powers_per_m": [
+          1000.0,
+          1000.0
+        ]
+      },
+      {
+        "plane": "M1_after",
+        "axes": [
+          {
+            "radius_m": 5.273359982743093e-05,
+            "curvature_per_m": -23.01469032449203,
+            "waist_radius_m": 5.212324386259573e-05,
+            "waist_distance_m": 0.001,
+            "rayleigh_range_m": 0.006515405482824466,
+            "divergence_rad": 0.007999999999999998
+          },
+          {
+            "radius_m": 3.6762496292702204e-05,
+            "curvature_per_m": -106.5497670758169,
+            "waist_radius_m": 3.4748829241730485e-05,
+            "waist_distance_m": 0.001,
+            "rayleigh_range_m": 0.002895735770144207,
+            "divergence_rad": 0.011999999999999999
+          }
+        ]
+      },
+      {
+        "plane": "M2_before",
+        "axes": [
+          {
+            "radius_m": 5.273359982743093e-05,
+            "curvature_per_m": 23.01469032449203,
+            "waist_radius_m": 5.212324386259573e-05,
+            "waist_distance_m": -0.001,
+            "rayleigh_range_m": 0.006515405482824466,
+            "divergence_rad": 0.007999999999999998
+          },
+          {
+            "radius_m": 3.6762496292702204e-05,
+            "curvature_per_m": 106.5497670758169,
+            "waist_radius_m": 3.4748829241730485e-05,
+            "waist_distance_m": -0.001,
+            "rayleigh_range_m": 0.002895735770144207,
+            "divergence_rad": 0.011999999999999999
+          }
+        ],
+        "surface_radii_m": [
+          7.457657206870832e-05,
+          3.6762496292702204e-05
+        ],
+        "footprint_slope_3w": 0.0791003997411464,
+        "aperture_tail_union_estimate": 1.2641554467740115e-78,
+        "powers_per_m": [
+          1000.0,
+          1000.0
+        ]
+      },
+      {
+        "plane": "M2_after",
+        "axes": [
+          {
+            "radius_m": 5.273359982743093e-05,
+            "curvature_per_m": -976.9853096755079,
+            "waist_radius_m": 8e-06,
+            "waist_distance_m": 0.001,
+            "rayleigh_range_m": 0.00015348238918301278,
+            "divergence_rad": 0.052123243862595724
+          },
+          {
+            "radius_m": 3.676249629270221e-05,
+            "curvature_per_m": -893.4502329241831,
+            "waist_radius_m": 1.2e-05,
+            "waist_distance_m": 0.001,
+            "rayleigh_range_m": 0.00034533537566177876,
+            "divergence_rad": 0.034748829241730485
+          }
+        ]
+      },
+      {
+        "plane": "target",
+        "axes": [
+          {
+            "radius_m": 8e-06,
+            "curvature_per_m": 0.0,
+            "waist_radius_m": 8e-06,
+            "waist_distance_m": -0.0,
+            "rayleigh_range_m": 0.00015348238918301278,
+            "divergence_rad": 0.052123243862595724
+          },
+          {
+            "radius_m": 1.2e-05,
+            "curvature_per_m": 0.0,
+            "waist_radius_m": 1.2e-05,
+            "waist_distance_m": -0.0,
+            "rayleigh_range_m": 0.00034533537566177876,
+            "divergence_rad": 0.034748829241730485
+          }
+        ]
+      }
+    ]
+  },
+  "unprovided_actual": {
+    "input_contract": {
+      "status": "Uncomputed",
+      "path": "wavelength_m",
+      "reason": "value not supplied"
+    },
+    "geometry": {
+      "status": "Uncomputed"
+    },
+    "model_domain": {
+      "status": "Uncomputed"
+    },
+    "design_constraints": {
+      "status": "Uncomputed"
+    },
+    "gaussian_mode_matching": {
+      "status": "Uncomputed",
+      "normalized_mode_overlap": null
+    },
+    "package_feasibility": {
+      "status": "Uncomputed"
+    },
+    "physical_losses": {
+      "status": "Uncomputed",
+      "total_coupling": null,
+      "reason": "interfaces/coatings/polarization/scatter not modeled"
+    },
+    "fabrication": {
+      "status": "Uncomputed"
+    },
+    "actual_applicability": {
+      "status": "Uncomputed",
+      "reason": "external input adapter does not independently certify actual Port field or package performance"
+    }
+  },
+  "rejection_controls": [
+    {
+      "name": "missing_phase",
+      "input_changes_from_synthetic_fixture": [
+        {
+          "op": "remove",
+          "path": "source.complex_q_ts_m"
+        },
+        {
+          "op": "remove",
+          "path": "source.wavefront_curvature_ts_per_m"
+        }
+      ],
+      "states": {
+        "input_contract": "Uncomputed",
+        "geometry": "Uncomputed",
+        "model_domain": "Uncomputed",
+        "design_constraints": "Uncomputed",
+        "package_feasibility": "Uncomputed"
+      },
+      "normalized_mode_overlap": null
+    },
+    {
+      "name": "bad_unit",
+      "input_changes_from_synthetic_fixture": [
+        {
+          "op": "replace",
+          "path": "source.position_m.unit",
+          "value": "mm"
+        }
+      ],
+      "states": {
+        "input_contract": "Fail",
+        "geometry": "Uncomputed",
+        "model_domain": "Uncomputed",
+        "design_constraints": "Uncomputed",
+        "package_feasibility": "Uncomputed"
+      },
+      "normalized_mode_overlap": null
+    },
+    {
+      "name": "guided_index",
+      "input_changes_from_synthetic_fixture": [
+        {
+          "op": "replace",
+          "path": "ambient_index.quantity",
+          "value": "guided_effective_index"
+        }
+      ],
+      "states": {
+        "input_contract": "Fail",
+        "geometry": "Uncomputed",
+        "model_domain": "Uncomputed",
+        "design_constraints": "Uncomputed",
+        "package_feasibility": "Uncomputed"
+      },
+      "normalized_mode_overlap": null
+    },
+    {
+      "name": "high_divergence",
+      "input_changes_from_synthetic_fixture": [
+        {
+          "op": "remove",
+          "path": "source.complex_q_ts_m"
+        },
+        {
+          "op": "replace",
+          "path": "source.mfd_ts_m.value",
+          "value": [
+            2e-06,
+            2e-06
+          ]
+        }
+      ],
+      "states": {
+        "input_contract": "Pass",
+        "geometry": "Pass",
+        "model_domain": "Fail",
+        "design_constraints": "Pass",
+        "package_feasibility": "Uncomputed"
+      },
+      "normalized_mode_overlap": null
+    },
+    {
+      "name": "curvature_bounds",
+      "input_changes_from_synthetic_fixture": [
+        {
+          "op": "replace",
+          "path": "reflectors",
+          "value": [
+            {
+              "surface_prescription": {
+                "value": "quadratic_patch",
+                "unit": "model",
+                "provenance": "synthetic",
+                "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+                "uncertainty": null
+              },
+              "vertex_bounds_m": {
+                "value": [
+                  [
+                    0.0009,
+                    -0.0001,
+                    -0.0001
+                  ],
+                  [
+                    0.0011,
+                    0.0001,
+                    0.0001
+                  ]
+                ],
+                "unit": "m",
+                "provenance": "synthetic",
+                "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+                "uncertainty": null
+              },
+              "normal_constraints": {
+                "value": {
+                  "axis": [
+                    -0.7071067811865475,
+                    0.0,
+                    0.7071067811865475
+                  ],
+                  "max_angle_rad": 0.0
+                },
+                "unit": "rad",
+                "provenance": "synthetic",
+                "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+                "uncertainty": null
+              },
+              "principal_curvature_bounds_per_m": {
+                "value": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    0,
+                    1
+                  ]
+                ],
+                "unit": "m^-1",
+                "provenance": "synthetic",
+                "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+                "uncertainty": null
+              },
+              "half_aperture_bounds_m": {
+                "value": [
+                  [
+                    0.00063,
+                    0.0007700000000000001
+                  ],
+                  [
+                    0.00045000000000000004,
+                    0.00055
+                  ]
+                ],
+                "unit": "m",
+                "provenance": "synthetic",
+                "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+                "uncertainty": null
+              },
+              "body_envelope": {
+                "value": {
+                  "type": "aabb",
+                  "min_m": [
+                    0.0003,
+                    -0.0006,
+                    -0.0007
+                  ],
+                  "max_m": [
+                    0.0017,
+                    0.0006,
+                    0.0007
+                  ]
+                },
+                "unit": "m",
+                "provenance": "synthetic",
+                "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+                "uncertainty": null
+              }
+            },
+            {
+              "surface_prescription": {
+                "value": "quadratic_patch",
+                "unit": "model",
+                "provenance": "synthetic",
+                "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+                "uncertainty": null
+              },
+              "vertex_bounds_m": {
+                "value": [
+                  [
+                    0.0009,
+                    -0.0001,
+                    0.0019
+                  ],
+                  [
+                    0.0011,
+                    0.0001,
+                    0.0021
+                  ]
+                ],
+                "unit": "m",
+                "provenance": "synthetic",
+                "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+                "uncertainty": null
+              },
+              "normal_constraints": {
+                "value": {
+                  "axis": [
+                    0.7071067811865475,
+                    0.0,
+                    -0.7071067811865475
+                  ],
+                  "max_angle_rad": 0.0
+                },
+                "unit": "rad",
+                "provenance": "synthetic",
+                "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+                "uncertainty": null
+              },
+              "principal_curvature_bounds_per_m": {
+                "value": [
+                  [
+                    350.017856687341,
+                    357.08892449920654
+                  ],
+                  [
+                    700.0357133746819,
+                    714.177848998413
+                  ]
+                ],
+                "unit": "m^-1",
+                "provenance": "synthetic",
+                "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+                "uncertainty": null
+              },
+              "half_aperture_bounds_m": {
+                "value": [
+                  [
+                    0.00063,
+                    0.0007700000000000001
+                  ],
+                  [
+                    0.00045000000000000004,
+                    0.00055
+                  ]
+                ],
+                "unit": "m",
+                "provenance": "synthetic",
+                "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+                "uncertainty": null
+              },
+              "body_envelope": {
+                "value": {
+                  "type": "aabb",
+                  "min_m": [
+                    0.0003,
+                    -0.0006,
+                    0.0013
+                  ],
+                  "max_m": [
+                    0.0017,
+                    0.0006,
+                    0.0027
+                  ]
+                },
+                "unit": "m",
+                "provenance": "synthetic",
+                "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+                "uncertainty": null
+              }
+            }
+          ]
+        }
+      ],
+      "states": {
+        "input_contract": "Pass",
+        "geometry": "Pass",
+        "model_domain": "Pass",
+        "design_constraints": "Fail",
+        "package_feasibility": "Uncomputed"
+      },
+      "normalized_mode_overlap": null
+    },
+    {
+      "name": "chief_keepout",
+      "input_changes_from_synthetic_fixture": [
+        {
+          "op": "replace",
+          "path": "package.keepout_bodies.value",
+          "value": [
+            {
+              "type": "aabb",
+              "min_m": [
+                0.0001,
+                -1e-05,
+                -1e-05
+              ],
+              "max_m": [
+                0.0002,
+                1e-05,
+                1e-05
+              ]
+            }
+          ]
+        }
+      ],
+      "states": {
+        "input_contract": "Pass",
+        "geometry": "Pass",
+        "model_domain": "Pass",
+        "design_constraints": "Pass",
+        "package_feasibility": "Fail"
+      },
+      "normalized_mode_overlap": null
+    }
+  ]
+}
