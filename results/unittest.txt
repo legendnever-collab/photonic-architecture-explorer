@@ -60,6 +60,6 @@ test_residual_scale_is_not_loss_and_inputs_are_preserved (test_m25.ExternalDomai
 test_waist_guard_boundary_and_index_scaling (test_m25.ExternalDomainReferences.test_waist_guard_boundary_and_index_scaling) ... ok
 
 ----------------------------------------------------------------------
-Ran 60 tests in 1.499s
+Ran 60 tests in 1.472s
 
 OK

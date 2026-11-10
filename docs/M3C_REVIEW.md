@@ -43,6 +43,8 @@ Chromium CI는 기존 Desktop 1440×1050 / Mobile 393×852 / Static HTML 검증�
 진단 경로 확인을 추가한다. Bad Unit → `source.position_m` 확인 → Unit만 `m`으로
 명시 수정 → Python 재평가 → 동일 Fixed Ports와 Approximate Overlap 1 복구를 검증한다.
 Mobile과 독립 Static HTML에서도 경로 표시를 확인하고 진단 Screenshot을 남긴다.
+Port Record 비교는 JSON 직렬화에서 동등한 `-0`/`0`을 동일하게 취급하며,
+다른 수치·Field는 반올림이나 수치 허용오차 없이 구조적으로 비교한다.
 실제 실행 결과는 M3-C PR의 정확한 HEAD CI와 Artifacts를 따른다.
 
 Physics / external Adapter / 기존 Physics Tests / Fixtures / Guards와 기존 Benchmark

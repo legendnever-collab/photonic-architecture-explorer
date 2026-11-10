@@ -1,6 +1,8 @@
 const {chromium} = require('playwright');
 const fs = require('fs');
 const assert = require('node:assert/strict');
+// JSON editing maps -0 to 0; compare exact JSON values without numeric rounding.
+const sameJSON=(actual,expected)=>assert.deepEqual(JSON.parse(JSON.stringify(actual)),JSON.parse(JSON.stringify(expected)));
 (async()=>{
  const {spawn} = require('node:child_process');
  const server = spawn('python', ['-m','photonic_architecture_explorer.inspector','--serve','--port','8765'], {env:{...process.env,PYTHONPATH:'src'},stdio:['ignore','pipe','inherit']});
@@ -47,7 +49,7 @@ const assert = require('node:assert/strict');
  await active().locator('button[type=submit]').click();
  await page.waitForURL('**/evaluate');
  assert.equal(await active().locator('[data-overlap-value]').innerText(),'1');
- assert.deepEqual(JSON.parse(await active().locator('textarea[name=ports]').inputValue()),nominalPorts);
+ sameJSON(JSON.parse(await active().locator('textarea[name=ports]').inputValue()),nominalPorts);
  report.checks.push('bad unit → visible source.position_m → explicit unit correction → overlap restored with identical Ports');
  await page.goto('http://127.0.0.1:8765');
  // Open editor, change one design variable, ensure stale output disappears BEFORE submit.
@@ -62,7 +64,7 @@ const assert = require('node:assert/strict');
  await page.waitForURL('**/evaluate');
  let eta=Number(await active().locator('[data-overlap-value]').innerText());
  assert(eta<1 && eta>0.99,String(eta));
- assert.deepEqual(JSON.parse(await active().locator('textarea[name=ports]').inputValue()),nominalPorts);
+ sameJSON(JSON.parse(await active().locator('textarea[name=ports]').inputValue()),nominalPorts);
  report.changed_overlap=eta;report.checks.push('explicit curvature edit reevaluates via Python; Fixed Ports remain identical');
  await active().locator('details').filter({has:page.locator('textarea[name=ports]')}).locator('summary').click();
  const savedPorts=await active().locator('textarea[name=ports]').inputValue();

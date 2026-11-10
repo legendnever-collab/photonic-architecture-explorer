@@ -3,8 +3,8 @@
   "numpy": "2.3.5",
   "test_command": "python -m unittest discover -s tests -v",
   "test_exit_code": 0,
-  "evaluated_checkout_sha": "52b2ff56f55f0e42003a74151b94afb29f7af5c4",
-  "checkout_dirty_before_run": true,
+  "evaluated_checkout_sha": "f1258bc761eb0e85daf369a0a87c4b6a314eac5d",
+  "checkout_dirty_before_run": false,
   "m25_actual_applicability": "Uncomputed",
   "m3a_adapter_gate": {
     "status": "Pass",
@@ -45,9 +45,9 @@
     "docs/M3A_CONTRACT.md": "548c29289fcaa39161e39e0176698de518974910da6895aa9c33210d58825850",
     "docs/M3A_ADAPTER.md": "d801c63430502a6866495e6bc2f54ea37464725f409c6d3029e7539ddb6051d6",
     "docs/M3B_CONTRACT.md": "e12174309ff43245d174e1ffbfc8d3ee304ac07254a1f516d9ef3c5e544fa593",
-    "docs/M3C_REVIEW.md": "e0a351389f1ed3bc8278679a8d28550e0a997ab6db2347a2368326a18ab8c4d4",
+    "docs/M3C_REVIEW.md": "31fd0b2ba50f31e2364268a259c64f1fa25b1348feab3d5a5da4f6750a64c1c1",
     "docs/M3C_INTEGRATION_READINESS.md": "c7122009c0a6195f1469fdaaf931522fc608929d20e05b44f0aec0666471f093",
-    "scripts/check_inspector.cjs": "dbf36cb05e0ef00b1a5e8d5d2bb6daa4f03f1870a57e6d4cd54cbae577d2e4e0",
+    "scripts/check_inspector.cjs": "8b34c96692fb4cad42563b8c1bf5f8a6c5720584b67e3af32849ac6940cde881",
     ".github/workflows/validate.yml": "c3eb9c69163eee30aa2310935eb8cd7b0f1fff83f4ea91a5b8543a7d6f85e43d"
   }
 }
