@@ -1,0 +1,551 @@
+{
+  "control_id": "M4C1-TE-WINDOW-001",
+  "scope": "Synthetic 2D TE planar only; not actual WAFT/PIC",
+  "status": "Pass",
+  "gates": {
+    "all_windows_non_tail": true,
+    "final_two_windows_all_criteria": true,
+    "final_two_tail_difference": true,
+    "legacy_failure_reproduced": true,
+    "continuous_power_balance": true,
+    "plane_wave_boundaries": true,
+    "plane_wave_power": true,
+    "normal_incidence": true,
+    "tir": true,
+    "incident_spectral_cut": true
+  },
+  "windows": [
+    {
+      "window_m": 8e-05,
+      "delta_u": 0.016374999999999997,
+      "cutoff_bin_coordinate": 6.0966971998063,
+      "samplings": [
+        {
+          "N": 512,
+          "dx_m": 1.5625e-07,
+          "incident_flux_W_per_m": 1.0,
+          "reflected_flux_W_per_m": -0.041329894945595996,
+          "R": 0.04132989494559601,
+          "T": 0.958670105054404,
+          "transmitted_flux_W_per_m": [
+            0.9586701050544039,
+            0.9586701050544039
+          ],
+          "balance_abs": 0.0,
+          "rms_sin_theta": 0.15170238956433896,
+          "flux_fraction_outside_0p1_rad": 0.4827793213425021,
+          "incident_peak_V_per_m": 17180.11713442615,
+          "outgoing_evanescent_E_spectral_norm_fraction": 1.1064641400752649e-10
+        },
+        {
+          "N": 1024,
+          "dx_m": 7.8125e-08,
+          "incident_flux_W_per_m": 1.0,
+          "reflected_flux_W_per_m": -0.041329894945595996,
+          "R": 0.04132989494559602,
+          "T": 0.958670105054404,
+          "transmitted_flux_W_per_m": [
+            0.9586701050544038,
+            0.9586701050544039
+          ],
+          "balance_abs": 0.0,
+          "rms_sin_theta": 0.15170238956433896,
+          "flux_fraction_outside_0p1_rad": 0.4827793213425021,
+          "incident_peak_V_per_m": 17180.11713442615,
+          "outgoing_evanescent_E_spectral_norm_fraction": 1.1064641400786519e-10
+        }
+      ],
+      "sampling_field_difference": [
+        {
+          "E_relative_L2": 2.93849327160042e-16,
+          "Z0H_relative_L2": 2.8606130271872896e-16
+        },
+        {
+          "E_relative_L2": 2.7684796222690944e-16,
+          "Z0H_relative_L2": 2.569705635135368e-16
+        }
+      ],
+      "sampling_relative_difference": {
+        "R": 1.6789043168488903e-16,
+        "T": 0.0,
+        "rms_sin_theta": 0.0
+      },
+      "sampling_tail_abs_difference": 0.0,
+      "continuous_field_errors": [
+        2.0255588019486054e-06,
+        2.025558801950669e-06
+      ],
+      "continuous_smooth_relative_errors": [
+        {
+          "T": 6.821130210032605e-14,
+          "rms_sin_theta": 1.0470840947479582e-12
+        },
+        {
+          "T": 6.821130210032605e-14,
+          "rms_sin_theta": 1.0470840947479582e-12
+        }
+      ],
+      "continuous_tail_abs_errors": [
+        0.027777663568040678,
+        0.027777663568040678
+      ],
+      "continuous_R_relative_errors": [
+        1.5788416195671895e-12,
+        1.5790095099988745e-12
+      ],
+      "spatial_spectral_flux_max_error": 2.220446049250313e-16,
+      "gates": {
+        "sampling_field": true,
+        "sampling_flux_angular": true,
+        "power_balance": true,
+        "spatial_spectral_flux": true,
+        "continuous_field": true,
+        "continuous_smooth_flux_angular": true,
+        "continuous_reflected_flux": true,
+        "continuous_tail": false
+      }
+    },
+    {
+      "window_m": 0.00016,
+      "delta_u": 0.008187499999999999,
+      "cutoff_bin_coordinate": 12.1933943996126,
+      "samplings": [
+        {
+          "N": 1024,
+          "dx_m": 1.5625e-07,
+          "incident_flux_W_per_m": 1.0,
+          "reflected_flux_W_per_m": -0.04132989494517035,
+          "R": 0.04132989494517036,
+          "T": 0.9586701050548296,
+          "transmitted_flux_W_per_m": [
+            0.9586701050548295,
+            0.9586701050548295
+          ],
+          "balance_abs": 0.0,
+          "rms_sin_theta": 0.15170238956571874,
+          "flux_fraction_outside_0p1_rad": 0.49993104438610664,
+          "incident_peak_V_per_m": 17180.11713442615,
+          "outgoing_evanescent_E_spectral_norm_fraction": 1.3572994340198065e-10
+        },
+        {
+          "N": 2048,
+          "dx_m": 7.8125e-08,
+          "incident_flux_W_per_m": 0.9999999999999997,
+          "reflected_flux_W_per_m": -0.04132989494517035,
+          "R": 0.04132989494517036,
+          "T": 0.9586701050548296,
+          "transmitted_flux_W_per_m": [
+            0.9586701050548295,
+            0.9586701050548295
+          ],
+          "balance_abs": 0.0,
+          "rms_sin_theta": 0.15170238956571874,
+          "flux_fraction_outside_0p1_rad": 0.4999310443861067,
+          "incident_peak_V_per_m": 17180.11713442615,
+          "outgoing_evanescent_E_spectral_norm_fraction": 1.357299434025129e-10
+        }
+      ],
+      "sampling_field_difference": [
+        {
+          "E_relative_L2": 3.0689238149077885e-16,
+          "Z0H_relative_L2": 3.2622317264510783e-16
+        },
+        {
+          "E_relative_L2": 3.080201626812595e-16,
+          "Z0H_relative_L2": 3.131307223185304e-16
+        }
+      ],
+      "sampling_relative_difference": {
+        "R": 0.0,
+        "T": 0.0,
+        "rms_sin_theta": 0.0
+      },
+      "sampling_tail_abs_difference": 5.551115123125783e-17,
+      "continuous_field_errors": [
+        5.478314544436645e-07,
+        5.478314544470967e-07
+      ],
+      "continuous_smooth_relative_errors": [
+        {
+          "T": 3.757991091944958e-13,
+          "rms_sin_theta": 8.048258298771262e-12
+        },
+        {
+          "T": 3.757991091944958e-13,
+          "rms_sin_theta": 8.048258298771262e-12
+        }
+      ],
+      "continuous_tail_abs_errors": [
+        0.010625940524436162,
+        0.010625940524436106
+      ],
+      "continuous_R_relative_errors": [
+        8.72006113129522e-12,
+        8.72006113129522e-12
+      ],
+      "spatial_spectral_flux_max_error": 3.3306690738754696e-16,
+      "gates": {
+        "sampling_field": true,
+        "sampling_flux_angular": true,
+        "power_balance": true,
+        "spatial_spectral_flux": true,
+        "continuous_field": true,
+        "continuous_smooth_flux_angular": true,
+        "continuous_reflected_flux": true,
+        "continuous_tail": true
+      }
+    },
+    {
+      "window_m": 0.00032,
+      "delta_u": 0.004093749999999999,
+      "cutoff_bin_coordinate": 24.3867887992252,
+      "samplings": [
+        {
+          "N": 2048,
+          "dx_m": 1.5625e-07,
+          "incident_flux_W_per_m": 1.0,
+          "reflected_flux_W_per_m": -0.04132989494532241,
+          "R": 0.041329894945322423,
+          "T": 0.9586701050546775,
+          "transmitted_flux_W_per_m": [
+            0.9586701050546773,
+            0.9586701050546773
+          ],
+          "balance_abs": 0.0,
+          "rms_sin_theta": 0.15170238956519833,
+          "flux_fraction_outside_0p1_rad": 0.5085832107169213,
+          "incident_peak_V_per_m": 17180.11713442615,
+          "outgoing_evanescent_E_spectral_norm_fraction": 1.4963738297634422e-10
+        },
+        {
+          "N": 4096,
+          "dx_m": 7.8125e-08,
+          "incident_flux_W_per_m": 0.9999999999999996,
+          "reflected_flux_W_per_m": -0.0413298949453224,
+          "R": 0.04132989494532241,
+          "T": 0.9586701050546773,
+          "transmitted_flux_W_per_m": [
+            0.9586701050546769,
+            0.9586701050546773
+          ],
+          "balance_abs": 2.220446049250313e-16,
+          "rms_sin_theta": 0.1517023895651983,
+          "flux_fraction_outside_0p1_rad": 0.5085832107169211,
+          "incident_peak_V_per_m": 17180.117134426146,
+          "outgoing_evanescent_E_spectral_norm_fraction": 1.4963738297671953e-10
+        }
+      ],
+      "sampling_field_difference": [
+        {
+          "E_relative_L2": 3.6846516570997337e-16,
+          "Z0H_relative_L2": 3.8180783494335716e-16
+        },
+        {
+          "E_relative_L2": 3.832937398595829e-16,
+          "Z0H_relative_L2": 3.693275930039759e-16
+        }
+      ],
+      "sampling_relative_difference": {
+        "R": 3.3578086337200098e-16,
+        "T": 2.316173246190535e-16,
+        "rms_sin_theta": 1.8296070151024343e-16
+      },
+      "sampling_tail_abs_difference": 1.1102230246251565e-16,
+      "continuous_field_errors": [
+        1.4526635305617934e-07,
+        1.4526635305956752e-07
+      ],
+      "continuous_smooth_relative_errors": [
+        {
+          "T": 2.1714124183040974e-13,
+          "rms_sin_theta": 4.6177451454383564e-12
+        },
+        {
+          "T": 2.1690962450579065e-13,
+          "rms_sin_theta": 4.6175621847368456e-12
+        }
+      ],
+      "continuous_tail_abs_errors": [
+        0.001973774193621547,
+        0.001973774193621658
+      ],
+      "continuous_R_relative_errors": [
+        5.040742320915068e-12,
+        5.041078101778438e-12
+      ],
+      "spatial_spectral_flux_max_error": 4.440892098500626e-16,
+      "gates": {
+        "sampling_field": true,
+        "sampling_flux_angular": true,
+        "power_balance": true,
+        "spatial_spectral_flux": true,
+        "continuous_field": true,
+        "continuous_smooth_flux_angular": true,
+        "continuous_reflected_flux": true,
+        "continuous_tail": true
+      }
+    },
+    {
+      "window_m": 0.00064,
+      "delta_u": 0.0020468749999999996,
+      "cutoff_bin_coordinate": 48.7735775984504,
+      "samplings": [
+        {
+          "N": 4096,
+          "dx_m": 1.5625e-07,
+          "incident_flux_W_per_m": 1.0,
+          "reflected_flux_W_per_m": -0.04132989494550933,
+          "R": 0.04132989494550933,
+          "T": 0.9586701050544907,
+          "transmitted_flux_W_per_m": [
+            0.9586701050544908,
+            0.9586701050544905
+          ],
+          "balance_abs": 0.0,
+          "rms_sin_theta": 0.1517023895645695,
+          "flux_fraction_outside_0p1_rad": 0.512928354405536,
+          "incident_peak_V_per_m": 17180.11713442615,
+          "outgoing_evanescent_E_spectral_norm_fraction": 1.5693711879503222e-10
+        },
+        {
+          "N": 8192,
+          "dx_m": 7.8125e-08,
+          "incident_flux_W_per_m": 0.9999999999999997,
+          "reflected_flux_W_per_m": -0.04132989494550932,
+          "R": 0.041329894945509316,
+          "T": 0.9586701050544904,
+          "transmitted_flux_W_per_m": [
+            0.9586701050544902,
+            0.9586701050544905
+          ],
+          "balance_abs": 3.3306690738754696e-16,
+          "rms_sin_theta": 0.1517023895645695,
+          "flux_fraction_outside_0p1_rad": 0.512928354405536,
+          "incident_peak_V_per_m": 17180.117134426146,
+          "outgoing_evanescent_E_spectral_norm_fraction": 1.5693711879495178e-10
+        }
+      ],
+      "sampling_field_difference": [
+        {
+          "E_relative_L2": 3.734102498178573e-16,
+          "Z0H_relative_L2": 3.874789244683542e-16
+        },
+        {
+          "E_relative_L2": 3.7418819233416576e-16,
+          "Z0H_relative_L2": 3.721691631492613e-16
+        }
+      ],
+      "sampling_relative_difference": {
+        "R": 3.3578086337048247e-16,
+        "T": 3.47425986928648e-16,
+        "rms_sin_theta": 0.0
+      },
+      "sampling_tail_abs_difference": 0.0,
+      "continuous_field_errors": [
+        4.422008169151776e-08,
+        4.422008176375365e-08
+      ],
+      "continuous_smooth_relative_errors": [
+        {
+          "T": 2.2235263163433958e-14,
+          "rms_sin_theta": 4.725874920031409e-13
+        },
+        {
+          "T": 2.1887837176505302e-14,
+          "rms_sin_theta": 4.725874920031409e-13
+        }
+      ],
+      "continuous_tail_abs_errors": [
+        0.0023713694949931696,
+        0.0023713694949931696
+      ],
+      "continuous_R_relative_errors": [
+        5.18445653043756e-13,
+        5.187814339071262e-13
+      ],
+      "spatial_spectral_flux_max_error": 3.3306690738754696e-16,
+      "gates": {
+        "sampling_field": true,
+        "sampling_flux_angular": true,
+        "power_balance": true,
+        "spatial_spectral_flux": true,
+        "continuous_field": true,
+        "continuous_smooth_flux_angular": true,
+        "continuous_reflected_flux": true,
+        "continuous_tail": true
+      }
+    },
+    {
+      "window_m": 0.00128,
+      "delta_u": 0.0010234374999999998,
+      "cutoff_bin_coordinate": 97.5471551969008,
+      "samplings": [
+        {
+          "N": 8192,
+          "dx_m": 1.5625e-07,
+          "incident_flux_W_per_m": 0.9999999999999996,
+          "reflected_flux_W_per_m": -0.041329894945536405,
+          "R": 0.04132989494553641,
+          "T": 0.9586701050544633,
+          "transmitted_flux_W_per_m": [
+            0.9586701050544634,
+            0.9586701050544629
+          ],
+          "balance_abs": 3.3306690738754696e-16,
+          "rms_sin_theta": 0.1517023895644788,
+          "flux_fraction_outside_0p1_rad": 0.5107606032604344,
+          "incident_peak_V_per_m": 17180.117134426146,
+          "outgoing_evanescent_E_spectral_norm_fraction": 1.5336666721315388e-10
+        },
+        {
+          "N": 16384,
+          "dx_m": 7.8125e-08,
+          "incident_flux_W_per_m": 0.9999999999999996,
+          "reflected_flux_W_per_m": -0.041329894945536405,
+          "R": 0.04132989494553641,
+          "T": 0.9586701050544633,
+          "transmitted_flux_W_per_m": [
+            0.9586701050544634,
+            0.958670105054463
+          ],
+          "balance_abs": 3.3306690738754696e-16,
+          "rms_sin_theta": 0.15170238956447876,
+          "flux_fraction_outside_0p1_rad": 0.5107606032604344,
+          "incident_peak_V_per_m": 17180.117134426146,
+          "outgoing_evanescent_E_spectral_norm_fraction": 1.533666672130843e-10
+        }
+      ],
+      "sampling_field_difference": [
+        {
+          "E_relative_L2": 3.74934309212761e-16,
+          "Z0H_relative_L2": 3.9615669891750137e-16
+        },
+        {
+          "E_relative_L2": 3.6657195484579954e-16,
+          "Z0H_relative_L2": 3.645490723030174e-16
+        }
+      ],
+      "sampling_relative_difference": {
+        "R": 0.0,
+        "T": 0.0,
+        "rms_sin_theta": 1.8296070151111123e-16
+      },
+      "sampling_tail_abs_difference": 0.0,
+      "continuous_field_errors": [
+        2.6048167196816628e-08,
+        2.6048167199584173e-08
+      ],
+      "continuous_smooth_relative_errors": [
+        {
+          "T": 6.3694764270253524e-15,
+          "rms_sin_theta": 1.2532808053509546e-13
+        },
+        {
+          "T": 6.3694764270253524e-15,
+          "rms_sin_theta": 1.2551104123660654e-13
+        }
+      ],
+      "continuous_tail_abs_errors": [
+        0.00020361834989157668,
+        0.00020361834989157668
+      ],
+      "continuous_R_relative_errors": [
+        1.3683070182340062e-13,
+        1.3683070182340062e-13
+      ],
+      "spatial_spectral_flux_max_error": 4.440892098500626e-16,
+      "gates": {
+        "sampling_field": true,
+        "sampling_flux_angular": true,
+        "power_balance": true,
+        "spatial_spectral_flux": true,
+        "continuous_field": true,
+        "continuous_smooth_flux_angular": true,
+        "continuous_reflected_flux": true,
+        "continuous_tail": true
+      }
+    }
+  ],
+  "continuous_quadrature": {
+    "T": 0.9586701050544694,
+    "rms_sin_theta": 0.1517023895644978,
+    "flux_fraction_outside_0p1_rad": 0.5105569849105428,
+    "incident_peak_V_per_m": 17180.117134426153,
+    "R": 0.04132989494553076,
+    "balance_abs": 1.1102230246251565e-16
+  },
+  "final_two_tail_abs_difference": 0.002167751145101593,
+  "plane_waves": [
+    {
+      "angle_rad": 0.0,
+      "boundary_residual": 2.220446049250313e-16,
+      "R": 0.04000000000000001,
+      "T": 0.96,
+      "balance_abs": 0.0,
+      "q2_imag": 0.0
+    },
+    {
+      "angle_rad": 0.3,
+      "boundary_residual": 0.0,
+      "R": 0.053070460278667665,
+      "T": 0.9469295397213324,
+      "balance_abs": 1.1102230246251565e-16,
+      "q2_imag": 0.0
+    },
+    {
+      "angle_rad": 1.0,
+      "boundary_residual": 2.482534153247273e-16,
+      "R": 0.9999999999999998,
+      "T": 2.0044227298229927e-16,
+      "balance_abs": 2.1602331942732036e-17,
+      "q2_imag": -0.7701721827718364
+    }
+  ],
+  "incident_removed_spectral_norm_bound": 1.0642068936202408e-20,
+  "external_input_audit": {
+    "request_case_id": "M4C-ACTUAL-EXTERNAL-UNPROVIDED",
+    "request_provenance": "unprovided",
+    "missing_fields": [
+      "reference_plane.origin_m",
+      "reference_plane.normal",
+      "reference_plane.transverse_basis",
+      "reference_plane.external_side_material",
+      "reference_plane.distance_from_facet_m",
+      "wavelength_m",
+      "external_material_permittivity",
+      "grid.x_m",
+      "grid.y_m",
+      "grid.array_axis_order",
+      "grid.staggering",
+      "complex_components.Ex_V_per_m",
+      "complex_components.Ey_V_per_m",
+      "complex_components.Ez_V_per_m",
+      "complex_components.Hx_A_per_m",
+      "complex_components.Hy_A_per_m",
+      "complex_components.Hz_A_per_m",
+      "time_and_spatial_phase_convention",
+      "field_decomposition_incident_outgoing_total",
+      "polarization_and_mode_identifier",
+      "normalization.incident_guided_power_W",
+      "normalization.outgoing_plane_flux_W",
+      "normalization.reflected_power_W",
+      "normalization.absorbed_power_W",
+      "normalization.other_boundary_flux_W",
+      "width_definition_and_fit_method",
+      "solver.name_version",
+      "solver.project_or_reproducible_material_geometry",
+      "solver.mesh_boundary_source_settings",
+      "solver.two_sampling_convergence",
+      "source",
+      "uncertainty"
+    ],
+    "status": "Unprovided",
+    "scope": "Repository request and files supplied with this task; no external field files supplied",
+    "not_an_automatic_field_validator": true,
+    "resume_condition": "Non-confidential complex E/H export with reference plane, medium, units, phase, power and convergence metadata; or a reproducible local facet model. Reciprocal Target required separately."
+  },
+  "actual_external_field": "Uncomputed",
+  "actual_overlap": null,
+  "total_coupling": null,
+  "full_package_feasibility": "Uncomputed"
+}

@@ -1,26 +1,29 @@
-"""CI evidence check: preserve the known failed Control, never label it Pass."""
-import hashlib
+"""Legacy checker retained; use run_m4c_stop.py for fresh execution certification."""
+import argparse
 import json
 from pathlib import Path
-import sys
+from m4c_evidence import ROOT, check_legacy
 
-root=Path(__file__).resolve().parents[1]
-r=json.loads((root/'results/m4c_planar_control.json').read_text())
-p=json.loads((root/'results/m4c_provenance.json').read_text())
-assert len(sys.argv)==2 and int(sys.argv[1])==1, 'Control must exit 1 at its frozen stop'
-assert r['status']=='Fail'
-assert {k for k,v in r['gates'].items() if not v}=={'continuous_flux_angular'}
-assert r['quadrature_outside_fraction_abs_difference']>0.02
-assert max(r['quadrature_relative_difference'].values())<1e-4
-assert r['actual_overlap'] is None and r['total_coupling'] is None
-assert r['actual_external_field']=='Uncomputed'
-assert p['elapsed_s']<120 and p['peak_rss_bytes_linux']<1_000_000_000
-assert hashlib.sha256((root/'results/m4c_planar_control.json').read_bytes()).hexdigest()==p['result_sha256']
-for path,digest in p['sha256'].items():
-    assert hashlib.sha256((root/path).read_bytes()).hexdigest()==digest,path
-(root/'results/m4c_execution.json').write_text(json.dumps({
-    'evidence_check':'Pass','control_acceptance':'Fail','control_exit_code':1,
-    'stop_reason':'angular-bin tail fraction exceeds frozen 0.02 absolute error budget',
-    'evaluated_checkout_sha':p['evaluated_checkout_sha'],
-    'actual_device_performance':'Uncomputed'},indent=2)+'\n')
-print('Evidence preserved: Control FAIL / stopped; actual performance Uncomputed.')
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('exit_code', type=int)
+    parser.add_argument('--output-dir', type=Path, default=ROOT/'results')
+    parser.add_argument('--run-id')
+    args = parser.parse_args()
+    p = check_legacy(args.output_dir, args.exit_code, args.run_id)
+    (args.output_dir/'m4c_execution.json').write_text(json.dumps({
+        'evidence_check':'Pass' if args.run_id else 'Historical integrity only',
+        'control_acceptance':'Fail', 'control_exit_code':1,
+        'fresh_execution_verified': args.run_id is not None,
+        'run_id': args.run_id,
+        'stop_reason':'angular-bin tail fraction exceeds frozen 0.02 absolute error budget',
+        'evaluated_checkout_sha':p['evaluated_checkout_sha'],
+        'actual_device_performance':'Uncomputed'}, indent=2)+'\n')
+    print('Fresh evidence verified: Control FAIL / stopped; actual performance Uncomputed.'
+          if args.run_id else
+          'Historical integrity only; fresh execution UNVERIFIED. Use run_m4c_stop.py.')
+
+
+if __name__ == '__main__':
+    main()

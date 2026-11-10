@@ -7,6 +7,7 @@ import hashlib
 import importlib.metadata
 import json
 import math
+import os
 from pathlib import Path
 import platform
 import resource
@@ -37,17 +38,21 @@ def library_coefficients(u):
             np.conj(N2 * np.cos(at)))
 
 
-def synth(a):
+def synth(a, window_m=L):
     # A(k)=integral E(x) exp(+ikx) dx; E(x)=integral A exp(-ikx) dk/(2pi).
-    return np.fft.fftshift(np.fft.fft(a)) / L
+    return np.fft.fftshift(np.fft.fft(a)) / window_m
 
 
 def flux(fields, dx):
     return float(-np.sum(np.real(fields[0] * np.conj(fields[1]))) * dx / (2 * Z0))
 
 
-def grid(n):
+def grid(n, window_m=L):
+    # L controls angular-bin spacing; n/L controls spatial sampling.
+    L = window_m
     dx = L / n
+    def synthesis(a):
+        return synth(a, window_m=L)
     x = (np.arange(n) - n // 2) * dx
     u = 2 * np.pi * np.fft.fftfreq(n, d=dx) / K0
     a = np.fft.ifft(np.fft.ifftshift(np.exp(-(x / W)**2))) * L
@@ -60,12 +65,12 @@ def grid(n):
     pin_seed = float(np.sum(qi * abs(a)**2) / (L * 2 * Z0))
     scale = 1 / np.sqrt(pin_seed)
     a *= scale
-    incident = np.array([synth(a), synth(-qi*a), synth(u*a)])
-    reflected = np.array([synth(r*a), synth(qi*r*a), synth(u*r*a)])
+    incident = np.array([synthesis(a), synthesis(-qi*a), synthesis(u*a)])
+    reflected = np.array([synthesis(r*a), synthesis(qi*r*a), synthesis(u*r*a)])
     transmitted = []
     for z in Z_PLANES:
         az = a*t*np.exp(-1j*K0*qt*z)
-        transmitted.append(np.array([synth(az), synth(-qt*az), synth(u*az)]))
+        transmitted.append(np.array([synthesis(az), synthesis(-qt*az), synthesis(u*az)]))
     R = float(np.sum(qi * abs(r*a)**2) / (L*2*Z0))
     bins = qt.real * abs(t*a)**2 / (L*2*Z0)
     # Clamp no physics: tiny positive real(kz) under TIR from trig roundoff is
@@ -199,7 +204,7 @@ def main():
             'status':'Pass' if all(gates.values()) else 'Fail',
             'actual_external_field':'Uncomputed','actual_overlap':None,'total_coupling':None,
             'full_package_feasibility':'Uncomputed'}
-    out=ROOT/'results';out.mkdir(exist_ok=True)
+    out=Path(os.environ.get('M4C_OUTPUT_DIR', ROOT/'results'));out.mkdir(parents=True, exist_ok=True)
     (out/'m4c_planar_control.json').write_text(json.dumps(report,indent=2,allow_nan=False)+'\n')
     for d in data:
         metrics,x,u,amp,t,qz,fields=d
@@ -219,6 +224,8 @@ def main():
                 'sha256':{p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in paths},
                 'tmm_core_sha256':hashlib.sha256(Path(tmm.tmm_core.__file__).read_bytes()).hexdigest(),
                 'result_sha256':hashlib.sha256((out/'m4c_planar_control.json').read_bytes()).hexdigest()}
+    from m4c_evidence import seal
+    seal(out, provenance, ['m4c_planar_control.json', 'm4c_fields_512.npz', 'm4c_fields_1024.npz'])
     (out/'m4c_provenance.json').write_text(json.dumps(provenance,indent=2)+'\n')
     print(json.dumps({'status':report['status'],'gates':gates,'elapsed_s':elapsed,
                       'fine_grid':b[0],'quadrature_field_error':qerr,'quadrature_relative':qrel},indent=2))

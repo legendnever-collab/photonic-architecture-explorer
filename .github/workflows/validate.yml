@@ -66,16 +66,26 @@ jobs:
         timeout-minutes: 2
         shell: bash
         run: |
-          rc=0
-          python scripts/m4c_planar_control.py || rc=$?
-          python scripts/check_m4c_stop.py "$rc"
+          python scripts/run_m4c_stop.py --output-dir results/runtime/m4c-legacy
           echo 'M4-C Control acceptance: FAIL (angular-bin error). Evidence collection: PASS. Actual device performance: Uncomputed.' >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: m4c-planar-reference-evidence
           path: |
-            results/m4c_*.json
-            results/m4c_fields_*.npz
+            results/runtime/m4c-legacy/
             docs/M4C_*.md
+            requirements-m4c.txt
+      - name: Verify M4-C.1 bounded Window convergence
+        timeout-minutes: 2
+        run: |
+          python scripts/m4c1_window_control.py --output-dir results/runtime/m4c1-window
+          echo 'M4-C.1 Synthetic Window verification: PASS. Actual Field/Overlap/Total Coupling/Package: Uncomputed.' >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: m4c1-window-reference-evidence
+          path: |
+            results/runtime/m4c1-window/
+            docs/M4C1_*.md
             requirements-m4c.txt
