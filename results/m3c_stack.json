@@ -1,0 +1,279 @@
+{
+  "scope": "read-only git merge-tree objects; no merge commit or branch mutation",
+  "main_sha": "fe730295672047878274d9013edc255b88d16ce2",
+  "base_pr": 5,
+  "base_head": "e07aa98ba11155dea4a9494e4d938905a42c0625",
+  "prs": [
+    {
+      "number": 1,
+      "head": "55de4c5f26d3bacc9e22ec64ba385de8acfc4dbe",
+      "base": "fe730295672047878274d9013edc255b88d16ce2",
+      "base_ref": "main",
+      "draft": true,
+      "mergeable": true,
+      "ci": [
+        {
+          "id": 42620976531,
+          "name": "M1 physics validation",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 2,
+          "jobs_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/runs/42620976531/jobs",
+          "logs_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/runs/42620976531/logs",
+          "workflow_id": 412081488
+        }
+      ],
+      "base_is_ancestor": true,
+      "merge_tree_exit_code": 0,
+      "merge_tree": "86a031e07b3060bccdff5bb1f63a3b92236f80ea",
+      "head_tree": "86a031e07b3060bccdff5bb1f63a3b92236f80ea",
+      "merge_tree_matches_head": true,
+      "changed_paths": [
+        ".github/workflows/validate.yml",
+        ".gitignore",
+        "AGENTS.md",
+        "README.md",
+        "docs/M1_BENCHMARK.md",
+        "docs/MVP_SCOPE.md",
+        "docs/NEXT_TASK.md",
+        "docs/PHYSICS.md",
+        "docs/REUSE_REVIEW.md",
+        "docs/VALIDATION.md",
+        "examples/m1_001.json",
+        "pyproject.toml",
+        "results/m1_001.json",
+        "results/unittest.txt",
+        "results/validation.json",
+        "scripts/validate.py",
+        "src/photonic_architecture_explorer/__init__.py",
+        "src/photonic_architecture_explorer/benchmark.py",
+        "src/photonic_architecture_explorer/gaussian.py",
+        "src/photonic_architecture_explorer/geometry.py",
+        "src/photonic_architecture_explorer/solver.py",
+        "tests/test_m1.py"
+      ]
+    },
+    {
+      "number": 2,
+      "head": "074930aab1b941d58c428b0644c1553dd23e9271",
+      "base": "55de4c5f26d3bacc9e22ec64ba385de8acfc4dbe",
+      "base_ref": "feature/m1-two-reflector",
+      "draft": true,
+      "mergeable": true,
+      "ci": [
+        {
+          "id": 42623160229,
+          "name": "Photonic physics validation",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 4,
+          "jobs_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/runs/42623160229/jobs",
+          "logs_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/runs/42623160229/logs",
+          "workflow_id": 412081488
+        }
+      ],
+      "base_is_ancestor": true,
+      "merge_tree_exit_code": 0,
+      "merge_tree": "00e578d3ea86df342dfc6456f2d73e7bf0af80b5",
+      "head_tree": "00e578d3ea86df342dfc6456f2d73e7bf0af80b5",
+      "merge_tree_matches_head": true,
+      "changed_paths": [
+        ".github/workflows/validate.yml",
+        "README.md",
+        "docs/M2_CONTRACT.md",
+        "docs/M2_RESULTS.md",
+        "docs/NEXT_TASK.md",
+        "results/m2_001.json",
+        "results/unittest.txt",
+        "results/validation.json",
+        "scripts/validate.py",
+        "src/photonic_architecture_explorer/diagnostics.py",
+        "tests/test_m2.py"
+      ]
+    },
+    {
+      "number": 3,
+      "head": "17bd1ad6bfa5715f6371fe0e41f52a6d1a93e199",
+      "base": "074930aab1b941d58c428b0644c1553dd23e9271",
+      "base_ref": "feature/m2-bounded-diagnostics",
+      "draft": true,
+      "mergeable": true,
+      "ci": [
+        {
+          "id": 42702995771,
+          "name": "Photonic physics validation",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 8,
+          "jobs_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/runs/42702995771/jobs",
+          "logs_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/runs/42702995771/logs",
+          "workflow_id": 412081488
+        }
+      ],
+      "base_is_ancestor": true,
+      "merge_tree_exit_code": 0,
+      "merge_tree": "31a34fff7c66fdb3a479ae24e65860796d7f8fa0",
+      "head_tree": "31a34fff7c66fdb3a479ae24e65860796d7f8fa0",
+      "merge_tree_matches_head": true,
+      "changed_paths": [
+        ".github/workflows/validate.yml",
+        "README.md",
+        "docs/EXTERNAL_PORT_CONTRACT.md",
+        "docs/M25_ASSESSMENT.md",
+        "docs/M25_CONTRACT.md",
+        "docs/NEXT_TASK.md",
+        "examples/external_ports_unprovided.json",
+        "results/m25_001.json",
+        "results/unittest.txt",
+        "results/validation.json",
+        "scripts/assess_m25.py",
+        "scripts/validate.py",
+        "src/photonic_architecture_explorer/applicability.py",
+        "tests/test_m25.py"
+      ]
+    },
+    {
+      "number": 4,
+      "head": "61bafc61d50b0c934e9fa17c4220bb44dbaf5b96",
+      "base": "17bd1ad6bfa5715f6371fe0e41f52a6d1a93e199",
+      "base_ref": "assessment/m25-external-port",
+      "draft": true,
+      "mergeable": true,
+      "ci": [
+        {
+          "id": 42705770777,
+          "name": "Photonic physics validation",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 10,
+          "jobs_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/runs/42705770777/jobs",
+          "logs_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/runs/42705770777/logs",
+          "workflow_id": 412081488
+        }
+      ],
+      "base_is_ancestor": true,
+      "merge_tree_exit_code": 0,
+      "merge_tree": "3431ba1b62b1a6700dbb3fec29479dbf535a0190",
+      "head_tree": "3431ba1b62b1a6700dbb3fec29479dbf535a0190",
+      "merge_tree_matches_head": true,
+      "changed_paths": [
+        ".github/workflows/validate.yml",
+        "README.md",
+        "docs/EXTERNAL_PORT_CONTRACT.md",
+        "docs/M3A_ADAPTER.md",
+        "docs/M3A_CONTRACT.md",
+        "docs/NEXT_TASK.md",
+        "examples/m3a_synthetic.json",
+        "pyproject.toml",
+        "results/m3a_001.json",
+        "results/unittest.txt",
+        "results/validation.json",
+        "scripts/assess_m3a.py",
+        "scripts/validate.py",
+        "src/photonic_architecture_explorer/external.py",
+        "src/photonic_architecture_explorer/package_geometry.py",
+        "tests/test_external.py"
+      ]
+    },
+    {
+      "number": 5,
+      "head": "e07aa98ba11155dea4a9494e4d938905a42c0625",
+      "base": "61bafc61d50b0c934e9fa17c4220bb44dbaf5b96",
+      "base_ref": "feature/m3a-external-adapter",
+      "draft": true,
+      "mergeable": true,
+      "ci": [
+        {
+          "id": 42757429094,
+          "name": "Photonic physics validation",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 12,
+          "jobs_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/runs/42757429094/jobs",
+          "logs_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/runs/42757429094/logs",
+          "workflow_id": 412081488
+        }
+      ],
+      "base_is_ancestor": true,
+      "merge_tree_exit_code": 0,
+      "merge_tree": "92b3744d8dd55ed0abc8f3e1e9d0de3140b456c4",
+      "head_tree": "92b3744d8dd55ed0abc8f3e1e9d0de3140b456c4",
+      "merge_tree_matches_head": true,
+      "changed_paths": [
+        ".github/workflows/validate.yml",
+        "README.md",
+        "docs/M3B_CONTRACT.md",
+        "docs/M3B_INSPECTOR.md",
+        "docs/NEXT_TASK.md",
+        "pyproject.toml",
+        "results/m3b-inspector.html",
+        "results/m3b_001.json",
+        "results/unittest.txt",
+        "results/validation.json",
+        "scripts/check_inspector.cjs",
+        "scripts/validate.py",
+        "src/photonic_architecture_explorer/inspector.py",
+        "tests/test_inspector.py"
+      ]
+    }
+  ],
+  "shared_paths": {
+    ".github/workflows/validate.yml": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "README.md": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "docs/NEXT_TASK.md": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "pyproject.toml": [
+      1,
+      4,
+      5
+    ],
+    "results/unittest.txt": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "results/validation.json": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "scripts/validate.py": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "docs/EXTERNAL_PORT_CONTRACT.md": [
+      3,
+      4
+    ]
+  },
+  "main_to_stack_tip": {
+    "exit_code": 0,
+    "tree": "92b3744d8dd55ed0abc8f3e1e9d0de3140b456c4",
+    "matches_pr5_tree": true
+  },
+  "status": "Pass"
+}

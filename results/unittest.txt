@@ -21,6 +21,7 @@ test_each_view_calls_adapter_and_never_caches_overlap (test_inspector.Inspector.
 test_html_escaping_and_static_controls (test_inspector.Inspector.test_html_escaping_and_static_controls) ... ok
 test_http_rejects_wrong_origin_host_and_invalid_bytes (test_inspector.Inspector.test_http_rejects_wrong_origin_host_and_invalid_bytes) ... ok
 test_http_valid_invalid_valid_edit_flow (test_inspector.Inspector.test_http_valid_invalid_valid_edit_flow) ... ok
+test_human_diagnostics_locate_rejected_or_missing_input (test_inspector.Inspector.test_human_diagnostics_locate_rejected_or_missing_input) ... ok
 test_input_group_roundtrip_missing_and_duplicate_data (test_inspector.Inspector.test_input_group_roundtrip_missing_and_duplicate_data) ... ok
 test_only_declared_common_frame_supported_boxes_are_displayed (test_inspector.Inspector.test_only_declared_common_frame_supported_boxes_are_displayed) ... ok
 test_projection_coordinates_equal_scale_and_chief_withholding (test_inspector.Inspector.test_projection_coordinates_equal_scale_and_chief_withholding) ... ok
@@ -59,6 +60,6 @@ test_residual_scale_is_not_loss_and_inputs_are_preserved (test_m25.ExternalDomai
 test_waist_guard_boundary_and_index_scaling (test_m25.ExternalDomainReferences.test_waist_guard_boundary_and_index_scaling) ... ok
 
 ----------------------------------------------------------------------
-Ran 59 tests in 1.657s
+Ran 60 tests in 1.499s
 
 OK

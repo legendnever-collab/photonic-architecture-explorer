@@ -1,26 +1,27 @@
-# M3-B handoff → M3-C proposal
+# M3-C handoff → M3-D conditional integration proposal
 
-M3-B: docs/M3B_INSPECTOR.md, results/m3b_001.json, results/m3b-inspector.html.
-Exact remote HEAD, CI and Artifacts must be recovered from the M3-B Draft PR.
-M3-B → PR #4 → PR #3 → PR #2 → PR #1 → Main; all remain Draft/unmerged.
-User Review is pending. Actual Applicability / Total Coupling remain Uncomputed.
+Read docs/M3C_REVIEW.md and docs/M3C_INTEGRATION_READINESS.md.
+M3-C → PR #5 → #4 → #3 → #2 → #1 → Main; all Draft/unmerged.
+Actual Applicability / Total Coupling / Full Finite-Beam Clearance remain Uncomputed.
 
-Recommended: Sol Work. 다음은 User Review와 Integration 준비이며 새 Physics가 아니다.
+다음은 **사용자가 화면 Review 후 Main 통합을 승인할 때** 보낼 지시문이다.
+작성 자체로 병합을 승인하거나 다음 작업을 자동 시작하지 않는다.
+Recommended: Sol Work. 기존 Stack 통합·Release 검증이며 새 Physics 작업이 아니다.
 
 ```text
-Photonic Architecture Explorer — M3-C
+Photonic Architecture Explorer — M3-D
 Recommended Mode: Sol Work
-Mission: User Review · Minimal Fixes · Integration Readiness
+Mission: Approved Stack Integration · Release Verification
 Repository: https://github.com/legendnever-collab/photonic-architecture-explorer
-Base: latest M3-B Draft PR; recover exact HEAD / CI / Artifacts.
+Base: latest M3-C Draft PR; recover exact HEAD / CI / Artifacts.
 
-AGENTS.md, docs/M3B_INSPECTOR.md, docs/M3A_ADAPTER.md, docs/NEXT_TASK.md를 읽어라.
-기존 Python/Browser 검증을 복구하고 사용자에게 Static HTML과 Local 실행 방법을 제공하라.
-기존 피드백이 있으면 우선 반영하고, 없으면 Engineering 작업 흐름을 실제로 검토하라.
-혼동을 주는 문제 최대 1개만 최소 수정하고, 회귀 검증을 수행하라.
-Fixed Ports / Physics / Fixtures / Guards / Adapter Contract / Uncomputed를 보존하라.
-Draft Stack의 의존 순서, 변경 범위, 충돌 및 통합 전 필수 검증을 정리하라.
-새 Solver / Optimizer / 추가 Optics / 자동 Topology를 시작하지 마라.
-별도 Draft PR과 정확한 HEAD / Tests / CI / Artifacts / 다음 제안을 채팅에 제출하라.
-Main 병합과 후속 개발 자동 시작은 하지 마라.
+AGENTS.md, docs/M3C_REVIEW.md, docs/M3C_INTEGRATION_READINESS.md를 읽어라.
+사용자 Review가 완료된 현재 Stack을 Main에 통합하라.
+원격 Snapshot·Diff·Tests·Browser CI·Artifact·충돌을 다시 확인한 후에만 병합한다.
+이력을 보존하며 PR #1부터 M3-C까지 의존 순서대로 병합하고,
+각 단계 뒤 다음 PR의 Base/Diff/CI를 확인한다. 검증 실패 시 중단하고 원인을 보고한다.
+Fixed Ports / Physics / Adapter / Fixtures / Guards / Uncomputed를 보존하라.
+최종 Main SHA에서 필수 검증과 HTML을 재생성하고 CI/Artifacts를 확인하라.
+정확한 Main SHA·통합 PR·검증 결과·사용 가능한 HTML·다음 제안을 제출하라.
+새 기능·새 Physics·다음 개발 자동 시작은 하지 마라.
 ```

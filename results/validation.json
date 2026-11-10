@@ -3,7 +3,7 @@
   "numpy": "2.3.5",
   "test_command": "python -m unittest discover -s tests -v",
   "test_exit_code": 0,
-  "evaluated_checkout_sha": "679c1fdf2d0ef9c1217eef9b545055893da812ba",
+  "evaluated_checkout_sha": "52b2ff56f55f0e42003a74151b94afb29f7af5c4",
   "checkout_dirty_before_run": true,
   "m25_actual_applicability": "Uncomputed",
   "m3a_adapter_gate": {
@@ -20,7 +20,7 @@
     "examples/m3a_synthetic.json": "a3c04f2d5d81248dcaffbfcfa57b4199894a1f2e90a1a30af62c851f29ed0faa",
     "scripts/assess_m25.py": "5981a3e6d00172bd5ed3646dc0d43725791c00a8d343c88bbed815cc440bb0dc",
     "scripts/assess_m3a.py": "fd674b3a22f8beb25fa835f62e619cb4e7a81da53155a107046cd53a563e5c8e",
-    "scripts/validate.py": "eb1cbf0fc318cf5df9bdbcd21b30d0643ec6ebb14d80e8371ae5b21b6d6f4df4",
+    "scripts/validate.py": "bc114dd60e57f0a351f967ec1cdaf7f4af1b9bfef4a8ab7198b85d5323245ccd",
     "src/photonic_architecture_explorer/__init__.py": "7e5bff7a68ccad603bf3ebc3cee6c760fd17290d1f5d5c8ce611fec41f50ca15",
     "src/photonic_architecture_explorer/applicability.py": "1d8866bb89b887e024beb9a432bc1476885e2b2cfcb5f1da91b0fd12c46e40c0",
     "src/photonic_architecture_explorer/benchmark.py": "2b6df43b6977b79292908879093ea79c4c28a668416f5bc21ac094070bd43e66",
@@ -28,11 +28,11 @@
     "src/photonic_architecture_explorer/external.py": "ac56803694784e942a816927d4b84e20fd9441166f5a02b78e16d8274710dabc",
     "src/photonic_architecture_explorer/gaussian.py": "908e84962d8b5ee5be793108eaf3491ddb9465b77e51ff2817d52e5caf06261d",
     "src/photonic_architecture_explorer/geometry.py": "67af248571a4ccbde2e387462b365b13dfc6b43198e65473687a5db466f0b6f2",
-    "src/photonic_architecture_explorer/inspector.py": "fa869111405f8d32f571b29b348297fcc61978aaa7fc54b486b96b7ec82fb564",
+    "src/photonic_architecture_explorer/inspector.py": "aa91eb97ce8ad4b271654f7aa333de3bbf815ca02d1e436fd8c1f4ebb18df67f",
     "src/photonic_architecture_explorer/package_geometry.py": "dd5015af492087db9c65b2997408035b7bea8567c431faa7c9fc1d250e5367d9",
     "src/photonic_architecture_explorer/solver.py": "3255b530cc41b984d3bce1ccfded62796775f9ec1fd8f5974f037ad7ee136b51",
     "tests/test_external.py": "9184307c5d47e0b5a15528492d1722776ba39a0de4787f5e99d4dd02ad37ef23",
-    "tests/test_inspector.py": "ef384ad5cf42b44469565aae8d5590590ec813812665689cccf9a35cfb18339b",
+    "tests/test_inspector.py": "da155d6bc4a070f905b8b647b9ab9c48a488cd9cbfd08818c2eaf7029f76c5a8",
     "tests/test_m1.py": "531db2f3c7356e513a3c87967f54f9f63add8abc7446a4f48f1238207233e7ac",
     "tests/test_m2.py": "abdb125eb62a06bdc717bd4a26ea4d35fd5f78b3da4283e15c6e2c32bc2a8b4c",
     "tests/test_m25.py": "dcd9c1c682c2d9040b7db77ac60ae857490235e2cd6e044b5e6e588556979275",
@@ -45,7 +45,9 @@
     "docs/M3A_CONTRACT.md": "548c29289fcaa39161e39e0176698de518974910da6895aa9c33210d58825850",
     "docs/M3A_ADAPTER.md": "d801c63430502a6866495e6bc2f54ea37464725f409c6d3029e7539ddb6051d6",
     "docs/M3B_CONTRACT.md": "e12174309ff43245d174e1ffbfc8d3ee304ac07254a1f516d9ef3c5e544fa593",
-    "scripts/check_inspector.cjs": "dcc2d6f84a12f287c0f6aa32234a5ea058dc3d98ec7e6d6189b555f104d65f71",
+    "docs/M3C_REVIEW.md": "e0a351389f1ed3bc8278679a8d28550e0a997ab6db2347a2368326a18ab8c4d4",
+    "docs/M3C_INTEGRATION_READINESS.md": "c7122009c0a6195f1469fdaaf931522fc608929d20e05b44f0aec0666471f093",
+    "scripts/check_inspector.cjs": "dbf36cb05e0ef00b1a5e8d5d2bb6daa4f03f1870a57e6d4cd54cbae577d2e4e0",
     ".github/workflows/validate.yml": "c3eb9c69163eee30aa2310935eb8cd7b0f1fff83f4ea91a5b8543a7d6f85e43d"
   }
 }

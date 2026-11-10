@@ -25,9 +25,31 @@ const assert = require('node:assert/strict');
   assert.equal(await page.locator('[data-overlap-value]:visible').count(),0,key);
   assert.equal(await active().locator('[data-overlap-withheld]').count(),1,key);
   if(key==='target-direction')assert.equal(await active().locator('[data-kind=verified-chief]').count(),0);
+  const inputPath={'bad-unit':'source.position_m','blank':'wavelength_m','missing-phase':'source'}[key];
+  if(inputPath){
+   const reason=active().locator('.results details').filter({hasText:'판정 근거 / 미계산 항목'});
+   await reason.locator('summary').click();
+   assert.equal(await reason.locator('code.issue-path').innerText(),inputPath);
+   assert.equal(await reason.locator('code.issue-path').isVisible(),true);
+  }
   await page.selectOption('#case-select','nominal');
   assert.equal(await page.locator('[data-overlap-value]:visible').count(),1);
  }report.checks.push('7 invalid/unprovided cases with no previous overlap; nominal restored each time');
+ report.checks.push('human diagnostics expose exact Adapter input path for unit/missing-data failures');
+ // Engineering recovery: locate the rejected field, correct its unit, reevaluate.
+ await page.selectOption('#case-select','bad-unit');
+ await page.screenshot({path:'results/inspector_input_diagnostic_desktop.png',fullPage:true});
+ await active().locator('details').filter({has:page.locator('textarea[name=ports]')}).locator('summary').click();
+ const fixedUnit=JSON.parse(await active().locator('textarea[name=ports]').inputValue());
+ fixedUnit.source.position_m.unit='m';
+ await active().locator('textarea[name=ports]').fill(JSON.stringify(fixedUnit,null,2));
+ assert.equal(await page.locator('[data-overlap-value]:visible').count(),0);
+ await active().locator('button[type=submit]').click();
+ await page.waitForURL('**/evaluate');
+ assert.equal(await active().locator('[data-overlap-value]').innerText(),'1');
+ assert.deepEqual(JSON.parse(await active().locator('textarea[name=ports]').inputValue()),nominalPorts);
+ report.checks.push('bad unit → visible source.position_m → explicit unit correction → overlap restored with identical Ports');
+ await page.goto('http://127.0.0.1:8765');
  // Open editor, change one design variable, ensure stale output disappears BEFORE submit.
  await active().locator('details').filter({has:page.locator('textarea[name=reflectors]')}).locator('summary').click();
  let text=await active().locator('textarea[name=reflectors]').inputValue();
@@ -50,6 +72,9 @@ const assert = require('node:assert/strict');
  await page.waitForLoadState('load');
  assert.equal(await page.locator('[data-overlap-value]').count(),0);
  assert((await active().innerText()).includes('Input Contract'));
+ const syntaxReason=active().locator('.results details').filter({hasText:'판정 근거 / 미계산 항목'});
+ await syntaxReason.locator('summary').click();
+ assert.equal(await syntaxReason.locator('code.issue-path').innerText(),'JSON editor');
  await active().locator('details').filter({has:page.locator('textarea[name=ports]')}).locator('summary').click();
  await active().locator('textarea[name=ports]').fill(savedPorts);
  await active().locator('button[type=submit]').click();
@@ -59,8 +84,14 @@ const assert = require('node:assert/strict');
  await page.goto('http://127.0.0.1:8765');
  await page.setViewportSize({width:393,height:852});
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true);
- for(const key of ['nominal','package-fail','blank']){
+ for(const key of ['nominal','package-fail','blank','bad-unit']){
   await page.selectOption('#case-select',key);
+  if(key==='bad-unit'){
+   const reason=active().locator('.results details').filter({hasText:'판정 근거 / 미계산 항목'});
+   await reason.locator('summary').click();
+   assert.equal(await reason.locator('code.issue-path').innerText(),'source.position_m');
+   await page.screenshot({path:'results/inspector_input_diagnostic_mobile.png',fullPage:true});
+  }
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true,key);
  }
  await page.selectOption('#case-select','nominal');
@@ -72,6 +103,11 @@ const assert = require('node:assert/strict');
  assert.equal(await page.locator('[data-overlap-value]:visible').count(),0);
  await page.selectOption('#projection-select','YZ');
  assert.equal(await page.locator('article:visible .projection:visible').count(),1);
+ await page.selectOption('#case-select','bad-unit');
+ const staticReason=active().locator('.results details').filter({hasText:'판정 근거 / 미계산 항목'});
+ await staticReason.locator('summary').click();
+ assert.equal(await staticReason.locator('code.issue-path').innerText(),'source.position_m');
+ await page.screenshot({path:'results/inspector_input_diagnostic_static.png',fullPage:true});
  report.checks.push('portable static HTML file: case/projection selection without server');
  assert.deepEqual(errors,[]);report.page_errors=errors;report.status='Pass';
  fs.writeFileSync('results/m3b_browser.json',JSON.stringify(report,null,2)+'\n');

@@ -54,6 +54,7 @@ def main():
               ROOT/'docs/M25_CONTRACT.md', ROOT/'docs/EXTERNAL_PORT_CONTRACT.md',
               ROOT/'docs/M25_ASSESSMENT.md', ROOT/'docs/M3A_CONTRACT.md',
               ROOT/'docs/M3A_ADAPTER.md', ROOT/'docs/M3B_CONTRACT.md',
+              ROOT/'docs/M3C_REVIEW.md', ROOT/'docs/M3C_INTEGRATION_READINESS.md',
               ROOT/'scripts/check_inspector.cjs', ROOT/'.github/workflows/validate.yml']
     import numpy
     evidence = {'python': platform.python_version(), 'numpy': numpy.__version__,
