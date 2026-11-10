@@ -1,37 +1,55 @@
-# M2 handoff — Port applicability before further performance claims
+# M2.5 handoff → M3-A
 
-M1: Draft PR #1, HEAD 55de4c5f26d3bacc9e22ec64ba385de8acfc4dbe.
-M2: feature/m2-bounded-diagnostics, stacked on M1; keep both Draft/unmerged.
-Recover exact remote HEAD/CI/artifacts before continuing. Read M2_CONTRACT.md,
-M2_RESULTS.md and results/m2_001.json. Run scripts/validate.py.
+M2.5 결과: docs/M25_ASSESSMENT.md, External Contract: docs/EXTERNAL_PORT_CONTRACT.md.
+Actual applicability / total coupling / package feasibility = Uncomputed.
+Path B is the development-path decision; no claim a particular SSC requires it.
 
-Implemented: individual curvature ±1%; actual quadratic-patch chief-ray tracing
-for ±5 µm individual placement; finite wavefront-normal ray fan and linear
-residuals. Independent Newton surface-intersection tests. No extra optics.
-M1 fixture/solver remains unchanged.
+Recommended: Sol Work for adapter/geometry/result boundary. A new off-vertex
+physics formulation is a separate Astra checkpoint, not automatic M3 scope.
+Stack: M2.5 → M2 Draft PR #2 → M1 Draft PR #1 → Main. No merges authorized.
+Recover exact remote SHA, CI and evidence artifacts before continuing.
 
-Key limitation: Curved 2w fan max nonlinear position residual ~2.680 µm.
-This is a geometric diagnostic, not a finite-field coupling reference. Placement
-Gaussian overlap, total coupling, physical losses, fabrication/yield and actual
-SSC applicability remain Uncomputed.
+## Copyable work order
 
-Next recommended checkpoint: external Port applicability decision. Sol can
-handle known-input contract/checking. Use Astra for assessing a new off-vertex
-Gaussian/field handoff if needed; do not implement that handoff automatically.
-Obtain non-confidential Source/Target external MFD_t/MFD_s, phase curvature,
-ambient, wavelength, positions/directions and allowed package/curvature ranges.
-Use ranges if exact values are unavailable; label estimates explicitly.
-If inputs are still unavailable, preserve Uncomputed instead of inventing actual
-SSC values. Model-domain rejection is not proof architecture is impossible.
+```text
+Photonic Architecture Explorer — M3-A
+Recommended Mode: Sol Work
+Mission: External Input Adapter · Fixed-Port Geometry · Result Contract
+Repository: https://github.com/legendnever-collab/photonic-architecture-explorer
+Base: latest M2.5 Draft PR on assessment/m25-external-port; recover exact HEAD first.
 
-Copyable next instruction:
+Read AGENTS.md, docs/EXTERNAL_PORT_CONTRACT.md, docs/M25_ASSESSMENT.md and
+M1/M2 frozen contracts. Recover Main/stacked PRs/CI/artifacts; rerun validation.
+Preserve all validated kernels, fixtures and guard values. Do not merge Main.
 
-    Photonic Architecture Explorer — external Port applicability gate
-    Recommended Model: Sol Work (Astra only for new physics formulation).
-    Recover current M2 Draft PR HEAD, CI and artifacts.
-    Read AGENTS.md, docs/NEXT_TASK.md and docs/M2_RESULTS.md.
-    Using explicitly provided non-confidential external Port ranges, assess
-    divergence/domain and finite-footprint residual significance. Preserve fixed
-    Ports and M1/M2 benchmarks. If inputs are absent, list required inputs and
-    retain actual applicability as Uncomputed. Propose the smallest next change;
-    no topology synthesis, new optics, general solver or Main merge.
+Implement the smallest UI-independent adapter from the external Contract to
+existing immutable Port/Reflector/evaluate. Explicit MFD+phase OR complex q;
+validate both if both supplied. No default waist, actual mode, ambient or package.
+Validate units/frame/reference plane/polarization assumptions/provenance. Do not
+accept guided n_eff as external ambient. Missing inputs remain Uncomputed.
+
+Use supplied non-confidential inputs if present, otherwise synthetic controls
+and the blank sheet. Keep actual applicability Uncomputed without real inputs.
+Separate Geometry, Gaussian domain, approximate normalized Mode Overlap,
+package feasibility and physical losses. Never create total coupling from overlap.
+
+Support exactly two coplanar aligned reflectors. Define vertices with source and
+backward-target axis distances, or validate explicitly supplied vertices. Check
+fixed-port closure and declared curvature/aperture/position bounds. Implement
+only a bounded world-AABB/explicit-envelope package representation with honest
+scope: unsupported solids or absent envelopes -> package feasibility Uncomputed;
+point containment alone must not become full-clearance Pass. No optimizer.
+
+Run independent controls for phase/q conversions, fixed Port invariance, invalid
+units/axes/high divergence, missing input, bounds failures, and no performance on
+invalid/uncomputed physics. Reuse existing evaluate; do not implement off-vertex
+handoff, finite-field propagation, extra optics or new topology synthesis.
+
+After adapter/result gates pass, propose a minimal M3-B 2D inspector with fixed
+ports, chief path, surfaces and separate state labels. Do not build the UI in M3-A.
+If new physics is needed, preserve evidence and propose a bounded Astra task.
+
+Create a separate Draft PR stacked on M2.5. Submit exact SHA, tests, CI/artifacts,
+unchanged baseline evidence, remaining limits and the next copyable work order
+in the chat. No Main merge or automatic M3-B start.
+```

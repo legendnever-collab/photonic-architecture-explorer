@@ -1,0 +1,127 @@
+{
+  "assessment_id": "M25-001",
+  "units": "m, rad, inverse m, dimensionless n",
+  "synthetic_inputs": {
+    "fixture": "examples/m1_001.json",
+    "assumptions": "fixed M1 waist fields, homogeneous ambient, scalar paraxial; not actual SSC data"
+  },
+  "base_m2_sha": "074930aab1b941d58c428b0644c1553dd23e9271",
+  "actual_applicability": {
+    "status": "Uncomputed",
+    "missing_inputs": [
+      "wavelength_m",
+      "ambient_index",
+      "source.position_m",
+      "source.propagation_direction",
+      "source.sagittal_axis",
+      "source.mfd_ts_m",
+      "source.wavefront_curvature_ts_per_m",
+      "source.complex_q_ts_m",
+      "source.polarization",
+      "source.reference_plane",
+      "source.mode_evidence",
+      "target.position_m",
+      "target.propagation_direction",
+      "target.sagittal_axis",
+      "target.mfd_ts_m",
+      "target.wavefront_curvature_ts_per_m",
+      "target.complex_q_ts_m",
+      "target.polarization",
+      "target.reference_plane",
+      "target.mode_evidence",
+      "package.available_volume",
+      "package.keepout_bodies",
+      "package.required_clearance_m",
+      "package.frame_id",
+      "reflectors[0].vertex_bounds_m",
+      "reflectors[0].normal_constraints",
+      "reflectors[0].principal_curvature_bounds_per_m",
+      "reflectors[0].half_aperture_bounds_m",
+      "reflectors[0].surface_prescription",
+      "reflectors[0].body_envelope",
+      "reflectors[1].vertex_bounds_m",
+      "reflectors[1].normal_constraints",
+      "reflectors[1].principal_curvature_bounds_per_m",
+      "reflectors[1].half_aperture_bounds_m",
+      "reflectors[1].surface_prescription",
+      "reflectors[1].body_envelope"
+    ]
+  },
+  "development_decision": {
+    "path": "B",
+    "meaning": "bounded extension required for engineering goal; actual applicability not decided"
+  },
+  "synthetic_port_precheck": {
+    "status": "Pass",
+    "scope": "per-Port divergence precheck only",
+    "reason": "inside divergence guard only",
+    "axes": [
+      {
+        "radius_m": 8e-06,
+        "curvature_per_m": 0.0,
+        "waist_radius_m": 8e-06,
+        "waist_distance_m": 0.0,
+        "rayleigh_range_m": 0.00015348238918301278,
+        "divergence_rad": 0.052123243862595724
+      },
+      {
+        "radius_m": 1.2e-05,
+        "curvature_per_m": 0.0,
+        "waist_radius_m": 1.2e-05,
+        "waist_distance_m": 0.0,
+        "rayleigh_range_m": 0.0003453353756617788,
+        "divergence_rad": 0.034748829241730485
+      }
+    ],
+    "max_divergence_rad": 0.1
+  },
+  "synthetic_waist_mfd_guard_min_m": 8.339719018015316e-06,
+  "guard_note": "waist only, homogeneous ambient, each axis; necessary not sufficient",
+  "finite_footprint_scale": [
+    {
+      "extent_beam_radii": 0.5,
+      "status": "Computed",
+      "norm_residual_m": 5.964402935526035e-08,
+      "norm_over_axis_radius": [
+        0.007455503669407544,
+        0.004970335779605029
+      ],
+      "meaning": "dimensionless scale comparison, not axis-resolved displacement or coupling loss"
+    },
+    {
+      "extent_beam_radii": 1.0,
+      "status": "Computed",
+      "norm_residual_m": 3.801723618448542e-07,
+      "norm_over_axis_radius": [
+        0.047521545230606775,
+        0.03168103015373785
+      ],
+      "meaning": "dimensionless scale comparison, not axis-resolved displacement or coupling loss"
+    },
+    {
+      "extent_beam_radii": 2.0,
+      "status": "Computed",
+      "norm_residual_m": 2.6796482990801002e-06,
+      "norm_over_axis_radius": [
+        0.33495603738501256,
+        0.22330402492334167
+      ],
+      "meaning": "dimensionless scale comparison, not axis-resolved displacement or coupling loss"
+    }
+  ],
+  "actual_finite_footprint_significance": {
+    "status": "Uncomputed",
+    "reason": "M2 residual cannot transfer to different modes or geometry"
+  },
+  "geometry_package": {
+    "status": "Uncomputed",
+    "reason": "no available volume, body or reflector constraints supplied"
+  },
+  "actual_mode_gaussian_fit": {
+    "status": "Uncomputed",
+    "reason": "no complex external field or fit reference"
+  },
+  "total_coupling": {
+    "status": "Uncomputed"
+  }
+}

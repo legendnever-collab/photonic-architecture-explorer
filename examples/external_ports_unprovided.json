@@ -1,0 +1,268 @@
+{
+  "contract_version": "M25-1",
+  "coordinate_convention": "right-handed world XYZ; t=s cross d; target d is arriving direction",
+  "wavelength_m": {
+    "value": null,
+    "unit": "vacuum m",
+    "provenance": "unprovided",
+    "source": null,
+    "uncertainty": null
+  },
+  "ambient_index": {
+    "value": null,
+    "unit": "positive real external homogeneous index",
+    "provenance": "unprovided",
+    "source": null,
+    "uncertainty": null
+  },
+  "source": {
+    "position_m": {
+      "value": null,
+      "unit": "m [x,y,z]",
+      "provenance": "unprovided",
+      "source": null,
+      "uncertainty": null
+    },
+    "propagation_direction": {
+      "value": null,
+      "unit": "unit vector [x,y,z]",
+      "provenance": "unprovided",
+      "source": null,
+      "uncertainty": null
+    },
+    "sagittal_axis": {
+      "value": null,
+      "unit": "unit vector [x,y,z]",
+      "provenance": "unprovided",
+      "source": null,
+      "uncertainty": null
+    },
+    "mfd_ts_m": {
+      "value": null,
+      "unit": "m [t,s], 1/e^2 intensity diameter",
+      "provenance": "unprovided",
+      "source": null,
+      "uncertainty": null
+    },
+    "wavefront_curvature_ts_per_m": {
+      "value": null,
+      "unit": "inverse m [t,s]",
+      "provenance": "unprovided",
+      "source": null,
+      "uncertainty": null
+    },
+    "complex_q_ts_m": {
+      "value": null,
+      "unit": "m [[real,imag],[real,imag]], alternative to MFD+curvature",
+      "provenance": "unprovided",
+      "source": null,
+      "uncertainty": null
+    },
+    "polarization": {
+      "value": null,
+      "unit": "complex Jones [t,s] or explicit scalar-ignored assumption",
+      "provenance": "unprovided",
+      "source": null,
+      "uncertainty": null
+    },
+    "reference_plane": {
+      "value": null,
+      "unit": "id and external side, origin=position, normal=propagation_direction",
+      "provenance": "unprovided",
+      "source": null,
+      "uncertainty": null
+    },
+    "mode_evidence": {
+      "value": null,
+      "unit": "external complex field/fit at named plane; measured/simulated/assumed",
+      "provenance": "unprovided",
+      "source": null,
+      "uncertainty": null
+    }
+  },
+  "target": {
+    "position_m": {
+      "value": null,
+      "unit": "m [x,y,z]",
+      "provenance": "unprovided",
+      "source": null,
+      "uncertainty": null
+    },
+    "propagation_direction": {
+      "value": null,
+      "unit": "unit vector [x,y,z]",
+      "provenance": "unprovided",
+      "source": null,
+      "uncertainty": null
+    },
+    "sagittal_axis": {
+      "value": null,
+      "unit": "unit vector [x,y,z]",
+      "provenance": "unprovided",
+      "source": null,
+      "uncertainty": null
+    },
+    "mfd_ts_m": {
+      "value": null,
+      "unit": "m [t,s], 1/e^2 intensity diameter",
+      "provenance": "unprovided",
+      "source": null,
+      "uncertainty": null
+    },
+    "wavefront_curvature_ts_per_m": {
+      "value": null,
+      "unit": "inverse m [t,s]",
+      "provenance": "unprovided",
+      "source": null,
+      "uncertainty": null
+    },
+    "complex_q_ts_m": {
+      "value": null,
+      "unit": "m [[real,imag],[real,imag]], alternative to MFD+curvature",
+      "provenance": "unprovided",
+      "source": null,
+      "uncertainty": null
+    },
+    "polarization": {
+      "value": null,
+      "unit": "complex Jones [t,s] or explicit scalar-ignored assumption",
+      "provenance": "unprovided",
+      "source": null,
+      "uncertainty": null
+    },
+    "reference_plane": {
+      "value": null,
+      "unit": "id and external side, origin=position, normal=propagation_direction",
+      "provenance": "unprovided",
+      "source": null,
+      "uncertainty": null
+    },
+    "mode_evidence": {
+      "value": null,
+      "unit": "external complex field/fit at named plane; measured/simulated/assumed",
+      "provenance": "unprovided",
+      "source": null,
+      "uncertainty": null
+    }
+  },
+  "package": {
+    "available_volume": {
+      "value": null,
+      "unit": "m, closed world-coordinate AABB or explicit solid",
+      "provenance": "unprovided",
+      "source": null,
+      "uncertainty": null
+    },
+    "keepout_bodies": {
+      "value": null,
+      "unit": "m, explicit solid list (empty requires explicit assumption)",
+      "provenance": "unprovided",
+      "source": null,
+      "uncertainty": null
+    },
+    "required_clearance_m": {
+      "value": null,
+      "unit": "m nonnegative",
+      "provenance": "unprovided",
+      "source": null,
+      "uncertainty": null
+    },
+    "frame_id": {
+      "value": null,
+      "unit": "common world frame and transform origin",
+      "provenance": "unprovided",
+      "source": null,
+      "uncertainty": null
+    }
+  },
+  "reflectors": [
+    {
+      "vertex_bounds_m": {
+        "value": null,
+        "unit": "m [[min_xyz],[max_xyz]]",
+        "provenance": "unprovided",
+        "source": null,
+        "uncertainty": null
+      },
+      "normal_constraints": {
+        "value": null,
+        "unit": "unit vectors or angular bounds rad",
+        "provenance": "unprovided",
+        "source": null,
+        "uncertainty": null
+      },
+      "principal_curvature_bounds_per_m": {
+        "value": null,
+        "unit": "inverse m [[t_min,t_max],[s_min,s_max]], signed",
+        "provenance": "unprovided",
+        "source": null,
+        "uncertainty": null
+      },
+      "half_aperture_bounds_m": {
+        "value": null,
+        "unit": "m [[t_min,t_max],[s_min,s_max]]",
+        "provenance": "unprovided",
+        "source": null,
+        "uncertainty": null
+      },
+      "surface_prescription": {
+        "value": null,
+        "unit": "quadratic patch or supported explicit prescription",
+        "provenance": "unprovided",
+        "source": null,
+        "uncertainty": null
+      },
+      "body_envelope": {
+        "value": null,
+        "unit": "m explicit backing/support solid",
+        "provenance": "unprovided",
+        "source": null,
+        "uncertainty": null
+      }
+    },
+    {
+      "vertex_bounds_m": {
+        "value": null,
+        "unit": "m [[min_xyz],[max_xyz]]",
+        "provenance": "unprovided",
+        "source": null,
+        "uncertainty": null
+      },
+      "normal_constraints": {
+        "value": null,
+        "unit": "unit vectors or angular bounds rad",
+        "provenance": "unprovided",
+        "source": null,
+        "uncertainty": null
+      },
+      "principal_curvature_bounds_per_m": {
+        "value": null,
+        "unit": "inverse m [[t_min,t_max],[s_min,s_max]], signed",
+        "provenance": "unprovided",
+        "source": null,
+        "uncertainty": null
+      },
+      "half_aperture_bounds_m": {
+        "value": null,
+        "unit": "m [[t_min,t_max],[s_min,s_max]]",
+        "provenance": "unprovided",
+        "source": null,
+        "uncertainty": null
+      },
+      "surface_prescription": {
+        "value": null,
+        "unit": "quadratic patch or supported explicit prescription",
+        "provenance": "unprovided",
+        "source": null,
+        "uncertainty": null
+      },
+      "body_envelope": {
+        "value": null,
+        "unit": "m explicit backing/support solid",
+        "provenance": "unprovided",
+        "source": null,
+        "uncertainty": null
+      }
+    }
+  ]
+}

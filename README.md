@@ -74,3 +74,13 @@ Newton-surface references verify exact patch intersections. 26 tests pass.
 finite fan은 linear reference에 비해 최대 2.680 µm의 위치 차이를 보입니다.
 이는 field coupling 또는 full-aperture worst case가 아닙니다. Placement별
 Gaussian overlap 및 actual SSC 적용성은 Uncomputed로 유지합니다.
+
+## M2.5 external Port applicability gate
+
+[External input contract](docs/EXTERNAL_PORT_CONTRACT.md)과
+[Physics applicability / M3 readiness](docs/M25_ASSESSMENT.md)를 추가했습니다.
+실제 Port/Package 입력은 전부 미제공이므로 실제 Applicability는 Uncomputed입니다.
+Path B는 최종 Engineering 목표 대비 최소 확장 경로이며 실물 성능 판정이 아닙니다.
+`python scripts/validate.py`가 `results/m25_001.json`도 생성합니다.
+추가 per-Port check는 divergence만 검사하며 full external adapter는 M3-A 범위입니다.
+[다음 개발 지시문](docs/NEXT_TASK.md)을 참조하세요.
