@@ -1,29 +1,37 @@
-# M1 handoff / minimal M2 recommendation
+# M2 handoff — Port applicability before further performance claims
 
-M1 model gate: Pass. Keep Draft PR until user review; do not merge automatically.
-Before continuing, recover current branch/HEAD, CI and results/validation.json.
-The frozen fixture and negative cases must remain reproducible.
+M1: Draft PR #1, HEAD 55de4c5f26d3bacc9e22ec64ba385de8acfc4dbe.
+M2: feature/m2-bounded-diagnostics, stacked on M1; keep both Draft/unmerged.
+Recover exact remote HEAD/CI/artifacts before continuing. Read M2_CONTRACT.md,
+M2_RESULTS.md and results/m2_001.json. Run scripts/validate.py.
 
-Recommended M2: **Fixed architecture applicability and sensitivity**, not more
-architectures or optics. Sol is suitable for scoped implementation; use deeper
-physics review only if actual Port data invalidate the current domain.
+Implemented: individual curvature ±1%; actual quadratic-patch chief-ray tracing
+for ±5 µm individual placement; finite wavefront-normal ray fan and linear
+residuals. Independent Newton surface-intersection tests. No extra optics.
+M1 fixture/solver remains unchanged.
 
-1. Define a non-confidential external Port specification: position/direction,
-   wavelength, ambient, both mode radii AND phase, acceptable curvature/aperture
-   ranges. Do not substitute a guided-mode index for the external medium.
-2. First run domain checks. If actual SSC divergence exceeds the supported range,
-   report the minimum missing external-field adapter/reference and stop that
-   performance claim. Do not enlarge the paraxial limits to force a result.
-3. On this same two-reflector architecture, add small, bounded principal-curvature
-   and placement perturbations, preserving Port invariance and classifying
-   geometry failures separately from Mode mismatch. A displaced vertex requires
-   real ray/surface intersection; never move the Ports to close the path.
-4. Before using nominal η to rank real designs, validate finite-beam aberration
-   with a bounded bundle of exact rays on the existing local surface model.
-   This is the minimum check beyond the M1 vertex limit; do not add a general
-   optical CAD, full freeform optimizer or Maxwell engine.
+Key limitation: Curved 2w fan max nonlinear position residual ~2.680 µm.
+This is a geometric diagnostic, not a finite-field coupling reference. Placement
+Gaussian overlap, total coupling, physical losses, fabrication/yield and actual
+SSC applicability remain Uncomputed.
 
-Proposed first checkpoint: recover M1, define M2 input contract and perturbation
-budget/acceptance criteria. Implement only after those inputs are concrete.
-Physical losses/total coupling/fabrication remain Uncomputed unless separately
-specified and validated. No claim about patent novelty follows from M1 or M2.
+Next recommended checkpoint: external Port applicability decision. Sol can
+handle known-input contract/checking. Use Astra for assessing a new off-vertex
+Gaussian/field handoff if needed; do not implement that handoff automatically.
+Obtain non-confidential Source/Target external MFD_t/MFD_s, phase curvature,
+ambient, wavelength, positions/directions and allowed package/curvature ranges.
+Use ranges if exact values are unavailable; label estimates explicitly.
+If inputs are still unavailable, preserve Uncomputed instead of inventing actual
+SSC values. Model-domain rejection is not proof architecture is impossible.
+
+Copyable next instruction:
+
+    Photonic Architecture Explorer — external Port applicability gate
+    Recommended Model: Sol Work (Astra only for new physics formulation).
+    Recover current M2 Draft PR HEAD, CI and artifacts.
+    Read AGENTS.md, docs/NEXT_TASK.md and docs/M2_RESULTS.md.
+    Using explicitly provided non-confidential external Port ranges, assess
+    divergence/domain and finite-footprint residual significance. Preserve fixed
+    Ports and M1/M2 benchmarks. If inputs are absent, list required inputs and
+    retain actual applicability as Uncomputed. Propose the smallest next change;
+    no topology synthesis, new optics, general solver or Main merge.

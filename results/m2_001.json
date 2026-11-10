@@ -1,0 +1,635 @@
+{
+  "benchmark_id": "M2-001",
+  "actual_ssc_applicability": {
+    "status": "Uncomputed",
+    "reason": "actual external Port specification not supplied"
+  },
+  "curvature_cases": [
+    {
+      "mirror": 1,
+      "axis": "t",
+      "fraction": -0.01,
+      "geometry": "Pass",
+      "domain": "Pass",
+      "mode_matching": {
+        "status": "Pass",
+        "meaning": "computed within model, not a product efficiency requirement",
+        "normalized_mode_overlap": 0.9994445373330456,
+        "log_overlap": -0.0005556169934926025,
+        "mismatch_db": 0.0024130139432551223,
+        "underflow": false,
+        "output_axes": [
+          {
+            "radius_m": 7.937133188694513e-06,
+            "curvature_per_m": -425.51149777263,
+            "waist_radius_m": 7.92078293360756e-06,
+            "waist_distance_m": 9.67235022201877e-06,
+            "rayleigh_range_m": 0.00015045783232217177,
+            "divergence_rad": 0.05264453708629123
+          },
+          {
+            "radius_m": 1.2000000000000002e-05,
+            "curvature_per_m": -1.8182689838351328e-12,
+            "waist_radius_m": 1.2000000000000002e-05,
+            "waist_distance_m": 2.168404344971009e-19,
+            "rayleigh_range_m": 0.0003453353756617789,
+            "divergence_rad": 0.03474882924173048
+          }
+        ]
+      }
+    },
+    {
+      "mirror": 1,
+      "axis": "t",
+      "fraction": 0.01,
+      "geometry": "Pass",
+      "domain": "Pass",
+      "mode_matching": {
+        "status": "Pass",
+        "meaning": "computed within model, not a product efficiency requirement",
+        "normalized_mode_overlap": 0.9994445373330456,
+        "log_overlap": -0.0005556169934926025,
+        "mismatch_db": 0.0024130139432551223,
+        "underflow": false,
+        "output_axes": [
+          {
+            "radius_m": 8.096794628436363e-06,
+            "curvature_per_m": 400.4119850543076,
+            "waist_radius_m": 8.08079836965664e-06,
+            "waist_distance_m": -9.858231460918316e-06,
+            "rayleigh_range_m": 0.00015659832699395986,
+            "divergence_rad": 0.05160207343701905
+          },
+          {
+            "radius_m": 1.2000000000000002e-05,
+            "curvature_per_m": -1.8182689838351328e-12,
+            "waist_radius_m": 1.2000000000000002e-05,
+            "waist_distance_m": 2.168404344971009e-19,
+            "rayleigh_range_m": 0.0003453353756617789,
+            "divergence_rad": 0.03474882924173048
+          }
+        ]
+      }
+    },
+    {
+      "mirror": 1,
+      "axis": "s",
+      "fraction": -0.01,
+      "geometry": "Pass",
+      "domain": "Pass",
+      "mode_matching": {
+        "status": "Pass",
+        "meaning": "computed within model, not a product efficiency requirement",
+        "normalized_mode_overlap": 0.9998687190793938,
+        "log_overlap": -0.00013128953870056304,
+        "mismatch_db": 0.0005701832218927795,
+        "underflow": false,
+        "output_axes": [
+          {
+            "radius_m": 7.999999999999998e-06,
+            "curvature_per_m": 9.204986730665375e-12,
+            "waist_radius_m": 7.999999999999998e-06,
+            "waist_distance_m": -2.168404344971009e-19,
+            "rayleigh_range_m": 0.00015348238918301273,
+            "divergence_rad": 0.05212324386259573
+          },
+          {
+            "radius_m": 1.1885080904788454e-05,
+            "curvature_per_m": -76.24472165384866,
+            "waist_radius_m": 1.1881118669897797e-05,
+            "waist_distance_m": 8.743511580488333e-06,
+            "rayleigh_range_m": 0.00033852694687497385,
+            "divergence_rad": 0.03509652268327632
+          }
+        ]
+      }
+    },
+    {
+      "mirror": 1,
+      "axis": "s",
+      "fraction": 0.01,
+      "geometry": "Pass",
+      "domain": "Pass",
+      "mode_matching": {
+        "status": "Pass",
+        "meaning": "computed within model, not a product efficiency requirement",
+        "normalized_mode_overlap": 0.999868719079394,
+        "log_overlap": -0.000131289538700341,
+        "mismatch_db": 0.0005701832218918152,
+        "underflow": false,
+        "output_axes": [
+          {
+            "radius_m": 7.999999999999998e-06,
+            "curvature_per_m": 9.204986730665375e-12,
+            "waist_radius_m": 7.999999999999998e-06,
+            "waist_distance_m": -2.168404344971009e-19,
+            "rayleigh_range_m": 0.00015348238918301273,
+            "divergence_rad": 0.05212324386259573
+          },
+          {
+            "radius_m": 1.2124980334555897e-05,
+            "curvature_per_m": 71.41892082607468,
+            "waist_radius_m": 1.2121138377695924e-05,
+            "waist_distance_m": -8.87195523634806e-06,
+            "rayleigh_range_m": 0.0003523427953720614,
+            "divergence_rad": 0.034401550242843575
+          }
+        ]
+      }
+    },
+    {
+      "mirror": 2,
+      "axis": "t",
+      "fraction": -0.01,
+      "geometry": "Pass",
+      "domain": "Pass",
+      "mode_matching": {
+        "status": "Pass",
+        "meaning": "computed within model, not a product efficiency requirement",
+        "normalized_mode_overlap": 0.9994445373330456,
+        "log_overlap": -0.0005556169934926025,
+        "mismatch_db": 0.0024130139432551223,
+        "underflow": false,
+        "output_axes": [
+          {
+            "radius_m": 8.096794628436365e-06,
+            "curvature_per_m": -400.4119850542981,
+            "waist_radius_m": 8.080798369656644e-06,
+            "waist_distance_m": 9.858231460918099e-06,
+            "rayleigh_range_m": 0.00015659832699396,
+            "divergence_rad": 0.05160207343701903
+          },
+          {
+            "radius_m": 1.1999999999999999e-05,
+            "curvature_per_m": 0.0,
+            "waist_radius_m": 1.1999999999999997e-05,
+            "waist_distance_m": -0.0,
+            "rayleigh_range_m": 0.00034533537566177865,
+            "divergence_rad": 0.03474882924173049
+          }
+        ]
+      }
+    },
+    {
+      "mirror": 2,
+      "axis": "t",
+      "fraction": 0.01,
+      "geometry": "Pass",
+      "domain": "Pass",
+      "mode_matching": {
+        "status": "Pass",
+        "meaning": "computed within model, not a product efficiency requirement",
+        "normalized_mode_overlap": 0.9994445373330456,
+        "log_overlap": -0.0005556169934926025,
+        "mismatch_db": 0.0024130139432551223,
+        "underflow": false,
+        "output_axes": [
+          {
+            "radius_m": 7.937133188694517e-06,
+            "curvature_per_m": 425.5114977726388,
+            "waist_radius_m": 7.920782933607561e-06,
+            "waist_distance_m": -9.672350222018986e-06,
+            "rayleigh_range_m": 0.00015045783232217188,
+            "divergence_rad": 0.052644537086291215
+          },
+          {
+            "radius_m": 1.1999999999999999e-05,
+            "curvature_per_m": 0.0,
+            "waist_radius_m": 1.1999999999999997e-05,
+            "waist_distance_m": -0.0,
+            "rayleigh_range_m": 0.00034533537566177865,
+            "divergence_rad": 0.03474882924173049
+          }
+        ]
+      }
+    },
+    {
+      "mirror": 2,
+      "axis": "s",
+      "fraction": -0.01,
+      "geometry": "Pass",
+      "domain": "Pass",
+      "mode_matching": {
+        "status": "Pass",
+        "meaning": "computed within model, not a product efficiency requirement",
+        "normalized_mode_overlap": 0.999868719079394,
+        "log_overlap": -0.000131289538700341,
+        "mismatch_db": 0.0005701832218918152,
+        "underflow": false,
+        "output_axes": [
+          {
+            "radius_m": 8.000000000000001e-06,
+            "curvature_per_m": 9.204986730665362e-12,
+            "waist_radius_m": 8.000000000000001e-06,
+            "waist_distance_m": -2.168404344971009e-19,
+            "rayleigh_range_m": 0.00015348238918301283,
+            "divergence_rad": 0.05212324386259571
+          },
+          {
+            "radius_m": 1.2124980334555892e-05,
+            "curvature_per_m": -71.41892082607826,
+            "waist_radius_m": 1.2121138377695919e-05,
+            "waist_distance_m": 8.871955236348494e-06,
+            "rayleigh_range_m": 0.00035234279537206114,
+            "divergence_rad": 0.034401550242843595
+          }
+        ]
+      }
+    },
+    {
+      "mirror": 2,
+      "axis": "s",
+      "fraction": 0.01,
+      "geometry": "Pass",
+      "domain": "Pass",
+      "mode_matching": {
+        "status": "Pass",
+        "meaning": "computed within model, not a product efficiency requirement",
+        "normalized_mode_overlap": 0.9998687190793938,
+        "log_overlap": -0.00013128953870056304,
+        "mismatch_db": 0.0005701832218927795,
+        "underflow": false,
+        "output_axes": [
+          {
+            "radius_m": 8.000000000000001e-06,
+            "curvature_per_m": 9.204986730665362e-12,
+            "waist_radius_m": 8.000000000000001e-06,
+            "waist_distance_m": -2.168404344971009e-19,
+            "rayleigh_range_m": 0.00015348238918301283,
+            "divergence_rad": 0.05212324386259571
+          },
+          {
+            "radius_m": 1.1885080904788449e-05,
+            "curvature_per_m": 76.24472165384498,
+            "waist_radius_m": 1.1881118669897793e-05,
+            "waist_distance_m": -8.7435115804879e-06,
+            "rayleigh_range_m": 0.00033852694687497363,
+            "divergence_rad": 0.03509652268327633
+          }
+        ]
+      }
+    }
+  ],
+  "placement_cases": [
+    {
+      "mirror": 1,
+      "axis": "X",
+      "delta_m": -5e-06,
+      "geometry": {
+        "status": "Pass",
+        "target_miss_m": 1.879717903508979e-08,
+        "target_slope_norm": 0.005006297041824778,
+        "target_closure": "Fail",
+        "target_offset_m": [
+          -1.879717903508979e-08,
+          0.0
+        ],
+        "target_slope": [
+          -0.005006297041824778,
+          0.0
+        ]
+      },
+      "gaussian_mode_matching": {
+        "status": "Uncomputed",
+        "reason": "off-vertex Gaussian handoff not validated"
+      }
+    },
+    {
+      "mirror": 1,
+      "axis": "X",
+      "delta_m": 5e-06,
+      "geometry": {
+        "status": "Pass",
+        "target_miss_m": 1.870342644693171e-08,
+        "target_slope_norm": 0.004993796709786496,
+        "target_closure": "Fail",
+        "target_offset_m": [
+          -1.870342644693171e-08,
+          0.0
+        ],
+        "target_slope": [
+          0.004993796709786496,
+          0.0
+        ]
+      },
+      "gaussian_mode_matching": {
+        "status": "Uncomputed",
+        "reason": "off-vertex Gaussian handoff not validated"
+      }
+    },
+    {
+      "mirror": 1,
+      "axis": "Y",
+      "delta_m": -5e-06,
+      "geometry": {
+        "status": "Pass",
+        "target_miss_m": 5.000300759838671e-06,
+        "target_slope_norm": 0.004999707044529202,
+        "target_closure": "Fail",
+        "target_offset_m": [
+          6.251240090241611e-09,
+          -5.000296852271926e-06
+        ],
+        "target_slope": [
+          -1.8748134905146472e-05,
+          0.004999671893089836
+        ]
+      },
+      "gaussian_mode_matching": {
+        "status": "Uncomputed",
+        "reason": "off-vertex Gaussian handoff not validated"
+      }
+    },
+    {
+      "mirror": 1,
+      "axis": "Y",
+      "delta_m": 5e-06,
+      "geometry": {
+        "status": "Pass",
+        "target_miss_m": 5.000300759838671e-06,
+        "target_slope_norm": 0.004999707044529202,
+        "target_closure": "Fail",
+        "target_offset_m": [
+          6.251240090241611e-09,
+          5.000296852271926e-06
+        ],
+        "target_slope": [
+          -1.8748134905146472e-05,
+          -0.004999671893089836
+        ]
+      },
+      "gaussian_mode_matching": {
+        "status": "Uncomputed",
+        "reason": "off-vertex Gaussian handoff not validated"
+      }
+    },
+    {
+      "mirror": 1,
+      "axis": "Z",
+      "delta_m": -5e-06,
+      "geometry": {
+        "status": "Pass",
+        "target_miss_m": 5.000030708122039e-06,
+        "target_slope_norm": 1.2406620744598353e-05,
+        "target_closure": "Fail",
+        "target_offset_m": [
+          5.000030708122039e-06,
+          0.0
+        ],
+        "target_slope": [
+          1.2406620744598353e-05,
+          0.0
+        ]
+      },
+      "gaussian_mode_matching": {
+        "status": "Uncomputed",
+        "reason": "off-vertex Gaussian handoff not validated"
+      }
+    },
+    {
+      "mirror": 1,
+      "axis": "Z",
+      "delta_m": 5e-06,
+      "geometry": {
+        "status": "Pass",
+        "target_miss_m": 5.000031801937182e-06,
+        "target_slope_norm": 1.2594121428732429e-05,
+        "target_closure": "Fail",
+        "target_offset_m": [
+          -5.000031801937182e-06,
+          0.0
+        ],
+        "target_slope": [
+          1.2594121428732429e-05,
+          0.0
+        ]
+      },
+      "gaussian_mode_matching": {
+        "status": "Uncomputed",
+        "reason": "off-vertex Gaussian handoff not validated"
+      }
+    },
+    {
+      "mirror": 2,
+      "axis": "X",
+      "delta_m": -5e-06,
+      "geometry": {
+        "status": "Pass",
+        "target_miss_m": 6.265557102660968e-09,
+        "target_slope_norm": 0.004993796709786939,
+        "target_closure": "Fail",
+        "target_offset_m": [
+          6.265557102660968e-09,
+          0.0
+        ],
+        "target_slope": [
+          0.004993796709786939,
+          0.0
+        ]
+      },
+      "gaussian_mode_matching": {
+        "status": "Uncomputed",
+        "reason": "off-vertex Gaussian handoff not validated"
+      }
+    },
+    {
+      "mirror": 2,
+      "axis": "X",
+      "delta_m": 5e-06,
+      "geometry": {
+        "status": "Pass",
+        "target_miss_m": 6.234306174166676e-09,
+        "target_slope_norm": 0.005006297041824778,
+        "target_closure": "Fail",
+        "target_offset_m": [
+          6.234306174166676e-09,
+          0.0
+        ],
+        "target_slope": [
+          -0.005006297041824778,
+          0.0
+        ]
+      },
+      "gaussian_mode_matching": {
+        "status": "Uncomputed",
+        "reason": "off-vertex Gaussian handoff not validated"
+      }
+    },
+    {
+      "mirror": 2,
+      "axis": "Y",
+      "delta_m": -5e-06,
+      "geometry": {
+        "status": "Pass",
+        "target_miss_m": 4.99998828127289e-06,
+        "target_slope_norm": 0.005000019531297303,
+        "target_closure": "Fail",
+        "target_offset_m": [
+          -6.249990234553915e-09,
+          -4.999984375024416e-06
+        ],
+        "target_slope": [
+          -1.875000976562628e-05,
+          -0.004999984375024415
+        ]
+      },
+      "gaussian_mode_matching": {
+        "status": "Uncomputed",
+        "reason": "off-vertex Gaussian handoff not validated"
+      }
+    },
+    {
+      "mirror": 2,
+      "axis": "Y",
+      "delta_m": 5e-06,
+      "geometry": {
+        "status": "Pass",
+        "target_miss_m": 4.99998828127289e-06,
+        "target_slope_norm": 0.005000019531297303,
+        "target_closure": "Fail",
+        "target_offset_m": [
+          -6.249990234553915e-09,
+          4.999984375024416e-06
+        ],
+        "target_slope": [
+          -1.875000976562628e-05,
+          0.004999984375024415
+        ]
+      },
+      "gaussian_mode_matching": {
+        "status": "Uncomputed",
+        "reason": "off-vertex Gaussian handoff not validated"
+      }
+    },
+    {
+      "mirror": 2,
+      "axis": "Z",
+      "delta_m": -5e-06,
+      "geometry": {
+        "status": "Pass",
+        "target_miss_m": 5.00000000000023e-06,
+        "target_slope_norm": 2.220446049250313e-16,
+        "target_closure": "Fail",
+        "target_offset_m": [
+          5.00000000000023e-06,
+          0.0
+        ],
+        "target_slope": [
+          2.220446049250313e-16,
+          0.0
+        ]
+      },
+      "gaussian_mode_matching": {
+        "status": "Uncomputed",
+        "reason": "off-vertex Gaussian handoff not validated"
+      }
+    },
+    {
+      "mirror": 2,
+      "axis": "Z",
+      "delta_m": 5e-06,
+      "geometry": {
+        "status": "Pass",
+        "target_miss_m": 4.999999999999796e-06,
+        "target_slope_norm": 2.220446049250313e-16,
+        "target_closure": "Fail",
+        "target_offset_m": [
+          -4.999999999999796e-06,
+          0.0
+        ],
+        "target_slope": [
+          2.220446049250313e-16,
+          0.0
+        ]
+      },
+      "gaussian_mode_matching": {
+        "status": "Uncomputed",
+        "reason": "off-vertex Gaussian handoff not validated"
+      }
+    }
+  ],
+  "finite_fans": {
+    "flat": [
+      {
+        "status": "Pass",
+        "extent_beam_radii": 0.5,
+        "attempted_rays": 9,
+        "traced_rays": 9,
+        "failures": [],
+        "max_transverse_residual_m": 5.963111948670274e-19,
+        "rms_transverse_residual_m": 3.9846376110400462e-19,
+        "max_slope_residual": 2.2898349882893854e-16,
+        "scope": "uniform wavefront-normal fan, not Gaussian power or field overlap",
+        "mode_overlap": null
+      },
+      {
+        "status": "Pass",
+        "extent_beam_radii": 1.0,
+        "attempted_rays": 9,
+        "traced_rays": 9,
+        "failures": [],
+        "max_transverse_residual_m": 1.4105049410642707e-18,
+        "rms_transverse_residual_m": 9.07918175561063e-19,
+        "max_slope_residual": 4.581772189210292e-16,
+        "scope": "uniform wavefront-normal fan, not Gaussian power or field overlap",
+        "mode_overlap": null
+      },
+      {
+        "status": "Pass",
+        "extent_beam_radii": 2.0,
+        "attempted_rays": 9,
+        "traced_rays": 9,
+        "failures": [],
+        "max_transverse_residual_m": 1.0896096981628377e-18,
+        "rms_transverse_residual_m": 6.159735825088195e-19,
+        "max_slope_residual": 3.3493678220833033e-16,
+        "scope": "uniform wavefront-normal fan, not Gaussian power or field overlap",
+        "mode_overlap": null
+      }
+    ],
+    "curved": [
+      {
+        "status": "Pass",
+        "extent_beam_radii": 0.5,
+        "attempted_rays": 9,
+        "traced_rays": 9,
+        "failures": [],
+        "max_transverse_residual_m": 5.964402935526035e-08,
+        "rms_transverse_residual_m": 3.569092389964922e-08,
+        "max_slope_residual": 0.0008486793794576942,
+        "scope": "uniform wavefront-normal fan, not Gaussian power or field overlap",
+        "mode_overlap": null
+      },
+      {
+        "status": "Pass",
+        "extent_beam_radii": 1.0,
+        "attempted_rays": 9,
+        "traced_rays": 9,
+        "failures": [],
+        "max_transverse_residual_m": 3.801723618448542e-07,
+        "rms_transverse_residual_m": 2.2931379520533784e-07,
+        "max_slope_residual": 0.003394680790267158,
+        "scope": "uniform wavefront-normal fan, not Gaussian power or field overlap",
+        "mode_overlap": null
+      },
+      {
+        "status": "Pass",
+        "extent_beam_radii": 2.0,
+        "attempted_rays": 9,
+        "traced_rays": 9,
+        "failures": [],
+        "max_transverse_residual_m": 2.6796482990801002e-06,
+        "rms_transverse_residual_m": 1.6724001529330813e-06,
+        "max_slope_residual": 0.013543187721295483,
+        "scope": "uniform wavefront-normal fan, not Gaussian power or field overlap",
+        "mode_overlap": null
+      }
+    ]
+  },
+  "total_coupling": {
+    "status": "Uncomputed"
+  },
+  "fabrication": {
+    "status": "Uncomputed"
+  }
+}

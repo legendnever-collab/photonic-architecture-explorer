@@ -11,6 +11,7 @@ import os
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT/'src'))
 from photonic_architecture_explorer.benchmark import run
+from photonic_architecture_explorer.diagnostics import run as run_m2
 
 
 def main():
@@ -18,6 +19,8 @@ def main():
     results.mkdir(exist_ok=True)
     benchmark = run(ROOT/'examples/m1_001.json')
     (results/'m1_001.json').write_text(json.dumps(benchmark, indent=2, allow_nan=False)+'\n')
+    m2 = run_m2(ROOT/'examples/m1_001.json')
+    (results/'m2_001.json').write_text(json.dumps(m2, indent=2, allow_nan=False)+'\n')
     env = {**os.environ, 'PYTHONPATH': str(ROOT/'src')}
     tests = subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', 'tests', '-v'],
                            cwd=ROOT, env=env, capture_output=True, text=True)
@@ -25,7 +28,7 @@ def main():
     (results/'unittest.txt').write_text(output)
     paths = sorted(p for folder in ('src', 'tests', 'examples', 'scripts')
                    for p in (ROOT/folder).rglob('*') if p.suffix in ('.py', '.json'))
-    paths += [ROOT/'pyproject.toml', ROOT/'docs/M1_BENCHMARK.md']
+    paths += [ROOT/'pyproject.toml', ROOT/'docs/M1_BENCHMARK.md', ROOT/'docs/M2_CONTRACT.md']
     import numpy
     evidence = {'python': platform.python_version(), 'numpy': numpy.__version__,
                 'test_command': 'python -m unittest discover -s tests -v',

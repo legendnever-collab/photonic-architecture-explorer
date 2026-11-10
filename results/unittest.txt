@@ -17,8 +17,15 @@ test_flat_fold_equals_unfolded_propagation (test_m1.ReflectionReferences.test_fl
 test_quadratic_patch_intersection (test_m1.ReflectionReferences.test_quadratic_patch_intersection) ... ok
 test_reflection_and_frame_transport (test_m1.ReflectionReferences.test_reflection_and_frame_transport) ... ok
 test_surface_derivatives_recover_oblique_principal_powers (test_m1.ReflectionReferences.test_surface_derivatives_recover_oblique_principal_powers) ... ok
+test_budget_fixed_ports_and_uncomputed_semantics (test_m2.M2References.test_budget_fixed_ports_and_uncomputed_semantics) ... ok
+test_curved_near_axis_convergence (test_m2.M2References.test_curved_near_axis_convergence) ... ok
+test_fan_independent_newton_nonzero_wavefront_rays (test_m2.M2References.test_fan_independent_newton_nonzero_wavefront_rays) ... ok
+test_flat_fan_linear_exactness (test_m2.M2References.test_flat_fan_linear_exactness) ... ok
+test_misses_and_invalid_fan_withhold_results (test_m2.M2References.test_misses_and_invalid_fan_withhold_results) ... ok
+test_nominal_chief_closes_and_surface_law_holds (test_m2.M2References.test_nominal_chief_closes_and_surface_law_holds) ... ok
+test_placement_independent_newton_reference_all_12_cases (test_m2.M2References.test_placement_independent_newton_reference_all_12_cases) ... ok
 
 ----------------------------------------------------------------------
-Ran 19 tests in 0.107s
+Ran 26 tests in 0.186s
 
 OK
