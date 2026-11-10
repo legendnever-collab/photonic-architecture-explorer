@@ -1,0 +1,560 @@
+{
+  "contract_version": "M3A-1",
+  "coordinate_convention": "right-handed world XYZ; t=s cross d; target d is arriving direction",
+  "description": "M4B-LIT-001 literature-guided Gaussian proxy, not a reproduction of the paper or a measured PIC/glass external field. L1=10.1021/acsphotonics.5c02702. Target widths use WAFT PIC-side TE 1310 nm guided-mode scales; their air-plane transfer is assumed. PIC source widths are selected to match that proxy. Phase=0, air n=1, scalar polarization and the two-mirror/package candidate are assumptions. Actual case M4A-001 remains unprovided.",
+  "wavelength_m": {
+    "value": 1.31e-06,
+    "unit": "m",
+    "provenance": "supplied",
+    "source": "L1 Table 1, TE 1310 nm; 10.1021/acsphotonics.5c02702",
+    "uncertainty": null
+  },
+  "ambient_index": {
+    "value": 1.0,
+    "unit": "1",
+    "provenance": "assumed",
+    "source": "A2: homogeneous air approximation for the proposed fold; NOT the WAFT guided effective index",
+    "uncertainty": null,
+    "quantity": "external_ambient_refractive_index"
+  },
+  "source": {
+    "position_m": {
+      "value": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "unit": "m",
+      "provenance": "assumed",
+      "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+      "uncertainty": null
+    },
+    "propagation_direction": {
+      "value": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "unit": "1",
+      "provenance": "assumed",
+      "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+      "uncertainty": null
+    },
+    "sagittal_axis": {
+      "value": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "unit": "1",
+      "provenance": "assumed",
+      "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+      "uncertainty": null
+    },
+    "mfd_ts_m": {
+      "value": [
+        2.73e-06,
+        3.79e-06
+      ],
+      "unit": "m",
+      "provenance": "assumed",
+      "source": "A3: selected width-matched PIC external Gaussian proxy; SiN MFD is not tabulated in L1; 1/e^2 Gaussian-diameter interpretation is assumed",
+      "uncertainty": null
+    },
+    "wavefront_curvature_ts_per_m": {
+      "value": [
+        0.0,
+        0.0
+      ],
+      "unit": "m^-1",
+      "provenance": "assumed",
+      "source": "A5: flat phase at the declared external plane, selected favorable Gaussian screen; not reported by L1",
+      "uncertainty": null
+    },
+    "polarization": {
+      "value": {
+        "treatment": "scalar_ignored",
+        "jones_ts": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ]
+      },
+      "unit": "1",
+      "provenance": "assumed",
+      "source": "A6: nominal horizontal TE label on s=+Y; vector transport/coating response not computed",
+      "uncertainty": null
+    },
+    "reference_plane": {
+      "value": {
+        "id": "source-external",
+        "frame_id": "world",
+        "side": "external",
+        "origin_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "normal": [
+          1.0,
+          0.0,
+          0.0
+        ]
+      },
+      "unit": "plane",
+      "provenance": "assumed",
+      "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+      "uncertainty": null
+    },
+    "mode_evidence": {
+      "value": {
+        "kind": "gaussian_assumption",
+        "reference": "10.1021/acsphotonics.5c02702",
+        "external_field_fit": "not available",
+        "role": "source",
+        "basis_mapping": "t=-Z vertical, s=+Y horizontal",
+        "note": "guided widths and an assumed external Gaussian are different evidence levels",
+        "mfd_definition": "Reported widths interpreted as 1/e^2 intensity Gaussian diameters for this proxy; the paper table does not establish a complex external-field fit."
+      },
+      "unit": "evidence",
+      "provenance": "assumed",
+      "source": "A3/A4: no measured/simulated complex external-plane field supplied",
+      "uncertainty": null
+    }
+  },
+  "target": {
+    "position_m": {
+      "value": [
+        0.002,
+        0.0,
+        0.002
+      ],
+      "unit": "m",
+      "provenance": "assumed",
+      "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+      "uncertainty": null
+    },
+    "propagation_direction": {
+      "value": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "unit": "1",
+      "provenance": "assumed",
+      "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+      "uncertainty": null
+    },
+    "sagittal_axis": {
+      "value": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "unit": "1",
+      "provenance": "assumed",
+      "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+      "uncertainty": null
+    },
+    "mfd_ts_m": {
+      "value": [
+        2.73e-06,
+        3.79e-06
+      ],
+      "unit": "m",
+      "provenance": "assumed",
+      "source": "L1 Table 1 TE 1310 nm guided-mode scales H=3.79 um,V=2.73 um; A4: external Gaussian transfer assumed; 10.1021/acsphotonics.5c02702; 1/e^2 Gaussian-diameter interpretation is assumed",
+      "uncertainty": null
+    },
+    "wavefront_curvature_ts_per_m": {
+      "value": [
+        0.0,
+        0.0
+      ],
+      "unit": "m^-1",
+      "provenance": "assumed",
+      "source": "A5: flat phase at the declared external plane, selected favorable Gaussian screen; not reported by L1",
+      "uncertainty": null
+    },
+    "polarization": {
+      "value": {
+        "treatment": "scalar_ignored",
+        "jones_ts": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ]
+      },
+      "unit": "1",
+      "provenance": "assumed",
+      "source": "A6: nominal horizontal TE label on s=+Y; vector transport/coating response not computed",
+      "uncertainty": null
+    },
+    "reference_plane": {
+      "value": {
+        "id": "target-external",
+        "frame_id": "world",
+        "side": "external",
+        "origin_m": [
+          0.002,
+          0.0,
+          0.002
+        ],
+        "normal": [
+          1.0,
+          0.0,
+          0.0
+        ]
+      },
+      "unit": "plane",
+      "provenance": "assumed",
+      "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+      "uncertainty": null
+    },
+    "mode_evidence": {
+      "value": {
+        "kind": "gaussian_assumption",
+        "reference": "10.1021/acsphotonics.5c02702",
+        "external_field_fit": "not available",
+        "role": "target",
+        "basis_mapping": "t=-Z vertical, s=+Y horizontal",
+        "note": "guided widths and an assumed external Gaussian are different evidence levels",
+        "mfd_definition": "Reported widths interpreted as 1/e^2 intensity Gaussian diameters for this proxy; the paper table does not establish a complex external-field fit."
+      },
+      "unit": "evidence",
+      "provenance": "assumed",
+      "source": "A3/A4: no measured/simulated complex external-plane field supplied",
+      "uncertainty": null
+    }
+  },
+  "design": {
+    "reflectors": [
+      {
+        "vertex_m": {
+          "value": [
+            0.001,
+            0.0,
+            0.0
+          ],
+          "unit": "m",
+          "provenance": "assumed",
+          "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+          "uncertainty": null
+        },
+        "illuminated_normal": {
+          "value": [
+            -0.7071067811865475,
+            0.0,
+            0.7071067811865475
+          ],
+          "unit": "1",
+          "provenance": "assumed",
+          "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+          "uncertainty": null
+        },
+        "principal_curvature_ts_per_m": {
+          "value": [
+            353.5533905932738,
+            707.1067811865474
+          ],
+          "unit": "m^-1",
+          "provenance": "assumed",
+          "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+          "uncertainty": null
+        },
+        "half_aperture_ts_m": {
+          "value": [
+            0.0007,
+            0.0005
+          ],
+          "unit": "m",
+          "provenance": "assumed",
+          "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+          "uncertainty": null
+        }
+      },
+      {
+        "vertex_m": {
+          "value": [
+            0.001,
+            0.0,
+            0.002
+          ],
+          "unit": "m",
+          "provenance": "assumed",
+          "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+          "uncertainty": null
+        },
+        "illuminated_normal": {
+          "value": [
+            0.7071067811865475,
+            0.0,
+            -0.7071067811865475
+          ],
+          "unit": "1",
+          "provenance": "assumed",
+          "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+          "uncertainty": null
+        },
+        "principal_curvature_ts_per_m": {
+          "value": [
+            353.5533905932738,
+            707.1067811865474
+          ],
+          "unit": "m^-1",
+          "provenance": "assumed",
+          "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+          "uncertainty": null
+        },
+        "half_aperture_ts_m": {
+          "value": [
+            0.0007,
+            0.0005
+          ],
+          "unit": "m",
+          "provenance": "assumed",
+          "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+          "uncertainty": null
+        }
+      }
+    ]
+  },
+  "reflectors": [
+    {
+      "surface_prescription": {
+        "value": "quadratic_patch",
+        "unit": "model",
+        "provenance": "assumed",
+        "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+        "uncertainty": null
+      },
+      "vertex_bounds_m": {
+        "value": [
+          [
+            0.0009,
+            -0.0001,
+            -0.0001
+          ],
+          [
+            0.0011,
+            0.0001,
+            0.0001
+          ]
+        ],
+        "unit": "m",
+        "provenance": "assumed",
+        "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+        "uncertainty": null
+      },
+      "normal_constraints": {
+        "value": {
+          "axis": [
+            -0.7071067811865475,
+            0.0,
+            0.7071067811865475
+          ],
+          "max_angle_rad": 0.0
+        },
+        "unit": "rad",
+        "provenance": "assumed",
+        "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+        "uncertainty": null
+      },
+      "principal_curvature_bounds_per_m": {
+        "value": [
+          [
+            350.017856687341,
+            357.08892449920654
+          ],
+          [
+            700.0357133746819,
+            714.177848998413
+          ]
+        ],
+        "unit": "m^-1",
+        "provenance": "assumed",
+        "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+        "uncertainty": null
+      },
+      "half_aperture_bounds_m": {
+        "value": [
+          [
+            0.00063,
+            0.0007700000000000001
+          ],
+          [
+            0.00045000000000000004,
+            0.00055
+          ]
+        ],
+        "unit": "m",
+        "provenance": "assumed",
+        "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+        "uncertainty": null
+      },
+      "body_envelope": {
+        "value": {
+          "type": "aabb",
+          "min_m": [
+            0.0003,
+            -0.0006,
+            -0.0007
+          ],
+          "max_m": [
+            0.0017,
+            0.0006,
+            0.0007
+          ]
+        },
+        "unit": "m",
+        "provenance": "assumed",
+        "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+        "uncertainty": null
+      }
+    },
+    {
+      "surface_prescription": {
+        "value": "quadratic_patch",
+        "unit": "model",
+        "provenance": "assumed",
+        "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+        "uncertainty": null
+      },
+      "vertex_bounds_m": {
+        "value": [
+          [
+            0.0009,
+            -0.0001,
+            0.0019
+          ],
+          [
+            0.0011,
+            0.0001,
+            0.0021
+          ]
+        ],
+        "unit": "m",
+        "provenance": "assumed",
+        "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+        "uncertainty": null
+      },
+      "normal_constraints": {
+        "value": {
+          "axis": [
+            0.7071067811865475,
+            0.0,
+            -0.7071067811865475
+          ],
+          "max_angle_rad": 0.0
+        },
+        "unit": "rad",
+        "provenance": "assumed",
+        "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+        "uncertainty": null
+      },
+      "principal_curvature_bounds_per_m": {
+        "value": [
+          [
+            350.017856687341,
+            357.08892449920654
+          ],
+          [
+            700.0357133746819,
+            714.177848998413
+          ]
+        ],
+        "unit": "m^-1",
+        "provenance": "assumed",
+        "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+        "uncertainty": null
+      },
+      "half_aperture_bounds_m": {
+        "value": [
+          [
+            0.00063,
+            0.0007700000000000001
+          ],
+          [
+            0.00045000000000000004,
+            0.00055
+          ]
+        ],
+        "unit": "m",
+        "provenance": "assumed",
+        "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+        "uncertainty": null
+      },
+      "body_envelope": {
+        "value": {
+          "type": "aabb",
+          "min_m": [
+            0.0003,
+            -0.0006,
+            0.0013
+          ],
+          "max_m": [
+            0.0017,
+            0.0006,
+            0.0027
+          ]
+        },
+        "unit": "m",
+        "provenance": "assumed",
+        "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+        "uncertainty": null
+      }
+    }
+  ],
+  "package": {
+    "frame_id": {
+      "value": "world",
+      "unit": "frame",
+      "provenance": "assumed",
+      "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+      "uncertainty": null
+    },
+    "available_volume": {
+      "value": {
+        "type": "aabb",
+        "min_m": [
+          -0.001,
+          -0.001,
+          -0.001
+        ],
+        "max_m": [
+          0.003,
+          0.001,
+          0.003
+        ]
+      },
+      "unit": "m",
+      "provenance": "assumed",
+      "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+      "uncertainty": null
+    },
+    "keepout_bodies": {
+      "value": [],
+      "unit": "m",
+      "provenance": "assumed",
+      "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+      "uncertainty": null
+    },
+    "required_clearance_m": {
+      "value": 1e-05,
+      "unit": "m",
+      "provenance": "assumed",
+      "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+      "uncertainty": null
+    }
+  }
+}

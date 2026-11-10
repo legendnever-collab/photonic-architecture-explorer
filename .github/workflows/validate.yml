@@ -50,3 +50,5 @@ jobs:
             results/m3b_browser.json
             results/inspector_*.png
             results/m3b-inspector.html
+            results/m4b_literature_inspector.html
+            results/m4b_adapter_ci.json

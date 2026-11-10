@@ -1,0 +1,1404 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Photonic Architecture Explorer · M3-B</title><style>
+:root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#263747;background:#f3f6f8;font-size:14px}*{box-sizing:border-box}body{margin:0}header{background:#142b3d;color:white;padding:22px max(20px,calc((100vw - 1400px)/2));}header p{color:#c6d5df;margin:6px 0 0}h1{font-size:23px;margin:0}h2{font-size:18px;margin:0 0 12px}h3{font-size:14px;margin:0 0 6px}.wrap{max-width:1400px;margin:auto;padding:20px}.toolbar{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:16px}.toolbar label{display:flex;gap:8px;align-items:center}select,button{font:inherit;padding:9px 12px;border:1px solid #b7c5cf;border-radius:5px;background:white;color:#203849}button{background:#176d92;color:white;border-color:#176d92;cursor:pointer}a{color:#176d92}article[hidden],[hidden]{display:none!important}.layout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(320px,1fr);gap:18px;align-items:start}.card{background:white;border:1px solid #d6e0e7;border-radius:8px;padding:18px;min-width:0}.drawing{position:sticky;top:16px}.muted,small{color:#617789}.notice{background:#eaf2f6;border-left:3px solid #176d92;padding:11px 14px;line-height:1.6;margin:12px 0}.caption{font-size:12px;color:#506b7b}.projection svg{display:block;width:100%;height:auto}.grid{stroke:#e6edf1;stroke-width:1}.tick{font-size:11px;fill:#657b8b}.axis{font-size:12px;fill:#324f64}.box{stroke-width:1.1}.volume{fill:#f0f5f8;stroke:#9bb1c1;stroke-dasharray:6 4}.body{fill:#e8e1d7;fill-opacity:.5;stroke:#ad997d}.keepout{fill:#edc6c6;fill-opacity:.5;stroke:#b34545}.surface{fill:none;stroke:#bd762e;stroke-width:1.8;stroke-linejoin:round}.chief{fill:none;stroke:#176d92;stroke-width:2.5}.port-label{font-size:12px;font-weight:650;fill:#203d52}.mirror-label{font-size:13px;font-weight:650;fill:#9c5b1d}.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:#4b6576}.legend b{font-size:18px}.metric{background:#f4f8fa;border-radius:6px;padding:14px;margin-bottom:14px;display:flex;flex-direction:column;gap:5px}.metric strong{font-size:30px;color:#193f57}.metric span{font-size:12px;color:#576f7d}table{border-collapse:collapse;width:100%;font-size:12px}td{border-bottom:1px solid #e5ecf0;padding:9px 3px;vertical-align:top}.states td:last-child{text-align:right}.input-summary td{overflow-wrap:anywhere}.input-summary td:first-child{color:#617789}summary{cursor:pointer;color:#2f596e;padding:12px 0;font-weight:600}pre,textarea{font-family:ui-monospace,monospace;font-size:11px;white-space:pre-wrap;overflow-wrap:anywhere}pre{max-height:350px;overflow:auto;background:#f5f7f9;padding:12px}textarea{width:100%;height:280px;padding:12px;border:1px solid #bcccd6;border-radius:4px;resize:vertical;background:#fbfcfd}.badge{font-size:11px;font-weight:600;padding:4px 7px;border-radius:4px;display:inline-block}.pass{background:#e7f4ed;color:#236848}.fail{background:#fbe7e7;color:#a52f35}.approximate{background:#e7f1fa;color:#216694}.uncomputed{background:#fff2d9;color:#916618}.empty-plot{min-height:360px;display:grid;place-content:center;text-align:center;line-height:2;color:#667e8e}.dirty-note{background:#fff2d9;padding:16px;border:1px solid #e2c381}li{font-size:12px;margin:7px 0;overflow-wrap:anywhere}.editors{margin-top:16px}.digest{font-size:11px;overflow-wrap:anywhere}.review{line-height:1.8;font-size:13px}.form-note{margin:10px 0;color:#5d7381;font-size:12px}@media(max-width:850px){.layout{grid-template-columns:1fr}.drawing{position:static}.wrap{padding:12px}.card{padding:14px}h1{font-size:19px}.toolbar label{width:100%;justify-content:space-between}.toolbar select{max-width:68%}.empty-plot{min-height:220px}}@media print{header{color:#203849;background:white}.toolbar,.editors{display:none}.layout{display:block}.drawing{position:static}.card{break-inside:avoid}}
+</style></head><body>
+    <header><h1>Photonic Architecture Explorer <span style="font-weight:400">/ M3-B Inspector</span></h1><p>Fixed Optical I/O → Two Reflectors · Static Review · 모든 결과는 Python Adapter로 사전 계산</p></header>
+    <main class="wrap"><div class="toolbar"><label>Review Case <select id="case-select" aria-label="Review Case"><option value="literature-proxy">Literature-guided Gaussian Proxy · L1 / Assumed Fold</option></select></label><label>Projection <select id="projection-select" aria-label="Projection"><option>XZ</option><option>XY</option><option>YZ</option></select></label></div>
+    <article data-case="literature-proxy"><div class="layout">
+        <section class="card drawing"><h2>Literature-guided Gaussian Proxy · L1 / Assumed Fold</h2><p class="caption" data-evaluated>Verified chief path</p><div class="projection-group"><div class="projection" data-projection="XZ"><h3>XZ Projection · 생략 축 Y · mm · Equal Scale</h3><svg viewBox="0 0 720 510" role="img" aria-label="XZ geometry projection [mm]" data-scale="equal"><defs><marker id="literature-proxy-XZ-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7" fill="context-stroke"/></marker></defs><line x1="208.0" y1="50" x2="208.0" y2="450" class="grid"/><line x1="50" y1="402.0" x2="670" y2="402.0" class="grid"/><text x="208.0" y="474" text-anchor="middle" class="tick">-1</text><text x="45" y="406.0" text-anchor="end" class="tick">-1</text><line x1="268.8" y1="50" x2="268.8" y2="450" class="grid"/><line x1="50" y1="341.2" x2="670" y2="341.2" class="grid"/><text x="268.8" y="474" text-anchor="middle" class="tick">-0.2</text><text x="45" y="345.2" text-anchor="end" class="tick">-0.2</text><line x1="329.6" y1="50" x2="329.6" y2="450" class="grid"/><line x1="50" y1="280.4" x2="670" y2="280.4" class="grid"/><text x="329.6" y="474" text-anchor="middle" class="tick">0.6</text><text x="45" y="284.4" text-anchor="end" class="tick">0.6</text><line x1="390.4" y1="50" x2="390.4" y2="450" class="grid"/><line x1="50" y1="219.60000000000002" x2="670" y2="219.60000000000002" class="grid"/><text x="390.4" y="474" text-anchor="middle" class="tick">1.4</text><text x="45" y="223.60000000000002" text-anchor="end" class="tick">1.4</text><line x1="451.20000000000005" y1="50" x2="451.20000000000005" y2="450" class="grid"/><line x1="50" y1="158.79999999999998" x2="670" y2="158.79999999999998" class="grid"/><text x="451.20000000000005" y="474" text-anchor="middle" class="tick">2.2</text><text x="45" y="162.79999999999998" text-anchor="end" class="tick">2.2</text><line x1="512.0" y1="50" x2="512.0" y2="450" class="grid"/><line x1="50" y1="98.0" x2="670" y2="98.0" class="grid"/><text x="512.0" y="474" text-anchor="middle" class="tick">3</text><text x="45" y="102.0" text-anchor="end" class="tick">3</text><text x="658" y="498" class="axis">X [mm]</text><text x="18" y="30" class="axis">Z [mm]</text><rect x="208.0" y="98.0" width="304.0" height="304.0" class="box volume" data-kind="volume"><title>Package Volume</title></rect><rect x="306.8" y="272.8" width="106.39999999999998" height="106.39999999999998" class="box body" data-kind="body"><title>M1 Envelope</title></rect><rect x="306.8" y="120.79999999999998" width="106.39999999999998" height="106.4" class="box body" data-kind="body"><title>M2 Envelope</title></rect><polyline points="284.00000,326.00000 360.00000,326.00000 360.00000,174.00000 436.00000,174.00000" class="chief" data-kind="verified-chief" marker-end="url(#literature-proxy-XZ-arrow)"/><polyline points="312.97692,354.21308 316.85527,351.82175 320.66896,349.36576 324.41800,346.84512 328.10239,344.25983 331.72213,341.60989 335.27721,338.89529 338.76764,336.11604 342.19342,333.27214 345.55454,330.36358 348.85101,327.39037 352.08283,324.35251 355.25000,321.25000 358.35251,318.08283 361.39037,314.85101 364.36358,311.55454 367.27214,308.19342 370.11604,304.76764 372.89529,301.27721 375.60989,297.72213 378.25983,294.10239 380.84512,290.41800 383.36576,286.66896 385.82175,282.85527 388.21308,278.97692" class="surface" data-kind="quadratic-surface"/><polyline points="317.72692,358.96308 321.60527,356.57175 325.41896,354.11576 329.16800,351.59512 332.85239,349.00983 336.47213,346.35989 340.02721,343.64529 343.51764,340.86604 346.94342,338.02214 350.30454,335.11358 353.60101,332.14037 356.83283,329.10251 360.00000,326.00000 363.10251,322.83283 366.14037,319.60101 369.11358,316.30454 372.02214,312.94342 374.86604,309.51764 377.64529,306.02721 380.35989,302.47213 383.00983,298.85239 385.59512,295.16800 388.11576,291.41896 390.57175,287.60527 392.96308,283.72692" class="surface" data-kind="quadratic-surface"/><polyline points="312.97692,354.21308 316.85527,351.82175 320.66896,349.36576 324.41800,346.84512 328.10239,344.25983 331.72213,341.60989 335.27721,338.89529 338.76764,336.11604 342.19342,333.27214 345.55454,330.36358 348.85101,327.39037 352.08283,324.35251 355.25000,321.25000 358.35251,318.08283 361.39037,314.85101 364.36358,311.55454 367.27214,308.19342 370.11604,304.76764 372.89529,301.27721 375.60989,297.72213 378.25983,294.10239 380.84512,290.41800 383.36576,286.66896 385.82175,282.85527 388.21308,278.97692" class="surface" data-kind="quadratic-surface"/><polyline points="312.97692,354.21308 313.73560,354.97176 314.42831,355.66447 315.05504,356.29121 315.61581,356.85197 316.11060,357.34676 316.53942,357.77558 316.90227,358.13843 317.19914,358.43530 317.43004,358.66621 317.59497,358.83114 317.69393,358.93009 317.72692,358.96308 317.69393,358.93009 317.59497,358.83114 317.43004,358.66621 317.19914,358.43530 316.90227,358.13843 316.53942,357.77558 316.11060,357.34676 315.61581,356.85197 315.05504,356.29121 314.42831,355.66447 313.73560,354.97176 312.97692,354.21308" class="surface" data-kind="quadratic-surface"/><polyline points="355.25000,321.25000 356.00868,322.00868 356.70139,322.70139 357.32812,323.32812 357.88889,323.88889 358.38368,324.38368 358.81250,324.81250 359.17535,325.17535 359.47222,325.47222 359.70312,325.70312 359.86806,325.86806 359.96701,325.96701 360.00000,326.00000 359.96701,325.96701 359.86806,325.86806 359.70312,325.70312 359.47222,325.47222 359.17535,325.17535 358.81250,324.81250 358.38368,324.38368 357.88889,323.88889 357.32812,323.32812 356.70139,322.70139 356.00868,322.00868 355.25000,321.25000" class="surface" data-kind="quadratic-surface"/><polyline points="388.21308,278.97692 388.97176,279.73560 389.66447,280.42831 390.29121,281.05504 390.85197,281.61581 391.34676,282.11060 391.77558,282.53942 392.13843,282.90227 392.43530,283.19914 392.66621,283.43004 392.83114,283.59497 392.93009,283.69393 392.96308,283.72692 392.93009,283.69393 392.83114,283.59497 392.66621,283.43004 392.43530,283.19914 392.13843,282.90227 391.77558,282.53942 391.34676,282.11060 390.85197,281.61581 390.29121,281.05504 389.66447,280.42831 388.97176,279.73560 388.21308,278.97692" class="surface" data-kind="quadratic-surface"/><text x="369.0" y="316.0" class="mirror-label">M1</text><polyline points="407.02308,145.78692 403.14473,148.17825 399.33104,150.63424 395.58200,153.15488 391.89761,155.74017 388.27787,158.39011 384.72279,161.10471 381.23236,163.88396 377.80658,166.72786 374.44546,169.63642 371.14899,172.60963 367.91717,175.64749 364.75000,178.75000 361.64749,181.91717 358.60963,185.14899 355.63642,188.44546 352.72786,191.80658 349.88396,195.23236 347.10471,198.72279 344.39011,202.27787 341.74017,205.89761 339.15488,209.58200 336.63424,213.33104 334.17825,217.14473 331.78692,221.02308" class="surface" data-kind="quadratic-surface"/><polyline points="402.27308,141.03692 398.39473,143.42825 394.58104,145.88424 390.83200,148.40488 387.14761,150.99017 383.52787,153.64011 379.97279,156.35471 376.48236,159.13396 373.05658,161.97786 369.69546,164.88642 366.39899,167.85963 363.16717,170.89749 360.00000,174.00000 356.89749,177.16717 353.85963,180.39899 350.88642,183.69546 347.97786,187.05658 345.13396,190.48236 342.35471,193.97279 339.64011,197.52787 336.99017,201.14761 334.40488,204.83200 331.88424,208.58104 329.42825,212.39473 327.03692,216.27308" class="surface" data-kind="quadratic-surface"/><polyline points="407.02308,145.78692 403.14473,148.17825 399.33104,150.63424 395.58200,153.15488 391.89761,155.74017 388.27787,158.39011 384.72279,161.10471 381.23236,163.88396 377.80658,166.72786 374.44546,169.63642 371.14899,172.60963 367.91717,175.64749 364.75000,178.75000 361.64749,181.91717 358.60963,185.14899 355.63642,188.44546 352.72786,191.80658 349.88396,195.23236 347.10471,198.72279 344.39011,202.27787 341.74017,205.89761 339.15488,209.58200 336.63424,213.33104 334.17825,217.14473 331.78692,221.02308" class="surface" data-kind="quadratic-surface"/><polyline points="407.02308,145.78692 406.26440,145.02824 405.57169,144.33553 404.94496,143.70879 404.38419,143.14803 403.88940,142.65324 403.46058,142.22442 403.09773,141.86157 402.80086,141.56470 402.56996,141.33379 402.40503,141.16886 402.30607,141.06991 402.27308,141.03692 402.30607,141.06991 402.40503,141.16886 402.56996,141.33379 402.80086,141.56470 403.09773,141.86157 403.46058,142.22442 403.88940,142.65324 404.38419,143.14803 404.94496,143.70879 405.57169,144.33553 406.26440,145.02824 407.02308,145.78692" class="surface" data-kind="quadratic-surface"/><polyline points="364.75000,178.75000 363.99132,177.99132 363.29861,177.29861 362.67188,176.67188 362.11111,176.11111 361.61632,175.61632 361.18750,175.18750 360.82465,174.82465 360.52778,174.52778 360.29688,174.29688 360.13194,174.13194 360.03299,174.03299 360.00000,174.00000 360.03299,174.03299 360.13194,174.13194 360.29688,174.29688 360.52778,174.52778 360.82465,174.82465 361.18750,175.18750 361.61632,175.61632 362.11111,176.11111 362.67188,176.67188 363.29861,177.29861 363.99132,177.99132 364.75000,178.75000" class="surface" data-kind="quadratic-surface"/><polyline points="331.78692,221.02308 331.02824,220.26440 330.33553,219.57169 329.70879,218.94496 329.14803,218.38419 328.65324,217.88940 328.22442,217.46058 327.86157,217.09773 327.56470,216.80086 327.33379,216.56996 327.16886,216.40503 327.06991,216.30607 327.03692,216.27308 327.06991,216.30607 327.16886,216.40503 327.33379,216.56996 327.56470,216.80086 327.86157,217.09773 328.22442,217.46058 328.65324,217.88940 329.14803,218.38419 329.70879,218.94496 330.33553,219.57169 331.02824,220.26440 331.78692,221.02308" class="surface" data-kind="quadratic-surface"/><text x="369.0" y="164.0" class="mirror-label">M2</text><circle cx="284.0" cy="326.0" r="5" fill="#176d92" data-kind="fixed-port"/><line x1="284.0" y1="326.0" x2="320.48" y2="326.0" stroke="#176d92" stroke-width="2.5" marker-end="url(#literature-proxy-XZ-arrow)"/><text x="294.0" y="342.0" class="port-label">Source</text><circle cx="436.0" cy="174.0" r="5" fill="#704b9d" data-kind="fixed-port"/><line x1="436.0" y1="174.0" x2="472.48" y2="174.0" stroke="#704b9d" stroke-width="2.5" marker-end="url(#literature-proxy-XZ-arrow)"/><text x="446.0" y="190.0" class="port-label">Target</text></svg></div><div class="projection" data-projection="XY" hidden><h3>XY Projection · 생략 축 Z · mm · Equal Scale</h3><svg viewBox="0 0 720 510" role="img" aria-label="XY geometry projection [mm]" data-scale="equal"><defs><marker id="literature-proxy-XY-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7" fill="context-stroke"/></marker></defs><line x1="112.0" y1="50" x2="112.0" y2="450" class="grid"/><line x1="50" y1="374.0" x2="670" y2="374.0" class="grid"/><text x="112.0" y="474" text-anchor="middle" class="tick">-1</text><text x="45" y="378.0" text-anchor="end" class="tick">-1</text><line x1="211.20000000000002" y1="50" x2="211.20000000000002" y2="450" class="grid"/><line x1="50" y1="324.4" x2="670" y2="324.4" class="grid"/><text x="211.20000000000002" y="474" text-anchor="middle" class="tick">-0.2</text><text x="45" y="328.4" text-anchor="end" class="tick">-0.6</text><line x1="310.40000000000003" y1="50" x2="310.40000000000003" y2="450" class="grid"/><line x1="50" y1="274.8" x2="670" y2="274.8" class="grid"/><text x="310.40000000000003" y="474" text-anchor="middle" class="tick">0.6</text><text x="45" y="278.8" text-anchor="end" class="tick">-0.2</text><line x1="409.59999999999997" y1="50" x2="409.59999999999997" y2="450" class="grid"/><line x1="50" y1="225.20000000000002" x2="670" y2="225.20000000000002" class="grid"/><text x="409.59999999999997" y="474" text-anchor="middle" class="tick">1.4</text><text x="45" y="229.20000000000002" text-anchor="end" class="tick">0.2</text><line x1="508.8" y1="50" x2="508.8" y2="450" class="grid"/><line x1="50" y1="175.6" x2="670" y2="175.6" class="grid"/><text x="508.8" y="474" text-anchor="middle" class="tick">2.2</text><text x="45" y="179.6" text-anchor="end" class="tick">0.6</text><line x1="608.0" y1="50" x2="608.0" y2="450" class="grid"/><line x1="50" y1="126.0" x2="670" y2="126.0" class="grid"/><text x="608.0" y="474" text-anchor="middle" class="tick">3</text><text x="45" y="130.0" text-anchor="end" class="tick">1</text><text x="658" y="498" class="axis">X [mm]</text><text x="18" y="30" class="axis">Y [mm]</text><rect x="112.0" y="126.0" width="496.0" height="248.0" class="box volume" data-kind="volume"><title>Package Volume</title></rect><rect x="273.2" y="175.60000000000002" width="173.60000000000002" height="148.79999999999995" class="box body" data-kind="body"><title>M1 Envelope</title></rect><rect x="273.2" y="175.60000000000002" width="173.60000000000002" height="148.79999999999995" class="box body" data-kind="body"><title>M2 Envelope</title></rect><polyline points="236.00000,250.00000 360.00000,250.00000 360.00000,250.00000 484.00000,250.00000" class="chief" data-kind="verified-chief" marker-end="url(#literature-proxy-XY-arrow)"/><polyline points="283.27813,312.00000 289.60596,312.00000 295.82830,312.00000 301.94516,312.00000 307.95653,312.00000 313.86242,312.00000 319.66282,312.00000 325.35773,312.00000 330.94715,312.00000 336.43110,312.00000 341.80955,312.00000 347.08252,312.00000 352.25000,312.00000 357.31200,312.00000 362.26851,312.00000 367.11953,312.00000 371.86507,312.00000 376.50512,312.00000 381.03968,312.00000 385.46876,312.00000 389.79236,312.00000 394.01046,312.00000 398.12308,312.00000 402.13022,312.00000 406.03187,312.00000" class="surface" data-kind="quadratic-surface"/><polyline points="291.02813,250.00000 297.35596,250.00000 303.57830,250.00000 309.69516,250.00000 315.70653,250.00000 321.61242,250.00000 327.41282,250.00000 333.10773,250.00000 338.69715,250.00000 344.18110,250.00000 349.55955,250.00000 354.83252,250.00000 360.00000,250.00000 365.06200,250.00000 370.01851,250.00000 374.86953,250.00000 379.61507,250.00000 384.25512,250.00000 388.78968,250.00000 393.21876,250.00000 397.54236,250.00000 401.76046,250.00000 405.87308,250.00000 409.88022,250.00000 413.78187,250.00000" class="surface" data-kind="quadratic-surface"/><polyline points="283.27813,188.00000 289.60596,188.00000 295.82830,188.00000 301.94516,188.00000 307.95653,188.00000 313.86242,188.00000 319.66282,188.00000 325.35773,188.00000 330.94715,188.00000 336.43110,188.00000 341.80955,188.00000 347.08252,188.00000 352.25000,188.00000 357.31200,188.00000 362.26851,188.00000 367.11953,188.00000 371.86507,188.00000 376.50512,188.00000 381.03968,188.00000 385.46876,188.00000 389.79236,188.00000 394.01046,188.00000 398.12308,188.00000 402.13022,188.00000 406.03187,188.00000" class="surface" data-kind="quadratic-surface"/><polyline points="283.27813,312.00000 284.51598,306.83333 285.64619,301.66667 286.66876,296.50000 287.58369,291.33333 288.39098,286.16667 289.09063,281.00000 289.68265,275.83333 290.16702,270.66667 290.54376,265.50000 290.81285,260.33333 290.97431,255.16667 291.02813,250.00000 290.97431,244.83333 290.81285,239.66667 290.54376,234.50000 290.16702,229.33333 289.68265,224.16667 289.09063,219.00000 288.39098,213.83333 287.58369,208.66667 286.66876,203.50000 285.64619,198.33333 284.51598,193.16667 283.27813,188.00000" class="surface" data-kind="quadratic-surface"/><polyline points="352.25000,312.00000 353.48785,306.83333 354.61806,301.66667 355.64062,296.50000 356.55556,291.33333 357.36285,286.16667 358.06250,281.00000 358.65451,275.83333 359.13889,270.66667 359.51562,265.50000 359.78472,260.33333 359.94618,255.16667 360.00000,250.00000 359.94618,244.83333 359.78472,239.66667 359.51562,234.50000 359.13889,229.33333 358.65451,224.16667 358.06250,219.00000 357.36285,213.83333 356.55556,208.66667 355.64062,203.50000 354.61806,198.33333 353.48785,193.16667 352.25000,188.00000" class="surface" data-kind="quadratic-surface"/><polyline points="406.03187,312.00000 407.26972,306.83333 408.39992,301.66667 409.42249,296.50000 410.33742,291.33333 411.14472,286.16667 411.84437,281.00000 412.43638,275.83333 412.92076,270.66667 413.29749,265.50000 413.56659,260.33333 413.72805,255.16667 413.78187,250.00000 413.72805,244.83333 413.56659,239.66667 413.29749,234.50000 412.92076,229.33333 412.43638,224.16667 411.84437,219.00000 411.14472,213.83333 410.33742,208.66667 409.42249,203.50000 408.39992,198.33333 407.26972,193.16667 406.03187,188.00000" class="surface" data-kind="quadratic-surface"/><text x="369.0" y="240.0" class="mirror-label">M1</text><polyline points="436.72187,312.00000 430.39404,312.00000 424.17170,312.00000 418.05484,312.00000 412.04347,312.00000 406.13758,312.00000 400.33718,312.00000 394.64227,312.00000 389.05285,312.00000 383.56890,312.00000 378.19045,312.00000 372.91748,312.00000 367.75000,312.00000 362.68800,312.00000 357.73149,312.00000 352.88047,312.00000 348.13493,312.00000 343.49488,312.00000 338.96032,312.00000 334.53124,312.00000 330.20764,312.00000 325.98954,312.00000 321.87692,312.00000 317.86978,312.00000 313.96813,312.00000" class="surface" data-kind="quadratic-surface"/><polyline points="428.97187,250.00000 422.64404,250.00000 416.42170,250.00000 410.30484,250.00000 404.29347,250.00000 398.38758,250.00000 392.58718,250.00000 386.89227,250.00000 381.30285,250.00000 375.81890,250.00000 370.44045,250.00000 365.16748,250.00000 360.00000,250.00000 354.93800,250.00000 349.98149,250.00000 345.13047,250.00000 340.38493,250.00000 335.74488,250.00000 331.21032,250.00000 326.78124,250.00000 322.45764,250.00000 318.23954,250.00000 314.12692,250.00000 310.11978,250.00000 306.21813,250.00000" class="surface" data-kind="quadratic-surface"/><polyline points="436.72187,188.00000 430.39404,188.00000 424.17170,188.00000 418.05484,188.00000 412.04347,188.00000 406.13758,188.00000 400.33718,188.00000 394.64227,188.00000 389.05285,188.00000 383.56890,188.00000 378.19045,188.00000 372.91748,188.00000 367.75000,188.00000 362.68800,188.00000 357.73149,188.00000 352.88047,188.00000 348.13493,188.00000 343.49488,188.00000 338.96032,188.00000 334.53124,188.00000 330.20764,188.00000 325.98954,188.00000 321.87692,188.00000 317.86978,188.00000 313.96813,188.00000" class="surface" data-kind="quadratic-surface"/><polyline points="436.72187,312.00000 435.48402,306.83333 434.35381,301.66667 433.33124,296.50000 432.41631,291.33333 431.60902,286.16667 430.90937,281.00000 430.31735,275.83333 429.83298,270.66667 429.45624,265.50000 429.18715,260.33333 429.02569,255.16667 428.97187,250.00000 429.02569,244.83333 429.18715,239.66667 429.45624,234.50000 429.83298,229.33333 430.31735,224.16667 430.90937,219.00000 431.60902,213.83333 432.41631,208.66667 433.33124,203.50000 434.35381,198.33333 435.48402,193.16667 436.72187,188.00000" class="surface" data-kind="quadratic-surface"/><polyline points="367.75000,312.00000 366.51215,306.83333 365.38194,301.66667 364.35938,296.50000 363.44444,291.33333 362.63715,286.16667 361.93750,281.00000 361.34549,275.83333 360.86111,270.66667 360.48438,265.50000 360.21528,260.33333 360.05382,255.16667 360.00000,250.00000 360.05382,244.83333 360.21528,239.66667 360.48438,234.50000 360.86111,229.33333 361.34549,224.16667 361.93750,219.00000 362.63715,213.83333 363.44444,208.66667 364.35938,203.50000 365.38194,198.33333 366.51215,193.16667 367.75000,188.00000" class="surface" data-kind="quadratic-surface"/><polyline points="313.96813,312.00000 312.73028,306.83333 311.60008,301.66667 310.57751,296.50000 309.66258,291.33333 308.85528,286.16667 308.15563,281.00000 307.56362,275.83333 307.07924,270.66667 306.70251,265.50000 306.43341,260.33333 306.27195,255.16667 306.21813,250.00000 306.27195,244.83333 306.43341,239.66667 306.70251,234.50000 307.07924,229.33333 307.56362,224.16667 308.15563,219.00000 308.85528,213.83333 309.66258,208.66667 310.57751,203.50000 311.60008,198.33333 312.73028,193.16667 313.96813,188.00000" class="surface" data-kind="quadratic-surface"/><text x="369.0" y="240.0" class="mirror-label">M2</text><circle cx="236.0" cy="250.0" r="5" fill="#176d92" data-kind="fixed-port"/><line x1="236.0" y1="250.0" x2="295.52" y2="250.0" stroke="#176d92" stroke-width="2.5" marker-end="url(#literature-proxy-XY-arrow)"/><text x="246.0" y="266.0" class="port-label">Source</text><circle cx="484.0" cy="250.0" r="5" fill="#704b9d" data-kind="fixed-port"/><line x1="484.0" y1="250.0" x2="543.52" y2="250.0" stroke="#704b9d" stroke-width="2.5" marker-end="url(#literature-proxy-XY-arrow)"/><text x="494.0" y="266.0" class="port-label">Target</text></svg></div><div class="projection" data-projection="YZ" hidden><h3>YZ Projection · 생략 축 X · mm · Equal Scale</h3><svg viewBox="0 0 720 510" role="img" aria-label="YZ geometry projection [mm]" data-scale="equal"><defs><marker id="literature-proxy-YZ-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7" fill="context-stroke"/></marker></defs><line x1="284.0" y1="50" x2="284.0" y2="450" class="grid"/><line x1="50" y1="402.0" x2="670" y2="402.0" class="grid"/><text x="284.0" y="474" text-anchor="middle" class="tick">-1</text><text x="45" y="406.0" text-anchor="end" class="tick">-1</text><line x1="314.4" y1="50" x2="314.4" y2="450" class="grid"/><line x1="50" y1="341.2" x2="670" y2="341.2" class="grid"/><text x="314.4" y="474" text-anchor="middle" class="tick">-0.6</text><text x="45" y="345.2" text-anchor="end" class="tick">-0.2</text><line x1="344.8" y1="50" x2="344.8" y2="450" class="grid"/><line x1="50" y1="280.4" x2="670" y2="280.4" class="grid"/><text x="344.8" y="474" text-anchor="middle" class="tick">-0.2</text><text x="45" y="284.4" text-anchor="end" class="tick">0.6</text><line x1="375.2" y1="50" x2="375.2" y2="450" class="grid"/><line x1="50" y1="219.60000000000002" x2="670" y2="219.60000000000002" class="grid"/><text x="375.2" y="474" text-anchor="middle" class="tick">0.2</text><text x="45" y="223.60000000000002" text-anchor="end" class="tick">1.4</text><line x1="405.6" y1="50" x2="405.6" y2="450" class="grid"/><line x1="50" y1="158.79999999999998" x2="670" y2="158.79999999999998" class="grid"/><text x="405.6" y="474" text-anchor="middle" class="tick">0.6</text><text x="45" y="162.79999999999998" text-anchor="end" class="tick">2.2</text><line x1="436.0" y1="50" x2="436.0" y2="450" class="grid"/><line x1="50" y1="98.0" x2="670" y2="98.0" class="grid"/><text x="436.0" y="474" text-anchor="middle" class="tick">1</text><text x="45" y="102.0" text-anchor="end" class="tick">3</text><text x="658" y="498" class="axis">Y [mm]</text><text x="18" y="30" class="axis">Z [mm]</text><rect x="284.0" y="98.0" width="152.0" height="304.0" class="box volume" data-kind="volume"><title>Package Volume</title></rect><rect x="314.4" y="272.8" width="91.20000000000005" height="106.39999999999998" class="box body" data-kind="body"><title>M1 Envelope</title></rect><rect x="314.4" y="120.79999999999998" width="91.20000000000005" height="106.4" class="box body" data-kind="body"><title>M2 Envelope</title></rect><polyline points="360.00000,326.00000 360.00000,326.00000 360.00000,174.00000 360.00000,174.00000" class="chief" data-kind="verified-chief" marker-end="url(#literature-proxy-YZ-arrow)"/><polyline points="322.00000,354.21308 322.00000,351.82175 322.00000,349.36576 322.00000,346.84512 322.00000,344.25983 322.00000,341.60989 322.00000,338.89529 322.00000,336.11604 322.00000,333.27214 322.00000,330.36358 322.00000,327.39037 322.00000,324.35251 322.00000,321.25000 322.00000,318.08283 322.00000,314.85101 322.00000,311.55454 322.00000,308.19342 322.00000,304.76764 322.00000,301.27721 322.00000,297.72213 322.00000,294.10239 322.00000,290.41800 322.00000,286.66896 322.00000,282.85527 322.00000,278.97692" class="surface" data-kind="quadratic-surface"/><polyline points="360.00000,358.96308 360.00000,356.57175 360.00000,354.11576 360.00000,351.59512 360.00000,349.00983 360.00000,346.35989 360.00000,343.64529 360.00000,340.86604 360.00000,338.02214 360.00000,335.11358 360.00000,332.14037 360.00000,329.10251 360.00000,326.00000 360.00000,322.83283 360.00000,319.60101 360.00000,316.30454 360.00000,312.94342 360.00000,309.51764 360.00000,306.02721 360.00000,302.47213 360.00000,298.85239 360.00000,295.16800 360.00000,291.41896 360.00000,287.60527 360.00000,283.72692" class="surface" data-kind="quadratic-surface"/><polyline points="398.00000,354.21308 398.00000,351.82175 398.00000,349.36576 398.00000,346.84512 398.00000,344.25983 398.00000,341.60989 398.00000,338.89529 398.00000,336.11604 398.00000,333.27214 398.00000,330.36358 398.00000,327.39037 398.00000,324.35251 398.00000,321.25000 398.00000,318.08283 398.00000,314.85101 398.00000,311.55454 398.00000,308.19342 398.00000,304.76764 398.00000,301.27721 398.00000,297.72213 398.00000,294.10239 398.00000,290.41800 398.00000,286.66896 398.00000,282.85527 398.00000,278.97692" class="surface" data-kind="quadratic-surface"/><polyline points="322.00000,354.21308 325.16667,354.97176 328.33333,355.66447 331.50000,356.29121 334.66667,356.85197 337.83333,357.34676 341.00000,357.77558 344.16667,358.13843 347.33333,358.43530 350.50000,358.66621 353.66667,358.83114 356.83333,358.93009 360.00000,358.96308 363.16667,358.93009 366.33333,358.83114 369.50000,358.66621 372.66667,358.43530 375.83333,358.13843 379.00000,357.77558 382.16667,357.34676 385.33333,356.85197 388.50000,356.29121 391.66667,355.66447 394.83333,354.97176 398.00000,354.21308" class="surface" data-kind="quadratic-surface"/><polyline points="322.00000,321.25000 325.16667,322.00868 328.33333,322.70139 331.50000,323.32812 334.66667,323.88889 337.83333,324.38368 341.00000,324.81250 344.16667,325.17535 347.33333,325.47222 350.50000,325.70312 353.66667,325.86806 356.83333,325.96701 360.00000,326.00000 363.16667,325.96701 366.33333,325.86806 369.50000,325.70312 372.66667,325.47222 375.83333,325.17535 379.00000,324.81250 382.16667,324.38368 385.33333,323.88889 388.50000,323.32812 391.66667,322.70139 394.83333,322.00868 398.00000,321.25000" class="surface" data-kind="quadratic-surface"/><polyline points="322.00000,278.97692 325.16667,279.73560 328.33333,280.42831 331.50000,281.05504 334.66667,281.61581 337.83333,282.11060 341.00000,282.53942 344.16667,282.90227 347.33333,283.19914 350.50000,283.43004 353.66667,283.59497 356.83333,283.69393 360.00000,283.72692 363.16667,283.69393 366.33333,283.59497 369.50000,283.43004 372.66667,283.19914 375.83333,282.90227 379.00000,282.53942 382.16667,282.11060 385.33333,281.61581 388.50000,281.05504 391.66667,280.42831 394.83333,279.73560 398.00000,278.97692" class="surface" data-kind="quadratic-surface"/><text x="369.0" y="316.0" class="mirror-label">M1</text><polyline points="322.00000,145.78692 322.00000,148.17825 322.00000,150.63424 322.00000,153.15488 322.00000,155.74017 322.00000,158.39011 322.00000,161.10471 322.00000,163.88396 322.00000,166.72786 322.00000,169.63642 322.00000,172.60963 322.00000,175.64749 322.00000,178.75000 322.00000,181.91717 322.00000,185.14899 322.00000,188.44546 322.00000,191.80658 322.00000,195.23236 322.00000,198.72279 322.00000,202.27787 322.00000,205.89761 322.00000,209.58200 322.00000,213.33104 322.00000,217.14473 322.00000,221.02308" class="surface" data-kind="quadratic-surface"/><polyline points="360.00000,141.03692 360.00000,143.42825 360.00000,145.88424 360.00000,148.40488 360.00000,150.99017 360.00000,153.64011 360.00000,156.35471 360.00000,159.13396 360.00000,161.97786 360.00000,164.88642 360.00000,167.85963 360.00000,170.89749 360.00000,174.00000 360.00000,177.16717 360.00000,180.39899 360.00000,183.69546 360.00000,187.05658 360.00000,190.48236 360.00000,193.97279 360.00000,197.52787 360.00000,201.14761 360.00000,204.83200 360.00000,208.58104 360.00000,212.39473 360.00000,216.27308" class="surface" data-kind="quadratic-surface"/><polyline points="398.00000,145.78692 398.00000,148.17825 398.00000,150.63424 398.00000,153.15488 398.00000,155.74017 398.00000,158.39011 398.00000,161.10471 398.00000,163.88396 398.00000,166.72786 398.00000,169.63642 398.00000,172.60963 398.00000,175.64749 398.00000,178.75000 398.00000,181.91717 398.00000,185.14899 398.00000,188.44546 398.00000,191.80658 398.00000,195.23236 398.00000,198.72279 398.00000,202.27787 398.00000,205.89761 398.00000,209.58200 398.00000,213.33104 398.00000,217.14473 398.00000,221.02308" class="surface" data-kind="quadratic-surface"/><polyline points="322.00000,145.78692 325.16667,145.02824 328.33333,144.33553 331.50000,143.70879 334.66667,143.14803 337.83333,142.65324 341.00000,142.22442 344.16667,141.86157 347.33333,141.56470 350.50000,141.33379 353.66667,141.16886 356.83333,141.06991 360.00000,141.03692 363.16667,141.06991 366.33333,141.16886 369.50000,141.33379 372.66667,141.56470 375.83333,141.86157 379.00000,142.22442 382.16667,142.65324 385.33333,143.14803 388.50000,143.70879 391.66667,144.33553 394.83333,145.02824 398.00000,145.78692" class="surface" data-kind="quadratic-surface"/><polyline points="322.00000,178.75000 325.16667,177.99132 328.33333,177.29861 331.50000,176.67188 334.66667,176.11111 337.83333,175.61632 341.00000,175.18750 344.16667,174.82465 347.33333,174.52778 350.50000,174.29688 353.66667,174.13194 356.83333,174.03299 360.00000,174.00000 363.16667,174.03299 366.33333,174.13194 369.50000,174.29688 372.66667,174.52778 375.83333,174.82465 379.00000,175.18750 382.16667,175.61632 385.33333,176.11111 388.50000,176.67188 391.66667,177.29861 394.83333,177.99132 398.00000,178.75000" class="surface" data-kind="quadratic-surface"/><polyline points="322.00000,221.02308 325.16667,220.26440 328.33333,219.57169 331.50000,218.94496 334.66667,218.38419 337.83333,217.88940 341.00000,217.46058 344.16667,217.09773 347.33333,216.80086 350.50000,216.56996 353.66667,216.40503 356.83333,216.30607 360.00000,216.27308 363.16667,216.30607 366.33333,216.40503 369.50000,216.56996 372.66667,216.80086 375.83333,217.09773 379.00000,217.46058 382.16667,217.88940 385.33333,218.38419 388.50000,218.94496 391.66667,219.57169 394.83333,220.26440 398.00000,221.02308" class="surface" data-kind="quadratic-surface"/><text x="369.0" y="164.0" class="mirror-label">M2</text><circle cx="360.0" cy="326.0" r="5" fill="#176d92" data-kind="fixed-port"/><text x="370.0" y="354.0" class="tick">axis along X</text><text x="370.0" y="342.0" class="port-label">Source</text><circle cx="360.0" cy="174.0" r="5" fill="#704b9d" data-kind="fixed-port"/><text x="370.0" y="202.0" class="tick">axis along X</text><text x="370.0" y="190.0" class="port-label">Target</text></svg></div></div>
+        <div class="dirty-note" hidden>입력이 변경되었습니다. 재평가 전에는 이전 결과와 Geometry를 표시하지 않습니다.</div>
+        <div class="legend"><span><b style="color:#176d92">●</b> Source / Chief Ray</span><span><b style="color:#704b9d">●</b> Fixed Target</span><span><b style="color:#bd762e">—</b> Quadratic Surfaces</span><span>▧ Declared AABBs</span></div>
+        <p class="notice">2D Projection의 중첩은 3D 충돌 판정이 아닙니다. Port 화살표 길이는 표시용입니다. Beam Envelope는 표시하지 않습니다.</p>
+        <details data-evaluated><summary>Fixed Port 입력 요약 · SI Units</summary><table class="input-summary"><tbody><tr><td>Source · position_m</td><td>[0.0, 0.0, 0.0]</td><td>m</td></tr><tr><td>Source · propagation_direction</td><td>[1.0, 0.0, 0.0]</td><td>1</td></tr><tr><td>Source · mfd_ts_m</td><td>[2.73e-06, 3.79e-06]</td><td>m</td></tr><tr><td>Target · position_m</td><td>[0.002, 0.0, 0.002]</td><td>m</td></tr><tr><td>Target · propagation_direction</td><td>[1.0, 0.0, 0.0]</td><td>1</td></tr><tr><td>Target · mfd_ts_m</td><td>[2.73e-06, 3.79e-06]</td><td>m</td></tr></tbody></table></details>
+        <p class="digest" data-evaluated>Input SHA256: 3939e0e0e71b6c470a6807e3127083c17fedc663f829d33b47da051d2ae6c179</p></section>
+        <section class="card"><h2>모델 결과와 적용 범위</h2><div class="results"><div class="metric"><span>η_mode · Approximate scalar diagnostic</span><strong data-overlap-withheld>—</strong><small>Total Coupling: Uncomputed · 실제 제품 효율이 아닙니다.</small></div>
+    <table class="states"><tbody><tr data-result="input_contract"><td>Input Contract</td><td><span class="badge pass">Pass</span></td></tr><tr data-result="geometry"><td>Chief-Ray Geometry</td><td><span class="badge pass">Pass</span></td></tr><tr data-result="model_domain"><td>Gaussian Domain</td><td><span class="badge fail">Fail</span></td></tr><tr data-result="design_constraints"><td>Design Bounds</td><td><span class="badge pass">Pass</span></td></tr><tr data-result="gaussian_mode_matching"><td>Normalized Mode Overlap</td><td><span class="badge uncomputed">Uncomputed</span></td></tr><tr data-result="envelope_geometry"><td>Envelope Geometry</td><td><span class="badge pass">Pass</span></td></tr><tr data-result="package_feasibility"><td>Full Package Feasibility</td><td><span class="badge uncomputed">Uncomputed</span></td></tr><tr data-result="physical_losses"><td>Physical Losses / Total Coupling</td><td><span class="badge uncomputed">Uncomputed</span></td></tr><tr data-result="fabrication"><td>Fabrication / Assembly</td><td><span class="badge uncomputed">Uncomputed</span></td></tr><tr data-result="actual_applicability"><td>Actual Applicability</td><td><span class="badge uncomputed">Uncomputed</span></td></tr></tbody></table>
+    <details><summary>판정 근거 / 미계산 항목</summary><ul><li><b>model_domain</b>: Gaussian divergence exceeds 0.1 rad</li><li><b>gaussian_mode_matching</b>: optical Geometry/domain incomplete or failed</li><li><b>package_feasibility</b>: full finite-beam/body/support clearance not evaluated</li><li><b>physical_losses</b>: coating/device interfaces/polarization/scatter not supplied</li><li><b>fabrication</b>: no process or assembly constraints</li><li><b>actual_applicability</b>: external input adapter does not independently certify actual Port field or package performance</li></ul></details>
+    <details><summary>Adapter Result JSON · 기존 Samples 포함</summary><pre>{
+  &quot;input_contract&quot;: {
+    &quot;status&quot;: &quot;Pass&quot;,
+    &quot;scope&quot;: &quot;explicit nominal external Gaussian contract; field fit not certified&quot;
+  },
+  &quot;geometry&quot;: {
+    &quot;status&quot;: &quot;Pass&quot;,
+    &quot;scope&quot;: &quot;fixed-port specular vertex path&quot;,
+    &quot;lengths&quot;: [
+      0.001,
+      0.002,
+      0.001
+    ],
+    &quot;directions&quot;: [
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0
+      ]
+    ],
+    &quot;cosines&quot;: [
+      0.7071067811865476,
+      0.7071067811865476
+    ],
+    &quot;patch_obstruction&quot;: &quot;Pass (chief ray, quadratic patches only)&quot;
+  },
+  &quot;model_domain&quot;: {
+    &quot;status&quot;: &quot;Fail&quot;,
+    &quot;reason&quot;: &quot;Gaussian divergence exceeds 0.1 rad&quot;
+  },
+  &quot;design_constraints&quot;: {
+    &quot;status&quot;: &quot;Pass&quot;,
+    &quot;scope&quot;: &quot;declared nominal bounds only; no tolerance/yield&quot;,
+    &quot;checks&quot;: [
+      {
+        &quot;path&quot;: &quot;reflectors[0].vertex_bounds_m&quot;,
+        &quot;status&quot;: &quot;Pass&quot;
+      },
+      {
+        &quot;path&quot;: &quot;reflectors[0].principal_curvature_bounds_per_m&quot;,
+        &quot;status&quot;: &quot;Pass&quot;
+      },
+      {
+        &quot;path&quot;: &quot;reflectors[0].half_aperture_bounds_m&quot;,
+        &quot;status&quot;: &quot;Pass&quot;
+      },
+      {
+        &quot;path&quot;: &quot;reflectors[0].normal_constraints&quot;,
+        &quot;status&quot;: &quot;Pass&quot;
+      },
+      {
+        &quot;path&quot;: &quot;reflectors[1].vertex_bounds_m&quot;,
+        &quot;status&quot;: &quot;Pass&quot;
+      },
+      {
+        &quot;path&quot;: &quot;reflectors[1].principal_curvature_bounds_per_m&quot;,
+        &quot;status&quot;: &quot;Pass&quot;
+      },
+      {
+        &quot;path&quot;: &quot;reflectors[1].half_aperture_bounds_m&quot;,
+        &quot;status&quot;: &quot;Pass&quot;
+      },
+      {
+        &quot;path&quot;: &quot;reflectors[1].normal_constraints&quot;,
+        &quot;status&quot;: &quot;Pass&quot;
+      }
+    ]
+  },
+  &quot;gaussian_mode_matching&quot;: {
+    &quot;status&quot;: &quot;Uncomputed&quot;,
+    &quot;normalized_mode_overlap&quot;: null,
+    &quot;reason&quot;: &quot;optical Geometry/domain incomplete or failed&quot;
+  },
+  &quot;package_feasibility&quot;: {
+    &quot;status&quot;: &quot;Uncomputed&quot;,
+    &quot;reason&quot;: &quot;full finite-beam/body/support clearance not evaluated&quot;,
+    &quot;envelope_geometry&quot;: {
+      &quot;status&quot;: &quot;Pass&quot;,
+      &quot;scope&quot;: &quot;declared world AABBs and quadratic patch extents only&quot;,
+      &quot;checks&quot;: [
+        {
+          &quot;path&quot;: &quot;package.frame_id&quot;,
+          &quot;status&quot;: &quot;Pass&quot;
+        },
+        {
+          &quot;path&quot;: &quot;package.available_volume&quot;,
+          &quot;status&quot;: &quot;Pass&quot;
+        },
+        {
+          &quot;path&quot;: &quot;package.required_clearance_m&quot;,
+          &quot;status&quot;: &quot;Pass&quot;
+        },
+        {
+          &quot;path&quot;: &quot;package.keepout_bodies&quot;,
+          &quot;status&quot;: &quot;Pass&quot;
+        },
+        {
+          &quot;path&quot;: &quot;reflectors[0].body_envelope&quot;,
+          &quot;status&quot;: &quot;Pass&quot;
+        },
+        {
+          &quot;path&quot;: &quot;reflectors[1].body_envelope&quot;,
+          &quot;status&quot;: &quot;Pass&quot;
+        },
+        {
+          &quot;path&quot;: &quot;patch[0].volume&quot;,
+          &quot;status&quot;: &quot;Pass&quot;,
+          &quot;reason&quot;: &quot;entire quadratic patch extent&quot;
+        },
+        {
+          &quot;path&quot;: &quot;body[0].patch&quot;,
+          &quot;status&quot;: &quot;Pass&quot;,
+          &quot;reason&quot;: &quot;declared total envelope must enclose entire surface&quot;
+        },
+        {
+          &quot;path&quot;: &quot;body[0].volume&quot;,
+          &quot;status&quot;: &quot;Pass&quot;,
+          &quot;reason&quot;: &quot;total envelope plus boundary clearance&quot;
+        },
+        {
+          &quot;path&quot;: &quot;patch[1].volume&quot;,
+          &quot;status&quot;: &quot;Pass&quot;,
+          &quot;reason&quot;: &quot;entire quadratic patch extent&quot;
+        },
+        {
+          &quot;path&quot;: &quot;body[1].patch&quot;,
+          &quot;status&quot;: &quot;Pass&quot;,
+          &quot;reason&quot;: &quot;declared total envelope must enclose entire surface&quot;
+        },
+        {
+          &quot;path&quot;: &quot;body[1].volume&quot;,
+          &quot;status&quot;: &quot;Pass&quot;,
+          &quot;reason&quot;: &quot;total envelope plus boundary clearance&quot;
+        },
+        {
+          &quot;path&quot;: &quot;path_point[0].volume&quot;,
+          &quot;status&quot;: &quot;Pass&quot;,
+          &quot;reason&quot;: &quot;chief path points only&quot;
+        },
+        {
+          &quot;path&quot;: &quot;path_point[1].volume&quot;,
+          &quot;status&quot;: &quot;Pass&quot;,
+          &quot;reason&quot;: &quot;chief path points only&quot;
+        },
+        {
+          &quot;path&quot;: &quot;path_point[2].volume&quot;,
+          &quot;status&quot;: &quot;Pass&quot;,
+          &quot;reason&quot;: &quot;chief path points only&quot;
+        },
+        {
+          &quot;path&quot;: &quot;path_point[3].volume&quot;,
+          &quot;status&quot;: &quot;Pass&quot;,
+          &quot;reason&quot;: &quot;chief path points only&quot;
+        },
+        {
+          &quot;path&quot;: &quot;reflector_envelope_pair&quot;,
+          &quot;status&quot;: &quot;Pass&quot;,
+          &quot;reason&quot;: &quot;envelope separation, not actual-solid distance&quot;
+        }
+      ]
+    },
+    &quot;finite_beam_clearance&quot;: {
+      &quot;status&quot;: &quot;Uncomputed&quot;
+    }
+  },
+  &quot;physical_losses&quot;: {
+    &quot;status&quot;: &quot;Uncomputed&quot;,
+    &quot;total_coupling&quot;: null,
+    &quot;reason&quot;: &quot;coating/device interfaces/polarization/scatter not supplied&quot;
+  },
+  &quot;fabrication&quot;: {
+    &quot;status&quot;: &quot;Uncomputed&quot;,
+    &quot;reason&quot;: &quot;no process or assembly constraints&quot;
+  },
+  &quot;actual_applicability&quot;: {
+    &quot;status&quot;: &quot;Uncomputed&quot;,
+    &quot;reason&quot;: &quot;external input adapter does not independently certify actual Port field or package performance&quot;
+  },
+  &quot;input_snapshot&quot;: {
+    &quot;ambient_index&quot;: {
+      &quot;provenance&quot;: &quot;assumed&quot;,
+      &quot;quantity&quot;: &quot;external_ambient_refractive_index&quot;,
+      &quot;source&quot;: &quot;A2: homogeneous air approximation for the proposed fold; NOT the WAFT guided effective index&quot;,
+      &quot;uncertainty&quot;: null,
+      &quot;unit&quot;: &quot;1&quot;,
+      &quot;value&quot;: 1.0
+    },
+    &quot;contract_version&quot;: &quot;M3A-1&quot;,
+    &quot;coordinate_convention&quot;: &quot;right-handed world XYZ; t=s cross d; target d is arriving direction&quot;,
+    &quot;description&quot;: &quot;M4B-LIT-001 literature-guided Gaussian proxy, not a reproduction of the paper or a measured PIC/glass external field. L1=10.1021/acsphotonics.5c02702. Target widths use WAFT PIC-side TE 1310 nm guided-mode scales; their air-plane transfer is assumed. PIC source widths are selected to match that proxy. Phase=0, air n=1, scalar polarization and the two-mirror/package candidate are assumptions. Actual case M4A-001 remains unprovided.&quot;,
+    &quot;design&quot;: {
+      &quot;reflectors&quot;: [
+        {
+          &quot;half_aperture_ts_m&quot;: {
+            &quot;provenance&quot;: &quot;assumed&quot;,
+            &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+            &quot;uncertainty&quot;: null,
+            &quot;unit&quot;: &quot;m&quot;,
+            &quot;value&quot;: [
+              0.0007,
+              0.0005
+            ]
+          },
+          &quot;illuminated_normal&quot;: {
+            &quot;provenance&quot;: &quot;assumed&quot;,
+            &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+            &quot;uncertainty&quot;: null,
+            &quot;unit&quot;: &quot;1&quot;,
+            &quot;value&quot;: [
+              -0.7071067811865475,
+              0.0,
+              0.7071067811865475
+            ]
+          },
+          &quot;principal_curvature_ts_per_m&quot;: {
+            &quot;provenance&quot;: &quot;assumed&quot;,
+            &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+            &quot;uncertainty&quot;: null,
+            &quot;unit&quot;: &quot;m^-1&quot;,
+            &quot;value&quot;: [
+              353.5533905932738,
+              707.1067811865474
+            ]
+          },
+          &quot;vertex_m&quot;: {
+            &quot;provenance&quot;: &quot;assumed&quot;,
+            &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+            &quot;uncertainty&quot;: null,
+            &quot;unit&quot;: &quot;m&quot;,
+            &quot;value&quot;: [
+              0.001,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        {
+          &quot;half_aperture_ts_m&quot;: {
+            &quot;provenance&quot;: &quot;assumed&quot;,
+            &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+            &quot;uncertainty&quot;: null,
+            &quot;unit&quot;: &quot;m&quot;,
+            &quot;value&quot;: [
+              0.0007,
+              0.0005
+            ]
+          },
+          &quot;illuminated_normal&quot;: {
+            &quot;provenance&quot;: &quot;assumed&quot;,
+            &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+            &quot;uncertainty&quot;: null,
+            &quot;unit&quot;: &quot;1&quot;,
+            &quot;value&quot;: [
+              0.7071067811865475,
+              0.0,
+              -0.7071067811865475
+            ]
+          },
+          &quot;principal_curvature_ts_per_m&quot;: {
+            &quot;provenance&quot;: &quot;assumed&quot;,
+            &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+            &quot;uncertainty&quot;: null,
+            &quot;unit&quot;: &quot;m^-1&quot;,
+            &quot;value&quot;: [
+              353.5533905932738,
+              707.1067811865474
+            ]
+          },
+          &quot;vertex_m&quot;: {
+            &quot;provenance&quot;: &quot;assumed&quot;,
+            &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+            &quot;uncertainty&quot;: null,
+            &quot;unit&quot;: &quot;m&quot;,
+            &quot;value&quot;: [
+              0.001,
+              0.0,
+              0.002
+            ]
+          }
+        }
+      ]
+    },
+    &quot;package&quot;: {
+      &quot;available_volume&quot;: {
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null,
+        &quot;unit&quot;: &quot;m&quot;,
+        &quot;value&quot;: {
+          &quot;max_m&quot;: [
+            0.003,
+            0.001,
+            0.003
+          ],
+          &quot;min_m&quot;: [
+            -0.001,
+            -0.001,
+            -0.001
+          ],
+          &quot;type&quot;: &quot;aabb&quot;
+        }
+      },
+      &quot;frame_id&quot;: {
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null,
+        &quot;unit&quot;: &quot;frame&quot;,
+        &quot;value&quot;: &quot;world&quot;
+      },
+      &quot;keepout_bodies&quot;: {
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null,
+        &quot;unit&quot;: &quot;m&quot;,
+        &quot;value&quot;: []
+      },
+      &quot;required_clearance_m&quot;: {
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null,
+        &quot;unit&quot;: &quot;m&quot;,
+        &quot;value&quot;: 1e-05
+      }
+    },
+    &quot;reflectors&quot;: [
+      {
+        &quot;body_envelope&quot;: {
+          &quot;provenance&quot;: &quot;assumed&quot;,
+          &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+          &quot;uncertainty&quot;: null,
+          &quot;unit&quot;: &quot;m&quot;,
+          &quot;value&quot;: {
+            &quot;max_m&quot;: [
+              0.0017,
+              0.0006,
+              0.0007
+            ],
+            &quot;min_m&quot;: [
+              0.0003,
+              -0.0006,
+              -0.0007
+            ],
+            &quot;type&quot;: &quot;aabb&quot;
+          }
+        },
+        &quot;half_aperture_bounds_m&quot;: {
+          &quot;provenance&quot;: &quot;assumed&quot;,
+          &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+          &quot;uncertainty&quot;: null,
+          &quot;unit&quot;: &quot;m&quot;,
+          &quot;value&quot;: [
+            [
+              0.00063,
+              0.0007700000000000001
+            ],
+            [
+              0.00045000000000000004,
+              0.00055
+            ]
+          ]
+        },
+        &quot;normal_constraints&quot;: {
+          &quot;provenance&quot;: &quot;assumed&quot;,
+          &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+          &quot;uncertainty&quot;: null,
+          &quot;unit&quot;: &quot;rad&quot;,
+          &quot;value&quot;: {
+            &quot;axis&quot;: [
+              -0.7071067811865475,
+              0.0,
+              0.7071067811865475
+            ],
+            &quot;max_angle_rad&quot;: 0.0
+          }
+        },
+        &quot;principal_curvature_bounds_per_m&quot;: {
+          &quot;provenance&quot;: &quot;assumed&quot;,
+          &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+          &quot;uncertainty&quot;: null,
+          &quot;unit&quot;: &quot;m^-1&quot;,
+          &quot;value&quot;: [
+            [
+              350.017856687341,
+              357.08892449920654
+            ],
+            [
+              700.0357133746819,
+              714.177848998413
+            ]
+          ]
+        },
+        &quot;surface_prescription&quot;: {
+          &quot;provenance&quot;: &quot;assumed&quot;,
+          &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+          &quot;uncertainty&quot;: null,
+          &quot;unit&quot;: &quot;model&quot;,
+          &quot;value&quot;: &quot;quadratic_patch&quot;
+        },
+        &quot;vertex_bounds_m&quot;: {
+          &quot;provenance&quot;: &quot;assumed&quot;,
+          &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+          &quot;uncertainty&quot;: null,
+          &quot;unit&quot;: &quot;m&quot;,
+          &quot;value&quot;: [
+            [
+              0.0009,
+              -0.0001,
+              -0.0001
+            ],
+            [
+              0.0011,
+              0.0001,
+              0.0001
+            ]
+          ]
+        }
+      },
+      {
+        &quot;body_envelope&quot;: {
+          &quot;provenance&quot;: &quot;assumed&quot;,
+          &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+          &quot;uncertainty&quot;: null,
+          &quot;unit&quot;: &quot;m&quot;,
+          &quot;value&quot;: {
+            &quot;max_m&quot;: [
+              0.0017,
+              0.0006,
+              0.0027
+            ],
+            &quot;min_m&quot;: [
+              0.0003,
+              -0.0006,
+              0.0013
+            ],
+            &quot;type&quot;: &quot;aabb&quot;
+          }
+        },
+        &quot;half_aperture_bounds_m&quot;: {
+          &quot;provenance&quot;: &quot;assumed&quot;,
+          &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+          &quot;uncertainty&quot;: null,
+          &quot;unit&quot;: &quot;m&quot;,
+          &quot;value&quot;: [
+            [
+              0.00063,
+              0.0007700000000000001
+            ],
+            [
+              0.00045000000000000004,
+              0.00055
+            ]
+          ]
+        },
+        &quot;normal_constraints&quot;: {
+          &quot;provenance&quot;: &quot;assumed&quot;,
+          &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+          &quot;uncertainty&quot;: null,
+          &quot;unit&quot;: &quot;rad&quot;,
+          &quot;value&quot;: {
+            &quot;axis&quot;: [
+              0.7071067811865475,
+              0.0,
+              -0.7071067811865475
+            ],
+            &quot;max_angle_rad&quot;: 0.0
+          }
+        },
+        &quot;principal_curvature_bounds_per_m&quot;: {
+          &quot;provenance&quot;: &quot;assumed&quot;,
+          &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+          &quot;uncertainty&quot;: null,
+          &quot;unit&quot;: &quot;m^-1&quot;,
+          &quot;value&quot;: [
+            [
+              350.017856687341,
+              357.08892449920654
+            ],
+            [
+              700.0357133746819,
+              714.177848998413
+            ]
+          ]
+        },
+        &quot;surface_prescription&quot;: {
+          &quot;provenance&quot;: &quot;assumed&quot;,
+          &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+          &quot;uncertainty&quot;: null,
+          &quot;unit&quot;: &quot;model&quot;,
+          &quot;value&quot;: &quot;quadratic_patch&quot;
+        },
+        &quot;vertex_bounds_m&quot;: {
+          &quot;provenance&quot;: &quot;assumed&quot;,
+          &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+          &quot;uncertainty&quot;: null,
+          &quot;unit&quot;: &quot;m&quot;,
+          &quot;value&quot;: [
+            [
+              0.0009,
+              -0.0001,
+              0.0019
+            ],
+            [
+              0.0011,
+              0.0001,
+              0.0021
+            ]
+          ]
+        }
+      }
+    ],
+    &quot;source&quot;: {
+      &quot;mfd_ts_m&quot;: {
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A3: selected width-matched PIC external Gaussian proxy; SiN MFD is not tabulated in L1; 1/e^2 Gaussian-diameter interpretation is assumed&quot;,
+        &quot;uncertainty&quot;: null,
+        &quot;unit&quot;: &quot;m&quot;,
+        &quot;value&quot;: [
+          2.73e-06,
+          3.79e-06
+        ]
+      },
+      &quot;mode_evidence&quot;: {
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A3/A4: no measured/simulated complex external-plane field supplied&quot;,
+        &quot;uncertainty&quot;: null,
+        &quot;unit&quot;: &quot;evidence&quot;,
+        &quot;value&quot;: {
+          &quot;basis_mapping&quot;: &quot;t=-Z vertical, s=+Y horizontal&quot;,
+          &quot;external_field_fit&quot;: &quot;not available&quot;,
+          &quot;kind&quot;: &quot;gaussian_assumption&quot;,
+          &quot;mfd_definition&quot;: &quot;Reported widths interpreted as 1/e^2 intensity Gaussian diameters for this proxy; the paper table does not establish a complex external-field fit.&quot;,
+          &quot;note&quot;: &quot;guided widths and an assumed external Gaussian are different evidence levels&quot;,
+          &quot;reference&quot;: &quot;10.1021/acsphotonics.5c02702&quot;,
+          &quot;role&quot;: &quot;source&quot;
+        }
+      },
+      &quot;polarization&quot;: {
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A6: nominal horizontal TE label on s=+Y; vector transport/coating response not computed&quot;,
+        &quot;uncertainty&quot;: null,
+        &quot;unit&quot;: &quot;1&quot;,
+        &quot;value&quot;: {
+          &quot;jones_ts&quot;: [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          &quot;treatment&quot;: &quot;scalar_ignored&quot;
+        }
+      },
+      &quot;position_m&quot;: {
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null,
+        &quot;unit&quot;: &quot;m&quot;,
+        &quot;value&quot;: [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      &quot;propagation_direction&quot;: {
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null,
+        &quot;unit&quot;: &quot;1&quot;,
+        &quot;value&quot;: [
+          1.0,
+          0.0,
+          0.0
+        ]
+      },
+      &quot;reference_plane&quot;: {
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null,
+        &quot;unit&quot;: &quot;plane&quot;,
+        &quot;value&quot;: {
+          &quot;frame_id&quot;: &quot;world&quot;,
+          &quot;id&quot;: &quot;source-external&quot;,
+          &quot;normal&quot;: [
+            1.0,
+            0.0,
+            0.0
+          ],
+          &quot;origin_m&quot;: [
+            0.0,
+            0.0,
+            0.0
+          ],
+          &quot;side&quot;: &quot;external&quot;
+        }
+      },
+      &quot;sagittal_axis&quot;: {
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null,
+        &quot;unit&quot;: &quot;1&quot;,
+        &quot;value&quot;: [
+          0.0,
+          1.0,
+          0.0
+        ]
+      },
+      &quot;wavefront_curvature_ts_per_m&quot;: {
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A5: flat phase at the declared external plane, selected favorable Gaussian screen; not reported by L1&quot;,
+        &quot;uncertainty&quot;: null,
+        &quot;unit&quot;: &quot;m^-1&quot;,
+        &quot;value&quot;: [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    &quot;target&quot;: {
+      &quot;mfd_ts_m&quot;: {
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;L1 Table 1 TE 1310 nm guided-mode scales H=3.79 um,V=2.73 um; A4: external Gaussian transfer assumed; 10.1021/acsphotonics.5c02702; 1/e^2 Gaussian-diameter interpretation is assumed&quot;,
+        &quot;uncertainty&quot;: null,
+        &quot;unit&quot;: &quot;m&quot;,
+        &quot;value&quot;: [
+          2.73e-06,
+          3.79e-06
+        ]
+      },
+      &quot;mode_evidence&quot;: {
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A3/A4: no measured/simulated complex external-plane field supplied&quot;,
+        &quot;uncertainty&quot;: null,
+        &quot;unit&quot;: &quot;evidence&quot;,
+        &quot;value&quot;: {
+          &quot;basis_mapping&quot;: &quot;t=-Z vertical, s=+Y horizontal&quot;,
+          &quot;external_field_fit&quot;: &quot;not available&quot;,
+          &quot;kind&quot;: &quot;gaussian_assumption&quot;,
+          &quot;mfd_definition&quot;: &quot;Reported widths interpreted as 1/e^2 intensity Gaussian diameters for this proxy; the paper table does not establish a complex external-field fit.&quot;,
+          &quot;note&quot;: &quot;guided widths and an assumed external Gaussian are different evidence levels&quot;,
+          &quot;reference&quot;: &quot;10.1021/acsphotonics.5c02702&quot;,
+          &quot;role&quot;: &quot;target&quot;
+        }
+      },
+      &quot;polarization&quot;: {
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A6: nominal horizontal TE label on s=+Y; vector transport/coating response not computed&quot;,
+        &quot;uncertainty&quot;: null,
+        &quot;unit&quot;: &quot;1&quot;,
+        &quot;value&quot;: {
+          &quot;jones_ts&quot;: [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          &quot;treatment&quot;: &quot;scalar_ignored&quot;
+        }
+      },
+      &quot;position_m&quot;: {
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null,
+        &quot;unit&quot;: &quot;m&quot;,
+        &quot;value&quot;: [
+          0.002,
+          0.0,
+          0.002
+        ]
+      },
+      &quot;propagation_direction&quot;: {
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null,
+        &quot;unit&quot;: &quot;1&quot;,
+        &quot;value&quot;: [
+          1.0,
+          0.0,
+          0.0
+        ]
+      },
+      &quot;reference_plane&quot;: {
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null,
+        &quot;unit&quot;: &quot;plane&quot;,
+        &quot;value&quot;: {
+          &quot;frame_id&quot;: &quot;world&quot;,
+          &quot;id&quot;: &quot;target-external&quot;,
+          &quot;normal&quot;: [
+            1.0,
+            0.0,
+            0.0
+          ],
+          &quot;origin_m&quot;: [
+            0.002,
+            0.0,
+            0.002
+          ],
+          &quot;side&quot;: &quot;external&quot;
+        }
+      },
+      &quot;sagittal_axis&quot;: {
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null,
+        &quot;unit&quot;: &quot;1&quot;,
+        &quot;value&quot;: [
+          0.0,
+          1.0,
+          0.0
+        ]
+      },
+      &quot;wavefront_curvature_ts_per_m&quot;: {
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A5: flat phase at the declared external plane, selected favorable Gaussian screen; not reported by L1&quot;,
+        &quot;uncertainty&quot;: null,
+        &quot;unit&quot;: &quot;m^-1&quot;,
+        &quot;value&quot;: [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    &quot;wavelength_m&quot;: {
+      &quot;provenance&quot;: &quot;supplied&quot;,
+      &quot;source&quot;: &quot;L1 Table 1, TE 1310 nm; 10.1021/acsphotonics.5c02702&quot;,
+      &quot;uncertainty&quot;: null,
+      &quot;unit&quot;: &quot;m&quot;,
+      &quot;value&quot;: 1.31e-06
+    }
+  },
+  &quot;uncertainty_treatment&quot;: &quot;metadata preserved; no uncertainty propagation or yield calculation&quot;,
+  &quot;evaluated_ports&quot;: {
+    &quot;source&quot;: {
+      &quot;position_m&quot;: [
+        0.0,
+        0.0,
+        0.0
+      ],
+      &quot;direction&quot;: [
+        1.0,
+        0.0,
+        0.0
+      ],
+      &quot;sagittal_axis&quot;: [
+        0.0,
+        1.0,
+        0.0
+      ],
+      &quot;complex_q_ts_m&quot;: [
+        [
+          -0.0,
+          4.468316009148735e-06
+        ],
+        [
+          -0.0,
+          8.611860884623883e-06
+        ]
+      ],
+      &quot;wavelength_m&quot;: 1.31e-06,
+      &quot;ambient_index&quot;: 1.0
+    },
+    &quot;target&quot;: {
+      &quot;position_m&quot;: [
+        0.002,
+        0.0,
+        0.002
+      ],
+      &quot;direction&quot;: [
+        1.0,
+        0.0,
+        0.0
+      ],
+      &quot;sagittal_axis&quot;: [
+        0.0,
+        1.0,
+        0.0
+      ],
+      &quot;complex_q_ts_m&quot;: [
+        [
+          -0.0,
+          4.468316009148735e-06
+        ],
+        [
+          -0.0,
+          8.611860884623883e-06
+        ]
+      ],
+      &quot;wavelength_m&quot;: 1.31e-06,
+      &quot;ambient_index&quot;: 1.0
+    }
+  },
+  &quot;samples&quot;: []
+}</pre></details></div>
+        <form class="editors" method="post" action="/evaluate"><h3>입력 · Port / Design / Package 분리</h3><details><summary>Fixed Optical Ports · Boundary Conditions</summary><textarea name="ports" aria-label="Fixed Optical Ports · Boundary Conditions" spellcheck="false" readonly>{
+  &quot;contract_version&quot;: &quot;M3A-1&quot;,
+  &quot;coordinate_convention&quot;: &quot;right-handed world XYZ; t=s cross d; target d is arriving direction&quot;,
+  &quot;description&quot;: &quot;M4B-LIT-001 literature-guided Gaussian proxy, not a reproduction of the paper or a measured PIC/glass external field. L1=10.1021/acsphotonics.5c02702. Target widths use WAFT PIC-side TE 1310 nm guided-mode scales; their air-plane transfer is assumed. PIC source widths are selected to match that proxy. Phase=0, air n=1, scalar polarization and the two-mirror/package candidate are assumptions. Actual case M4A-001 remains unprovided.&quot;,
+  &quot;wavelength_m&quot;: {
+    &quot;value&quot;: 1.31e-06,
+    &quot;unit&quot;: &quot;m&quot;,
+    &quot;provenance&quot;: &quot;supplied&quot;,
+    &quot;source&quot;: &quot;L1 Table 1, TE 1310 nm; 10.1021/acsphotonics.5c02702&quot;,
+    &quot;uncertainty&quot;: null
+  },
+  &quot;ambient_index&quot;: {
+    &quot;value&quot;: 1.0,
+    &quot;unit&quot;: &quot;1&quot;,
+    &quot;provenance&quot;: &quot;assumed&quot;,
+    &quot;source&quot;: &quot;A2: homogeneous air approximation for the proposed fold; NOT the WAFT guided effective index&quot;,
+    &quot;uncertainty&quot;: null,
+    &quot;quantity&quot;: &quot;external_ambient_refractive_index&quot;
+  },
+  &quot;source&quot;: {
+    &quot;position_m&quot;: {
+      &quot;value&quot;: [
+        0.0,
+        0.0,
+        0.0
+      ],
+      &quot;unit&quot;: &quot;m&quot;,
+      &quot;provenance&quot;: &quot;assumed&quot;,
+      &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+      &quot;uncertainty&quot;: null
+    },
+    &quot;propagation_direction&quot;: {
+      &quot;value&quot;: [
+        1.0,
+        0.0,
+        0.0
+      ],
+      &quot;unit&quot;: &quot;1&quot;,
+      &quot;provenance&quot;: &quot;assumed&quot;,
+      &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+      &quot;uncertainty&quot;: null
+    },
+    &quot;sagittal_axis&quot;: {
+      &quot;value&quot;: [
+        0.0,
+        1.0,
+        0.0
+      ],
+      &quot;unit&quot;: &quot;1&quot;,
+      &quot;provenance&quot;: &quot;assumed&quot;,
+      &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+      &quot;uncertainty&quot;: null
+    },
+    &quot;mfd_ts_m&quot;: {
+      &quot;value&quot;: [
+        2.73e-06,
+        3.79e-06
+      ],
+      &quot;unit&quot;: &quot;m&quot;,
+      &quot;provenance&quot;: &quot;assumed&quot;,
+      &quot;source&quot;: &quot;A3: selected width-matched PIC external Gaussian proxy; SiN MFD is not tabulated in L1; 1/e^2 Gaussian-diameter interpretation is assumed&quot;,
+      &quot;uncertainty&quot;: null
+    },
+    &quot;wavefront_curvature_ts_per_m&quot;: {
+      &quot;value&quot;: [
+        0.0,
+        0.0
+      ],
+      &quot;unit&quot;: &quot;m^-1&quot;,
+      &quot;provenance&quot;: &quot;assumed&quot;,
+      &quot;source&quot;: &quot;A5: flat phase at the declared external plane, selected favorable Gaussian screen; not reported by L1&quot;,
+      &quot;uncertainty&quot;: null
+    },
+    &quot;polarization&quot;: {
+      &quot;value&quot;: {
+        &quot;treatment&quot;: &quot;scalar_ignored&quot;,
+        &quot;jones_ts&quot;: [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ]
+      },
+      &quot;unit&quot;: &quot;1&quot;,
+      &quot;provenance&quot;: &quot;assumed&quot;,
+      &quot;source&quot;: &quot;A6: nominal horizontal TE label on s=+Y; vector transport/coating response not computed&quot;,
+      &quot;uncertainty&quot;: null
+    },
+    &quot;reference_plane&quot;: {
+      &quot;value&quot;: {
+        &quot;id&quot;: &quot;source-external&quot;,
+        &quot;frame_id&quot;: &quot;world&quot;,
+        &quot;side&quot;: &quot;external&quot;,
+        &quot;origin_m&quot;: [
+          0.0,
+          0.0,
+          0.0
+        ],
+        &quot;normal&quot;: [
+          1.0,
+          0.0,
+          0.0
+        ]
+      },
+      &quot;unit&quot;: &quot;plane&quot;,
+      &quot;provenance&quot;: &quot;assumed&quot;,
+      &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+      &quot;uncertainty&quot;: null
+    },
+    &quot;mode_evidence&quot;: {
+      &quot;value&quot;: {
+        &quot;kind&quot;: &quot;gaussian_assumption&quot;,
+        &quot;reference&quot;: &quot;10.1021/acsphotonics.5c02702&quot;,
+        &quot;external_field_fit&quot;: &quot;not available&quot;,
+        &quot;role&quot;: &quot;source&quot;,
+        &quot;basis_mapping&quot;: &quot;t=-Z vertical, s=+Y horizontal&quot;,
+        &quot;note&quot;: &quot;guided widths and an assumed external Gaussian are different evidence levels&quot;,
+        &quot;mfd_definition&quot;: &quot;Reported widths interpreted as 1/e^2 intensity Gaussian diameters for this proxy; the paper table does not establish a complex external-field fit.&quot;
+      },
+      &quot;unit&quot;: &quot;evidence&quot;,
+      &quot;provenance&quot;: &quot;assumed&quot;,
+      &quot;source&quot;: &quot;A3/A4: no measured/simulated complex external-plane field supplied&quot;,
+      &quot;uncertainty&quot;: null
+    }
+  },
+  &quot;target&quot;: {
+    &quot;position_m&quot;: {
+      &quot;value&quot;: [
+        0.002,
+        0.0,
+        0.002
+      ],
+      &quot;unit&quot;: &quot;m&quot;,
+      &quot;provenance&quot;: &quot;assumed&quot;,
+      &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+      &quot;uncertainty&quot;: null
+    },
+    &quot;propagation_direction&quot;: {
+      &quot;value&quot;: [
+        1.0,
+        0.0,
+        0.0
+      ],
+      &quot;unit&quot;: &quot;1&quot;,
+      &quot;provenance&quot;: &quot;assumed&quot;,
+      &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+      &quot;uncertainty&quot;: null
+    },
+    &quot;sagittal_axis&quot;: {
+      &quot;value&quot;: [
+        0.0,
+        1.0,
+        0.0
+      ],
+      &quot;unit&quot;: &quot;1&quot;,
+      &quot;provenance&quot;: &quot;assumed&quot;,
+      &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+      &quot;uncertainty&quot;: null
+    },
+    &quot;mfd_ts_m&quot;: {
+      &quot;value&quot;: [
+        2.73e-06,
+        3.79e-06
+      ],
+      &quot;unit&quot;: &quot;m&quot;,
+      &quot;provenance&quot;: &quot;assumed&quot;,
+      &quot;source&quot;: &quot;L1 Table 1 TE 1310 nm guided-mode scales H=3.79 um,V=2.73 um; A4: external Gaussian transfer assumed; 10.1021/acsphotonics.5c02702; 1/e^2 Gaussian-diameter interpretation is assumed&quot;,
+      &quot;uncertainty&quot;: null
+    },
+    &quot;wavefront_curvature_ts_per_m&quot;: {
+      &quot;value&quot;: [
+        0.0,
+        0.0
+      ],
+      &quot;unit&quot;: &quot;m^-1&quot;,
+      &quot;provenance&quot;: &quot;assumed&quot;,
+      &quot;source&quot;: &quot;A5: flat phase at the declared external plane, selected favorable Gaussian screen; not reported by L1&quot;,
+      &quot;uncertainty&quot;: null
+    },
+    &quot;polarization&quot;: {
+      &quot;value&quot;: {
+        &quot;treatment&quot;: &quot;scalar_ignored&quot;,
+        &quot;jones_ts&quot;: [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ]
+      },
+      &quot;unit&quot;: &quot;1&quot;,
+      &quot;provenance&quot;: &quot;assumed&quot;,
+      &quot;source&quot;: &quot;A6: nominal horizontal TE label on s=+Y; vector transport/coating response not computed&quot;,
+      &quot;uncertainty&quot;: null
+    },
+    &quot;reference_plane&quot;: {
+      &quot;value&quot;: {
+        &quot;id&quot;: &quot;target-external&quot;,
+        &quot;frame_id&quot;: &quot;world&quot;,
+        &quot;side&quot;: &quot;external&quot;,
+        &quot;origin_m&quot;: [
+          0.002,
+          0.0,
+          0.002
+        ],
+        &quot;normal&quot;: [
+          1.0,
+          0.0,
+          0.0
+        ]
+      },
+      &quot;unit&quot;: &quot;plane&quot;,
+      &quot;provenance&quot;: &quot;assumed&quot;,
+      &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+      &quot;uncertainty&quot;: null
+    },
+    &quot;mode_evidence&quot;: {
+      &quot;value&quot;: {
+        &quot;kind&quot;: &quot;gaussian_assumption&quot;,
+        &quot;reference&quot;: &quot;10.1021/acsphotonics.5c02702&quot;,
+        &quot;external_field_fit&quot;: &quot;not available&quot;,
+        &quot;role&quot;: &quot;target&quot;,
+        &quot;basis_mapping&quot;: &quot;t=-Z vertical, s=+Y horizontal&quot;,
+        &quot;note&quot;: &quot;guided widths and an assumed external Gaussian are different evidence levels&quot;,
+        &quot;mfd_definition&quot;: &quot;Reported widths interpreted as 1/e^2 intensity Gaussian diameters for this proxy; the paper table does not establish a complex external-field fit.&quot;
+      },
+      &quot;unit&quot;: &quot;evidence&quot;,
+      &quot;provenance&quot;: &quot;assumed&quot;,
+      &quot;source&quot;: &quot;A3/A4: no measured/simulated complex external-plane field supplied&quot;,
+      &quot;uncertainty&quot;: null
+    }
+  }
+}</textarea></details><details><summary>Reflector Design Variables · Nominal / Bounds / Envelopes</summary><textarea name="reflectors" aria-label="Reflector Design Variables · Nominal / Bounds / Envelopes" spellcheck="false" readonly>{
+  &quot;design&quot;: {
+    &quot;reflectors&quot;: [
+      {
+        &quot;vertex_m&quot;: {
+          &quot;value&quot;: [
+            0.001,
+            0.0,
+            0.0
+          ],
+          &quot;unit&quot;: &quot;m&quot;,
+          &quot;provenance&quot;: &quot;assumed&quot;,
+          &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+          &quot;uncertainty&quot;: null
+        },
+        &quot;illuminated_normal&quot;: {
+          &quot;value&quot;: [
+            -0.7071067811865475,
+            0.0,
+            0.7071067811865475
+          ],
+          &quot;unit&quot;: &quot;1&quot;,
+          &quot;provenance&quot;: &quot;assumed&quot;,
+          &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+          &quot;uncertainty&quot;: null
+        },
+        &quot;principal_curvature_ts_per_m&quot;: {
+          &quot;value&quot;: [
+            353.5533905932738,
+            707.1067811865474
+          ],
+          &quot;unit&quot;: &quot;m^-1&quot;,
+          &quot;provenance&quot;: &quot;assumed&quot;,
+          &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+          &quot;uncertainty&quot;: null
+        },
+        &quot;half_aperture_ts_m&quot;: {
+          &quot;value&quot;: [
+            0.0007,
+            0.0005
+          ],
+          &quot;unit&quot;: &quot;m&quot;,
+          &quot;provenance&quot;: &quot;assumed&quot;,
+          &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+          &quot;uncertainty&quot;: null
+        }
+      },
+      {
+        &quot;vertex_m&quot;: {
+          &quot;value&quot;: [
+            0.001,
+            0.0,
+            0.002
+          ],
+          &quot;unit&quot;: &quot;m&quot;,
+          &quot;provenance&quot;: &quot;assumed&quot;,
+          &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+          &quot;uncertainty&quot;: null
+        },
+        &quot;illuminated_normal&quot;: {
+          &quot;value&quot;: [
+            0.7071067811865475,
+            0.0,
+            -0.7071067811865475
+          ],
+          &quot;unit&quot;: &quot;1&quot;,
+          &quot;provenance&quot;: &quot;assumed&quot;,
+          &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+          &quot;uncertainty&quot;: null
+        },
+        &quot;principal_curvature_ts_per_m&quot;: {
+          &quot;value&quot;: [
+            353.5533905932738,
+            707.1067811865474
+          ],
+          &quot;unit&quot;: &quot;m^-1&quot;,
+          &quot;provenance&quot;: &quot;assumed&quot;,
+          &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+          &quot;uncertainty&quot;: null
+        },
+        &quot;half_aperture_ts_m&quot;: {
+          &quot;value&quot;: [
+            0.0007,
+            0.0005
+          ],
+          &quot;unit&quot;: &quot;m&quot;,
+          &quot;provenance&quot;: &quot;assumed&quot;,
+          &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+          &quot;uncertainty&quot;: null
+        }
+      }
+    ]
+  },
+  &quot;reflectors&quot;: [
+    {
+      &quot;surface_prescription&quot;: {
+        &quot;value&quot;: &quot;quadratic_patch&quot;,
+        &quot;unit&quot;: &quot;model&quot;,
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null
+      },
+      &quot;vertex_bounds_m&quot;: {
+        &quot;value&quot;: [
+          [
+            0.0009,
+            -0.0001,
+            -0.0001
+          ],
+          [
+            0.0011,
+            0.0001,
+            0.0001
+          ]
+        ],
+        &quot;unit&quot;: &quot;m&quot;,
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null
+      },
+      &quot;normal_constraints&quot;: {
+        &quot;value&quot;: {
+          &quot;axis&quot;: [
+            -0.7071067811865475,
+            0.0,
+            0.7071067811865475
+          ],
+          &quot;max_angle_rad&quot;: 0.0
+        },
+        &quot;unit&quot;: &quot;rad&quot;,
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null
+      },
+      &quot;principal_curvature_bounds_per_m&quot;: {
+        &quot;value&quot;: [
+          [
+            350.017856687341,
+            357.08892449920654
+          ],
+          [
+            700.0357133746819,
+            714.177848998413
+          ]
+        ],
+        &quot;unit&quot;: &quot;m^-1&quot;,
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null
+      },
+      &quot;half_aperture_bounds_m&quot;: {
+        &quot;value&quot;: [
+          [
+            0.00063,
+            0.0007700000000000001
+          ],
+          [
+            0.00045000000000000004,
+            0.00055
+          ]
+        ],
+        &quot;unit&quot;: &quot;m&quot;,
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null
+      },
+      &quot;body_envelope&quot;: {
+        &quot;value&quot;: {
+          &quot;type&quot;: &quot;aabb&quot;,
+          &quot;min_m&quot;: [
+            0.0003,
+            -0.0006,
+            -0.0007
+          ],
+          &quot;max_m&quot;: [
+            0.0017,
+            0.0006,
+            0.0007
+          ]
+        },
+        &quot;unit&quot;: &quot;m&quot;,
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null
+      }
+    },
+    {
+      &quot;surface_prescription&quot;: {
+        &quot;value&quot;: &quot;quadratic_patch&quot;,
+        &quot;unit&quot;: &quot;model&quot;,
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null
+      },
+      &quot;vertex_bounds_m&quot;: {
+        &quot;value&quot;: [
+          [
+            0.0009,
+            -0.0001,
+            0.0019
+          ],
+          [
+            0.0011,
+            0.0001,
+            0.0021
+          ]
+        ],
+        &quot;unit&quot;: &quot;m&quot;,
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null
+      },
+      &quot;normal_constraints&quot;: {
+        &quot;value&quot;: {
+          &quot;axis&quot;: [
+            0.7071067811865475,
+            0.0,
+            -0.7071067811865475
+          ],
+          &quot;max_angle_rad&quot;: 0.0
+        },
+        &quot;unit&quot;: &quot;rad&quot;,
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null
+      },
+      &quot;principal_curvature_bounds_per_m&quot;: {
+        &quot;value&quot;: [
+          [
+            350.017856687341,
+            357.08892449920654
+          ],
+          [
+            700.0357133746819,
+            714.177848998413
+          ]
+        ],
+        &quot;unit&quot;: &quot;m^-1&quot;,
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null
+      },
+      &quot;half_aperture_bounds_m&quot;: {
+        &quot;value&quot;: [
+          [
+            0.00063,
+            0.0007700000000000001
+          ],
+          [
+            0.00045000000000000004,
+            0.00055
+          ]
+        ],
+        &quot;unit&quot;: &quot;m&quot;,
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null
+      },
+      &quot;body_envelope&quot;: {
+        &quot;value&quot;: {
+          &quot;type&quot;: &quot;aabb&quot;,
+          &quot;min_m&quot;: [
+            0.0003,
+            -0.0006,
+            0.0013
+          ],
+          &quot;max_m&quot;: [
+            0.0017,
+            0.0006,
+            0.0027
+          ]
+        },
+        &quot;unit&quot;: &quot;m&quot;,
+        &quot;provenance&quot;: &quot;assumed&quot;,
+        &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+        &quot;uncertainty&quot;: null
+      }
+    }
+  ]
+}</textarea></details><details><summary>Package Geometry</summary><textarea name="package" aria-label="Package Geometry" spellcheck="false" readonly>{
+  &quot;package&quot;: {
+    &quot;frame_id&quot;: {
+      &quot;value&quot;: &quot;world&quot;,
+      &quot;unit&quot;: &quot;frame&quot;,
+      &quot;provenance&quot;: &quot;assumed&quot;,
+      &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+      &quot;uncertainty&quot;: null
+    },
+    &quot;available_volume&quot;: {
+      &quot;value&quot;: {
+        &quot;type&quot;: &quot;aabb&quot;,
+        &quot;min_m&quot;: [
+          -0.001,
+          -0.001,
+          -0.001
+        ],
+        &quot;max_m&quot;: [
+          0.003,
+          0.001,
+          0.003
+        ]
+      },
+      &quot;unit&quot;: &quot;m&quot;,
+      &quot;provenance&quot;: &quot;assumed&quot;,
+      &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+      &quot;uncertainty&quot;: null
+    },
+    &quot;keepout_bodies&quot;: {
+      &quot;value&quot;: [],
+      &quot;unit&quot;: &quot;m&quot;,
+      &quot;provenance&quot;: &quot;assumed&quot;,
+      &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+      &quot;uncertainty&quot;: null
+    },
+    &quot;required_clearance_m&quot;: {
+      &quot;value&quot;: 1e-05,
+      &quot;unit&quot;: &quot;m&quot;,
+      &quot;provenance&quot;: &quot;assumed&quot;,
+      &quot;source&quot;: &quot;A1: selected M1/M3-A single-channel reference candidate; not geometry from L1&quot;,
+      &quot;uncertainty&quot;: null
+    }
+  }
+}</textarea></details>
+        <p class="form-note">직접 변경한 Port는 다음 평가의 새 고정 조건입니다. 자동 이동·Mode Fitting은 수행하지 않습니다.</p><p class="form-note">정적 Snapshot · 수정·재평가는 Python Local Inspector에서 실행합니다.</p></form></section></div></article><section class="card review" style="margin-top:18px"><h2>User Review</h2>
+    ① Synthetic Relay의 고정 Port와 두 곡면을 확인하세요. ② XZ/XY/YZ와 생략 축을 비교하세요.
+    ③ 실패 사례에서 Overlap이 —로 바뀌는지 확인하세요. ④ Envelope Pass와 Full Package Uncomputed를 구분하세요.
+    <p class="muted">Approximate Overlap은 Normalized Scalar Gaussian 진단입니다. 실제 Applicability·Total Coupling·Finite-Beam Clearance는 Uncomputed입니다.</p></section></main><script>
+const caseSelect=document.querySelector('#case-select');
+const projectionSelect=document.querySelector('#projection-select');
+function showViews(){
+ document.querySelectorAll('article[data-case]').forEach(a=>a.hidden=a.dataset.case!==caseSelect.value);
+ document.querySelectorAll('[data-projection]').forEach(v=>v.hidden=v.dataset.projection!==projectionSelect.value);
+}
+caseSelect.addEventListener('change',showViews);projectionSelect.addEventListener('change',showViews);
+document.querySelectorAll('textarea:not([readonly])').forEach(t=>t.addEventListener('input',()=>{
+ const a=t.closest('article');a.querySelectorAll('.results,.projection-group,[data-evaluated]').forEach(r=>r.hidden=true);
+ a.querySelector('.dirty-note').hidden=false;
+}));showViews();
+</script></body></html>
