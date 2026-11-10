@@ -1,0 +1,147 @@
+{
+  "assessment_id": "M4A-001",
+  "assessment_scope": "one unprovided actual PIC SSC to Glass Waveguide case; readiness audit, not a real-data performance calculation",
+  "base_main_sha": "f2781ba2955b4ccda4202165c778cd3dc58a07ec",
+  "input_file": "examples/external_ports_unprovided.json",
+  "input_sha256": "924c68622e4549c35ab45020ea2a5d268d04751141320235e50f4391261c2ed0",
+  "input_modified": false,
+  "actual_user_numeric_inputs_supplied": false,
+  "synthetic_values_imported": false,
+  "readiness_decision": "AwaitingInput",
+  "missing_record_count": 36,
+  "populated_record_count": 0,
+  "missing_existing_records": [
+    "wavelength_m",
+    "ambient_index",
+    "source.position_m",
+    "source.propagation_direction",
+    "source.sagittal_axis",
+    "source.mfd_ts_m",
+    "source.wavefront_curvature_ts_per_m",
+    "source.complex_q_ts_m",
+    "source.polarization",
+    "source.reference_plane",
+    "source.mode_evidence",
+    "target.position_m",
+    "target.propagation_direction",
+    "target.sagittal_axis",
+    "target.mfd_ts_m",
+    "target.wavefront_curvature_ts_per_m",
+    "target.complex_q_ts_m",
+    "target.polarization",
+    "target.reference_plane",
+    "target.mode_evidence",
+    "package.available_volume",
+    "package.keepout_bodies",
+    "package.required_clearance_m",
+    "package.frame_id",
+    "reflectors[0].vertex_bounds_m",
+    "reflectors[0].normal_constraints",
+    "reflectors[0].principal_curvature_bounds_per_m",
+    "reflectors[0].half_aperture_bounds_m",
+    "reflectors[0].surface_prescription",
+    "reflectors[0].body_envelope",
+    "reflectors[1].vertex_bounds_m",
+    "reflectors[1].normal_constraints",
+    "reflectors[1].principal_curvature_bounds_per_m",
+    "reflectors[1].half_aperture_bounds_m",
+    "reflectors[1].surface_prescription",
+    "reflectors[1].body_envelope"
+  ],
+  "missing_structure_or_declarations_for_nominal_execution": [
+    "ambient_index.quantity",
+    "design.reflectors",
+    "design.reflectors[0].vertex_m",
+    "design.reflectors[0].illuminated_normal",
+    "design.reflectors[0].principal_curvature_ts_per_m",
+    "design.reflectors[0].half_aperture_ts_m",
+    "design.reflectors[1].vertex_m",
+    "design.reflectors[1].illuminated_normal",
+    "design.reflectors[1].principal_curvature_ts_per_m",
+    "design.reflectors[1].half_aperture_ts_m"
+  ],
+  "mode_alternatives": {
+    "source": [
+      [
+        "source.mfd_ts_m",
+        "source.wavefront_curvature_ts_per_m"
+      ],
+      [
+        "source.complex_q_ts_m"
+      ]
+    ],
+    "target": [
+      [
+        "target.mfd_ts_m",
+        "target.wavefront_curvature_ts_per_m"
+      ],
+      [
+        "target.complex_q_ts_m"
+      ]
+    ]
+  },
+  "record_count_note": "Inventory only, not 36 simultaneously mandatory fields. MFD+phase and ordinary q are alternatives. Missing package/bounds are separate Uncomputed engineering gates.",
+  "execution": {
+    "api": "evaluate_external(document)",
+    "first_stop": {
+      "status": "Uncomputed",
+      "path": "wavelength_m",
+      "reason": "value not supplied"
+    },
+    "nominal_geometry_executed": false,
+    "model_domain_evaluated": false
+  },
+  "adapter_result": {
+    "input_contract": {
+      "status": "Uncomputed",
+      "path": "wavelength_m",
+      "reason": "value not supplied"
+    },
+    "geometry": {
+      "status": "Uncomputed"
+    },
+    "model_domain": {
+      "status": "Uncomputed"
+    },
+    "design_constraints": {
+      "status": "Uncomputed"
+    },
+    "gaussian_mode_matching": {
+      "status": "Uncomputed",
+      "normalized_mode_overlap": null
+    },
+    "package_feasibility": {
+      "status": "Uncomputed"
+    },
+    "physical_losses": {
+      "status": "Uncomputed",
+      "total_coupling": null,
+      "reason": "interfaces/coatings/polarization/scatter not modeled"
+    },
+    "fabrication": {
+      "status": "Uncomputed"
+    },
+    "actual_applicability": {
+      "status": "Uncomputed",
+      "reason": "external input adapter does not independently certify actual Port field or package performance"
+    }
+  },
+  "decision_notes": {
+    "geometry": "Uncomputed: no supplied fixed Port geometry or two nominal Reflector candidates.",
+    "model_domain": "Uncomputed: no supplied external fields or nominal path; outside-domain is not established.",
+    "approximate_overlap": "Uncomputed/null; no previous Synthetic overlap is imported.",
+    "package": "Uncomputed: no declared volume/frame/keepout/envelopes/clearance; full finite-beam clearance is outside the implemented package diagnostic.",
+    "actual_applicability": "Uncomputed. Completing input records alone does not independently certify actual field or package performance.",
+    "astra_now": "Not triggered by missing inputs alone. Conditional scope is documented in docs/M4A_ACTUAL_INPUT_READINESS.md."
+  },
+  "preserved_source_sha256": {
+    "src/photonic_architecture_explorer/external.py": "ac56803694784e942a816927d4b84e20fd9441166f5a02b78e16d8274710dabc",
+    "src/photonic_architecture_explorer/solver.py": "3255b530cc41b984d3bce1ccfded62796775f9ec1fd8f5974f037ad7ee136b51",
+    "src/photonic_architecture_explorer/gaussian.py": "908e84962d8b5ee5be793108eaf3491ddb9465b77e51ff2817d52e5caf06261d",
+    "src/photonic_architecture_explorer/geometry.py": "67af248571a4ccbde2e387462b365b13dfc6b43198e65473687a5db466f0b6f2",
+    "src/photonic_architecture_explorer/package_geometry.py": "dd5015af492087db9c65b2997408035b7bea8567c431faa7c9fc1d250e5367d9",
+    "src/photonic_architecture_explorer/applicability.py": "1d8866bb89b887e024beb9a432bc1476885e2b2cfcb5f1da91b0fd12c46e40c0",
+    "docs/EXTERNAL_PORT_CONTRACT.md": "d3a3d2d2cd8771d942388e6c3ab7c8af15dec48afd85e953850e0b6846b2c41d",
+    "docs/M3A_ADAPTER.md": "d801c63430502a6866495e6bc2f54ea37464725f409c6d3029e7539ddb6051d6"
+  }
+}
