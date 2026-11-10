@@ -1,0 +1,926 @@
+{
+  "case_id": "M4B-LIT-001",
+  "case_kind": "literature_guided_declared_gaussian_proxy",
+  "actual_case_replaced": false,
+  "actual_case": "M4A-001 remains AwaitingInput / Uncomputed",
+  "base_pr": 7,
+  "base_sha": "a76fd01ac28443fe71223a2ad1c7329f8b12f0a6",
+  "primary_reference": {
+    "id": "L1",
+    "first_author": "Ipsita Chakraborty et al.",
+    "year": 2026,
+    "doi": "10.1021/acsphotonics.5c02702",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13088358/",
+    "locator": "Table 1, TE 1310 nm row",
+    "license": "CC-BY-4.0",
+    "retrieved": "2026-11-10",
+    "reported_guided_mfd_horizontal_vertical_um": [
+      3.79,
+      2.73
+    ],
+    "reported_guided_effective_index_not_used_as_ambient": 1.525025,
+    "reported_fiber_side_mfd_um_not_used_at_pic_plane": 10.0
+  },
+  "input_file": "examples/m4b_literature_proxy.json",
+  "input_sha256": "c244b187f8ac3e94fd497e622e16a1567788dd6acf10a4fb0550ffdedbd2f2ac",
+  "assumptions": [
+    "air n=1 homogeneous propagation",
+    "external Gaussian proxy derived from guided-mode width scales, not a verified interface transfer",
+    "PIC source proxy width-matched by selection, not a paper-reported PIC MFD",
+    "flat phase C_t=C_s=0 at each declared plane",
+    "scalar-ignored polarization",
+    "existing 1-2-1 mm two-quadratic-reflector reference Geometry and declared AABBs selected, not from the paper",
+    "reported MFD interpreted as 1/e^2 intensity Gaussian diameter; full paper-table width definition / external complex-field fit is not established"
+  ],
+  "axis_mapping": {
+    "paper_horizontal": "model s=+Y",
+    "paper_vertical": "model t=-Z",
+    "input_order": "t,s"
+  },
+  "independent_flat_phase_gaussian_divergence_rad_ts": {
+    "source": [
+      0.3054842131141141,
+      0.22004535667586583
+    ],
+    "target": [
+      0.3054842131141141,
+      0.22004535667586583
+    ]
+  },
+  "minimum_waist_mfd_for_existing_0p1_rad_guard_m": 8.339719018015316e-06,
+  "port_precheck": {
+    "source": {
+      "status": "Fail",
+      "scope": "per-Port divergence precheck only",
+      "reason": "outside existing 0.1 rad guard",
+      "axes": [
+        {
+          "radius_m": 1.3649999999999998e-06,
+          "curvature_per_m": 0.0,
+          "waist_radius_m": 1.3649999999999998e-06,
+          "waist_distance_m": 0.0,
+          "rayleigh_range_m": 4.468316009148735e-06,
+          "divergence_rad": 0.30548421311411417
+        },
+        {
+          "radius_m": 1.8949999999999999e-06,
+          "curvature_per_m": 0.0,
+          "waist_radius_m": 1.8949999999999999e-06,
+          "waist_distance_m": 0.0,
+          "rayleigh_range_m": 8.611860884623883e-06,
+          "divergence_rad": 0.22004535667586586
+        }
+      ],
+      "max_divergence_rad": 0.1
+    },
+    "target": {
+      "status": "Fail",
+      "scope": "per-Port divergence precheck only",
+      "reason": "outside existing 0.1 rad guard",
+      "axes": [
+        {
+          "radius_m": 1.3649999999999998e-06,
+          "curvature_per_m": 0.0,
+          "waist_radius_m": 1.3649999999999998e-06,
+          "waist_distance_m": 0.0,
+          "rayleigh_range_m": 4.468316009148735e-06,
+          "divergence_rad": 0.30548421311411417
+        },
+        {
+          "radius_m": 1.8949999999999999e-06,
+          "curvature_per_m": 0.0,
+          "waist_radius_m": 1.8949999999999999e-06,
+          "waist_distance_m": 0.0,
+          "rayleigh_range_m": 8.611860884623883e-06,
+          "divergence_rad": 0.22004535667586586
+        }
+      ],
+      "max_divergence_rad": 0.1
+    }
+  },
+  "adapter_result": {
+    "input_contract": {
+      "status": "Pass",
+      "scope": "explicit nominal external Gaussian contract; field fit not certified"
+    },
+    "geometry": {
+      "status": "Pass",
+      "scope": "fixed-port specular vertex path",
+      "lengths": [
+        0.001,
+        0.002,
+        0.001
+      ],
+      "directions": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "cosines": [
+        0.7071067811865476,
+        0.7071067811865476
+      ],
+      "patch_obstruction": "Pass (chief ray, quadratic patches only)"
+    },
+    "model_domain": {
+      "status": "Fail",
+      "reason": "Gaussian divergence exceeds 0.1 rad"
+    },
+    "design_constraints": {
+      "status": "Pass",
+      "scope": "declared nominal bounds only; no tolerance/yield",
+      "checks": [
+        {
+          "path": "reflectors[0].vertex_bounds_m",
+          "status": "Pass"
+        },
+        {
+          "path": "reflectors[0].principal_curvature_bounds_per_m",
+          "status": "Pass"
+        },
+        {
+          "path": "reflectors[0].half_aperture_bounds_m",
+          "status": "Pass"
+        },
+        {
+          "path": "reflectors[0].normal_constraints",
+          "status": "Pass"
+        },
+        {
+          "path": "reflectors[1].vertex_bounds_m",
+          "status": "Pass"
+        },
+        {
+          "path": "reflectors[1].principal_curvature_bounds_per_m",
+          "status": "Pass"
+        },
+        {
+          "path": "reflectors[1].half_aperture_bounds_m",
+          "status": "Pass"
+        },
+        {
+          "path": "reflectors[1].normal_constraints",
+          "status": "Pass"
+        }
+      ]
+    },
+    "gaussian_mode_matching": {
+      "status": "Uncomputed",
+      "normalized_mode_overlap": null,
+      "reason": "optical Geometry/domain incomplete or failed"
+    },
+    "package_feasibility": {
+      "status": "Uncomputed",
+      "reason": "full finite-beam/body/support clearance not evaluated",
+      "envelope_geometry": {
+        "status": "Pass",
+        "scope": "declared world AABBs and quadratic patch extents only",
+        "checks": [
+          {
+            "path": "package.frame_id",
+            "status": "Pass"
+          },
+          {
+            "path": "package.available_volume",
+            "status": "Pass"
+          },
+          {
+            "path": "package.required_clearance_m",
+            "status": "Pass"
+          },
+          {
+            "path": "package.keepout_bodies",
+            "status": "Pass"
+          },
+          {
+            "path": "reflectors[0].body_envelope",
+            "status": "Pass"
+          },
+          {
+            "path": "reflectors[1].body_envelope",
+            "status": "Pass"
+          },
+          {
+            "path": "patch[0].volume",
+            "status": "Pass",
+            "reason": "entire quadratic patch extent"
+          },
+          {
+            "path": "body[0].patch",
+            "status": "Pass",
+            "reason": "declared total envelope must enclose entire surface"
+          },
+          {
+            "path": "body[0].volume",
+            "status": "Pass",
+            "reason": "total envelope plus boundary clearance"
+          },
+          {
+            "path": "patch[1].volume",
+            "status": "Pass",
+            "reason": "entire quadratic patch extent"
+          },
+          {
+            "path": "body[1].patch",
+            "status": "Pass",
+            "reason": "declared total envelope must enclose entire surface"
+          },
+          {
+            "path": "body[1].volume",
+            "status": "Pass",
+            "reason": "total envelope plus boundary clearance"
+          },
+          {
+            "path": "path_point[0].volume",
+            "status": "Pass",
+            "reason": "chief path points only"
+          },
+          {
+            "path": "path_point[1].volume",
+            "status": "Pass",
+            "reason": "chief path points only"
+          },
+          {
+            "path": "path_point[2].volume",
+            "status": "Pass",
+            "reason": "chief path points only"
+          },
+          {
+            "path": "path_point[3].volume",
+            "status": "Pass",
+            "reason": "chief path points only"
+          },
+          {
+            "path": "reflector_envelope_pair",
+            "status": "Pass",
+            "reason": "envelope separation, not actual-solid distance"
+          }
+        ]
+      },
+      "finite_beam_clearance": {
+        "status": "Uncomputed"
+      }
+    },
+    "physical_losses": {
+      "status": "Uncomputed",
+      "total_coupling": null,
+      "reason": "coating/device interfaces/polarization/scatter not supplied"
+    },
+    "fabrication": {
+      "status": "Uncomputed",
+      "reason": "no process or assembly constraints"
+    },
+    "actual_applicability": {
+      "status": "Uncomputed",
+      "reason": "external input adapter does not independently certify actual Port field or package performance"
+    },
+    "input_snapshot": {
+      "ambient_index": {
+        "provenance": "assumed",
+        "quantity": "external_ambient_refractive_index",
+        "source": "A2: homogeneous air approximation for the proposed fold; NOT the WAFT guided effective index",
+        "uncertainty": null,
+        "unit": "1",
+        "value": 1.0
+      },
+      "contract_version": "M3A-1",
+      "coordinate_convention": "right-handed world XYZ; t=s cross d; target d is arriving direction",
+      "description": "M4B-LIT-001 literature-guided Gaussian proxy, not a reproduction of the paper or a measured PIC/glass external field. L1=10.1021/acsphotonics.5c02702. Target widths use WAFT PIC-side TE 1310 nm guided-mode scales; their air-plane transfer is assumed. PIC source widths are selected to match that proxy. Phase=0, air n=1, scalar polarization and the two-mirror/package candidate are assumptions. Actual case M4A-001 remains unprovided.",
+      "design": {
+        "reflectors": [
+          {
+            "half_aperture_ts_m": {
+              "provenance": "assumed",
+              "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                0.0007,
+                0.0005
+              ]
+            },
+            "illuminated_normal": {
+              "provenance": "assumed",
+              "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                -0.7071067811865475,
+                0.0,
+                0.7071067811865475
+              ]
+            },
+            "principal_curvature_ts_per_m": {
+              "provenance": "assumed",
+              "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+              "uncertainty": null,
+              "unit": "m^-1",
+              "value": [
+                353.5533905932738,
+                707.1067811865474
+              ]
+            },
+            "vertex_m": {
+              "provenance": "assumed",
+              "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                0.001,
+                0.0,
+                0.0
+              ]
+            }
+          },
+          {
+            "half_aperture_ts_m": {
+              "provenance": "assumed",
+              "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                0.0007,
+                0.0005
+              ]
+            },
+            "illuminated_normal": {
+              "provenance": "assumed",
+              "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                0.7071067811865475,
+                0.0,
+                -0.7071067811865475
+              ]
+            },
+            "principal_curvature_ts_per_m": {
+              "provenance": "assumed",
+              "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+              "uncertainty": null,
+              "unit": "m^-1",
+              "value": [
+                353.5533905932738,
+                707.1067811865474
+              ]
+            },
+            "vertex_m": {
+              "provenance": "assumed",
+              "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                0.001,
+                0.0,
+                0.002
+              ]
+            }
+          }
+        ]
+      },
+      "package": {
+        "available_volume": {
+          "provenance": "assumed",
+          "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+          "uncertainty": null,
+          "unit": "m",
+          "value": {
+            "max_m": [
+              0.003,
+              0.001,
+              0.003
+            ],
+            "min_m": [
+              -0.001,
+              -0.001,
+              -0.001
+            ],
+            "type": "aabb"
+          }
+        },
+        "frame_id": {
+          "provenance": "assumed",
+          "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+          "uncertainty": null,
+          "unit": "frame",
+          "value": "world"
+        },
+        "keepout_bodies": {
+          "provenance": "assumed",
+          "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+          "uncertainty": null,
+          "unit": "m",
+          "value": []
+        },
+        "required_clearance_m": {
+          "provenance": "assumed",
+          "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+          "uncertainty": null,
+          "unit": "m",
+          "value": 1e-05
+        }
+      },
+      "reflectors": [
+        {
+          "body_envelope": {
+            "provenance": "assumed",
+            "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+            "uncertainty": null,
+            "unit": "m",
+            "value": {
+              "max_m": [
+                0.0017,
+                0.0006,
+                0.0007
+              ],
+              "min_m": [
+                0.0003,
+                -0.0006,
+                -0.0007
+              ],
+              "type": "aabb"
+            }
+          },
+          "half_aperture_bounds_m": {
+            "provenance": "assumed",
+            "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+            "uncertainty": null,
+            "unit": "m",
+            "value": [
+              [
+                0.00063,
+                0.0007700000000000001
+              ],
+              [
+                0.00045000000000000004,
+                0.00055
+              ]
+            ]
+          },
+          "normal_constraints": {
+            "provenance": "assumed",
+            "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+            "uncertainty": null,
+            "unit": "rad",
+            "value": {
+              "axis": [
+                -0.7071067811865475,
+                0.0,
+                0.7071067811865475
+              ],
+              "max_angle_rad": 0.0
+            }
+          },
+          "principal_curvature_bounds_per_m": {
+            "provenance": "assumed",
+            "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+            "uncertainty": null,
+            "unit": "m^-1",
+            "value": [
+              [
+                350.017856687341,
+                357.08892449920654
+              ],
+              [
+                700.0357133746819,
+                714.177848998413
+              ]
+            ]
+          },
+          "surface_prescription": {
+            "provenance": "assumed",
+            "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+            "uncertainty": null,
+            "unit": "model",
+            "value": "quadratic_patch"
+          },
+          "vertex_bounds_m": {
+            "provenance": "assumed",
+            "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+            "uncertainty": null,
+            "unit": "m",
+            "value": [
+              [
+                0.0009,
+                -0.0001,
+                -0.0001
+              ],
+              [
+                0.0011,
+                0.0001,
+                0.0001
+              ]
+            ]
+          }
+        },
+        {
+          "body_envelope": {
+            "provenance": "assumed",
+            "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+            "uncertainty": null,
+            "unit": "m",
+            "value": {
+              "max_m": [
+                0.0017,
+                0.0006,
+                0.0027
+              ],
+              "min_m": [
+                0.0003,
+                -0.0006,
+                0.0013
+              ],
+              "type": "aabb"
+            }
+          },
+          "half_aperture_bounds_m": {
+            "provenance": "assumed",
+            "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+            "uncertainty": null,
+            "unit": "m",
+            "value": [
+              [
+                0.00063,
+                0.0007700000000000001
+              ],
+              [
+                0.00045000000000000004,
+                0.00055
+              ]
+            ]
+          },
+          "normal_constraints": {
+            "provenance": "assumed",
+            "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+            "uncertainty": null,
+            "unit": "rad",
+            "value": {
+              "axis": [
+                0.7071067811865475,
+                0.0,
+                -0.7071067811865475
+              ],
+              "max_angle_rad": 0.0
+            }
+          },
+          "principal_curvature_bounds_per_m": {
+            "provenance": "assumed",
+            "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+            "uncertainty": null,
+            "unit": "m^-1",
+            "value": [
+              [
+                350.017856687341,
+                357.08892449920654
+              ],
+              [
+                700.0357133746819,
+                714.177848998413
+              ]
+            ]
+          },
+          "surface_prescription": {
+            "provenance": "assumed",
+            "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+            "uncertainty": null,
+            "unit": "model",
+            "value": "quadratic_patch"
+          },
+          "vertex_bounds_m": {
+            "provenance": "assumed",
+            "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+            "uncertainty": null,
+            "unit": "m",
+            "value": [
+              [
+                0.0009,
+                -0.0001,
+                0.0019
+              ],
+              [
+                0.0011,
+                0.0001,
+                0.0021
+              ]
+            ]
+          }
+        }
+      ],
+      "source": {
+        "mfd_ts_m": {
+          "provenance": "assumed",
+          "source": "A3: selected width-matched PIC external Gaussian proxy; SiN MFD is not tabulated in L1; 1/e^2 Gaussian-diameter interpretation is assumed",
+          "uncertainty": null,
+          "unit": "m",
+          "value": [
+            2.73e-06,
+            3.79e-06
+          ]
+        },
+        "mode_evidence": {
+          "provenance": "assumed",
+          "source": "A3/A4: no measured/simulated complex external-plane field supplied",
+          "uncertainty": null,
+          "unit": "evidence",
+          "value": {
+            "basis_mapping": "t=-Z vertical, s=+Y horizontal",
+            "external_field_fit": "not available",
+            "kind": "gaussian_assumption",
+            "mfd_definition": "Reported widths interpreted as 1/e^2 intensity Gaussian diameters for this proxy; the paper table does not establish a complex external-field fit.",
+            "note": "guided widths and an assumed external Gaussian are different evidence levels",
+            "reference": "10.1021/acsphotonics.5c02702",
+            "role": "source"
+          }
+        },
+        "polarization": {
+          "provenance": "assumed",
+          "source": "A6: nominal horizontal TE label on s=+Y; vector transport/coating response not computed",
+          "uncertainty": null,
+          "unit": "1",
+          "value": {
+            "jones_ts": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "treatment": "scalar_ignored"
+          }
+        },
+        "position_m": {
+          "provenance": "assumed",
+          "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+          "uncertainty": null,
+          "unit": "m",
+          "value": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "propagation_direction": {
+          "provenance": "assumed",
+          "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+          "uncertainty": null,
+          "unit": "1",
+          "value": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        "reference_plane": {
+          "provenance": "assumed",
+          "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+          "uncertainty": null,
+          "unit": "plane",
+          "value": {
+            "frame_id": "world",
+            "id": "source-external",
+            "normal": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "origin_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "side": "external"
+          }
+        },
+        "sagittal_axis": {
+          "provenance": "assumed",
+          "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+          "uncertainty": null,
+          "unit": "1",
+          "value": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        "wavefront_curvature_ts_per_m": {
+          "provenance": "assumed",
+          "source": "A5: flat phase at the declared external plane, selected favorable Gaussian screen; not reported by L1",
+          "uncertainty": null,
+          "unit": "m^-1",
+          "value": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "target": {
+        "mfd_ts_m": {
+          "provenance": "assumed",
+          "source": "L1 Table 1 TE 1310 nm guided-mode scales H=3.79 um,V=2.73 um; A4: external Gaussian transfer assumed; 10.1021/acsphotonics.5c02702; 1/e^2 Gaussian-diameter interpretation is assumed",
+          "uncertainty": null,
+          "unit": "m",
+          "value": [
+            2.73e-06,
+            3.79e-06
+          ]
+        },
+        "mode_evidence": {
+          "provenance": "assumed",
+          "source": "A3/A4: no measured/simulated complex external-plane field supplied",
+          "uncertainty": null,
+          "unit": "evidence",
+          "value": {
+            "basis_mapping": "t=-Z vertical, s=+Y horizontal",
+            "external_field_fit": "not available",
+            "kind": "gaussian_assumption",
+            "mfd_definition": "Reported widths interpreted as 1/e^2 intensity Gaussian diameters for this proxy; the paper table does not establish a complex external-field fit.",
+            "note": "guided widths and an assumed external Gaussian are different evidence levels",
+            "reference": "10.1021/acsphotonics.5c02702",
+            "role": "target"
+          }
+        },
+        "polarization": {
+          "provenance": "assumed",
+          "source": "A6: nominal horizontal TE label on s=+Y; vector transport/coating response not computed",
+          "uncertainty": null,
+          "unit": "1",
+          "value": {
+            "jones_ts": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "treatment": "scalar_ignored"
+          }
+        },
+        "position_m": {
+          "provenance": "assumed",
+          "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+          "uncertainty": null,
+          "unit": "m",
+          "value": [
+            0.002,
+            0.0,
+            0.002
+          ]
+        },
+        "propagation_direction": {
+          "provenance": "assumed",
+          "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+          "uncertainty": null,
+          "unit": "1",
+          "value": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        "reference_plane": {
+          "provenance": "assumed",
+          "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+          "uncertainty": null,
+          "unit": "plane",
+          "value": {
+            "frame_id": "world",
+            "id": "target-external",
+            "normal": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "origin_m": [
+              0.002,
+              0.0,
+              0.002
+            ],
+            "side": "external"
+          }
+        },
+        "sagittal_axis": {
+          "provenance": "assumed",
+          "source": "A1: selected M1/M3-A single-channel reference candidate; not geometry from L1",
+          "uncertainty": null,
+          "unit": "1",
+          "value": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        "wavefront_curvature_ts_per_m": {
+          "provenance": "assumed",
+          "source": "A5: flat phase at the declared external plane, selected favorable Gaussian screen; not reported by L1",
+          "uncertainty": null,
+          "unit": "m^-1",
+          "value": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "wavelength_m": {
+        "provenance": "supplied",
+        "source": "L1 Table 1, TE 1310 nm; 10.1021/acsphotonics.5c02702",
+        "uncertainty": null,
+        "unit": "m",
+        "value": 1.31e-06
+      }
+    },
+    "uncertainty_treatment": "metadata preserved; no uncertainty propagation or yield calculation",
+    "evaluated_ports": {
+      "source": {
+        "position_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "direction": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "sagittal_axis": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "complex_q_ts_m": [
+          [
+            -0.0,
+            4.468316009148735e-06
+          ],
+          [
+            -0.0,
+            8.611860884623883e-06
+          ]
+        ],
+        "wavelength_m": 1.31e-06,
+        "ambient_index": 1.0
+      },
+      "target": {
+        "position_m": [
+          0.002,
+          0.0,
+          0.002
+        ],
+        "direction": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "sagittal_axis": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "complex_q_ts_m": [
+          [
+            -0.0,
+            4.468316009148735e-06
+          ],
+          [
+            -0.0,
+            8.611860884623883e-06
+          ]
+        ],
+        "wavelength_m": 1.31e-06,
+        "ambient_index": 1.0
+      }
+    },
+    "samples": []
+  },
+  "decision": "OutsideExistingGaussianDomain for this declared proxy, NOT proof that the paper device or two-reflector architecture is impossible",
+  "gaussian_overlap_published": null,
+  "preservation": {
+    "fixed_ports_unchanged": true,
+    "paper_coupling_loss_not_transferred": true,
+    "guards_unchanged": true,
+    "new_solver": false
+  },
+  "limitations": [
+    "the paper uses direct WAFT/SiN coupling; it does not specify this free-space two-mirror relay",
+    "guided-mode widths alone do not identify the external vector/phase field",
+    "reported device loss is not a folded-path loss or our normalized overlap",
+    "full finite-beam/backing/support clearance and Total Coupling remain Uncomputed"
+  ]
+}

@@ -111,6 +111,28 @@ const sameJSON=(actual,expected)=>assert.deepEqual(JSON.parse(JSON.stringify(act
  assert.equal(await staticReason.locator('code.issue-path').innerText(),'source.position_m');
  await page.screenshot({path:'results/inspector_input_diagnostic_static.png',fullPage:true});
  report.checks.push('portable static HTML file: case/projection selection without server');
+ // Reevaluate and render the literature proxy with the existing Python CLIs.
+ const {spawnSync}=require('node:child_process');
+ const proxyFile='examples/m4b_literature_proxy.json';
+ const evaluation=spawnSync('python',['-m','photonic_architecture_explorer.external',proxyFile,'--output','results/m4b_adapter_ci.json'],{env:{...process.env,PYTHONPATH:'src'},encoding:'utf8'});
+ assert.equal(evaluation.status,1,evaluation.stderr); // expected MODEL rejection
+ const fresh=JSON.parse(fs.readFileSync('results/m4b_adapter_ci.json','utf8'));
+ const recorded=JSON.parse(fs.readFileSync('results/m4b_literature_001.json','utf8'));
+ sameJSON(fresh,recorded.adapter_result);
+ const rendered=spawnSync('python',['-m','photonic_architecture_explorer.inspector','--input',proxyFile,'--output','results/m4b_literature_inspector.html'],{env:{...process.env,PYTHONPATH:'src'},encoding:'utf8'});
+ assert.equal(rendered.status,0,rendered.stderr);
+ await page.goto('file://'+require('node:path').resolve('results/m4b_literature_inspector.html'));
+ for(const viewport of [{width:1440,height:1050},{width:393,height:852}]){
+  await page.setViewportSize(viewport);
+  for(const [key,status] of [['input_contract','Pass'],['geometry','Pass'],['model_domain','Fail'],['envelope_geometry','Pass'],['package_feasibility','Uncomputed']]){
+   assert.equal(await active().locator(`[data-result="${key}"] .badge`).innerText(),status);
+  }
+  assert.equal(await page.locator('[data-overlap-value]').count(),0);
+  assert.equal(await active().locator('[data-overlap-withheld]').count(),1);
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+  await page.screenshot({path:`results/inspector_m4b_${viewport.width}.png`,fullPage:true});
+ }
+ report.checks.push('literature proxy: exact fresh Adapter result, expected domain rejection, Desktop/Mobile static overlap withholding');
  assert.deepEqual(errors,[]);report.page_errors=errors;report.status='Pass';
  fs.writeFileSync('results/m3b_browser.json',JSON.stringify(report,null,2)+'\n');
  console.log(JSON.stringify(report));await browser.close();
