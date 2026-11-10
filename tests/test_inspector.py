@@ -139,6 +139,26 @@ class Inspector(unittest.TestCase):
         self.assertIn('data-overlap-value="1.0"', text)
         self.assertIn('2D Projection의 중첩은 3D 충돌 판정이 아닙니다.', text)
 
+    def test_human_diagnostics_locate_rejected_or_missing_input(self):
+        # Raw Result JSON already contains the path; the human reason list must
+        # expose it too, so the engineer can locate the field in the JSON editor.
+        for key, expected in (('bad-unit', 'source.position_m'), ('blank', 'wavelength_m'),
+                              ('missing-phase', 'source')):
+            document = next(data for name, _, data in self.cases if name == key)
+            result, _ = ui.evaluate_view(document)
+            before = copy.deepcopy(result)
+            panel = ui.result_panel(result)
+            reasons = panel.split('<ul>', 1)[1].split('</ul>', 1)[0]
+            self.assertIn(f'<code class="issue-path">{expected}</code>', reasons, key)
+            self.assertEqual(result, before)
+            self.assertIsNone(ui.visible_overlap(result))
+        result, _ = ui.evaluate_view({}, 'invalid JSON')
+        self.assertIn('<code class="issue-path">JSON editor</code>', ui.result_panel(result))
+        result['input_contract']['path'] = '<img src=x onerror=alert(1)>'
+        reasons = ui.result_panel(result).split('<ul>', 1)[1].split('</ul>', 1)[0]
+        self.assertNotIn('<img', reasons)
+        self.assertIn('&lt;img', reasons)
+
     def test_http_valid_invalid_valid_edit_flow(self):
         server = ui.make_server(self.cases, port=0)
         thread = threading.Thread(target=server.serve_forever, daemon=True)

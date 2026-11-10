@@ -203,7 +203,8 @@ def result_panel(result):
     issues = []
     for key, value in result.items():
         if isinstance(value, dict) and value.get('status') in ('Fail', 'Uncomputed') and value.get('reason'):
-            issues.append(f'<li><b>{escape(key)}</b>: {escape(value["reason"])}</li>')
+            path = f' · <code class="issue-path">{escape(value["path"])}</code>' if value.get('path') else ''
+            issues.append(f'<li><b>{escape(key)}</b>{path}: {escape(value["reason"])}</li>')
     for key in ('design_constraints', 'package_feasibility'):
         group = result[key].get('envelope_geometry', result[key])
         issues += [f'<li>{escape(c.get("path", ""))}: {escape(c.get("reason", ""))}</li>' for c in group.get('checks', []) if c['status'] == 'Fail']
