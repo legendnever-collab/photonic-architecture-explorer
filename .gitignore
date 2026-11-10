@@ -8,3 +8,6 @@ dist/
 results/m4c_fields_*.npz
 results/m4c_provenance.json
 results/m4c_execution.json
+
+# Every control invocation gets a fresh directory; CI uploads these runtime files.
+results/runtime/

@@ -1,0 +1,54 @@
+{
+  "base_head": "f42a6b1701eeb8c0500092a95e0b4202be86aa8b",
+  "main_ci": {
+    "run_id": 42910559738,
+    "conclusion": "success",
+    "jobs": 4,
+    "artifacts": [
+      {
+        "id": 13807885298,
+        "name": "m4c-planar-reference-evidence",
+        "digest": "sha256:40281dc563286bc9b4a943cbd2a94b433e50fe6b3d1773266fa641835c7cf7a6",
+        "expired": false
+      },
+      {
+        "id": 13807515870,
+        "name": "physics-evidence-python-3.11",
+        "digest": "sha256:2896a54e2341e538020b06686f79ce12e61bd42ebc43cbe7d6d9cf4ee8d09a37",
+        "expired": false
+      },
+      {
+        "id": 13805944732,
+        "name": "inspector-browser-evidence",
+        "digest": "sha256:cb43ead2397215a110d7b4f4aa901e6607154e72e106a06177f6bbc1480ef84c",
+        "expired": false
+      },
+      {
+        "id": 13805859883,
+        "name": "physics-evidence-python-3.12",
+        "digest": "sha256:101ff0096ebc504e78c895e2c19098c87559021f8ae35d249d2cf9bc05324006",
+        "expired": false
+      }
+    ]
+  },
+  "download_verified": {
+    "artifact_id": 13807885298,
+    "zip_sha256": "40281dc563286bc9b4a943cbd2a94b433e50fe6b3d1773266fa641835c7cf7a6",
+    "provenance_head_matches_base": true,
+    "all_source_hashes_match_git_tree": true,
+    "other_artifacts": "Metadata/status inspected; payloads not downloaded"
+  },
+  "baseline": {
+    "tests": 61,
+    "tests_status": "Pass",
+    "benchmark": "Pass",
+    "adapter": "Pass",
+    "legacy_exit_code": 1,
+    "legacy_result_byte_identical": true,
+    "legacy_angular_tail_absolute_error": 0.027777663568040678,
+    "legacy_acceptance_threshold": 0.02,
+    "legacy_failed_gate": "continuous_flux_angular"
+  },
+  "pre_execution_plan_commit": "eb8c7c7",
+  "scope": "No supplied actual external field/model; numerical evidence applies only to Synthetic Control"
+}
