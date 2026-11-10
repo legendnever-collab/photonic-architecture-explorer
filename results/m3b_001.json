@@ -1,0 +1,90 @@
+[
+  {
+    "case": "nominal",
+    "input_contract": "Pass",
+    "geometry": "Pass",
+    "domain": "Pass",
+    "bounds": "Pass",
+    "package": "Uncomputed",
+    "published_overlap": 1.0,
+    "total_coupling": null,
+    "actual_applicability": "Uncomputed"
+  },
+  {
+    "case": "blank",
+    "input_contract": "Uncomputed",
+    "geometry": "Uncomputed",
+    "domain": "Uncomputed",
+    "bounds": "Uncomputed",
+    "package": "Uncomputed",
+    "published_overlap": null,
+    "total_coupling": null,
+    "actual_applicability": "Uncomputed"
+  },
+  {
+    "case": "missing-phase",
+    "input_contract": "Uncomputed",
+    "geometry": "Uncomputed",
+    "domain": "Uncomputed",
+    "bounds": "Uncomputed",
+    "package": "Uncomputed",
+    "published_overlap": null,
+    "total_coupling": null,
+    "actual_applicability": "Uncomputed"
+  },
+  {
+    "case": "bad-unit",
+    "input_contract": "Fail",
+    "geometry": "Uncomputed",
+    "domain": "Uncomputed",
+    "bounds": "Uncomputed",
+    "package": "Uncomputed",
+    "published_overlap": null,
+    "total_coupling": null,
+    "actual_applicability": "Uncomputed"
+  },
+  {
+    "case": "target-direction",
+    "input_contract": "Pass",
+    "geometry": "Fail",
+    "domain": "Uncomputed",
+    "bounds": "Pass",
+    "package": "Uncomputed",
+    "published_overlap": null,
+    "total_coupling": null,
+    "actual_applicability": "Uncomputed"
+  },
+  {
+    "case": "high-divergence",
+    "input_contract": "Pass",
+    "geometry": "Pass",
+    "domain": "Fail",
+    "bounds": "Pass",
+    "package": "Uncomputed",
+    "published_overlap": null,
+    "total_coupling": null,
+    "actual_applicability": "Uncomputed"
+  },
+  {
+    "case": "bounds-fail",
+    "input_contract": "Pass",
+    "geometry": "Pass",
+    "domain": "Pass",
+    "bounds": "Fail",
+    "package": "Uncomputed",
+    "published_overlap": null,
+    "total_coupling": null,
+    "actual_applicability": "Uncomputed"
+  },
+  {
+    "case": "package-fail",
+    "input_contract": "Pass",
+    "geometry": "Pass",
+    "domain": "Pass",
+    "bounds": "Pass",
+    "package": "Fail",
+    "published_overlap": null,
+    "total_coupling": null,
+    "actual_applicability": "Uncomputed"
+  }
+]
