@@ -59,7 +59,7 @@ Source/Target Port의 direction은 모두 **Source→Target으로 전파하는 �
 Target의 outward-facing normal로 해석하면 안 됩니다. Mode radii는 MFD/2입니다.
 M1에서는 Port의 medium을 homogeneous external ambient로 정의합니다.
 
-UI, topology synthesis, freeform inverse design, Maxwell solver, 특허 scoring,
+Topology synthesis, freeform inverse design, Maxwell solver, 특허 scoring,
 회사 기밀 데이터는 포함하지 않습니다. Main 병합에는 사용자 승인이 필요합니다.
 
 ## M2 bounded diagnostics
@@ -97,4 +97,18 @@ PYTHONPATH=src python -m photonic_architecture_explorer.external examples/m3a_sy
 MFD+Phase / Complex q, Fixed Ports, Provenance, Bounds 및 제한된 AABB 검사를 지원합니다.
 Overlap은 Approximate normalized scalar diagnostic입니다. Envelope 검사가 통과해도
 Full Package Clearance·Actual Applicability·Total Coupling은 Uncomputed입니다.
-UI는 아직 구현하지 않았습니다.
+M3-B Inspector에서 이 Adapter를 호출합니다.
+
+## M3-B minimal 2D Inspector
+
+```bash
+python -m photonic_architecture_explorer.inspector
+python -m photonic_architecture_explorer.inspector --serve
+```
+
+첫 명령은 `results/m3b-inspector.html` 정적 Review를 생성합니다. 두 번째 명령은
+`http://127.0.0.1:8765`에서 입력 수정 후 Python Adapter로 재평가합니다.
+[실행·검증·User Review](docs/M3B_INSPECTOR.md)를 참조하세요.
+Fixed Ports·두 Quadratic Surfaces·검증된 Chief Path·명시 AABB의 2D Projection과
+결과 상태를 표시합니다. Static HTML은 Case/Projection 선택이 가능한 Read-only
+Snapshot이며, Actual Applicability와 Total Coupling은 Uncomputed입니다.

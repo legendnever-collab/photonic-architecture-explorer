@@ -13,6 +13,7 @@ dependencies = []
 test = ["numpy>=2,<3"]
 
 [project.scripts]
+pae-inspector = "photonic_architecture_explorer.inspector:main"
 pae-external = "photonic_architecture_explorer.external:main"
 pae-benchmark = "photonic_architecture_explorer.benchmark:main"
 

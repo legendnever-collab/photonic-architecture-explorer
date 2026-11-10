@@ -14,6 +14,7 @@ from photonic_architecture_explorer.benchmark import run
 from photonic_architecture_explorer.diagnostics import run as run_m2
 from assess_m25 import run as run_m25
 from assess_m3a import run as run_m3a
+from photonic_architecture_explorer.inspector import review_cases, render_report, evaluate_view, visible_overlap
 
 
 def main():
@@ -29,6 +30,19 @@ def main():
     (results/'m25_001.json').write_text(json.dumps(m25, indent=2, allow_nan=False)+'\n')
     m3a = run_m3a()
     (results/'m3a_001.json').write_text(json.dumps(m3a, indent=2, allow_nan=False)+'\n')
+    cases = review_cases(ROOT)
+    (results/'m3b-inspector.html').write_text(render_report(cases), encoding='utf-8')
+    inspector = []
+    for key, _, document in cases:
+        result, _ = evaluate_view(document)
+        inspector.append({'case': key, 'input_contract': result['input_contract']['status'],
+                          'geometry': result['geometry']['status'], 'domain': result['model_domain']['status'],
+                          'bounds': result['design_constraints']['status'],
+                          'package': result['package_feasibility']['status'],
+                          'published_overlap': visible_overlap(result),
+                          'total_coupling': result['physical_losses']['total_coupling'],
+                          'actual_applicability': result['actual_applicability']['status']})
+    (results/'m3b_001.json').write_text(json.dumps(inspector, indent=2, allow_nan=False)+'\n')
     env = {**os.environ, 'PYTHONPATH': str(ROOT/'src')}
     tests = subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', 'tests', '-v'],
                            cwd=ROOT, env=env, capture_output=True, text=True)
@@ -39,7 +53,8 @@ def main():
     paths += [ROOT/'pyproject.toml', ROOT/'docs/M1_BENCHMARK.md', ROOT/'docs/M2_CONTRACT.md',
               ROOT/'docs/M25_CONTRACT.md', ROOT/'docs/EXTERNAL_PORT_CONTRACT.md',
               ROOT/'docs/M25_ASSESSMENT.md', ROOT/'docs/M3A_CONTRACT.md',
-              ROOT/'docs/M3A_ADAPTER.md', ROOT/'.github/workflows/validate.yml']
+              ROOT/'docs/M3A_ADAPTER.md', ROOT/'docs/M3B_CONTRACT.md',
+              ROOT/'scripts/check_inspector.cjs', ROOT/'.github/workflows/validate.yml']
     import numpy
     evidence = {'python': platform.python_version(), 'numpy': numpy.__version__,
                 'test_command': 'python -m unittest discover -s tests -v',

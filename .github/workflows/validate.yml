@@ -2,7 +2,7 @@ name: Photonic physics validation
 on:
   pull_request:
   push:
-    branches: [main, feature/m1-two-reflector, feature/m2-bounded-diagnostics, assessment/m25-external-port, feature/m3a-external-adapter]
+    branches: [main, feature/m1-two-reflector, feature/m2-bounded-diagnostics, assessment/m25-external-port, feature/m3a-external-adapter, feature/m3b-inspector]
 permissions:
   contents: read
 jobs:
@@ -25,3 +25,28 @@ jobs:
         with:
           name: physics-evidence-python-${{ matrix.python }}
           path: results/
+  inspector-browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: '${{ github.event.pull_request.head.sha || github.sha }}'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e .
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save --package-lock=false playwright@1.62.1
+      - run: npx playwright install --with-deps chromium
+      - run: python -m photonic_architecture_explorer.inspector
+      - run: node scripts/check_inspector.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: inspector-browser-evidence
+          path: |
+            results/m3b_browser.json
+            results/inspector_*.png
+            results/m3b-inspector.html
