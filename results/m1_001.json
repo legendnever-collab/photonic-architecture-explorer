@@ -1,0 +1,674 @@
+{
+  "benchmark_id": "M1-001",
+  "input_sha256": "40f92b746c3870776503ccce0d06c8361a5e0a812392f509bdbb9acea61321ed",
+  "completion_gate": {
+    "status": "Pass",
+    "scope": "benchmark model gate; independent tests separately required"
+  },
+  "analytical_flat_overlap": 0.013019224937694652,
+  "cases": {
+    "flat": {
+      "geometry": {
+        "status": "Pass",
+        "scope": "fixed-port specular vertex path",
+        "lengths": [
+          0.001,
+          0.002,
+          0.001
+        ],
+        "directions": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ],
+          [
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "cosines": [
+          0.7071067811865475,
+          0.7071067811865475
+        ],
+        "patch_obstruction": "Pass (chief ray, quadratic patches only)"
+      },
+      "model_domain": {
+        "status": "Pass",
+        "scope": "aligned coplanar scalar paraxial model",
+        "aperture_tail_union_estimate": 2.5727081981889197e-10
+      },
+      "gaussian_mode_matching": {
+        "status": "Pass",
+        "meaning": "computed within model, not a product efficiency requirement",
+        "normalized_mode_overlap": 0.013019224937694652,
+        "log_overlap": -4.341328172568492,
+        "mismatch_db": 18.85414869477624,
+        "underflow": false,
+        "output_axes": [
+          {
+            "radius_m": 0.0002086464013879798,
+            "curvature_per_m": 249.6324654379334,
+            "waist_radius_m": 8e-06,
+            "waist_distance_m": -0.004,
+            "rayleigh_range_m": 0.00015348238918301278,
+            "divergence_rad": 0.052123243862595724
+          },
+          {
+            "radius_m": 0.00013951235837278035,
+            "curvature_per_m": 248.15040288112792,
+            "waist_radius_m": 1.2e-05,
+            "waist_distance_m": -0.004,
+            "rayleigh_range_m": 0.0003453353756617788,
+            "divergence_rad": 0.034748829241730485
+          }
+        ]
+      },
+      "physical_losses": {
+        "status": "Uncomputed",
+        "total_coupling": null,
+        "reason": "coating/device interfaces/polarization/scatter not supplied"
+      },
+      "fabrication": {
+        "status": "Uncomputed",
+        "reason": "no process or assembly constraints"
+      },
+      "samples": [
+        {
+          "plane": "source",
+          "axes": [
+            {
+              "radius_m": 8e-06,
+              "curvature_per_m": 0.0,
+              "waist_radius_m": 8e-06,
+              "waist_distance_m": 0.0,
+              "rayleigh_range_m": 0.00015348238918301278,
+              "divergence_rad": 0.052123243862595724
+            },
+            {
+              "radius_m": 1.2e-05,
+              "curvature_per_m": 0.0,
+              "waist_radius_m": 1.2e-05,
+              "waist_distance_m": 0.0,
+              "rayleigh_range_m": 0.0003453353756617788,
+              "divergence_rad": 0.034748829241730485
+            }
+          ]
+        },
+        {
+          "plane": "M1_before",
+          "axes": [
+            {
+              "radius_m": 5.273359982743093e-05,
+              "curvature_per_m": 976.9853096755079,
+              "waist_radius_m": 8e-06,
+              "waist_distance_m": -0.001,
+              "rayleigh_range_m": 0.00015348238918301278,
+              "divergence_rad": 0.052123243862595724
+            },
+            {
+              "radius_m": 3.6762496292702204e-05,
+              "curvature_per_m": 893.4502329241831,
+              "waist_radius_m": 1.2e-05,
+              "waist_distance_m": -0.001,
+              "rayleigh_range_m": 0.0003453353756617788,
+              "divergence_rad": 0.034748829241730485
+            }
+          ],
+          "surface_radii_m": [
+            7.457657206870833e-05,
+            3.6762496292702204e-05
+          ],
+          "footprint_slope_3w": 0.0,
+          "aperture_tail_union_estimate": 1.2641554467741309e-78,
+          "powers_per_m": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "plane": "M1_after",
+          "axes": [
+            {
+              "radius_m": 5.273359982743093e-05,
+              "curvature_per_m": 976.9853096755079,
+              "waist_radius_m": 8e-06,
+              "waist_distance_m": -0.001,
+              "rayleigh_range_m": 0.00015348238918301278,
+              "divergence_rad": 0.052123243862595724
+            },
+            {
+              "radius_m": 3.6762496292702204e-05,
+              "curvature_per_m": 893.4502329241831,
+              "waist_radius_m": 1.2e-05,
+              "waist_distance_m": -0.001,
+              "rayleigh_range_m": 0.0003453353756617788,
+              "divergence_rad": 0.034748829241730485
+            }
+          ]
+        },
+        {
+          "plane": "M2_before",
+          "axes": [
+            {
+              "radius_m": 0.00015657424103867343,
+              "curvature_per_m": 332.46313531729123,
+              "waist_radius_m": 8e-06,
+              "waist_distance_m": -0.003,
+              "rayleigh_range_m": 0.00015348238918301278,
+              "divergence_rad": 0.052123243862595724
+            },
+            {
+              "radius_m": 0.00010493488553878777,
+              "curvature_per_m": 328.97418697091155,
+              "waist_radius_m": 1.2e-05,
+              "waist_distance_m": -0.003,
+              "rayleigh_range_m": 0.0003453353756617788,
+              "divergence_rad": 0.034748829241730485
+            }
+          ],
+          "surface_radii_m": [
+            0.00022142941519516602,
+            0.00010493488553878777
+          ],
+          "footprint_slope_3w": 0.0,
+          "aperture_tail_union_estimate": 2.5727081981889197e-10,
+          "powers_per_m": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "plane": "M2_after",
+          "axes": [
+            {
+              "radius_m": 0.00015657424103867343,
+              "curvature_per_m": 332.46313531729123,
+              "waist_radius_m": 8e-06,
+              "waist_distance_m": -0.003,
+              "rayleigh_range_m": 0.00015348238918301278,
+              "divergence_rad": 0.052123243862595724
+            },
+            {
+              "radius_m": 0.00010493488553878777,
+              "curvature_per_m": 328.97418697091155,
+              "waist_radius_m": 1.2e-05,
+              "waist_distance_m": -0.003,
+              "rayleigh_range_m": 0.0003453353756617788,
+              "divergence_rad": 0.034748829241730485
+            }
+          ]
+        },
+        {
+          "plane": "target",
+          "axes": [
+            {
+              "radius_m": 0.0002086464013879798,
+              "curvature_per_m": 249.6324654379334,
+              "waist_radius_m": 8e-06,
+              "waist_distance_m": -0.004,
+              "rayleigh_range_m": 0.00015348238918301278,
+              "divergence_rad": 0.052123243862595724
+            },
+            {
+              "radius_m": 0.00013951235837278035,
+              "curvature_per_m": 248.15040288112792,
+              "waist_radius_m": 1.2e-05,
+              "waist_distance_m": -0.004,
+              "rayleigh_range_m": 0.0003453353756617788,
+              "divergence_rad": 0.034748829241730485
+            }
+          ]
+        }
+      ]
+    },
+    "curved": {
+      "geometry": {
+        "status": "Pass",
+        "scope": "fixed-port specular vertex path",
+        "lengths": [
+          0.001,
+          0.002,
+          0.001
+        ],
+        "directions": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ],
+          [
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "cosines": [
+          0.7071067811865475,
+          0.7071067811865475
+        ],
+        "patch_obstruction": "Pass (chief ray, quadratic patches only)"
+      },
+      "model_domain": {
+        "status": "Pass",
+        "scope": "aligned coplanar scalar paraxial model",
+        "aperture_tail_union_estimate": 2.528310893547963e-78
+      },
+      "gaussian_mode_matching": {
+        "status": "Pass",
+        "meaning": "computed within model, not a product efficiency requirement",
+        "normalized_mode_overlap": 1.0,
+        "log_overlap": 0.0,
+        "mismatch_db": -0.0,
+        "underflow": false,
+        "output_axes": [
+          {
+            "radius_m": 8e-06,
+            "curvature_per_m": 1.840997346133074e-11,
+            "waist_radius_m": 8e-06,
+            "waist_distance_m": -4.336808689942018e-19,
+            "rayleigh_range_m": 0.00015348238918301278,
+            "divergence_rad": 0.052123243862595724
+          },
+          {
+            "radius_m": 1.2e-05,
+            "curvature_per_m": -3.636537967670268e-12,
+            "waist_radius_m": 1.2e-05,
+            "waist_distance_m": 4.336808689942018e-19,
+            "rayleigh_range_m": 0.0003453353756617788,
+            "divergence_rad": 0.034748829241730485
+          }
+        ]
+      },
+      "physical_losses": {
+        "status": "Uncomputed",
+        "total_coupling": null,
+        "reason": "coating/device interfaces/polarization/scatter not supplied"
+      },
+      "fabrication": {
+        "status": "Uncomputed",
+        "reason": "no process or assembly constraints"
+      },
+      "samples": [
+        {
+          "plane": "source",
+          "axes": [
+            {
+              "radius_m": 8e-06,
+              "curvature_per_m": 0.0,
+              "waist_radius_m": 8e-06,
+              "waist_distance_m": 0.0,
+              "rayleigh_range_m": 0.00015348238918301278,
+              "divergence_rad": 0.052123243862595724
+            },
+            {
+              "radius_m": 1.2e-05,
+              "curvature_per_m": 0.0,
+              "waist_radius_m": 1.2e-05,
+              "waist_distance_m": 0.0,
+              "rayleigh_range_m": 0.0003453353756617788,
+              "divergence_rad": 0.034748829241730485
+            }
+          ]
+        },
+        {
+          "plane": "M1_before",
+          "axes": [
+            {
+              "radius_m": 5.273359982743093e-05,
+              "curvature_per_m": 976.9853096755079,
+              "waist_radius_m": 8e-06,
+              "waist_distance_m": -0.001,
+              "rayleigh_range_m": 0.00015348238918301278,
+              "divergence_rad": 0.052123243862595724
+            },
+            {
+              "radius_m": 3.6762496292702204e-05,
+              "curvature_per_m": 893.4502329241831,
+              "waist_radius_m": 1.2e-05,
+              "waist_distance_m": -0.001,
+              "rayleigh_range_m": 0.0003453353756617788,
+              "divergence_rad": 0.034748829241730485
+            }
+          ],
+          "surface_radii_m": [
+            7.457657206870833e-05,
+            3.6762496292702204e-05
+          ],
+          "footprint_slope_3w": 0.0791003997411464,
+          "aperture_tail_union_estimate": 1.2641554467741309e-78,
+          "powers_per_m": [
+            1000.0000000000001,
+            999.9999999999998
+          ]
+        },
+        {
+          "plane": "M1_after",
+          "axes": [
+            {
+              "radius_m": 5.273359982743093e-05,
+              "curvature_per_m": -23.014690324492246,
+              "waist_radius_m": 5.212324386259572e-05,
+              "waist_distance_m": 0.0010000000000000093,
+              "rayleigh_range_m": 0.006515405482824465,
+              "divergence_rad": 0.008
+            },
+            {
+              "radius_m": 3.6762496292702204e-05,
+              "curvature_per_m": -106.5497670758167,
+              "waist_radius_m": 3.4748829241730485e-05,
+              "waist_distance_m": 0.0009999999999999983,
+              "rayleigh_range_m": 0.002895735770144208,
+              "divergence_rad": 0.011999999999999999
+            }
+          ]
+        },
+        {
+          "plane": "M2_before",
+          "axes": [
+            {
+              "radius_m": 5.273359982743091e-05,
+              "curvature_per_m": 23.014690324491834,
+              "waist_radius_m": 5.212324386259572e-05,
+              "waist_distance_m": -0.0009999999999999907,
+              "rayleigh_range_m": 0.006515405482824465,
+              "divergence_rad": 0.008
+            },
+            {
+              "radius_m": 3.676249629270222e-05,
+              "curvature_per_m": 106.54976707581699,
+              "waist_radius_m": 3.4748829241730485e-05,
+              "waist_distance_m": -0.0010000000000000018,
+              "rayleigh_range_m": 0.002895735770144208,
+              "divergence_rad": 0.011999999999999999
+            }
+          ],
+          "surface_radii_m": [
+            7.45765720687083e-05,
+            3.676249629270222e-05
+          ],
+          "footprint_slope_3w": 0.07910039974114637,
+          "aperture_tail_union_estimate": 1.2641554467738322e-78,
+          "powers_per_m": [
+            1000.0000000000001,
+            999.9999999999998
+          ]
+        },
+        {
+          "plane": "M2_after",
+          "axes": [
+            {
+              "radius_m": 5.273359982743091e-05,
+              "curvature_per_m": -976.9853096755083,
+              "waist_radius_m": 8e-06,
+              "waist_distance_m": 0.0009999999999999996,
+              "rayleigh_range_m": 0.00015348238918301278,
+              "divergence_rad": 0.052123243862595724
+            },
+            {
+              "radius_m": 3.6762496292702225e-05,
+              "curvature_per_m": -893.4502329241827,
+              "waist_radius_m": 1.2e-05,
+              "waist_distance_m": 0.0010000000000000005,
+              "rayleigh_range_m": 0.0003453353756617788,
+              "divergence_rad": 0.034748829241730485
+            }
+          ]
+        },
+        {
+          "plane": "target",
+          "axes": [
+            {
+              "radius_m": 8e-06,
+              "curvature_per_m": 1.840997346133074e-11,
+              "waist_radius_m": 8e-06,
+              "waist_distance_m": -4.336808689942018e-19,
+              "rayleigh_range_m": 0.00015348238918301278,
+              "divergence_rad": 0.052123243862595724
+            },
+            {
+              "radius_m": 1.2e-05,
+              "curvature_per_m": -3.636537967670268e-12,
+              "waist_radius_m": 1.2e-05,
+              "waist_distance_m": 4.336808689942018e-19,
+              "rayleigh_range_m": 0.0003453353756617788,
+              "divergence_rad": 0.034748829241730485
+            }
+          ]
+        }
+      ]
+    },
+    "spherical_control": {
+      "geometry": {
+        "status": "Pass",
+        "scope": "fixed-port specular vertex path",
+        "lengths": [
+          0.001,
+          0.002,
+          0.001
+        ],
+        "directions": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ],
+          [
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "cosines": [
+          0.7071067811865475,
+          0.7071067811865475
+        ],
+        "patch_obstruction": "Pass (chief ray, quadratic patches only)"
+      },
+      "model_domain": {
+        "status": "Pass",
+        "scope": "aligned coplanar scalar paraxial model",
+        "aperture_tail_union_estimate": 5.102834250419707e-73
+      },
+      "gaussian_mode_matching": {
+        "status": "Pass",
+        "meaning": "computed within model, not a product efficiency requirement",
+        "normalized_mode_overlap": 0.3889688084592639,
+        "log_overlap": -0.9442561224879396,
+        "mismatch_db": 4.100852234998731,
+        "underflow": false,
+        "output_axes": [
+          {
+            "radius_m": 2.583451074556084e-05,
+            "curvature_per_m": 1223.7593111703377,
+            "waist_radius_m": 1.1747047413251703e-05,
+            "waist_distance_m": -0.000648203078312522,
+            "rayleigh_range_m": 0.00033092990934369175,
+            "divergence_rad": 0.03549708588307637
+          },
+          {
+            "radius_m": 2.813234539785323e-05,
+            "curvature_per_m": -894.813466975828,
+            "waist_radius_m": 1.4274059817763892e-05,
+            "waist_distance_m": 0.0008298442177930804,
+            "rayleigh_range_m": 0.000488622658007943,
+            "divergence_rad": 0.029212848777740996
+          }
+        ]
+      },
+      "physical_losses": {
+        "status": "Uncomputed",
+        "total_coupling": null,
+        "reason": "coating/device interfaces/polarization/scatter not supplied"
+      },
+      "fabrication": {
+        "status": "Uncomputed",
+        "reason": "no process or assembly constraints"
+      },
+      "samples": [
+        {
+          "plane": "source",
+          "axes": [
+            {
+              "radius_m": 8e-06,
+              "curvature_per_m": 0.0,
+              "waist_radius_m": 8e-06,
+              "waist_distance_m": 0.0,
+              "rayleigh_range_m": 0.00015348238918301278,
+              "divergence_rad": 0.052123243862595724
+            },
+            {
+              "radius_m": 1.2e-05,
+              "curvature_per_m": 0.0,
+              "waist_radius_m": 1.2e-05,
+              "waist_distance_m": 0.0,
+              "rayleigh_range_m": 0.0003453353756617788,
+              "divergence_rad": 0.034748829241730485
+            }
+          ]
+        },
+        {
+          "plane": "M1_before",
+          "axes": [
+            {
+              "radius_m": 5.273359982743093e-05,
+              "curvature_per_m": 976.9853096755079,
+              "waist_radius_m": 8e-06,
+              "waist_distance_m": -0.001,
+              "rayleigh_range_m": 0.00015348238918301278,
+              "divergence_rad": 0.052123243862595724
+            },
+            {
+              "radius_m": 3.6762496292702204e-05,
+              "curvature_per_m": 893.4502329241831,
+              "waist_radius_m": 1.2e-05,
+              "waist_distance_m": -0.001,
+              "rayleigh_range_m": 0.0003453353756617788,
+              "divergence_rad": 0.034748829241730485
+            }
+          ],
+          "surface_radii_m": [
+            7.457657206870833e-05,
+            3.6762496292702204e-05
+          ],
+          "footprint_slope_3w": 0.1118648581030625,
+          "aperture_tail_union_estimate": 1.2641554467741309e-78,
+          "powers_per_m": [
+            1414.213562373095,
+            707.1067811865474
+          ]
+        },
+        {
+          "plane": "M1_after",
+          "axes": [
+            {
+              "radius_m": 5.273359982743092e-05,
+              "curvature_per_m": -437.22825269758727,
+              "waist_radius_m": 1.710720019328685e-05,
+              "waist_distance_m": 0.002046435613373834,
+              "rayleigh_range_m": 0.0007018373108758285,
+              "divergence_rad": 0.024374879944667856
+            },
+            {
+              "radius_m": 3.6762496292702204e-05,
+              "curvature_per_m": 186.34345173763566,
+              "waist_radius_m": 3.146857611753752e-05,
+              "waist_distance_m": -0.0014342850195115673,
+              "rayleigh_range_m": 0.00237483128802322,
+              "divergence_rad": 0.013250868083236167
+            }
+          ]
+        },
+        {
+          "plane": "M2_before",
+          "axes": [
+            {
+              "radius_m": 1.7144602975125732e-05,
+              "curvature_per_m": -93.86016046411089,
+              "waist_radius_m": 1.710720019328685e-05,
+              "waist_distance_m": 4.643561337383398e-05,
+              "rayleigh_range_m": 0.0007018373108758285,
+              "divergence_rad": 0.024374879944667856
+            },
+            {
+              "radius_m": 5.532794764975832e-05,
+              "curvature_per_m": 196.9862329220669,
+              "waist_radius_m": 3.146857611753752e-05,
+              "waist_distance_m": -0.0034342850195115673,
+              "rayleigh_range_m": 0.00237483128802322,
+              "divergence_rad": 0.013250868083236167
+            }
+          ],
+          "surface_radii_m": [
+            2.4246130048924928e-05,
+            5.532794764975832e-05
+          ],
+          "footprint_slope_3w": 0.08299192147463748,
+          "aperture_tail_union_estimate": 5.102821608865239e-73,
+          "powers_per_m": [
+            1414.213562373095,
+            707.1067811865474
+          ]
+        },
+        {
+          "plane": "M2_after",
+          "axes": [
+            {
+              "radius_m": 1.7144602975125736e-05,
+              "curvature_per_m": -1508.073722837206,
+              "waist_radius_m": 1.1747047413251703e-05,
+              "waist_distance_m": 0.00035179692168747794,
+              "rayleigh_range_m": 0.00033092990934369175,
+              "divergence_rad": 0.03549708588307637
+            },
+            {
+              "radius_m": 5.532794764975832e-05,
+              "curvature_per_m": -510.12054826448053,
+              "waist_radius_m": 1.4274059817763892e-05,
+              "waist_distance_m": 0.0018298442177930804,
+              "rayleigh_range_m": 0.000488622658007943,
+              "divergence_rad": 0.029212848777740996
+            }
+          ]
+        },
+        {
+          "plane": "target",
+          "axes": [
+            {
+              "radius_m": 2.583451074556084e-05,
+              "curvature_per_m": 1223.7593111703377,
+              "waist_radius_m": 1.1747047413251703e-05,
+              "waist_distance_m": -0.000648203078312522,
+              "rayleigh_range_m": 0.00033092990934369175,
+              "divergence_rad": 0.03549708588307637
+            },
+            {
+              "radius_m": 2.813234539785323e-05,
+              "curvature_per_m": -894.813466975828,
+              "waist_radius_m": 1.4274059817763892e-05,
+              "waist_distance_m": 0.0008298442177930804,
+              "rayleigh_range_m": 0.000488622658007943,
+              "divergence_rad": 0.029212848777740996
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
