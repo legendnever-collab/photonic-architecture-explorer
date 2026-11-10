@@ -3,9 +3,13 @@
   "numpy": "2.3.5",
   "test_command": "python -m unittest discover -s tests -v",
   "test_exit_code": 0,
-  "evaluated_checkout_sha": "8c887e17bc0286ba9def86324031bd4d6c832cf2",
+  "evaluated_checkout_sha": "09cf378579efe9388408d9fe8fdb983f1a21f65d",
   "checkout_dirty_before_run": true,
   "m25_actual_applicability": "Uncomputed",
+  "m3a_adapter_gate": {
+    "status": "Pass",
+    "scope": "adapter controls, not actual engineering acceptance"
+  },
   "benchmark_gate": {
     "status": "Pass",
     "scope": "benchmark model gate; independent tests separately required"
@@ -13,23 +17,31 @@
   "sha256": {
     "examples/external_ports_unprovided.json": "924c68622e4549c35ab45020ea2a5d268d04751141320235e50f4391261c2ed0",
     "examples/m1_001.json": "40f92b746c3870776503ccce0d06c8361a5e0a812392f509bdbb9acea61321ed",
+    "examples/m3a_synthetic.json": "a3c04f2d5d81248dcaffbfcfa57b4199894a1f2e90a1a30af62c851f29ed0faa",
     "scripts/assess_m25.py": "5981a3e6d00172bd5ed3646dc0d43725791c00a8d343c88bbed815cc440bb0dc",
-    "scripts/validate.py": "b687ee8494aac37753fb797a77a73367e33c2aac9c923f28fdb8ef6d36f86681",
+    "scripts/assess_m3a.py": "fd674b3a22f8beb25fa835f62e619cb4e7a81da53155a107046cd53a563e5c8e",
+    "scripts/validate.py": "cf1cdded2f910f6a924c37675ad9c89495b058d1f8ff99aa894dfad50cdffa14",
     "src/photonic_architecture_explorer/__init__.py": "7e5bff7a68ccad603bf3ebc3cee6c760fd17290d1f5d5c8ce611fec41f50ca15",
     "src/photonic_architecture_explorer/applicability.py": "1d8866bb89b887e024beb9a432bc1476885e2b2cfcb5f1da91b0fd12c46e40c0",
     "src/photonic_architecture_explorer/benchmark.py": "2b6df43b6977b79292908879093ea79c4c28a668416f5bc21ac094070bd43e66",
     "src/photonic_architecture_explorer/diagnostics.py": "45a0f0c30c0505afb699bd48722352eee4f4d8307aad8d89a48b5f583b12e040",
+    "src/photonic_architecture_explorer/external.py": "ac56803694784e942a816927d4b84e20fd9441166f5a02b78e16d8274710dabc",
     "src/photonic_architecture_explorer/gaussian.py": "908e84962d8b5ee5be793108eaf3491ddb9465b77e51ff2817d52e5caf06261d",
     "src/photonic_architecture_explorer/geometry.py": "67af248571a4ccbde2e387462b365b13dfc6b43198e65473687a5db466f0b6f2",
+    "src/photonic_architecture_explorer/package_geometry.py": "dd5015af492087db9c65b2997408035b7bea8567c431faa7c9fc1d250e5367d9",
     "src/photonic_architecture_explorer/solver.py": "3255b530cc41b984d3bce1ccfded62796775f9ec1fd8f5974f037ad7ee136b51",
+    "tests/test_external.py": "9184307c5d47e0b5a15528492d1722776ba39a0de4787f5e99d4dd02ad37ef23",
     "tests/test_m1.py": "531db2f3c7356e513a3c87967f54f9f63add8abc7446a4f48f1238207233e7ac",
     "tests/test_m2.py": "abdb125eb62a06bdc717bd4a26ea4d35fd5f78b3da4283e15c6e2c32bc2a8b4c",
     "tests/test_m25.py": "dcd9c1c682c2d9040b7db77ac60ae857490235e2cd6e044b5e6e588556979275",
-    "pyproject.toml": "0c2ffea24a573b6165ce320f5afad0812f0b836143d4d572f7b8a09ce103ed7c",
+    "pyproject.toml": "81f6780f8010d5c233f920e85ce4dcb4db5d994159d72b5b0f6ea0232ee9f4d3",
     "docs/M1_BENCHMARK.md": "369d04812068ac0aaf9fcc5c26e4732467490a1d3d9fda5b03373ac2aac358cd",
     "docs/M2_CONTRACT.md": "2f24afde763d42a409e7fe9d0cef40ce30bef48c1a6122cdc0d93eff4674d6b8",
     "docs/M25_CONTRACT.md": "d0d277b8d45d1be4497c873cdaf472355ea7d32681858e143706616b12454110",
-    "docs/EXTERNAL_PORT_CONTRACT.md": "9c3671740116eace43813dce35dfd714f90b0f2d0f58982e91684eac984e5167",
-    "docs/M25_ASSESSMENT.md": "6eb19b5bfd3795dcd1dd9bd86178d74e2bf23500afacc8e25e39bc4b37bc7f7d"
+    "docs/EXTERNAL_PORT_CONTRACT.md": "d3a3d2d2cd8771d942388e6c3ab7c8af15dec48afd85e953850e0b6846b2c41d",
+    "docs/M25_ASSESSMENT.md": "6eb19b5bfd3795dcd1dd9bd86178d74e2bf23500afacc8e25e39bc4b37bc7f7d",
+    "docs/M3A_CONTRACT.md": "548c29289fcaa39161e39e0176698de518974910da6895aa9c33210d58825850",
+    "docs/M3A_ADAPTER.md": "d801c63430502a6866495e6bc2f54ea37464725f409c6d3029e7539ddb6051d6",
+    ".github/workflows/validate.yml": "cee42da6b8d6eeafd2f9f20be18c8208a5960c0bace2e8aa67dac7d218ed0af9"
   }
 }
