@@ -1,0 +1,22 @@
+{
+  "schema": "M4C-external-field-request-1",
+  "kind": "Unprovided export request; NOT an executable Adapter input",
+  "case_id": "M4C-ACTUAL-EXTERNAL-UNPROVIDED",
+  "distinct_from": ["M4A-001", "M4B-LIT-001", "M4C-TE-PLANAR-001"],
+  "reference_plane": {"origin_m": null, "normal": null, "transverse_basis": null, "external_side_material": null, "distance_from_facet_m": null},
+  "wavelength_m": null,
+  "external_material_permittivity": null,
+  "grid": {"x_m": null, "y_m": null, "array_axis_order": null, "staggering": null},
+  "complex_components": {"Ex_V_per_m": null, "Ey_V_per_m": null, "Ez_V_per_m": null, "Hx_A_per_m": null, "Hy_A_per_m": null, "Hz_A_per_m": null},
+  "time_and_spatial_phase_convention": null,
+  "field_decomposition_incident_outgoing_total": null,
+  "polarization_and_mode_identifier": null,
+  "normalization": {"incident_guided_power_W": null, "outgoing_plane_flux_W": null, "reflected_power_W": null, "absorbed_power_W": null, "other_boundary_flux_W": null},
+  "width_definition_and_fit_method": null,
+  "solver": {"name_version": null, "project_or_reproducible_material_geometry": null, "mesh_boundary_source_settings": null, "two_sampling_convergence": null},
+  "provenance": "unprovided",
+  "source": null,
+  "uncertainty": null,
+  "accepted_target_reciprocal_field": "Required separately before coupling claims",
+  "publication_permission": "Non-confidential data only"
+}

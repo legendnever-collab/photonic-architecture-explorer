@@ -4,3 +4,7 @@ __pycache__/
 .venv/
 build/
 dist/
+# Reproduced M4-C arrays/runtime provenance are uploaded by the dedicated CI job.
+results/m4c_fields_*.npz
+results/m4c_provenance.json
+results/m4c_execution.json

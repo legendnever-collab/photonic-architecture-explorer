@@ -1,0 +1,4 @@
+# Standalone reference only; no production package dependency changes.
+numpy==2.3.5
+scipy==1.17.0
+tmm==0.2.0

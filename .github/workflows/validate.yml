@@ -52,3 +52,30 @@ jobs:
             results/m3b-inspector.html
             results/m4b_literature_inspector.html
             results/m4b_adapter_ci.json
+  m4c-reference-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: '${{ github.event.pull_request.head.sha || github.sha }}'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements-m4c.txt
+      - name: Reproduce bounded Control and verify its recorded STOP
+        timeout-minutes: 2
+        shell: bash
+        run: |
+          rc=0
+          python scripts/m4c_planar_control.py || rc=$?
+          python scripts/check_m4c_stop.py "$rc"
+          echo 'M4-C Control acceptance: FAIL (angular-bin error). Evidence collection: PASS. Actual device performance: Uncomputed.' >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: m4c-planar-reference-evidence
+          path: |
+            results/m4c_*.json
+            results/m4c_fields_*.npz
+            docs/M4C_*.md
+            requirements-m4c.txt
