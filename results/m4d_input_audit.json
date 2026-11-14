@@ -1,0 +1,179 @@
+{
+  "audit_id": "M4D-EXTERNAL-INTAKE-001",
+  "audit_date_local": "2026-11-14",
+  "timezone": "America/Los_Angeles",
+  "intake_status": "Unprovided",
+  "decision": "Stop actual-performance work pending non-confidential input",
+  "scope": "Current request attachments (none), repository tracked inputs and prior Synthetic Control evidence; no claim about other services or unpublished data",
+  "supplied_external_field_files": [],
+  "supplied_reproducible_facet_models": [],
+  "request_file": "references/m4c_external_field_request.json",
+  "request_sha256": "c706184a868ba4efbf24a47bbf81a95d689e194c0b04692b49f5a813ae2db1cb",
+  "missing_null_leaf_count": 32,
+  "missing_null_leaf_paths": [
+    "reference_plane.origin_m",
+    "reference_plane.normal",
+    "reference_plane.transverse_basis",
+    "reference_plane.external_side_material",
+    "reference_plane.distance_from_facet_m",
+    "wavelength_m",
+    "external_material_permittivity",
+    "grid.x_m",
+    "grid.y_m",
+    "grid.array_axis_order",
+    "grid.staggering",
+    "complex_components.Ex_V_per_m",
+    "complex_components.Ey_V_per_m",
+    "complex_components.Ez_V_per_m",
+    "complex_components.Hx_A_per_m",
+    "complex_components.Hy_A_per_m",
+    "complex_components.Hz_A_per_m",
+    "time_and_spatial_phase_convention",
+    "field_decomposition_incident_outgoing_total",
+    "polarization_and_mode_identifier",
+    "normalization.incident_guided_power_W",
+    "normalization.outgoing_plane_flux_W",
+    "normalization.reflected_power_W",
+    "normalization.absorbed_power_W",
+    "normalization.other_boundary_flux_W",
+    "width_definition_and_fit_method",
+    "solver.name_version",
+    "solver.project_or_reproducible_material_geometry",
+    "solver.mesh_boundary_source_settings",
+    "solver.two_sampling_convergence",
+    "source",
+    "uncertainty"
+  ],
+  "missing_count_is_not_a_new_mandatory_schema": true,
+  "classifications": {
+    "M4A-001": "Actual input unprovided",
+    "M4B-LIT-001": "Literature-guided Proxy with assumptions; not actual external field",
+    "M1/M3A": "Synthetic external Gaussian",
+    "M4C-TE-PLANAR-001": "Synthetic 2D TE planar control; historical numerical Fail",
+    "M4C1-TE-WINDOW-001": "Synthetic 2D TE Window verification; numerical Pass"
+  },
+  "actual_states": {
+    "external_field": {
+      "status": "Uncomputed",
+      "value": null,
+      "reason": "Actual complex E/H export or reproducible local facet model not supplied; Target and Package evidence required separately"
+    },
+    "gaussian_complex_fit": {
+      "status": "Uncomputed",
+      "value": null,
+      "reason": "Actual complex E/H export or reproducible local facet model not supplied; Target and Package evidence required separately"
+    },
+    "applicability": {
+      "status": "Uncomputed",
+      "value": null,
+      "reason": "Actual complex E/H export or reproducible local facet model not supplied; Target and Package evidence required separately"
+    },
+    "normalized_mode_overlap": {
+      "status": "Uncomputed",
+      "value": null,
+      "reason": "Actual complex E/H export or reproducible local facet model not supplied; Target and Package evidence required separately"
+    },
+    "total_coupling": {
+      "status": "Uncomputed",
+      "value": null,
+      "reason": "Actual complex E/H export or reproducible local facet model not supplied; Target and Package evidence required separately"
+    },
+    "package_feasibility": {
+      "status": "Uncomputed",
+      "value": null,
+      "reason": "Actual complex E/H export or reproducible local facet model not supplied; Target and Package evidence required separately"
+    }
+  },
+  "resume_routes": {
+    "field_export": "One Source Port complex E/H plus plane/basis, grid/units, wavelength/medium, phase/decomposition, source/polarization, power accounting and convergence metadata",
+    "local_model": "Actual material/index and facet/taper geometry plus solver/version, source/eigenmode normalization, boundary/mesh and convergence settings; execution access/budget must be checked before use",
+    "target": "Reciprocal accepted Target field is separately required before coupling claims",
+    "package": "Actual mechanical geometry/constraints separately required"
+  },
+  "new_actual_calculations_performed": false,
+  "new_solver_fit_adapter_implemented": false,
+  "input_file_sha256": {
+    "references/m4c_external_field_request.json": "c706184a868ba4efbf24a47bbf81a95d689e194c0b04692b49f5a813ae2db1cb",
+    "examples/external_ports_unprovided.json": "924c68622e4549c35ab45020ea2a5d268d04751141320235e50f4391261c2ed0",
+    "examples/m4b_literature_proxy.json": "c244b187f8ac3e94fd497e622e16a1567788dd6acf10a4fb0550ffdedbd2f2ac",
+    "examples/m3a_synthetic.json": "a3c04f2d5d81248dcaffbfcfa57b4199894a1f2e90a1a30af62c851f29ed0faa",
+    "examples/m1_001.json": "40f92b746c3870776503ccce0d06c8361a5e0a812392f509bdbb9acea61321ed",
+    "docs/EXTERNAL_PORT_CONTRACT.md": "d3a3d2d2cd8771d942388e6c3ab7c8af15dec48afd85e953850e0b6846b2c41d"
+  },
+  "recovery": {
+    "main_head": "f42a6b1701eeb8c0500092a95e0b4202be86aa8b",
+    "main_ci_run": 42910559738,
+    "main_ci_status": "success",
+    "base_pr": 10,
+    "base_pr_state": "Draft / open / not merged",
+    "base_head": "e164f7aa3c255a03f9c54f11af699b49c86c78e6",
+    "base_branch": "assessment/m4c1-angular-verification",
+    "base_ci_run": 42920925168,
+    "base_ci_status": "success",
+    "artifacts": [
+      {
+        "id": 13812425638,
+        "name": "m4c1-window-reference-evidence",
+        "digest": "sha256:f8f1d27a5d1eeb3393a07a2aa29c39600afee2f589cc5cd07adffa83e7162e11",
+        "expired": false
+      },
+      {
+        "id": 13812170462,
+        "name": "m4c-planar-reference-evidence",
+        "digest": "sha256:107fb18455b18dacce57baa1f9b25c1b5464c4a8eb766b4afd8020182b947564",
+        "expired": false
+      },
+      {
+        "id": 13810824320,
+        "name": "physics-evidence-python-3.12",
+        "digest": "sha256:1b27544fcf759a3ce95250e633a1c583de9e53a1501fca53fab1803fe11681a5",
+        "expired": false
+      },
+      {
+        "id": 13810584910,
+        "name": "inspector-browser-evidence",
+        "digest": "sha256:fd33fa3b21d127019d26f5fb595c68f3735b484e5e38a8c21aded6bd90a2bc25",
+        "expired": false
+      },
+      {
+        "id": 13810529879,
+        "name": "physics-evidence-python-3.11",
+        "digest": "sha256:a5aae2642681f4af3fff288b351e642f7a6fd2c1b4af3bfd5b75be53900faa26",
+        "expired": false
+      }
+    ],
+    "cached_artifact_payload_reverification": "All five ZIP digests; Physics/Control HEAD and source hashes; Control output manifests verified",
+    "local_reproduction": {
+      "isolated_detached_worktree": true,
+      "tests": 68,
+      "tests_status": "Pass",
+      "test_log_sha256": "2b0ed8b9817676f546243a23524fd1ac2e64e367f13a0d0f1ca8499a99dc3793",
+      "benchmark": "Pass",
+      "adapter": "Pass",
+      "legacy": {
+        "status": "Fail",
+        "tail_absolute_error": 0.027777663568040678,
+        "run_id": "fd1356c328054af7ac6ff116164177bc",
+        "elapsed_s": 0.3953489069999705,
+        "provenance_sha256": "43876b9d28a46086d52fc87a26d8fff6818ed4b5bbba4fd0750054b5eb1e851f"
+      },
+      "window": {
+        "status": "Pass",
+        "final_tail_absolute_error": 0.00020361834989157668,
+        "run_id": "b0ee525735d24093ae72c78826843b5c",
+        "elapsed_s": 0.8063459960001182,
+        "provenance_sha256": "535b7ba6f7f8445dfc896bc03b3790830367a4549b96dc09aa138e9eb3e8b475"
+      },
+      "first_attempt": {
+        "status": "Execution failure; not a Control Stop",
+        "error": "ModuleNotFoundError: No module named 'tmm'",
+        "child_log_sha256": "8d84fb3033576451d2fbde3e855d498032c96a237ca083ff0c9e61ad29dbc6d1",
+        "fresh_report_generated": false,
+        "checker_rejected": true,
+        "resolution": "Installed unchanged requirements-m4c.txt; retried in a new exclusive directory"
+      },
+      "published_log": "results/m4d_recovery_log.txt"
+    }
+  },
+  "next_action": "Await actual non-confidential input, then resume M4-D under docs/NEXT_TASK.md; do not start additional synthetic development"
+}

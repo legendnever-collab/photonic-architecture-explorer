@@ -1,0 +1,144 @@
+M4-D recovery at e164f7aa3c255a03f9c54f11af699b49c86c78e6
+Independent run directories; no actual-device calculations.
+
+
+Initial dependency failure (not Control Stop)
+Traceback (most recent call last):
+  File "<isolated-worktree>/scripts/m4c_planar_control.py", line 19, in <module>
+    import tmm
+ModuleNotFoundError: No module named 'tmm'
+
+
+Initial launcher/checker rejected missing fresh output
+Traceback (most recent call last):
+  File "<isolated-worktree>/scripts/check_m4c_stop.py", line 29, in <module>
+    main()
+  File "<isolated-worktree>/scripts/check_m4c_stop.py", line 14, in main
+    p = check_legacy(args.output_dir, args.exit_code, args.run_id)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<isolated-worktree>/scripts/m4c_evidence.py", line 50, in check_legacy
+    r = json.loads((out/'m4c_planar_control.json').read_text())
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '<isolated-worktree>/results/runtime/m4d-recovery/legacy/m4c_planar_control.json'
+Traceback (most recent call last):
+  File "<isolated-worktree>/scripts/run_m4c_stop.py", line 28, in <module>
+    main()
+  File "<isolated-worktree>/scripts/run_m4c_stop.py", line 22, in main
+    subprocess.run([sys.executable, str(ROOT/'scripts/check_m4c_stop.py'), str(child.returncode),
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python', '<isolated-worktree>/scripts/check_m4c_stop.py', '1', '--output-dir', '<isolated-worktree>/results/runtime/m4d-recovery/legacy', '--run-id', '85b64ed981b34951bf4b4ed2b7d59438']' returned non-zero exit status 1.
+
+
+68-test recovery
+test_blank_sheet_and_cli_no_actual_coupling (test_external.ExternalAdapter.test_blank_sheet_and_cli_no_actual_coupling) ... ok
+test_body_envelope_must_contain_surface (test_external.ExternalAdapter.test_body_envelope_must_contain_surface) ... ok
+test_declared_bounds_fail_or_remain_separately_uncomputed (test_external.ExternalAdapter.test_declared_bounds_fail_or_remain_separately_uncomputed) ... ok
+test_engine_domain_rejections_preserve_frozen_guards (test_external.ExternalAdapter.test_engine_domain_rejections_preserve_frozen_guards) ... ok
+test_envelope_collisions_distance_and_chief_keepout (test_external.ExternalAdapter.test_envelope_collisions_distance_and_chief_keepout) ... ok
+test_envelope_pass_is_not_full_package_clearance_pass (test_external.ExternalAdapter.test_envelope_pass_is_not_full_package_clearance_pass) ... ok
+test_equivalence_immutable_ports_snapshot_and_roundtrip (test_external.ExternalAdapter.test_equivalence_immutable_ports_snapshot_and_roundtrip) ... ok
+test_geometry_closure_and_exactly_two_reflectors (test_external.ExternalAdapter.test_geometry_closure_and_exactly_two_reflectors) ... ok
+test_independent_nonwaist_formula_mfd_phase_and_q_only (test_external.ExternalAdapter.test_independent_nonwaist_formula_mfd_phase_and_q_only) ... ok
+test_invalid_units_provenance_nonfinite_and_unknown_fields (test_external.ExternalAdapter.test_invalid_units_provenance_nonfinite_and_unknown_fields) ... ok
+test_missing_phase_q_or_partial_components_do_not_default (test_external.ExternalAdapter.test_missing_phase_q_or_partial_components_do_not_default) ... ok
+test_missing_unsupported_package_and_frame_units (test_external.ExternalAdapter.test_missing_unsupported_package_and_frame_units) ... ok
+test_polarization_assumption_and_external_ambient_identity (test_external.ExternalAdapter.test_polarization_assumption_and_external_ambient_identity) ... ok
+test_quadratic_patch_extent_independent_dense_surface_reference (test_external.ExternalAdapter.test_quadratic_patch_extent_independent_dense_surface_reference) ... ok
+test_redundant_mode_mismatch_including_partial_inputs (test_external.ExternalAdapter.test_redundant_mode_mismatch_including_partial_inputs) ... ok
+test_reference_plane_frame_axis_and_target_direction (test_external.ExternalAdapter.test_reference_plane_frame_axis_and_target_direction) ... ok
+test_volume_uses_whole_patch_not_vertices (test_external.ExternalAdapter.test_volume_uses_whole_patch_not_vertices) ... ok
+test_all_review_states_and_immutable_ports (test_inspector.Inspector.test_all_review_states_and_immutable_ports) ... ok
+test_cli_static_default_and_blank_input (test_inspector.Inspector.test_cli_static_default_and_blank_input) ... ok
+test_each_view_calls_adapter_and_never_caches_overlap (test_inspector.Inspector.test_each_view_calls_adapter_and_never_caches_overlap) ... ok
+test_html_escaping_and_static_controls (test_inspector.Inspector.test_html_escaping_and_static_controls) ... ok
+test_http_rejects_wrong_origin_host_and_invalid_bytes (test_inspector.Inspector.test_http_rejects_wrong_origin_host_and_invalid_bytes) ... ok
+test_http_valid_invalid_valid_edit_flow (test_inspector.Inspector.test_http_valid_invalid_valid_edit_flow) ... ok
+test_human_diagnostics_locate_rejected_or_missing_input (test_inspector.Inspector.test_human_diagnostics_locate_rejected_or_missing_input) ... ok
+test_input_group_roundtrip_missing_and_duplicate_data (test_inspector.Inspector.test_input_group_roundtrip_missing_and_duplicate_data) ... ok
+test_only_declared_common_frame_supported_boxes_are_displayed (test_inspector.Inspector.test_only_declared_common_frame_supported_boxes_are_displayed) ... ok
+test_projection_coordinates_equal_scale_and_chief_withholding (test_inspector.Inspector.test_projection_coordinates_equal_scale_and_chief_withholding) ... ok
+test_quadratic_display_samples_against_local_sag_prescription (test_inspector.Inspector.test_quadratic_display_samples_against_local_sag_prescription) ... ok
+test_waft_pic_side_axes_assumptions_and_domain_withholding (test_literature_proxy.LiteratureProxy.test_waft_pic_side_axes_assumptions_and_domain_withholding) ... ok
+test_common_rigid_transform_preserves_results (test_m1.BenchmarkAndDomain.test_common_rigid_transform_preserves_results) ... ok
+test_domain_failures (test_m1.BenchmarkAndDomain.test_domain_failures) ... ok
+test_frozen_acceptance_and_fixed_ports (test_m1.BenchmarkAndDomain.test_frozen_acceptance_and_fixed_ports) ... ok
+test_geometry_failures (test_m1.BenchmarkAndDomain.test_geometry_failures) ... ok
+test_grazing_and_nonplanar_paths_are_withheld (test_m1.BenchmarkAndDomain.test_grazing_and_nonplanar_paths_are_withheld) ... ok
+test_vector_input_validation (test_m1.BenchmarkAndDomain.test_vector_input_validation) ... ok
+test_curved_reflection_independent_phase_screen (test_m1.GaussianReferences.test_curved_reflection_independent_phase_screen) ... ok
+test_free_propagation_closed_form_in_air_and_dielectric (test_m1.GaussianReferences.test_free_propagation_closed_form_in_air_and_dielectric) ... ok
+test_free_propagation_independent_fresnel_grid_convergence (test_m1.GaussianReferences.test_free_propagation_independent_fresnel_grid_convergence) ... ok
+test_full_two_mirror_relay_fresnel_reference (test_m1.GaussianReferences.test_full_two_mirror_relay_fresnel_reference) ... ok
+test_nonphysical_and_numerically_invalid_inputs (test_m1.GaussianReferences.test_nonphysical_and_numerically_invalid_inputs) ... ok
+test_normalization_at_every_benchmark_plane (test_m1.GaussianReferences.test_normalization_at_every_benchmark_plane) ... ok
+test_overlap_analytical_identity_width_offset_tilt_defocus (test_m1.GaussianReferences.test_overlap_analytical_identity_width_offset_tilt_defocus) ... ok
+test_overlap_independent_quadrature_with_two_curved_fields (test_m1.GaussianReferences.test_overlap_independent_quadrature_with_two_curved_fields) ... ok
+test_overlap_reciprocity_and_underflow (test_m1.GaussianReferences.test_overlap_reciprocity_and_underflow) ... ok
+test_flat_fold_equals_unfolded_propagation (test_m1.ReflectionReferences.test_flat_fold_equals_unfolded_propagation) ... ok
+test_quadratic_patch_intersection (test_m1.ReflectionReferences.test_quadratic_patch_intersection) ... ok
+test_reflection_and_frame_transport (test_m1.ReflectionReferences.test_reflection_and_frame_transport) ... ok
+test_surface_derivatives_recover_oblique_principal_powers (test_m1.ReflectionReferences.test_surface_derivatives_recover_oblique_principal_powers) ... ok
+test_budget_fixed_ports_and_uncomputed_semantics (test_m2.M2References.test_budget_fixed_ports_and_uncomputed_semantics) ... ok
+test_curved_near_axis_convergence (test_m2.M2References.test_curved_near_axis_convergence) ... ok
+test_fan_independent_newton_nonzero_wavefront_rays (test_m2.M2References.test_fan_independent_newton_nonzero_wavefront_rays) ... ok
+test_flat_fan_linear_exactness (test_m2.M2References.test_flat_fan_linear_exactness) ... ok
+test_misses_and_invalid_fan_withhold_results (test_m2.M2References.test_misses_and_invalid_fan_withhold_results) ... ok
+test_nominal_chief_closes_and_surface_law_holds (test_m2.M2References.test_nominal_chief_closes_and_surface_law_holds) ... ok
+test_placement_independent_newton_reference_all_12_cases (test_m2.M2References.test_placement_independent_newton_reference_all_12_cases) ... ok
+test_blank_actual_sheet_keeps_every_physical_input_unprovided (test_m25.ExternalDomainReferences.test_blank_actual_sheet_keeps_every_physical_input_unprovided) ... ok
+test_fft_angular_moments_independent_of_q_kernel (test_m25.ExternalDomainReferences.test_fft_angular_moments_independent_of_q_kernel) ... ok
+test_independent_phase_width_formula_and_nonwaist_rejection (test_m25.ExternalDomainReferences.test_independent_phase_width_formula_and_nonwaist_rejection) ... ok
+test_missing_and_invalid_do_not_become_performance (test_m25.ExternalDomainReferences.test_missing_and_invalid_do_not_become_performance) ... ok
+test_residual_scale_is_not_loss_and_inputs_are_preserved (test_m25.ExternalDomainReferences.test_residual_scale_is_not_loss_and_inputs_are_preserved) ... ok
+test_waist_guard_boundary_and_index_scaling (test_m25.ExternalDomainReferences.test_waist_guard_boundary_and_index_scaling) ... ok
+test_expected_stop_requires_fresh_identity (test_m4c_evidence.EvidenceTests.test_expected_stop_requires_fresh_identity) ... ok
+test_fresh_launcher_refuses_preexisting_directory (test_m4c_evidence.EvidenceTests.test_fresh_launcher_refuses_preexisting_directory) ... ok
+test_importerror_cannot_reuse_prior_run (test_m4c_evidence.EvidenceTests.test_importerror_cannot_reuse_prior_run) ... ok
+test_missing_and_corrupt_raw_outputs_rejected (test_m4c_evidence.EvidenceTests.test_missing_and_corrupt_raw_outputs_rejected) ... ok
+test_stale_result_or_changed_source_rejected (test_m4c_evidence.EvidenceTests.test_stale_result_or_changed_source_rejected) ... ok
+test_unexpected_exit_codes_rejected (test_m4c_evidence.EvidenceTests.test_unexpected_exit_codes_rejected) ... ok
+test_wrong_head_or_missing_completion_rejected (test_m4c_evidence.EvidenceTests.test_wrong_head_or_missing_completion_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 68 tests in 1.707s
+
+OK
+
+
+Fresh legacy retry
+Fresh evidence verified: Control FAIL / stopped; actual performance Uncomputed.
+<isolated-worktree>/results/runtime/m4d-recovery/legacy-restored
+
+
+Fresh window reproduction
+{
+  "status": "Pass",
+  "gates": {
+    "all_windows_non_tail": true,
+    "final_two_windows_all_criteria": true,
+    "final_two_tail_difference": true,
+    "legacy_failure_reproduced": true,
+    "continuous_power_balance": true,
+    "plane_wave_boundaries": true,
+    "plane_wave_power": true,
+    "normal_incidence": true,
+    "tir": true,
+    "incident_spectral_cut": true
+  },
+  "tail_errors": [
+    0.027777663568040678,
+    0.010625940524436106,
+    0.001973774193621658,
+    0.0023713694949931696,
+    0.00020361834989157668
+  ],
+  "elapsed_s": 0.8063459960001182,
+  "output_dir": "<isolated-worktree>/results/runtime/m4d-recovery/window"
+}
