@@ -97,6 +97,13 @@ def describe_plane(record, port):
             f' · t {vector(t)} · s {vector(port.sagittal)} · normal {vector(plane["normal"])}')
 
 
+def arrived_mode(evaluation, target):
+    # These are the evaluated output beam parameters at the Target plane.
+    output_axes = evaluation["gaussian_mode_matching"]["output_axes"]
+    return Gaussian(*(complex(-p["waist_distance_m"], p["rayleigh_range_m"])
+                         for p in output_axes), target.wavelength, target.index)
+
+
 def render_mode_match(candidate, input_sha, adapted):
     evaluation = candidate["evaluation"]
     eta = visible_overlap(evaluation)
@@ -104,10 +111,7 @@ def render_mode_match(candidate, input_sha, adapted):
         return '<p>Mode Match · Uncomputed</p>'
     source = adapted.source.mode
     target = adapted.target.mode
-    # These are the evaluated output beam parameters at the Target plane.
-    output_axes = evaluation["gaussian_mode_matching"]["output_axes"]
-    arrival = Gaussian(*(complex(-p["waist_distance_m"], p["rayleigh_range_m"])
-                         for p in output_axes), target.wavelength, target.index)
+    arrival = arrived_mode(evaluation, target)
     source_plots, target_plots, phase_plots = [], [], []
     for index, axis in enumerate(("t", "s")):
         x, incident, _, _ = axis_profiles(source, index)
