@@ -11,4 +11,5 @@ results/m4c_execution.json
 # Per-run M5-A artifacts; committed snapshots live in results/m5a/.
 results/runtime-m5a*/
 results/runtime-m5b*/
+results/runtime-m5c*/
 node_modules/

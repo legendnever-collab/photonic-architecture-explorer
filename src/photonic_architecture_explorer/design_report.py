@@ -2,7 +2,8 @@
 from html import escape
 import json
 from .external import adapt_external
-from .inspector import CSS, PROJECTIONS, plot_svg, result_panel, input_summary
+from .inspector import CSS, PROJECTIONS, plot_svg, result_panel, input_summary, visible_overlap
+from .mode_match import MODE_MATCH_CSS, render_mode_match
 
 
 def render_design_report(result):
@@ -10,9 +11,11 @@ def render_design_report(result):
     rows=[]; articles=[]; options=[]
     for i,c in enumerate(result['candidates']):
         identifier=c['id'];d=c['prescription'];e=c['evaluation'];r=c['ranking']
-        eta=e['gaussian_mode_matching']['normalized_mode_overlap']
+        eta = visible_overlap(e)
+        metric = f'<strong data-overlap-value="{eta}">{eta:.9g}</strong>' if eta is not None else '<strong>Uncomputed</strong>'
+        table_eta = f'{eta:.9g}' if eta is not None else 'Uncomputed'
         options.append(f'<option value="{identifier}">{i+1} · {"추천" if i==0 else "대안"} · {r["total_path_m"]*1000:.3f} mm</option>')
-        rows.append(f'<tr><td>{i+1}{" · 추천" if i==0 else ""}</td><td>{eta:.9g}</td><td>{r["max_3w_footprint_curvature"]:.6f}</td><td>{r["max_projected_radius_m"]*1e6:.2f}</td><td>{r["total_path_m"]*1000:.3f}</td></tr>')
+        rows.append(f'<tr><td>{i+1}{" · 추천" if i==0 else ""}</td><td>{table_eta}</td><td>{r["max_3w_footprint_curvature"]:.6f}</td><td>{r["max_projected_radius_m"]*1e6:.2f}</td><td>{r["total_path_m"]*1000:.3f}</td></tr>')
         adapted=adapt_external(d)
         plots=[]
         for proj,(_,_,omitted) in PROJECTIONS.items():
@@ -25,11 +28,12 @@ def render_design_report(result):
         <div class="layout"><section class="card drawing"><h2>{'추천 설계' if i==0 else '대안 설계 '+str(i+1)}</h2>{''.join(plots)}
         <p class="caption">파랑: Fixed Source / Chief Path · 보라: Fixed Target · 주황: Quadratic Reflectors</p>
         <p class="notice">Conceptual Geometry · Half-aperture는 자동 설계한 4×Beam Radius입니다. 실제 Package·제작 가능성은 Uncomputed입니다.</p></section>
-        <section class="card"><h2>설계 판단</h2><div class="metric"><span>Normalized Mode Overlap · Approximate</span><strong data-overlap-value="{eta}">{eta:.9g}</strong><small>Total Coupling: Uncomputed · 실제 전송 효율이 아닙니다.</small></div>
+        <section class="card"><h2>설계 판단</h2><div class="metric"><span>Normalized Mode Overlap · Approximate</span>{metric}<small>Total Coupling: Uncomputed · 실제 전송 효율이 아닙니다.</small></div>
         <p>Geometry와 Gaussian Domain 검사 통과. Path Length <b>{r['total_path_m']*1000:.3f} mm</b>.</p>
         <p>3w Footprint × Curvature 최대 <b>{r['max_3w_footprint_curvature']:.6f}</b> (Guard 0.15).
         최대 Projected Beam Radius <b>{r['max_projected_radius_m']*1e6:.2f} µm</b>.</p>
         <p>Overlap이 같은 수치 분해능이면 Footprint–Curvature 여유를 먼저 비교합니다. 더 짧은 경로 또는 더 작은 Beam Footprint가 항상 1순위는 아닙니다.</p>
+        {render_mode_match(c, result.get('input_sha256', ''), adapted)}
         <details><summary>Reflector 설계값 · 자동 생성</summary><div class="table-scroll"><table><tr><th>면</th><th>Vertex [mm]</th><th>Normal</th><th>κt, κs [m⁻¹]</th><th>Half-aperture [mm]</th></tr>{''.join(prescription_rows)}</table></div>
         <p>Segment Lengths [mm]: {', '.join(f'{v*1000:.6g}' for v in e['geometry']['lengths'])}</p></details>
         <details><summary>상세 Physics 판정 · 미계산 항목</summary>{result_panel(e)}</details>
@@ -39,7 +43,7 @@ def render_design_report(result):
     toolbar=(f'<div class="toolbar"><label>설계 후보 <select id="candidate-select">{"".join(options)}</select></label><label>Projection <select id="projection-select"><option>XZ</option><option>XY</option><option>YZ</option></select></label></div>' if options else '')
     comparison=(f'<section class="card compare"><h2>대표 후보 비교</h2><div class="table-scroll"><table><thead><tr><th>후보</th><th>η_mode</th><th>max 3w·κ</th><th>max Radius [µm]</th><th>Path [mm]</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div><p class="caption">가중합 Score 없음. Mode Matching → Footprint/Aperture 여유 → Path Length 순서. 서로 다른 Vertex Geometry의 상위 후보를 표시합니다.</p></section>' if rows else '')
     search=result.get('search',{})
-    return f'''<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PAE · Two-Port Design · M5-A</title><style>{CSS}
+    return f'''<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PAE · Two-Port Design</title><style>{CSS}{MODE_MATCH_CSS}
     .wrap{{max-width:1240px}}.compare{{margin:18px 0}}th{{text-align:left;padding:9px 3px;font-size:12px}}.table-scroll{{overflow:auto}}.results .metric{{display:none}}.overview{{margin-bottom:18px}}code{{overflow-wrap:anywhere}}</style></head><body>
     <header><h1>Photonic Architecture Explorer / Two-Port Design</h1><p>Fixed Source + Fixed Target → 자동 생성한 Two-Reflector 후보 · Read-only Report</p></header>
     <main class="wrap"><section class="card overview"><h2>두 Port에서 설계한 결과</h2><p>탐색 상태: <b>{escape(result['status'])}</b> · 유효 후보 {search.get('accepted_count',0)}개 중 대표 {len(result['candidates'])}개</p>
@@ -53,5 +57,9 @@ def render_design_report(result):
     <script type="application/json" id="design-result">{payload}</script><script>
     const selector=document.querySelector('#candidate-select'), projection=document.querySelector('#projection-select');
     function show(){{document.querySelectorAll('[data-candidate]').forEach(e=>e.hidden=e.dataset.candidate!==selector.value);document.querySelectorAll('[data-projection]').forEach(e=>e.hidden=e.dataset.projection!==projection.value);}}
-    if(selector){{selector.addEventListener('change',show);projection.addEventListener('change',show);show();}}
+    if(selector){{
+      const viewed=JSON.parse(document.querySelector('#design-result').textContent).viewed_candidate_id;
+      if(Array.from(selector.options).some(option=>option.value===viewed)) selector.value=viewed;
+      selector.addEventListener('change',show);projection.addEventListener('change',show);show();
+    }}
     </script></body></html>'''

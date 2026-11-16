@@ -217,8 +217,16 @@ if (frame) {
     button.addEventListener('click', () => {
       if (output.hidden) return;
       const format = button.dataset.export;
-      const data = format === 'html' ? frame.getAttribute('srcdoc') :
-        frame.contentDocument.querySelector('#design-result').textContent + '\\n';
+      const script = frame.contentDocument.querySelector('#design-result');
+      const original = script.textContent;
+      const viewed = frame.contentDocument.querySelector('#candidate-select')?.value;
+      // Preserve the engine JSON's exact numbers and recommendation; save the viewed candidate separately.
+      const encodedId = viewed && JSON.stringify(viewed);
+      const payload = viewed ? '{"viewed_candidate_id":' + encodedId + ',' + original.slice(1) : original;
+      const start = '<script type="application/json" id="design-result">';
+      const html = frame.getAttribute('srcdoc');
+      const data = format === 'html' ?
+        html.replace(start + original, () => start + payload) : payload + '\\n';
       const url = URL.createObjectURL(new Blob([data], {
         type: format === 'html' ? 'text/html;charset=utf-8' : 'application/json;charset=utf-8'
       }));

@@ -54,6 +54,25 @@ async function main() {
       assert.equal(await page.getByRole('button', {name: 'HTML 저장'}).isVisible(), false);
       assert.equal(await page.locator('#design-review').isVisible(), false);
     };
+    const verifyModeMatch = async (view, data, candidateId) => {
+      const active = view.locator('[data-candidate]:visible');
+      assert.equal(await active.getAttribute('data-candidate'), candidateId);
+      const candidate = data.candidates.find(item => item.id === candidateId);
+      const mode = active.locator('[data-mode-match]');
+      assert.equal(await mode.getAttribute('data-mode-match'), candidateId);
+      assert.equal(await mode.getAttribute('data-input-sha'), data.input_sha256);
+      for (const port of ['source', 'target']) {
+        const plane = data.input_snapshot[port].reference_plane.value;
+        assert.deepEqual(plane, candidate.prescription[port].reference_plane.value);
+        assert.equal(await mode.getAttribute('data-' + port + '-plane'), plane.id);
+      }
+      const eta = candidate.evaluation.gaussian_mode_matching.normalized_mode_overlap;
+      assert.equal(Number(await mode.getAttribute('data-mode-eta')), eta);
+      assert.equal(Number(await active.locator('[data-overlap-value]:visible').innerText()), eta);
+      if (!(await mode.evaluate(node => node.open))) await mode.locator('summary').click();
+      assert.equal(await mode.locator('svg:visible').count(), 6);
+      assert.match(await mode.locator('[data-mismatch-loss]').innerText(), / dB$/);
+    };
     const download = async format => {
       const [item] = await Promise.all([page.waitForEvent('download'),
                                        page.locator('[data-export="' + format + '"]').click()]);
@@ -83,16 +102,20 @@ async function main() {
       }
     }
     assert.equal(revised.physical_losses.total_coupling, null);
+    const alternativeId = revised.candidates[1].id;
+    await frame.locator('#candidate-select').selectOption(alternativeId);
+    await verifyModeMatch(frame, revised, alternativeId);
     await page.screenshot({path: path.join(dir, 'workspace-desktop.png'), fullPage: true});
 
     const html = await download('html');
     const json = await download('json');
-    assert.deepEqual(JSON.parse(fs.readFileSync(json)), revised);
+    const exported = {...revised, viewed_candidate_id: alternativeId};
+    assert.deepEqual(JSON.parse(fs.readFileSync(json)), exported);
     const standalone = await browser.newPage();
     await standalone.route('http**://**/*', route => route.abort());
     await standalone.goto('file://' + path.resolve(html));
-    assert.deepEqual(await standalone.locator('#design-result').evaluate(el => JSON.parse(el.textContent)), revised);
-    assert.equal(await standalone.locator('[data-candidate]:visible').count(), 1);
+    assert.deepEqual(await standalone.locator('#design-result').evaluate(el => JSON.parse(el.textContent)), exported);
+    await verifyModeMatch(standalone, exported, alternativeId);
     await standalone.close();
 
     await edit('source_wavefront_curvature_ts_per_m_0', '');
@@ -102,6 +125,7 @@ async function main() {
     assert.equal(rejected.input_snapshot.source.wavefront_curvature_ts_per_m.value, null);
     assert.match(rejected.reason, /no waist default/);
     assert.equal(await frame.locator('[data-overlap-value]').count(), 0);
+    assert.equal(await frame.locator('[data-mode-match]').count(), 0);
     await edit('source_wavefront_curvature_ts_per_m_0', '0');
     await edit('source_wavefront_curvature_ts_per_m_1', '0');
     assert.equal((await design('Computed')).input_sha256, revised.input_sha256);
@@ -110,12 +134,14 @@ async function main() {
     rejected = await design('Fail');
     assert.match(rejected.reason, /unit vector/);
     assert.equal(await frame.locator('[data-overlap-value]').count(), 0);
+    assert.equal(await frame.locator('[data-mode-match]').count(), 0);
     await edit('source_propagation_direction_0', '1');
     await edit('source_mfd_ts_m_0', '2');
     await edit('source_mfd_ts_m_1', '2');
     rejected = await design('Fail');
     assert.match(rejected.reason, /divergence/);
     assert.equal(await frame.locator('[data-overlap-value]').count(), 0);
+    assert.equal(await frame.locator('[data-mode-match]').count(), 0);
     await edit('source_mfd_ts_m_0', '16');
     await edit('source_mfd_ts_m_1', '24');
     await design('Computed');
@@ -129,6 +155,8 @@ async function main() {
     assert.equal(await frame.locator('[data-candidate]:visible').count(), 1);
     await frame.locator('#projection-select').selectOption('XY');
     assert.equal(await frame.locator('[data-projection="XY"]:visible').count(), 1);
+    await verifyModeMatch(frame, await result(), await frame.locator('#candidate-select').inputValue());
+    assert(await frame.locator('html').evaluate(el => el.scrollWidth <= el.clientWidth));
     await page.screenshot({path: path.join(dir, 'workspace-mobile.png'), fullPage: true});
 
     await page.getByRole('link', {name: '새 입력'}).click();
@@ -144,7 +172,7 @@ async function main() {
     const evidence = {status: 'Pass', evaluated_checkout_sha: head, browser: await browser.version(),
       checks: ['fresh M5-A synthetic exact match', 'edited fixed Port and reference plane', 'immediate stale result and export hiding',
                'missing phase and recovery', 'invalid unit vector and high divergence', 'Uncomputed package and total coupling',
-               'standalone HTML and JSON identical data', 'desktop and 393px mobile', 'blank input and complex q controls']};
+               'standalone HTML and JSON identical data and viewed candidate', 'Mode Match candidate/planes/SHA/overlap agreement', 'desktop and 393px mobile', 'blank input and complex q controls']};
     fs.writeFileSync(path.join(dir, 'browser.json'), JSON.stringify(evidence, null, 2) + '\n');
     console.log(JSON.stringify(evidence));
   } finally {
