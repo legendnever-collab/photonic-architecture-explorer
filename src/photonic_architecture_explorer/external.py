@@ -174,8 +174,16 @@ class AdaptedDesign:
     input_json: str  # immutable, complete original values/units/provenance/uncertainty
 
 
-def adapt_external(document):
-    """No defaults; convert one explicit nominal design without changing Ports."""
+@dataclass(frozen=True)
+class AdaptedPorts:
+    source: Port
+    target: Port
+    frame_id: str
+    input_json: str
+
+
+def adapt_ports(document):
+    """Read the unchanged external Port contract without requiring a design."""
     snapshot = json.dumps(document, allow_nan=False, sort_keys=True)
     if not isinstance(document, dict):
         fail('input', 'object required')
@@ -197,6 +205,13 @@ def adapt_external(document):
     target, target_frame = _port(document.get('target'), wavelength, index, 'target')
     if frame != target_frame:
         fail('frame_id', 'Source/Target need one shared frame; transforms unsupported')
+    return AdaptedPorts(source, target, frame, snapshot)
+
+
+def adapt_external(document):
+    """No defaults; convert one explicit nominal design without changing Ports."""
+    ports = adapt_ports(document)
+    source, target, frame, snapshot = ports.source, ports.target, ports.frame_id, ports.input_json
     constraints = document.get('reflectors')
     if constraints is None:
         raise InputIssue('Uncomputed', 'reflectors', 'surface contracts not supplied')

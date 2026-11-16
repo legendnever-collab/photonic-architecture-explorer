@@ -1,3 +1,38 @@
+# M5-B — Two-Port Design Workspace
+
+추천: **Sol Work**. 검증된 M5-A Engine을 최소 입력 흐름에 연결하는 점진적 개발이다.
+새 Physics/Optimizer가 아니라 사용자가 두 Port를 수정하고 Design을 실행하는 경로를 완성한다.
+M4-C.1/M4-D 실제 Field 검증은 별도 track으로 유지한다.
+
+```text
+Photonic Architecture Explorer — M5-B
+Recommended Mode: Sol Work
+Mission: Two-Port Editing → Design → Candidate Review
+Repository: https://github.com/legendnever-collab/photonic-architecture-explorer
+Base: M5-A Draft PR (병합됐다면 최신 Main)
+
+1. 원격 HEAD/Base/CI/Artifacts를 복구하고 AGENTS.md, PRODUCT_CHARTER,
+   M5A_DESIGN_CONTRACT, M5A_AUTONOMOUS_DESIGN, M3B_INSPECTOR를 읽어라.
+   기존 Tests와 M5-A Synthetic 결과·실패 cases를 fresh directory에서 재현하라.
+2. 기존 Python Inspector 구조를 재사용해 최소 Two-Port 입력과 단일 Design 동작을
+   연결하라. 사용자가 Position/Direction/Mode/Phase를 입력·검토할 수 있게 하라.
+   Reflector/Curvature/Solver/Search 옵션을 필수 입력으로 추가하지 마라.
+3. design_two_ports를 그대로 호출하고 기존 Read-only Report/JSON Export를 재사용하라.
+   편집 후 이전 후보/Overlap은 즉시 숨기고, 완료된 입력 snapshot과 결과를 일치시켜라.
+   단위·기준면·누락 Phase를 분명히 표시하며 Flat Phase를 임의 기본값으로 채우지 마라.
+4. 추천 후보와 짧은 경로 대안의 Trade-off, bounded failure 및 Uncomputed를 보여라.
+   Package 미제공은 Conceptual Geometry로 유지하라. Product Charter를 수정하지 마라.
+5. Nominal→Port edit→Design, valid→missing phase→valid, invalid direction/high-NA,
+   Fixed Port 불변성, static export 일치, Desktop/Mobile을 검증하라.
+   결과/재현 명령/한계/다음 지시문을 저장하고 별도 Draft PR을 작성하라.
+6. Frozen Guards·기존 결과 보존. 새 Topology/Optimizer/Maxwell/Vector adapter,
+   실제 Coupling/Yield 주장, Main 또는 기존 PR 임의 병합, 후속 자동 실행은 금지한다.
+```
+
+---
+
+## Historical M4-C handoff (preserved)
+
 # M4-C handoff — STOP / external input required
 
 추천: **Astra Work**. 실제 Field 정의·기준면·수치 오차의 판단이 필요한 범위다.

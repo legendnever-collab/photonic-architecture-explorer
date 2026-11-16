@@ -1,0 +1,5143 @@
+{
+  "schema": "M5A-design-result-1",
+  "status": "Computed",
+  "input_snapshot": {
+    "ambient_index": {
+      "provenance": "synthetic",
+      "quantity": "external_ambient_refractive_index",
+      "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+      "uncertainty": null,
+      "unit": "1",
+      "value": 1.0
+    },
+    "contract_version": "M3A-1",
+    "coordinate_convention": "right-handed world XYZ; t=s cross d; target d is arriving direction",
+    "description": "M5A-001: only two fixed Synthetic external Gaussian Ports. Mirrors and apertures are generated concept prescriptions. Package is not supplied.",
+    "source": {
+      "mfd_ts_m": {
+        "provenance": "synthetic",
+        "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+        "uncertainty": null,
+        "unit": "m",
+        "value": [
+          1.6e-05,
+          2.4e-05
+        ]
+      },
+      "mode_evidence": {
+        "provenance": "synthetic",
+        "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+        "uncertainty": null,
+        "unit": "evidence",
+        "value": {
+          "fixture": "examples/m1_001.json",
+          "kind": "synthetic_gaussian"
+        }
+      },
+      "polarization": {
+        "provenance": "synthetic",
+        "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+        "uncertainty": null,
+        "unit": "1",
+        "value": {
+          "jones_ts": [
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "treatment": "scalar_ignored"
+        }
+      },
+      "position_m": {
+        "provenance": "synthetic",
+        "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+        "uncertainty": null,
+        "unit": "m",
+        "value": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "propagation_direction": {
+        "provenance": "synthetic",
+        "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+        "uncertainty": null,
+        "unit": "1",
+        "value": [
+          1.0,
+          0.0,
+          0.0
+        ]
+      },
+      "reference_plane": {
+        "provenance": "synthetic",
+        "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+        "uncertainty": null,
+        "unit": "plane",
+        "value": {
+          "frame_id": "world",
+          "id": "source-external",
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "origin_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "side": "external"
+        }
+      },
+      "sagittal_axis": {
+        "provenance": "synthetic",
+        "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+        "uncertainty": null,
+        "unit": "1",
+        "value": [
+          0.0,
+          1.0,
+          0.0
+        ]
+      },
+      "wavefront_curvature_ts_per_m": {
+        "provenance": "synthetic",
+        "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+        "uncertainty": null,
+        "unit": "m^-1",
+        "value": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "target": {
+      "mfd_ts_m": {
+        "provenance": "synthetic",
+        "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+        "uncertainty": null,
+        "unit": "m",
+        "value": [
+          1.6e-05,
+          2.4e-05
+        ]
+      },
+      "mode_evidence": {
+        "provenance": "synthetic",
+        "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+        "uncertainty": null,
+        "unit": "evidence",
+        "value": {
+          "fixture": "examples/m1_001.json",
+          "kind": "synthetic_gaussian"
+        }
+      },
+      "polarization": {
+        "provenance": "synthetic",
+        "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+        "uncertainty": null,
+        "unit": "1",
+        "value": {
+          "jones_ts": [
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "treatment": "scalar_ignored"
+        }
+      },
+      "position_m": {
+        "provenance": "synthetic",
+        "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+        "uncertainty": null,
+        "unit": "m",
+        "value": [
+          0.002,
+          0.0,
+          0.002
+        ]
+      },
+      "propagation_direction": {
+        "provenance": "synthetic",
+        "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+        "uncertainty": null,
+        "unit": "1",
+        "value": [
+          1.0,
+          0.0,
+          0.0
+        ]
+      },
+      "reference_plane": {
+        "provenance": "synthetic",
+        "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+        "uncertainty": null,
+        "unit": "plane",
+        "value": {
+          "frame_id": "world",
+          "id": "target-external",
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "origin_m": [
+            0.002,
+            0.0,
+            0.002
+          ],
+          "side": "external"
+        }
+      },
+      "sagittal_axis": {
+        "provenance": "synthetic",
+        "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+        "uncertainty": null,
+        "unit": "1",
+        "value": [
+          0.0,
+          1.0,
+          0.0
+        ]
+      },
+      "wavefront_curvature_ts_per_m": {
+        "provenance": "synthetic",
+        "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+        "uncertainty": null,
+        "unit": "m^-1",
+        "value": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "wavelength_m": {
+      "provenance": "synthetic",
+      "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+      "uncertainty": null,
+      "unit": "m",
+      "value": 1.31e-06
+    }
+  },
+  "input_contract": {
+    "status": "Pass",
+    "scope": "explicit two-Port subset of M3A contract"
+  },
+  "search_policy": {
+    "id": "M5A-BOUNDED-EXACT-1",
+    "distance_fractions": [
+      0.125,
+      0.25,
+      0.5,
+      1.0,
+      2.0
+    ],
+    "geometry_limit": 64,
+    "candidate_limit": 256,
+    "representatives": 3,
+    "aperture_projected_radius_factor": 4.0,
+    "dedup_relative_decimals": 12,
+    "termination": "exhaust frozen finite family; never expand or optimize Target"
+  },
+  "ranking_order": [
+    "overlap_deficit_at_1e-12",
+    "max_3w_footprint_curvature",
+    "negative_min_aperture_radius_ratio_at_1e-12",
+    "max_projected_radius_m",
+    "total_path_m",
+    "package_evidence_missing_checks",
+    "stable_id"
+  ],
+  "candidates": [
+    {
+      "id": "G036-B1",
+      "geometry_id": "G036",
+      "classification": "Conceptual Geometry",
+      "prescription": {
+        "contract_version": "M3A-1",
+        "coordinate_convention": "right-handed world XYZ; t=s cross d; target d is arriving direction",
+        "description": "M5A-001: only two fixed Synthetic external Gaussian Ports. Mirrors and apertures are generated concept prescriptions. Package is not supplied.",
+        "wavelength_m": {
+          "value": 1.31e-06,
+          "unit": "m",
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null
+        },
+        "ambient_index": {
+          "value": 1.0,
+          "unit": "1",
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "quantity": "external_ambient_refractive_index"
+        },
+        "source": {
+          "position_m": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "propagation_direction": {
+            "value": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "sagittal_axis": {
+            "value": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "mfd_ts_m": {
+            "value": [
+              1.6e-05,
+              2.4e-05
+            ],
+            "unit": "m",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "wavefront_curvature_ts_per_m": {
+            "value": [
+              0.0,
+              0.0
+            ],
+            "unit": "m^-1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "polarization": {
+            "value": {
+              "treatment": "scalar_ignored",
+              "jones_ts": [
+                [
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0
+                ]
+              ]
+            },
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "reference_plane": {
+            "value": {
+              "id": "source-external",
+              "frame_id": "world",
+              "side": "external",
+              "origin_m": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "normal": [
+                1.0,
+                0.0,
+                0.0
+              ]
+            },
+            "unit": "plane",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "mode_evidence": {
+            "value": {
+              "kind": "synthetic_gaussian",
+              "fixture": "examples/m1_001.json"
+            },
+            "unit": "evidence",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          }
+        },
+        "target": {
+          "position_m": {
+            "value": [
+              0.002,
+              0.0,
+              0.002
+            ],
+            "unit": "m",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "propagation_direction": {
+            "value": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "sagittal_axis": {
+            "value": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "mfd_ts_m": {
+            "value": [
+              1.6e-05,
+              2.4e-05
+            ],
+            "unit": "m",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "wavefront_curvature_ts_per_m": {
+            "value": [
+              0.0,
+              0.0
+            ],
+            "unit": "m^-1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "polarization": {
+            "value": {
+              "treatment": "scalar_ignored",
+              "jones_ts": [
+                [
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0
+                ]
+              ]
+            },
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "reference_plane": {
+            "value": {
+              "id": "target-external",
+              "frame_id": "world",
+              "side": "external",
+              "origin_m": [
+                0.002,
+                0.0,
+                0.002
+              ],
+              "normal": [
+                1.0,
+                0.0,
+                0.0
+              ]
+            },
+            "unit": "plane",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "mode_evidence": {
+            "value": {
+              "kind": "synthetic_gaussian",
+              "fixture": "examples/m1_001.json"
+            },
+            "unit": "evidence",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          }
+        },
+        "design": {
+          "reflectors": [
+            {
+              "vertex_m": {
+                "value": [
+                  0.00565685424949238,
+                  0.0,
+                  0.0
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "illuminated_normal": {
+                "value": [
+                  -0.9944123587145177,
+                  0.0,
+                  0.10556543390631798
+                ],
+                "unit": "1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "principal_curvature_ts_per_m": {
+                "value": [
+                  87.88423727892099,
+                  88.83255613819166
+                ],
+                "unit": "m^-1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "half_aperture_ts_m": {
+                "value": [
+                  0.0011864780216325717,
+                  0.0007877400208441379
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              }
+            },
+            {
+              "vertex_m": {
+                "value": [
+                  -0.00365685424949238,
+                  0.0,
+                  0.002
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "illuminated_normal": {
+                "value": [
+                  0.9944123587145177,
+                  0.0,
+                  -0.10556543390631798
+                ],
+                "unit": "1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "principal_curvature_ts_per_m": {
+                "value": [
+                  87.88423727892099,
+                  88.83255613819166
+                ],
+                "unit": "m^-1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "half_aperture_ts_m": {
+                "value": [
+                  0.0011864780216325717,
+                  0.0007877400208441379
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              }
+            }
+          ]
+        },
+        "reflectors": [
+          {
+            "surface_prescription": {
+              "value": "quadratic_patch",
+              "unit": "model",
+              "provenance": "assumed",
+              "source": "M5A autonomous concept prescription; not a measured device fact",
+              "uncertainty": null
+            }
+          },
+          {
+            "surface_prescription": {
+              "value": "quadratic_patch",
+              "unit": "model",
+              "provenance": "assumed",
+              "source": "M5A autonomous concept prescription; not a measured device fact",
+              "uncertainty": null
+            }
+          }
+        ]
+      },
+      "evaluation": {
+        "input_contract": {
+          "status": "Pass",
+          "scope": "explicit nominal external Gaussian contract; field fit not certified"
+        },
+        "geometry": {
+          "status": "Pass",
+          "scope": "fixed-port specular vertex path",
+          "lengths": [
+            0.00565685424949238,
+            0.009526025719263042,
+            0.00565685424949238
+          ],
+          "directions": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              -0.9777118783283416,
+              0.0,
+              0.20995114425900638
+            ],
+            [
+              1.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "cosines": [
+            0.9944123587145179,
+            0.9944123587145179
+          ],
+          "patch_obstruction": "Pass (chief ray, quadratic patches only)"
+        },
+        "model_domain": {
+          "status": "Pass",
+          "scope": "aligned coplanar scalar paraxial model",
+          "aperture_tail_union_estimate": 4.976768459417405e-15
+        },
+        "design_constraints": {
+          "status": "Uncomputed",
+          "scope": "declared nominal bounds only; no tolerance/yield",
+          "checks": [
+            {
+              "path": "reflectors[0].vertex_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[0].principal_curvature_bounds_per_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[0].half_aperture_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[0].normal_constraints",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].vertex_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].principal_curvature_bounds_per_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].half_aperture_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].normal_constraints",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            }
+          ]
+        },
+        "gaussian_mode_matching": {
+          "status": "Approximate",
+          "meaning": "computed within model, not a product efficiency requirement",
+          "normalized_mode_overlap": 1.0,
+          "log_overlap": 0.0,
+          "mismatch_db": -0.0,
+          "underflow": false,
+          "output_axes": [
+            {
+              "radius_m": 8e-06,
+              "curvature_per_m": -1.840997346133073e-10,
+              "waist_radius_m": 8.000000000000001e-06,
+              "waist_distance_m": 4.336808689942018e-18,
+              "rayleigh_range_m": 0.0001534823891830128,
+              "divergence_rad": 0.05212324386259571
+            },
+            {
+              "radius_m": 1.2e-05,
+              "curvature_per_m": 2.1819227806021612e-11,
+              "waist_radius_m": 1.2e-05,
+              "waist_distance_m": -2.6020852139652106e-18,
+              "rayleigh_range_m": 0.0003453353756617788,
+              "divergence_rad": 0.034748829241730485
+            }
+          ],
+          "scope": "normalized scalar paraxial Gaussian diagnostic; not total coupling",
+          "conditions": [
+            "explicit scalar-ignored polarization",
+            "finite-field aberration unvalidated",
+            "package/bounds status remains separate"
+          ]
+        },
+        "package_feasibility": {
+          "status": "Uncomputed",
+          "reason": "full finite-beam/body/support clearance not evaluated",
+          "envelope_geometry": {
+            "status": "Uncomputed",
+            "scope": "declared world AABBs and quadratic patch extents only",
+            "checks": [
+              {
+                "path": "package.frame_id",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "package.available_volume",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "package.required_clearance_m",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "package.keepout_bodies",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "reflectors[0].body_envelope",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "reflectors[1].body_envelope",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              }
+            ]
+          },
+          "finite_beam_clearance": {
+            "status": "Uncomputed"
+          }
+        },
+        "physical_losses": {
+          "status": "Uncomputed",
+          "total_coupling": null,
+          "reason": "coating/device interfaces/polarization/scatter not supplied"
+        },
+        "fabrication": {
+          "status": "Uncomputed",
+          "reason": "no process or assembly constraints"
+        },
+        "actual_applicability": {
+          "status": "Uncomputed",
+          "reason": "external input adapter does not independently certify actual Port field or package performance"
+        },
+        "input_snapshot": {
+          "ambient_index": {
+            "provenance": "synthetic",
+            "quantity": "external_ambient_refractive_index",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null,
+            "unit": "1",
+            "value": 1.0
+          },
+          "contract_version": "M3A-1",
+          "coordinate_convention": "right-handed world XYZ; t=s cross d; target d is arriving direction",
+          "description": "M5A-001: only two fixed Synthetic external Gaussian Ports. Mirrors and apertures are generated concept prescriptions. Package is not supplied.",
+          "design": {
+            "reflectors": [
+              {
+                "half_aperture_ts_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    0.0011864780216325717,
+                    0.0007877400208441379
+                  ]
+                },
+                "illuminated_normal": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "1",
+                  "value": [
+                    -0.9944123587145177,
+                    0.0,
+                    0.10556543390631798
+                  ]
+                },
+                "principal_curvature_ts_per_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m^-1",
+                  "value": [
+                    87.88423727892099,
+                    88.83255613819166
+                  ]
+                },
+                "vertex_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    0.00565685424949238,
+                    0.0,
+                    0.0
+                  ]
+                }
+              },
+              {
+                "half_aperture_ts_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    0.0011864780216325717,
+                    0.0007877400208441379
+                  ]
+                },
+                "illuminated_normal": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "1",
+                  "value": [
+                    0.9944123587145177,
+                    0.0,
+                    -0.10556543390631798
+                  ]
+                },
+                "principal_curvature_ts_per_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m^-1",
+                  "value": [
+                    87.88423727892099,
+                    88.83255613819166
+                  ]
+                },
+                "vertex_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    -0.00365685424949238,
+                    0.0,
+                    0.002
+                  ]
+                }
+              }
+            ]
+          },
+          "reflectors": [
+            {
+              "surface_prescription": {
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null,
+                "unit": "model",
+                "value": "quadratic_patch"
+              }
+            },
+            {
+              "surface_prescription": {
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null,
+                "unit": "model",
+                "value": "quadratic_patch"
+              }
+            }
+          ],
+          "source": {
+            "mfd_ts_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                1.6e-05,
+                2.4e-05
+              ]
+            },
+            "mode_evidence": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "evidence",
+              "value": {
+                "fixture": "examples/m1_001.json",
+                "kind": "synthetic_gaussian"
+              }
+            },
+            "polarization": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "1",
+              "value": {
+                "jones_ts": [
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "treatment": "scalar_ignored"
+              }
+            },
+            "position_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "propagation_direction": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                1.0,
+                0.0,
+                0.0
+              ]
+            },
+            "reference_plane": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "plane",
+              "value": {
+                "frame_id": "world",
+                "id": "source-external",
+                "normal": [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "origin_m": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "side": "external"
+              }
+            },
+            "sagittal_axis": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                0.0,
+                1.0,
+                0.0
+              ]
+            },
+            "wavefront_curvature_ts_per_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m^-1",
+              "value": [
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "target": {
+            "mfd_ts_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                1.6e-05,
+                2.4e-05
+              ]
+            },
+            "mode_evidence": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "evidence",
+              "value": {
+                "fixture": "examples/m1_001.json",
+                "kind": "synthetic_gaussian"
+              }
+            },
+            "polarization": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "1",
+              "value": {
+                "jones_ts": [
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "treatment": "scalar_ignored"
+              }
+            },
+            "position_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                0.002,
+                0.0,
+                0.002
+              ]
+            },
+            "propagation_direction": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                1.0,
+                0.0,
+                0.0
+              ]
+            },
+            "reference_plane": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "plane",
+              "value": {
+                "frame_id": "world",
+                "id": "target-external",
+                "normal": [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "origin_m": [
+                  0.002,
+                  0.0,
+                  0.002
+                ],
+                "side": "external"
+              }
+            },
+            "sagittal_axis": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                0.0,
+                1.0,
+                0.0
+              ]
+            },
+            "wavefront_curvature_ts_per_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m^-1",
+              "value": [
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "wavelength_m": {
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null,
+            "unit": "m",
+            "value": 1.31e-06
+          }
+        },
+        "uncertainty_treatment": "metadata preserved; no uncertainty propagation or yield calculation",
+        "evaluated_ports": {
+          "source": {
+            "position_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "direction": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "sagittal_axis": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "complex_q_ts_m": [
+              [
+                -0.0,
+                0.00015348238918301278
+              ],
+              [
+                -0.0,
+                0.0003453353756617788
+              ]
+            ],
+            "wavelength_m": 1.31e-06,
+            "ambient_index": 1.0
+          },
+          "target": {
+            "position_m": [
+              0.002,
+              0.0,
+              0.002
+            ],
+            "direction": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "sagittal_axis": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "complex_q_ts_m": [
+              [
+                -0.0,
+                0.00015348238918301278
+              ],
+              [
+                -0.0,
+                0.0003453353756617788
+              ]
+            ],
+            "wavelength_m": 1.31e-06,
+            "ambient_index": 1.0
+          }
+        },
+        "samples": [
+          {
+            "plane": "source",
+            "axes": [
+              {
+                "radius_m": 8e-06,
+                "curvature_per_m": 0.0,
+                "waist_radius_m": 8e-06,
+                "waist_distance_m": 0.0,
+                "rayleigh_range_m": 0.00015348238918301278,
+                "divergence_rad": 0.052123243862595724
+              },
+              {
+                "radius_m": 1.2e-05,
+                "curvature_per_m": 0.0,
+                "waist_radius_m": 1.2e-05,
+                "waist_distance_m": 0.0,
+                "rayleigh_range_m": 0.0003453353756617788,
+                "divergence_rad": 0.034748829241730485
+              }
+            ]
+          },
+          {
+            "plane": "M1_before",
+            "axes": [
+              {
+                "radius_m": 0.00029496210201364505,
+                "curvature_per_m": 176.64665661864086,
+                "waist_radius_m": 8e-06,
+                "waist_distance_m": -0.00565685424949238,
+                "rayleigh_range_m": 0.00015348238918301278,
+                "divergence_rad": 0.052123243862595724
+              },
+              {
+                "radius_m": 0.00019693500521103448,
+                "curvature_per_m": 176.1203359633646,
+                "waist_radius_m": 1.2e-05,
+                "waist_distance_m": -0.00565685424949238,
+                "rayleigh_range_m": 0.0003453353756617788,
+                "divergence_rad": 0.034748829241730485
+              }
+            ],
+            "surface_radii_m": [
+              0.0002966195054081429,
+              0.00019693500521103448
+            ],
+            "footprint_slope_3w": 0.07820453698453625,
+            "aperture_tail_union_estimate": 2.48838422970869e-15,
+            "powers_per_m": [
+              176.75612437586636,
+              176.672383360038
+            ]
+          },
+          {
+            "plane": "M1_after",
+            "axes": [
+              {
+                "radius_m": 0.00029496210201364505,
+                "curvature_per_m": -0.10946775722548,
+                "waist_radius_m": 0.0002948851959081647,
+                "waist_distance_m": 0.004763012859628051,
+                "rayleigh_range_m": 0.20853767034105844,
+                "divergence_rad": 0.0014140620034063243
+              },
+              {
+                "radius_m": 0.00019693500521103448,
+                "curvature_per_m": -0.5520473966734194,
+                "waist_radius_m": 0.00019667592346824062,
+                "waist_distance_m": 0.004763012859631879,
+                "rayleigh_range_m": 0.09276432164807068,
+                "divergence_rad": 0.002120167753874058
+              }
+            ]
+          },
+          {
+            "plane": "M2_before",
+            "axes": [
+              {
+                "radius_m": 0.0002949621020136452,
+                "curvature_per_m": 0.10946775722563935,
+                "waist_radius_m": 0.0002948851959081647,
+                "waist_distance_m": -0.004763012859634991,
+                "rayleigh_range_m": 0.20853767034105844,
+                "divergence_rad": 0.0014140620034063243
+              },
+              {
+                "radius_m": 0.0001969350052110344,
+                "curvature_per_m": 0.5520473966733368,
+                "waist_radius_m": 0.00019667592346824062,
+                "waist_distance_m": -0.004763012859631163,
+                "rayleigh_range_m": 0.09276432164807068,
+                "divergence_rad": 0.002120167753874058
+              }
+            ],
+            "surface_radii_m": [
+              0.00029661950540814304,
+              0.0001969350052110344
+            ],
+            "footprint_slope_3w": 0.0782045369845363,
+            "aperture_tail_union_estimate": 2.488384229708715e-15,
+            "powers_per_m": [
+              176.75612437586636,
+              176.672383360038
+            ]
+          },
+          {
+            "plane": "M2_after",
+            "axes": [
+              {
+                "radius_m": 0.0002949621020136452,
+                "curvature_per_m": -176.64665661864075,
+                "waist_radius_m": 8.000000000000001e-06,
+                "waist_distance_m": 0.0056568542494923844,
+                "rayleigh_range_m": 0.0001534823891830128,
+                "divergence_rad": 0.05212324386259571
+              },
+              {
+                "radius_m": 0.0001969350052110344,
+                "curvature_per_m": -176.12033596336468,
+                "waist_radius_m": 1.2e-05,
+                "waist_distance_m": 0.0056568542494923775,
+                "rayleigh_range_m": 0.0003453353756617788,
+                "divergence_rad": 0.034748829241730485
+              }
+            ]
+          },
+          {
+            "plane": "target",
+            "axes": [
+              {
+                "radius_m": 8e-06,
+                "curvature_per_m": -1.840997346133073e-10,
+                "waist_radius_m": 8.000000000000001e-06,
+                "waist_distance_m": 4.336808689942018e-18,
+                "rayleigh_range_m": 0.0001534823891830128,
+                "divergence_rad": 0.05212324386259571
+              },
+              {
+                "radius_m": 1.2e-05,
+                "curvature_per_m": 2.1819227806021612e-11,
+                "waist_radius_m": 1.2e-05,
+                "waist_distance_m": -2.6020852139652106e-18,
+                "rayleigh_range_m": 0.0003453353756617788,
+                "divergence_rad": 0.034748829241730485
+              }
+            ]
+          }
+        ]
+      },
+      "ranking": {
+        "overlap_deficit_at_1e-12": 0.0,
+        "max_3w_footprint_curvature": 0.0782045369845363,
+        "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+        "max_projected_radius_m": 0.00029661950540814304,
+        "total_path_m": 0.0208397342182478,
+        "package_evidence_missing_checks": 6,
+        "stable_id": "G036-B1"
+      },
+      "advantages": [
+        "Fixed Port closure and frozen domain guards passed",
+        "Two-axis exact-q design, checked by existing manual Adapter"
+      ],
+      "limitations": [
+        "Conceptual Geometry; prescribed aperture is not fabrication capability",
+        "Scalar paraxial normalized overlap is not Total Coupling",
+        "Finite-field aberration, coating, interface and polarization losses Uncomputed",
+        "Full Package, fabrication/yield and patentability Uncomputed",
+        "Bounded exact-matching family; no global feasibility/optimality guarantee"
+      ]
+    },
+    {
+      "id": "G029-B1",
+      "geometry_id": "G029",
+      "classification": "Conceptual Geometry",
+      "prescription": {
+        "contract_version": "M3A-1",
+        "coordinate_convention": "right-handed world XYZ; t=s cross d; target d is arriving direction",
+        "description": "M5A-001: only two fixed Synthetic external Gaussian Ports. Mirrors and apertures are generated concept prescriptions. Package is not supplied.",
+        "wavelength_m": {
+          "value": 1.31e-06,
+          "unit": "m",
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null
+        },
+        "ambient_index": {
+          "value": 1.0,
+          "unit": "1",
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "quantity": "external_ambient_refractive_index"
+        },
+        "source": {
+          "position_m": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "propagation_direction": {
+            "value": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "sagittal_axis": {
+            "value": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "mfd_ts_m": {
+            "value": [
+              1.6e-05,
+              2.4e-05
+            ],
+            "unit": "m",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "wavefront_curvature_ts_per_m": {
+            "value": [
+              0.0,
+              0.0
+            ],
+            "unit": "m^-1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "polarization": {
+            "value": {
+              "treatment": "scalar_ignored",
+              "jones_ts": [
+                [
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0
+                ]
+              ]
+            },
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "reference_plane": {
+            "value": {
+              "id": "source-external",
+              "frame_id": "world",
+              "side": "external",
+              "origin_m": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "normal": [
+                1.0,
+                0.0,
+                0.0
+              ]
+            },
+            "unit": "plane",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "mode_evidence": {
+            "value": {
+              "kind": "synthetic_gaussian",
+              "fixture": "examples/m1_001.json"
+            },
+            "unit": "evidence",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          }
+        },
+        "target": {
+          "position_m": {
+            "value": [
+              0.002,
+              0.0,
+              0.002
+            ],
+            "unit": "m",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "propagation_direction": {
+            "value": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "sagittal_axis": {
+            "value": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "mfd_ts_m": {
+            "value": [
+              1.6e-05,
+              2.4e-05
+            ],
+            "unit": "m",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "wavefront_curvature_ts_per_m": {
+            "value": [
+              0.0,
+              0.0
+            ],
+            "unit": "m^-1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "polarization": {
+            "value": {
+              "treatment": "scalar_ignored",
+              "jones_ts": [
+                [
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0
+                ]
+              ]
+            },
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "reference_plane": {
+            "value": {
+              "id": "target-external",
+              "frame_id": "world",
+              "side": "external",
+              "origin_m": [
+                0.002,
+                0.0,
+                0.002
+              ],
+              "normal": [
+                1.0,
+                0.0,
+                0.0
+              ]
+            },
+            "unit": "plane",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "mode_evidence": {
+            "value": {
+              "kind": "synthetic_gaussian",
+              "fixture": "examples/m1_001.json"
+            },
+            "unit": "evidence",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          }
+        },
+        "design": {
+          "reflectors": [
+            {
+              "vertex_m": {
+                "value": [
+                  0.00282842712474619,
+                  0.0,
+                  0.0
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "illuminated_normal": {
+                "value": [
+                  -0.968853755208019,
+                  0.0,
+                  0.24763360236308762
+                ],
+                "unit": "1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "principal_curvature_ts_per_m": {
+                "value": [
+                  171.13792414571847,
+                  181.7408175233321
+                ],
+                "unit": "m^-1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "half_aperture_ts_m": {
+                "value": [
+                  0.0006095602904011035,
+                  0.00039605755277469554
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              }
+            },
+            {
+              "vertex_m": {
+                "value": [
+                  -0.00082842712474619,
+                  0.0,
+                  0.002
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "illuminated_normal": {
+                "value": [
+                  0.968853755208019,
+                  0.0,
+                  -0.24763360236308762
+                ],
+                "unit": "1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "principal_curvature_ts_per_m": {
+                "value": [
+                  171.13792414571847,
+                  181.7408175233321
+                ],
+                "unit": "m^-1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "half_aperture_ts_m": {
+                "value": [
+                  0.0006095602904011038,
+                  0.0003960575527746955
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              }
+            }
+          ]
+        },
+        "reflectors": [
+          {
+            "surface_prescription": {
+              "value": "quadratic_patch",
+              "unit": "model",
+              "provenance": "assumed",
+              "source": "M5A autonomous concept prescription; not a measured device fact",
+              "uncertainty": null
+            }
+          },
+          {
+            "surface_prescription": {
+              "value": "quadratic_patch",
+              "unit": "model",
+              "provenance": "assumed",
+              "source": "M5A autonomous concept prescription; not a measured device fact",
+              "uncertainty": null
+            }
+          }
+        ]
+      },
+      "evaluation": {
+        "input_contract": {
+          "status": "Pass",
+          "scope": "explicit nominal external Gaussian contract; field fit not certified"
+        },
+        "geometry": {
+          "status": "Pass",
+          "scope": "fixed-port specular vertex path",
+          "lengths": [
+            0.00282842712474619,
+            0.004168043066239896,
+            0.00282842712474619
+          ],
+          "directions": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              -0.8773551979613604,
+              0.0,
+              0.4798414911303337
+            ],
+            [
+              1.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "cosines": [
+            0.9688537552080192,
+            0.9688537552080193
+          ],
+          "patch_obstruction": "Pass (chief ray, quadratic patches only)"
+        },
+        "model_domain": {
+          "status": "Pass",
+          "scope": "aligned coplanar scalar paraxial model",
+          "aperture_tail_union_estimate": 4.976768459417392e-15
+        },
+        "design_constraints": {
+          "status": "Uncomputed",
+          "scope": "declared nominal bounds only; no tolerance/yield",
+          "checks": [
+            {
+              "path": "reflectors[0].vertex_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[0].principal_curvature_bounds_per_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[0].half_aperture_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[0].normal_constraints",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].vertex_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].principal_curvature_bounds_per_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].half_aperture_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].normal_constraints",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            }
+          ]
+        },
+        "gaussian_mode_matching": {
+          "status": "Approximate",
+          "meaning": "computed within model, not a product efficiency requirement",
+          "normalized_mode_overlap": 1.0,
+          "log_overlap": 0.0,
+          "mismatch_db": -0.0,
+          "underflow": false,
+          "output_axes": [
+            {
+              "radius_m": 8.000000000000001e-06,
+              "curvature_per_m": -7.36398938453229e-11,
+              "waist_radius_m": 8.000000000000001e-06,
+              "waist_distance_m": 1.734723475976807e-18,
+              "rayleigh_range_m": 0.00015348238918301283,
+              "divergence_rad": 0.05212324386259571
+            },
+            {
+              "radius_m": 1.1999999999999999e-05,
+              "curvature_per_m": 1.0909613903010811e-11,
+              "waist_radius_m": 1.1999999999999997e-05,
+              "waist_distance_m": -1.3010426069826053e-18,
+              "rayleigh_range_m": 0.0003453353756617787,
+              "divergence_rad": 0.03474882924173049
+            }
+          ],
+          "scope": "normalized scalar paraxial Gaussian diagnostic; not total coupling",
+          "conditions": [
+            "explicit scalar-ignored polarization",
+            "finite-field aberration unvalidated",
+            "package/bounds status remains separate"
+          ]
+        },
+        "package_feasibility": {
+          "status": "Uncomputed",
+          "reason": "full finite-beam/body/support clearance not evaluated",
+          "envelope_geometry": {
+            "status": "Uncomputed",
+            "scope": "declared world AABBs and quadratic patch extents only",
+            "checks": [
+              {
+                "path": "package.frame_id",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "package.available_volume",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "package.required_clearance_m",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "package.keepout_bodies",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "reflectors[0].body_envelope",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "reflectors[1].body_envelope",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              }
+            ]
+          },
+          "finite_beam_clearance": {
+            "status": "Uncomputed"
+          }
+        },
+        "physical_losses": {
+          "status": "Uncomputed",
+          "total_coupling": null,
+          "reason": "coating/device interfaces/polarization/scatter not supplied"
+        },
+        "fabrication": {
+          "status": "Uncomputed",
+          "reason": "no process or assembly constraints"
+        },
+        "actual_applicability": {
+          "status": "Uncomputed",
+          "reason": "external input adapter does not independently certify actual Port field or package performance"
+        },
+        "input_snapshot": {
+          "ambient_index": {
+            "provenance": "synthetic",
+            "quantity": "external_ambient_refractive_index",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null,
+            "unit": "1",
+            "value": 1.0
+          },
+          "contract_version": "M3A-1",
+          "coordinate_convention": "right-handed world XYZ; t=s cross d; target d is arriving direction",
+          "description": "M5A-001: only two fixed Synthetic external Gaussian Ports. Mirrors and apertures are generated concept prescriptions. Package is not supplied.",
+          "design": {
+            "reflectors": [
+              {
+                "half_aperture_ts_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    0.0006095602904011035,
+                    0.00039605755277469554
+                  ]
+                },
+                "illuminated_normal": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "1",
+                  "value": [
+                    -0.968853755208019,
+                    0.0,
+                    0.24763360236308762
+                  ]
+                },
+                "principal_curvature_ts_per_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m^-1",
+                  "value": [
+                    171.13792414571847,
+                    181.7408175233321
+                  ]
+                },
+                "vertex_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    0.00282842712474619,
+                    0.0,
+                    0.0
+                  ]
+                }
+              },
+              {
+                "half_aperture_ts_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    0.0006095602904011038,
+                    0.0003960575527746955
+                  ]
+                },
+                "illuminated_normal": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "1",
+                  "value": [
+                    0.968853755208019,
+                    0.0,
+                    -0.24763360236308762
+                  ]
+                },
+                "principal_curvature_ts_per_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m^-1",
+                  "value": [
+                    171.13792414571847,
+                    181.7408175233321
+                  ]
+                },
+                "vertex_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    -0.00082842712474619,
+                    0.0,
+                    0.002
+                  ]
+                }
+              }
+            ]
+          },
+          "reflectors": [
+            {
+              "surface_prescription": {
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null,
+                "unit": "model",
+                "value": "quadratic_patch"
+              }
+            },
+            {
+              "surface_prescription": {
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null,
+                "unit": "model",
+                "value": "quadratic_patch"
+              }
+            }
+          ],
+          "source": {
+            "mfd_ts_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                1.6e-05,
+                2.4e-05
+              ]
+            },
+            "mode_evidence": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "evidence",
+              "value": {
+                "fixture": "examples/m1_001.json",
+                "kind": "synthetic_gaussian"
+              }
+            },
+            "polarization": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "1",
+              "value": {
+                "jones_ts": [
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "treatment": "scalar_ignored"
+              }
+            },
+            "position_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "propagation_direction": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                1.0,
+                0.0,
+                0.0
+              ]
+            },
+            "reference_plane": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "plane",
+              "value": {
+                "frame_id": "world",
+                "id": "source-external",
+                "normal": [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "origin_m": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "side": "external"
+              }
+            },
+            "sagittal_axis": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                0.0,
+                1.0,
+                0.0
+              ]
+            },
+            "wavefront_curvature_ts_per_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m^-1",
+              "value": [
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "target": {
+            "mfd_ts_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                1.6e-05,
+                2.4e-05
+              ]
+            },
+            "mode_evidence": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "evidence",
+              "value": {
+                "fixture": "examples/m1_001.json",
+                "kind": "synthetic_gaussian"
+              }
+            },
+            "polarization": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "1",
+              "value": {
+                "jones_ts": [
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "treatment": "scalar_ignored"
+              }
+            },
+            "position_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                0.002,
+                0.0,
+                0.002
+              ]
+            },
+            "propagation_direction": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                1.0,
+                0.0,
+                0.0
+              ]
+            },
+            "reference_plane": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "plane",
+              "value": {
+                "frame_id": "world",
+                "id": "target-external",
+                "normal": [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "origin_m": [
+                  0.002,
+                  0.0,
+                  0.002
+                ],
+                "side": "external"
+              }
+            },
+            "sagittal_axis": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                0.0,
+                1.0,
+                0.0
+              ]
+            },
+            "wavefront_curvature_ts_per_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m^-1",
+              "value": [
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "wavelength_m": {
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null,
+            "unit": "m",
+            "value": 1.31e-06
+          }
+        },
+        "uncertainty_treatment": "metadata preserved; no uncertainty propagation or yield calculation",
+        "evaluated_ports": {
+          "source": {
+            "position_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "direction": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "sagittal_axis": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "complex_q_ts_m": [
+              [
+                -0.0,
+                0.00015348238918301278
+              ],
+              [
+                -0.0,
+                0.0003453353756617788
+              ]
+            ],
+            "wavelength_m": 1.31e-06,
+            "ambient_index": 1.0
+          },
+          "target": {
+            "position_m": [
+              0.002,
+              0.0,
+              0.002
+            ],
+            "direction": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "sagittal_axis": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "complex_q_ts_m": [
+              [
+                -0.0,
+                0.00015348238918301278
+              ],
+              [
+                -0.0,
+                0.0003453353756617788
+              ]
+            ],
+            "wavelength_m": 1.31e-06,
+            "ambient_index": 1.0
+          }
+        },
+        "samples": [
+          {
+            "plane": "source",
+            "axes": [
+              {
+                "radius_m": 8e-06,
+                "curvature_per_m": 0.0,
+                "waist_radius_m": 8e-06,
+                "waist_distance_m": 0.0,
+                "rayleigh_range_m": 0.00015348238918301278,
+                "divergence_rad": 0.052123243862595724
+              },
+              {
+                "radius_m": 1.2e-05,
+                "curvature_per_m": 0.0,
+                "waist_radius_m": 1.2e-05,
+                "waist_distance_m": 0.0,
+                "rayleigh_range_m": 0.0003453353756617788,
+                "divergence_rad": 0.034748829241730485
+              }
+            ]
+          },
+          {
+            "plane": "M1_before",
+            "axes": [
+              {
+                "radius_m": 0.00014764369409519994,
+                "curvature_per_m": 352.5153718996268,
+                "waist_radius_m": 8e-06,
+                "waist_distance_m": -0.00282842712474619,
+                "rayleigh_range_m": 0.00015348238918301278,
+                "divergence_rad": 0.052123243862595724
+              },
+              {
+                "radius_m": 9.901438819367389e-05,
+                "curvature_per_m": 348.3603599901705,
+                "waist_radius_m": 1.2e-05,
+                "waist_distance_m": -0.00282842712474619,
+                "rayleigh_range_m": 0.0003453353756617788,
+                "divergence_rad": 0.034748829241730485
+              }
+            ],
+            "surface_radii_m": [
+              0.00015239007260027586,
+              9.901438819367389e-05
+            ],
+            "footprint_slope_3w": 0.07823916205567963,
+            "aperture_tail_union_estimate": 2.48838422970869e-15,
+            "powers_per_m": [
+              353.2791677294455,
+              352.16054706411137
+            ]
+          },
+          {
+            "plane": "M1_after",
+            "axes": [
+              {
+                "radius_m": 0.00014764369409519994,
+                "curvature_per_m": -0.7637958298186407,
+                "waist_radius_m": 0.00014752614012015664,
+                "waist_distance_m": 0.0020840215331196033,
+                "rayleigh_range_m": 0.052193513886350275,
+                "divergence_rad": 0.0028265224763634454
+              },
+              {
+                "radius_m": 9.901438819367389e-05,
+                "curvature_per_m": -3.800187073940892,
+                "waist_radius_m": 9.86215280931119e-05,
+                "waist_distance_m": 0.002084021533119987,
+                "rayleigh_range_m": 0.023325020381166513,
+                "divergence_rad": 0.004228143276253795
+              }
+            ]
+          },
+          {
+            "plane": "M2_before",
+            "axes": [
+              {
+                "radius_m": 0.00014764369409520003,
+                "curvature_per_m": 0.7637958298188926,
+                "waist_radius_m": 0.00014752614012015664,
+                "waist_distance_m": -0.002084021533120293,
+                "rayleigh_range_m": 0.052193513886350275,
+                "divergence_rad": 0.0028265224763634454
+              },
+              {
+                "radius_m": 9.901438819367386e-05,
+                "curvature_per_m": 3.800187073940752,
+                "waist_radius_m": 9.86215280931119e-05,
+                "waist_distance_m": -0.002084021533119909,
+                "rayleigh_range_m": 0.023325020381166513,
+                "divergence_rad": 0.004228143276253795
+              }
+            ],
+            "surface_radii_m": [
+              0.00015239007260027594,
+              9.901438819367386e-05
+            ],
+            "footprint_slope_3w": 0.07823916205567967,
+            "aperture_tail_union_estimate": 2.4883842297087025e-15,
+            "powers_per_m": [
+              353.2791677294455,
+              352.1605470641114
+            ]
+          },
+          {
+            "plane": "M2_after",
+            "axes": [
+              {
+                "radius_m": 0.00014764369409520003,
+                "curvature_per_m": -352.5153718996266,
+                "waist_radius_m": 8.000000000000001e-06,
+                "waist_distance_m": 0.002828427124746192,
+                "rayleigh_range_m": 0.00015348238918301283,
+                "divergence_rad": 0.05212324386259571
+              },
+              {
+                "radius_m": 9.901438819367386e-05,
+                "curvature_per_m": -348.36035999017065,
+                "waist_radius_m": 1.1999999999999997e-05,
+                "waist_distance_m": 0.0028284271247461888,
+                "rayleigh_range_m": 0.0003453353756617787,
+                "divergence_rad": 0.03474882924173049
+              }
+            ]
+          },
+          {
+            "plane": "target",
+            "axes": [
+              {
+                "radius_m": 8.000000000000001e-06,
+                "curvature_per_m": -7.36398938453229e-11,
+                "waist_radius_m": 8.000000000000001e-06,
+                "waist_distance_m": 1.734723475976807e-18,
+                "rayleigh_range_m": 0.00015348238918301283,
+                "divergence_rad": 0.05212324386259571
+              },
+              {
+                "radius_m": 1.1999999999999999e-05,
+                "curvature_per_m": 1.0909613903010811e-11,
+                "waist_radius_m": 1.1999999999999997e-05,
+                "waist_distance_m": -1.3010426069826053e-18,
+                "rayleigh_range_m": 0.0003453353756617787,
+                "divergence_rad": 0.03474882924173049
+              }
+            ]
+          }
+        ]
+      },
+      "ranking": {
+        "overlap_deficit_at_1e-12": 0.0,
+        "max_3w_footprint_curvature": 0.07823916205567967,
+        "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+        "max_projected_radius_m": 0.00015239007260027594,
+        "total_path_m": 0.009824897315732276,
+        "package_evidence_missing_checks": 6,
+        "stable_id": "G029-B1"
+      },
+      "advantages": [
+        "Fixed Port closure and frozen domain guards passed",
+        "Two-axis exact-q design, checked by existing manual Adapter"
+      ],
+      "limitations": [
+        "Conceptual Geometry; prescribed aperture is not fabrication capability",
+        "Scalar paraxial normalized overlap is not Total Coupling",
+        "Finite-field aberration, coating, interface and polarization losses Uncomputed",
+        "Full Package, fabrication/yield and patentability Uncomputed",
+        "Bounded exact-matching family; no global feasibility/optimality guarantee"
+      ]
+    },
+    {
+      "id": "G022-B1",
+      "geometry_id": "G022",
+      "classification": "Conceptual Geometry",
+      "prescription": {
+        "contract_version": "M3A-1",
+        "coordinate_convention": "right-handed world XYZ; t=s cross d; target d is arriving direction",
+        "description": "M5A-001: only two fixed Synthetic external Gaussian Ports. Mirrors and apertures are generated concept prescriptions. Package is not supplied.",
+        "wavelength_m": {
+          "value": 1.31e-06,
+          "unit": "m",
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null
+        },
+        "ambient_index": {
+          "value": 1.0,
+          "unit": "1",
+          "provenance": "synthetic",
+          "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+          "uncertainty": null,
+          "quantity": "external_ambient_refractive_index"
+        },
+        "source": {
+          "position_m": {
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "unit": "m",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "propagation_direction": {
+            "value": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "sagittal_axis": {
+            "value": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "mfd_ts_m": {
+            "value": [
+              1.6e-05,
+              2.4e-05
+            ],
+            "unit": "m",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "wavefront_curvature_ts_per_m": {
+            "value": [
+              0.0,
+              0.0
+            ],
+            "unit": "m^-1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "polarization": {
+            "value": {
+              "treatment": "scalar_ignored",
+              "jones_ts": [
+                [
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0
+                ]
+              ]
+            },
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "reference_plane": {
+            "value": {
+              "id": "source-external",
+              "frame_id": "world",
+              "side": "external",
+              "origin_m": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "normal": [
+                1.0,
+                0.0,
+                0.0
+              ]
+            },
+            "unit": "plane",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "mode_evidence": {
+            "value": {
+              "kind": "synthetic_gaussian",
+              "fixture": "examples/m1_001.json"
+            },
+            "unit": "evidence",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          }
+        },
+        "target": {
+          "position_m": {
+            "value": [
+              0.002,
+              0.0,
+              0.002
+            ],
+            "unit": "m",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "propagation_direction": {
+            "value": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "sagittal_axis": {
+            "value": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "mfd_ts_m": {
+            "value": [
+              1.6e-05,
+              2.4e-05
+            ],
+            "unit": "m",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "wavefront_curvature_ts_per_m": {
+            "value": [
+              0.0,
+              0.0
+            ],
+            "unit": "m^-1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "polarization": {
+            "value": {
+              "treatment": "scalar_ignored",
+              "jones_ts": [
+                [
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0
+                ]
+              ]
+            },
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "reference_plane": {
+            "value": {
+              "id": "target-external",
+              "frame_id": "world",
+              "side": "external",
+              "origin_m": [
+                0.002,
+                0.0,
+                0.002
+              ],
+              "normal": [
+                1.0,
+                0.0,
+                0.0
+              ]
+            },
+            "unit": "plane",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          },
+          "mode_evidence": {
+            "value": {
+              "kind": "synthetic_gaussian",
+              "fixture": "examples/m1_001.json"
+            },
+            "unit": "evidence",
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null
+          }
+        },
+        "design": {
+          "reflectors": [
+            {
+              "vertex_m": {
+                "value": [
+                  0.001414213562373095,
+                  0.0,
+                  0.0
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "illuminated_normal": {
+                "value": [
+                  -0.8314696123025452,
+                  0.0,
+                  0.5555702330196023
+                ],
+                "unit": "1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "principal_curvature_ts_per_m": {
+                "value": [
+                  293.15313928239794,
+                  419.14413339612605
+                ],
+                "unit": "m^-1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "half_aperture_ts_m": {
+                "value": [
+                  0.0003566997048140494,
+                  0.0002023447461078992
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              }
+            },
+            {
+              "vertex_m": {
+                "value": [
+                  0.000585786437626905,
+                  0.0,
+                  0.002
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "illuminated_normal": {
+                "value": [
+                  0.8314696123025452,
+                  0.0,
+                  -0.5555702330196023
+                ],
+                "unit": "1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "principal_curvature_ts_per_m": {
+                "value": [
+                  293.153139282398,
+                  419.144133396126
+                ],
+                "unit": "m^-1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "half_aperture_ts_m": {
+                "value": [
+                  0.00035669970481404934,
+                  0.00020234474610789918
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              }
+            }
+          ]
+        },
+        "reflectors": [
+          {
+            "surface_prescription": {
+              "value": "quadratic_patch",
+              "unit": "model",
+              "provenance": "assumed",
+              "source": "M5A autonomous concept prescription; not a measured device fact",
+              "uncertainty": null
+            }
+          },
+          {
+            "surface_prescription": {
+              "value": "quadratic_patch",
+              "unit": "model",
+              "provenance": "assumed",
+              "source": "M5A autonomous concept prescription; not a measured device fact",
+              "uncertainty": null
+            }
+          }
+        ]
+      },
+      "evaluation": {
+        "input_contract": {
+          "status": "Pass",
+          "scope": "explicit nominal external Gaussian contract; field fit not certified"
+        },
+        "geometry": {
+          "status": "Pass",
+          "scope": "fixed-port specular vertex path",
+          "lengths": [
+            0.001414213562373095,
+            0.002164784400584788,
+            0.001414213562373095
+          ],
+          "directions": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              -0.3826834323650898,
+              0.0,
+              0.9238795325112868
+            ],
+            [
+              1.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "cosines": [
+            0.8314696123025452,
+            0.8314696123025453
+          ],
+          "patch_obstruction": "Pass (chief ray, quadratic patches only)"
+        },
+        "model_domain": {
+          "status": "Pass",
+          "scope": "aligned coplanar scalar paraxial model",
+          "aperture_tail_union_estimate": 4.976768459417418e-15
+        },
+        "design_constraints": {
+          "status": "Uncomputed",
+          "scope": "declared nominal bounds only; no tolerance/yield",
+          "checks": [
+            {
+              "path": "reflectors[0].vertex_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[0].principal_curvature_bounds_per_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[0].half_aperture_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[0].normal_constraints",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].vertex_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].principal_curvature_bounds_per_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].half_aperture_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].normal_constraints",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            }
+          ]
+        },
+        "gaussian_mode_matching": {
+          "status": "Approximate",
+          "meaning": "computed within model, not a product efficiency requirement",
+          "normalized_mode_overlap": 1.0,
+          "log_overlap": 0.0,
+          "mismatch_db": -0.0,
+          "underflow": false,
+          "output_axes": [
+            {
+              "radius_m": 8e-06,
+              "curvature_per_m": 0.0,
+              "waist_radius_m": 8.000000000000001e-06,
+              "waist_distance_m": -0.0,
+              "rayleigh_range_m": 0.0001534823891830128,
+              "divergence_rad": 0.05212324386259571
+            },
+            {
+              "radius_m": 1.2e-05,
+              "curvature_per_m": 3.6365379676702692e-12,
+              "waist_radius_m": 1.2e-05,
+              "waist_distance_m": -4.336808689942018e-19,
+              "rayleigh_range_m": 0.00034533537566177876,
+              "divergence_rad": 0.034748829241730485
+            }
+          ],
+          "scope": "normalized scalar paraxial Gaussian diagnostic; not total coupling",
+          "conditions": [
+            "explicit scalar-ignored polarization",
+            "finite-field aberration unvalidated",
+            "package/bounds status remains separate"
+          ]
+        },
+        "package_feasibility": {
+          "status": "Uncomputed",
+          "reason": "full finite-beam/body/support clearance not evaluated",
+          "envelope_geometry": {
+            "status": "Uncomputed",
+            "scope": "declared world AABBs and quadratic patch extents only",
+            "checks": [
+              {
+                "path": "package.frame_id",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "package.available_volume",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "package.required_clearance_m",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "package.keepout_bodies",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "reflectors[0].body_envelope",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "reflectors[1].body_envelope",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              }
+            ]
+          },
+          "finite_beam_clearance": {
+            "status": "Uncomputed"
+          }
+        },
+        "physical_losses": {
+          "status": "Uncomputed",
+          "total_coupling": null,
+          "reason": "coating/device interfaces/polarization/scatter not supplied"
+        },
+        "fabrication": {
+          "status": "Uncomputed",
+          "reason": "no process or assembly constraints"
+        },
+        "actual_applicability": {
+          "status": "Uncomputed",
+          "reason": "external input adapter does not independently certify actual Port field or package performance"
+        },
+        "input_snapshot": {
+          "ambient_index": {
+            "provenance": "synthetic",
+            "quantity": "external_ambient_refractive_index",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null,
+            "unit": "1",
+            "value": 1.0
+          },
+          "contract_version": "M3A-1",
+          "coordinate_convention": "right-handed world XYZ; t=s cross d; target d is arriving direction",
+          "description": "M5A-001: only two fixed Synthetic external Gaussian Ports. Mirrors and apertures are generated concept prescriptions. Package is not supplied.",
+          "design": {
+            "reflectors": [
+              {
+                "half_aperture_ts_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    0.0003566997048140494,
+                    0.0002023447461078992
+                  ]
+                },
+                "illuminated_normal": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "1",
+                  "value": [
+                    -0.8314696123025452,
+                    0.0,
+                    0.5555702330196023
+                  ]
+                },
+                "principal_curvature_ts_per_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m^-1",
+                  "value": [
+                    293.15313928239794,
+                    419.14413339612605
+                  ]
+                },
+                "vertex_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    0.001414213562373095,
+                    0.0,
+                    0.0
+                  ]
+                }
+              },
+              {
+                "half_aperture_ts_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    0.00035669970481404934,
+                    0.00020234474610789918
+                  ]
+                },
+                "illuminated_normal": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "1",
+                  "value": [
+                    0.8314696123025452,
+                    0.0,
+                    -0.5555702330196023
+                  ]
+                },
+                "principal_curvature_ts_per_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m^-1",
+                  "value": [
+                    293.153139282398,
+                    419.144133396126
+                  ]
+                },
+                "vertex_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    0.000585786437626905,
+                    0.0,
+                    0.002
+                  ]
+                }
+              }
+            ]
+          },
+          "reflectors": [
+            {
+              "surface_prescription": {
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null,
+                "unit": "model",
+                "value": "quadratic_patch"
+              }
+            },
+            {
+              "surface_prescription": {
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null,
+                "unit": "model",
+                "value": "quadratic_patch"
+              }
+            }
+          ],
+          "source": {
+            "mfd_ts_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                1.6e-05,
+                2.4e-05
+              ]
+            },
+            "mode_evidence": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "evidence",
+              "value": {
+                "fixture": "examples/m1_001.json",
+                "kind": "synthetic_gaussian"
+              }
+            },
+            "polarization": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "1",
+              "value": {
+                "jones_ts": [
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "treatment": "scalar_ignored"
+              }
+            },
+            "position_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "propagation_direction": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                1.0,
+                0.0,
+                0.0
+              ]
+            },
+            "reference_plane": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "plane",
+              "value": {
+                "frame_id": "world",
+                "id": "source-external",
+                "normal": [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "origin_m": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "side": "external"
+              }
+            },
+            "sagittal_axis": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                0.0,
+                1.0,
+                0.0
+              ]
+            },
+            "wavefront_curvature_ts_per_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m^-1",
+              "value": [
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "target": {
+            "mfd_ts_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                1.6e-05,
+                2.4e-05
+              ]
+            },
+            "mode_evidence": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "evidence",
+              "value": {
+                "fixture": "examples/m1_001.json",
+                "kind": "synthetic_gaussian"
+              }
+            },
+            "polarization": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "1",
+              "value": {
+                "jones_ts": [
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "treatment": "scalar_ignored"
+              }
+            },
+            "position_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                0.002,
+                0.0,
+                0.002
+              ]
+            },
+            "propagation_direction": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                1.0,
+                0.0,
+                0.0
+              ]
+            },
+            "reference_plane": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "plane",
+              "value": {
+                "frame_id": "world",
+                "id": "target-external",
+                "normal": [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "origin_m": [
+                  0.002,
+                  0.0,
+                  0.002
+                ],
+                "side": "external"
+              }
+            },
+            "sagittal_axis": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                0.0,
+                1.0,
+                0.0
+              ]
+            },
+            "wavefront_curvature_ts_per_m": {
+              "provenance": "synthetic",
+              "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+              "uncertainty": null,
+              "unit": "m^-1",
+              "value": [
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "wavelength_m": {
+            "provenance": "synthetic",
+            "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+            "uncertainty": null,
+            "unit": "m",
+            "value": 1.31e-06
+          }
+        },
+        "uncertainty_treatment": "metadata preserved; no uncertainty propagation or yield calculation",
+        "evaluated_ports": {
+          "source": {
+            "position_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "direction": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "sagittal_axis": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "complex_q_ts_m": [
+              [
+                -0.0,
+                0.00015348238918301278
+              ],
+              [
+                -0.0,
+                0.0003453353756617788
+              ]
+            ],
+            "wavelength_m": 1.31e-06,
+            "ambient_index": 1.0
+          },
+          "target": {
+            "position_m": [
+              0.002,
+              0.0,
+              0.002
+            ],
+            "direction": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "sagittal_axis": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "complex_q_ts_m": [
+              [
+                -0.0,
+                0.00015348238918301278
+              ],
+              [
+                -0.0,
+                0.0003453353756617788
+              ]
+            ],
+            "wavelength_m": 1.31e-06,
+            "ambient_index": 1.0
+          }
+        },
+        "samples": [
+          {
+            "plane": "source",
+            "axes": [
+              {
+                "radius_m": 8e-06,
+                "curvature_per_m": 0.0,
+                "waist_radius_m": 8e-06,
+                "waist_distance_m": 0.0,
+                "rayleigh_range_m": 0.00015348238918301278,
+                "divergence_rad": 0.052123243862595724
+              },
+              {
+                "radius_m": 1.2e-05,
+                "curvature_per_m": 0.0,
+                "waist_radius_m": 1.2e-05,
+                "waist_distance_m": 0.0,
+                "rayleigh_range_m": 0.0003453353756617788,
+                "divergence_rad": 0.034748829241730485
+              }
+            ]
+          },
+          {
+            "plane": "M1_before",
+            "axes": [
+              {
+                "radius_m": 7.414624131754249e-05,
+                "curvature_per_m": 698.8751349948883,
+                "waist_radius_m": 8e-06,
+                "waist_distance_m": -0.001414213562373095,
+                "rayleigh_range_m": 0.00015348238918301278,
+                "divergence_rad": 0.052123243862595724
+              },
+              {
+                "radius_m": 5.05861865269748e-05,
+                "curvature_per_m": 667.3158949392754,
+                "waist_radius_m": 1.2e-05,
+                "waist_distance_m": -0.001414213562373095,
+                "rayleigh_range_m": 0.0003453353756617788,
+                "divergence_rad": 0.034748829241730485
+              }
+            ],
+            "surface_radii_m": [
+              8.917492620351235e-05,
+              5.05861865269748e-05
+            ],
+            "footprint_slope_3w": 0.07842572868550744,
+            "aperture_tail_union_estimate": 2.488384229708715e-15,
+            "powers_per_m": [
+              705.1445655857087,
+              697.0112201875264
+            ]
+          },
+          {
+            "plane": "M1_after",
+            "axes": [
+              {
+                "radius_m": 7.414624131754249e-05,
+                "curvature_per_m": -6.269430590820485,
+                "waist_radius_m": 7.389423550491152e-05,
+                "waist_distance_m": 0.0010823922002924007,
+                "rayleigh_range_m": 0.013094824967267979,
+                "divergence_rad": 0.005643010554903839
+              },
+              {
+                "radius_m": 5.0586186526974794e-05,
+                "curvature_per_m": -29.695325248251102,
+                "waist_radius_m": 4.976657645189507e-05,
+                "waist_distance_m": 0.0010823922002923957,
+                "rayleigh_range_m": 0.005939557739036932,
+                "divergence_rad": 0.008378835367625279
+              }
+            ]
+          },
+          {
+            "plane": "M2_before",
+            "axes": [
+              {
+                "radius_m": 7.414624131754249e-05,
+                "curvature_per_m": 6.269430590820408,
+                "waist_radius_m": 7.389423550491152e-05,
+                "waist_distance_m": -0.0010823922002923872,
+                "rayleigh_range_m": 0.013094824967267979,
+                "divergence_rad": 0.005643010554903839
+              },
+              {
+                "radius_m": 5.0586186526974794e-05,
+                "curvature_per_m": 29.695325248251017,
+                "waist_radius_m": 4.976657645189507e-05,
+                "waist_distance_m": -0.0010823922002923922,
+                "rayleigh_range_m": 0.005939557739036932,
+                "divergence_rad": 0.008378835367625279
+              }
+            ],
+            "surface_radii_m": [
+              8.917492620351233e-05,
+              5.0586186526974794e-05
+            ],
+            "footprint_slope_3w": 0.07842572868550744,
+            "aperture_tail_union_estimate": 2.4883842297087025e-15,
+            "powers_per_m": [
+              705.1445655857087,
+              697.0112201875264
+            ]
+          },
+          {
+            "plane": "M2_after",
+            "axes": [
+              {
+                "radius_m": 7.414624131754249e-05,
+                "curvature_per_m": -698.8751349948883,
+                "waist_radius_m": 8.000000000000001e-06,
+                "waist_distance_m": 0.001414213562373095,
+                "rayleigh_range_m": 0.0001534823891830128,
+                "divergence_rad": 0.05212324386259571
+              },
+              {
+                "radius_m": 5.058618652697479e-05,
+                "curvature_per_m": -667.3158949392755,
+                "waist_radius_m": 1.2e-05,
+                "waist_distance_m": 0.0014142135623730946,
+                "rayleigh_range_m": 0.00034533537566177876,
+                "divergence_rad": 0.034748829241730485
+              }
+            ]
+          },
+          {
+            "plane": "target",
+            "axes": [
+              {
+                "radius_m": 8e-06,
+                "curvature_per_m": 0.0,
+                "waist_radius_m": 8.000000000000001e-06,
+                "waist_distance_m": -0.0,
+                "rayleigh_range_m": 0.0001534823891830128,
+                "divergence_rad": 0.05212324386259571
+              },
+              {
+                "radius_m": 1.2e-05,
+                "curvature_per_m": 3.6365379676702692e-12,
+                "waist_radius_m": 1.2e-05,
+                "waist_distance_m": -4.336808689942018e-19,
+                "rayleigh_range_m": 0.00034533537566177876,
+                "divergence_rad": 0.034748829241730485
+              }
+            ]
+          }
+        ]
+      },
+      "ranking": {
+        "overlap_deficit_at_1e-12": 0.0,
+        "max_3w_footprint_curvature": 0.07842572868550744,
+        "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+        "max_projected_radius_m": 8.917492620351235e-05,
+        "total_path_m": 0.0049932115253309775,
+        "package_evidence_missing_checks": 6,
+        "stable_id": "G022-B1"
+      },
+      "advantages": [
+        "Fixed Port closure and frozen domain guards passed",
+        "Two-axis exact-q design, checked by existing manual Adapter"
+      ],
+      "limitations": [
+        "Conceptual Geometry; prescribed aperture is not fabrication capability",
+        "Scalar paraxial normalized overlap is not Total Coupling",
+        "Finite-field aberration, coating, interface and polarization losses Uncomputed",
+        "Full Package, fabrication/yield and patentability Uncomputed",
+        "Bounded exact-matching family; no global feasibility/optimality guarantee"
+      ]
+    }
+  ],
+  "selected_candidate_id": "G036-B1",
+  "search": {
+    "status": "Completed",
+    "attempts": [
+      {
+        "id": "G001",
+        "status": "Rejected",
+        "stage": "geometry_or_power",
+        "reason": "no real exact-q power solution for one or both axes"
+      },
+      {
+        "id": "G002",
+        "status": "Rejected",
+        "stage": "geometry_or_power",
+        "reason": "no real exact-q power solution for one or both axes"
+      },
+      {
+        "id": "G003",
+        "status": "Rejected",
+        "stage": "geometry_or_power",
+        "reason": "no real exact-q power solution for one or both axes"
+      },
+      {
+        "id": "G004-B1",
+        "geometry_id": "G004",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.00035355339059327376,
+          0.0020134379027262114,
+          0.001414213562373095
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.12785561304004822,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00011148497040470557,
+          "total_path_m": 0.00378120485569258,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G004-B1"
+        }
+      },
+      {
+        "id": "G004-B2",
+        "geometry_id": "G004",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.00035355339059327376,
+          0.0020134379027262114,
+          0.001414213562373095
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.13774279279396556,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00011148497040470557,
+          "total_path_m": 0.00378120485569258,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G004-B2"
+        }
+      },
+      {
+        "id": "G004-B3",
+        "geometry_id": "G004",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.00035355339059327376,
+          0.0020134379027262114,
+          0.001414213562373095
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.14533003906310815,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00011148497040470552,
+          "total_path_m": 0.00378120485569258,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G004-B3"
+        }
+      },
+      {
+        "id": "G004-B4",
+        "geometry_id": "G004",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.00035355339059327376,
+          0.0020134379027262114,
+          0.001414213562373095
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.14533003906310815,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00011148497040470552,
+          "total_path_m": 0.00378120485569258,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G004-B4"
+        }
+      },
+      {
+        "id": "G005-B1",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G005-B2",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G005-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G005-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G006-B1",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G006-B2",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G006-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G006-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G007",
+        "status": "Rejected",
+        "stage": "geometry_or_power",
+        "reason": "no real exact-q power solution for one or both axes"
+      },
+      {
+        "id": "G008",
+        "status": "Rejected",
+        "stage": "geometry_or_power",
+        "reason": "no real exact-q power solution for one or both axes"
+      },
+      {
+        "id": "G009-B1",
+        "geometry_id": "G009",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.0007071067811865475,
+          0.0020213328369239206,
+          0.001
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.10015767050681164,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 8.064811601342694e-05,
+          "total_path_m": 0.0037284396181104682,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G009-B1"
+        }
+      },
+      {
+        "id": "G009-B2",
+        "geometry_id": "G009",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.0007071067811865475,
+          0.0020213328369239206,
+          0.001
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.13398293960147153,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 8.064811601342694e-05,
+          "total_path_m": 0.0037284396181104682,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G009-B2"
+        }
+      },
+      {
+        "id": "G009-B3",
+        "geometry_id": "G009",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.0007071067811865475,
+          0.0020213328369239206,
+          0.001
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.14176274987813942,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 8.064811601342688e-05,
+          "total_path_m": 0.0037284396181104682,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G009-B3"
+        }
+      },
+      {
+        "id": "G009-B4",
+        "geometry_id": "G009",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.0007071067811865475,
+          0.0020213328369239206,
+          0.001
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.14176274987813942,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 8.064811601342688e-05,
+          "total_path_m": 0.0037284396181104682,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G009-B4"
+        }
+      },
+      {
+        "id": "G010-B1",
+        "geometry_id": "G010",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.0007071067811865475,
+          0.0020036762776859513,
+          0.001414213562373095
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.10629144995032577,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00010182133677395403,
+          "total_path_m": 0.004124996621245594,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G010-B1"
+        }
+      },
+      {
+        "id": "G010-B2",
+        "geometry_id": "G010",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.0007071067811865475,
+          0.0020036762776859513,
+          0.001414213562373095
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.14394469758597483,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00010182133677395403,
+          "total_path_m": 0.004124996621245594,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G010-B2"
+        }
+      },
+      {
+        "id": "G010-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G010-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G011-B1",
+        "geometry_id": "G011",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.0007071067811865475,
+          0.002521480592086532,
+          0.00282842712474619
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.1438689609524175,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00016460932563066511,
+          "total_path_m": 0.006057014498019269,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G011-B1"
+        }
+      },
+      {
+        "id": "G011-B2",
+        "geometry_id": "G011",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.0007071067811865475,
+          0.002521480592086532,
+          0.00282842712474619
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.1438689609524175,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00016460932563066511,
+          "total_path_m": 0.006057014498019269,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G011-B2"
+        }
+      },
+      {
+        "id": "G011-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G011-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G012-B1",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G012-B2",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G012-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G012-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G013",
+        "status": "Rejected",
+        "stage": "geometry_or_power",
+        "reason": "no real exact-q power solution for one or both axes"
+      },
+      {
+        "id": "G014-B1",
+        "geometry_id": "G014",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001,
+          0.0020213328369239206,
+          0.0007071067811865476
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.10015767050681161,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 8.064811601342692e-05,
+          "total_path_m": 0.0037284396181104682,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G014-B1"
+        }
+      },
+      {
+        "id": "G014-B2",
+        "geometry_id": "G014",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001,
+          0.0020213328369239206,
+          0.0007071067811865476
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.13398293960147148,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 8.064811601342692e-05,
+          "total_path_m": 0.0037284396181104682,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G014-B2"
+        }
+      },
+      {
+        "id": "G014-B3",
+        "geometry_id": "G014",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001,
+          0.0020213328369239206,
+          0.0007071067811865476
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.14176274987813947,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 8.064811601342692e-05,
+          "total_path_m": 0.0037284396181104682,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G014-B3"
+        }
+      },
+      {
+        "id": "G014-B4",
+        "geometry_id": "G014",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001,
+          0.0020213328369239206,
+          0.0007071067811865476
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.14176274987813947,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 8.064811601342692e-05,
+          "total_path_m": 0.0037284396181104682,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G014-B4"
+        }
+      },
+      {
+        "id": "G015-B1",
+        "geometry_id": "G015",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001,
+          0.002,
+          0.001
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.07910039974114642,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 7.457657206870836e-05,
+          "total_path_m": 0.004,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G015-B1"
+        }
+      },
+      {
+        "id": "G015-B2",
+        "geometry_id": "G015",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001,
+          0.002,
+          0.001
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.1393514886979595,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 7.457657206870836e-05,
+          "total_path_m": 0.004,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G015-B2"
+        }
+      },
+      {
+        "id": "G015-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G015-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G016-B1",
+        "geometry_id": "G016",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001,
+          0.0020424428695201757,
+          0.001414213562373095
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.09438409920785004,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 9.561078522671675e-05,
+          "total_path_m": 0.004456656431893271,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G016-B1"
+        }
+      },
+      {
+        "id": "G016-B2",
+        "geometry_id": "G016",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001,
+          0.0020424428695201757,
+          0.001414213562373095
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.14414928684429382,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 9.561078522671675e-05,
+          "total_path_m": 0.004456656431893271,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G016-B2"
+        }
+      },
+      {
+        "id": "G016-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G016-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G017-B1",
+        "geometry_id": "G017",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001,
+          0.0027098239334885986,
+          0.00282842712474619
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.13091573648753282,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00016134524802282005,
+          "total_path_m": 0.006538251058234789,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G017-B1"
+        }
+      },
+      {
+        "id": "G017-B2",
+        "geometry_id": "G017",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001,
+          0.0027098239334885986,
+          0.00282842712474619
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.13757479850312243,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00016134524802282005,
+          "total_path_m": 0.006538251058234789,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G017-B2"
+        }
+      },
+      {
+        "id": "G017-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G017-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G018-B1",
+        "geometry_id": "G018",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001,
+          0.005068164510058374,
+          0.00565685424949238
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.1499920236249893,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.0003011350763137232,
+          "total_path_m": 0.011725018759550754,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G018-B1"
+        }
+      },
+      {
+        "id": "G018-B2",
+        "geometry_id": "G018",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001,
+          0.005068164510058374,
+          0.00565685424949238
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.1499920236249893,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.0003011350763137232,
+          "total_path_m": 0.011725018759550754,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G018-B2"
+        }
+      },
+      {
+        "id": "G018-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G018-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G019-B1",
+        "geometry_id": "G019",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001414213562373095,
+          0.0020134379027262114,
+          0.0003535533905932738
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.12785561304004825,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.0001114849704047056,
+          "total_path_m": 0.00378120485569258,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G019-B1"
+        }
+      },
+      {
+        "id": "G019-B2",
+        "geometry_id": "G019",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001414213562373095,
+          0.0020134379027262114,
+          0.0003535533905932738
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.1377427927939656,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.0001114849704047056,
+          "total_path_m": 0.00378120485569258,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G019-B2"
+        }
+      },
+      {
+        "id": "G019-B3",
+        "geometry_id": "G019",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001414213562373095,
+          0.0020134379027262114,
+          0.0003535533905932738
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.1453300390631082,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.0001114849704047056,
+          "total_path_m": 0.00378120485569258,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G019-B3"
+        }
+      },
+      {
+        "id": "G019-B4",
+        "geometry_id": "G019",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001414213562373095,
+          0.0020134379027262114,
+          0.0003535533905932738
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.1453300390631082,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.0001114849704047056,
+          "total_path_m": 0.00378120485569258,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G019-B4"
+        }
+      },
+      {
+        "id": "G020-B1",
+        "geometry_id": "G020",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001414213562373095,
+          0.0020036762776859513,
+          0.0007071067811865476
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.10629144995032577,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00010182133677395403,
+          "total_path_m": 0.004124996621245594,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G020-B1"
+        }
+      },
+      {
+        "id": "G020-B2",
+        "geometry_id": "G020",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001414213562373095,
+          0.0020036762776859513,
+          0.0007071067811865476
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.1439446975859749,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00010182133677395403,
+          "total_path_m": 0.004124996621245594,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G020-B2"
+        }
+      },
+      {
+        "id": "G020-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G020-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G021-B1",
+        "geometry_id": "G021",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001414213562373095,
+          0.0020424428695201757,
+          0.001
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.09438409920785001,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 9.561078522671673e-05,
+          "total_path_m": 0.004456656431893271,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G021-B1"
+        }
+      },
+      {
+        "id": "G021-B2",
+        "geometry_id": "G021",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001414213562373095,
+          0.0020424428695201757,
+          0.001
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.14414928684429373,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 9.561078522671673e-05,
+          "total_path_m": 0.004456656431893271,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G021-B2"
+        }
+      },
+      {
+        "id": "G021-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G021-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G022-B1",
+        "geometry_id": "G022",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001414213562373095,
+          0.002164784400584788,
+          0.001414213562373095
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.07842572868550744,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 8.917492620351235e-05,
+          "total_path_m": 0.0049932115253309775,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G022-B1"
+        }
+      },
+      {
+        "id": "G022-B2",
+        "geometry_id": "G022",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001414213562373095,
+          0.002164784400584788,
+          0.001414213562373095
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.142501302987765,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 8.917492620351235e-05,
+          "total_path_m": 0.0049932115253309775,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G022-B2"
+        }
+      },
+      {
+        "id": "G022-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G022-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G023-B1",
+        "geometry_id": "G023",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001414213562373095,
+          0.00300490220332091,
+          0.00282842712474619
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.11500202761294073,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00015800363315374583,
+          "total_path_m": 0.007247542890440195,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G023-B1"
+        }
+      },
+      {
+        "id": "G023-B2",
+        "geometry_id": "G023",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001414213562373095,
+          0.00300490220332091,
+          0.00282842712474619
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.1344285567872609,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00015800363315374583,
+          "total_path_m": 0.007247542890440195,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G023-B2"
+        }
+      },
+      {
+        "id": "G023-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G023-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G024-B1",
+        "geometry_id": "G024",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001414213562373095,
+          0.005451213511919901,
+          0.00565685424949238
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.13902807966810687,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00030024297817552234,
+          "total_path_m": 0.012522281323785377,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G024-B1"
+        }
+      },
+      {
+        "id": "G024-B2",
+        "geometry_id": "G024",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.001414213562373095,
+          0.005451213511919901,
+          0.00565685424949238
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.13902807966810687,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00030024297817552234,
+          "total_path_m": 0.012522281323785377,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G024-B2"
+        }
+      },
+      {
+        "id": "G024-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G024-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G025-B1",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G025-B2",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G025-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G025-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G026-B1",
+        "geometry_id": "G026",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.00282842712474619,
+          0.002521480592086532,
+          0.0007071067811865476
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.14386896095241747,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00016460932563066511,
+          "total_path_m": 0.006057014498019269,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G026-B1"
+        }
+      },
+      {
+        "id": "G026-B2",
+        "geometry_id": "G026",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.00282842712474619,
+          0.002521480592086532,
+          0.0007071067811865476
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.14386896095241747,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00016460932563066511,
+          "total_path_m": 0.006057014498019269,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G026-B2"
+        }
+      },
+      {
+        "id": "G026-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G026-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G027-B1",
+        "geometry_id": "G027",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.00282842712474619,
+          0.0027098239334885986,
+          0.001
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.13091573648753277,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00016134524802281997,
+          "total_path_m": 0.006538251058234789,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G027-B1"
+        }
+      },
+      {
+        "id": "G027-B2",
+        "geometry_id": "G027",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.00282842712474619,
+          0.0027098239334885986,
+          0.001
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.13757479850312238,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00016134524802281997,
+          "total_path_m": 0.006538251058234789,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G027-B2"
+        }
+      },
+      {
+        "id": "G027-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G027-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G028-B1",
+        "geometry_id": "G028",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.00282842712474619,
+          0.00300490220332091,
+          0.001414213562373095
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.11500202761294073,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00015800363315374583,
+          "total_path_m": 0.007247542890440195,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G028-B1"
+        }
+      },
+      {
+        "id": "G028-B2",
+        "geometry_id": "G028",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.00282842712474619,
+          0.00300490220332091,
+          0.001414213562373095
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.1344285567872609,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00015800363315374583,
+          "total_path_m": 0.007247542890440195,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G028-B2"
+        }
+      },
+      {
+        "id": "G028-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G028-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G029-B1",
+        "geometry_id": "G029",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.00282842712474619,
+          0.004168043066239896,
+          0.00282842712474619
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.07823916205567967,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00015239007260027594,
+          "total_path_m": 0.009824897315732276,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G029-B1"
+        }
+      },
+      {
+        "id": "G029-B2",
+        "geometry_id": "G029",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.00282842712474619,
+          0.004168043066239896,
+          0.00282842712474619
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.1263776281290636,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00015239007260027594,
+          "total_path_m": 0.009824897315732276,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G029-B2"
+        }
+      },
+      {
+        "id": "G029-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G029-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G030-B1",
+        "geometry_id": "G030",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.00282842712474619,
+          0.006786668881199797,
+          0.00565685424949238
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.11078561691898768,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00029829239086897556,
+          "total_path_m": 0.015271950255438368,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G030-B1"
+        }
+      },
+      {
+        "id": "G030-B2",
+        "geometry_id": "G030",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.00282842712474619,
+          0.006786668881199797,
+          0.00565685424949238
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.11852920221829975,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00029829239086897556,
+          "total_path_m": 0.015271950255438368,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G030-B2"
+        }
+      },
+      {
+        "id": "G030-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G030-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G031-B1",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G031-B2",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G031-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G031-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G032-B1",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G032-B2",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G032-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G032-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G033-B1",
+        "geometry_id": "G033",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.00565685424949238,
+          0.005068164510058374,
+          0.001
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.1499920236249893,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.0003011350763137232,
+          "total_path_m": 0.011725018759550754,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G033-B1"
+        }
+      },
+      {
+        "id": "G033-B2",
+        "geometry_id": "G033",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.00565685424949238,
+          0.005068164510058374,
+          0.001
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.1499920236249893,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.0003011350763137232,
+          "total_path_m": 0.011725018759550754,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G033-B2"
+        }
+      },
+      {
+        "id": "G033-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G033-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G034-B1",
+        "geometry_id": "G034",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.00565685424949238,
+          0.005451213511919901,
+          0.001414213562373095
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.13902807966810693,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00030024297817552245,
+          "total_path_m": 0.012522281323785377,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G034-B1"
+        }
+      },
+      {
+        "id": "G034-B2",
+        "geometry_id": "G034",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.00565685424949238,
+          0.005451213511919901,
+          0.001414213562373095
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.13902807966810693,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00030024297817552245,
+          "total_path_m": 0.012522281323785377,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G034-B2"
+        }
+      },
+      {
+        "id": "G034-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G034-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G035-B1",
+        "geometry_id": "G035",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.00565685424949238,
+          0.006786668881199797,
+          0.00282842712474619
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.1107856169189877,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00029829239086897556,
+          "total_path_m": 0.015271950255438368,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G035-B1"
+        }
+      },
+      {
+        "id": "G035-B2",
+        "geometry_id": "G035",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.00565685424949238,
+          0.006786668881199797,
+          0.00282842712474619
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.11852920221829973,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00029829239086897556,
+          "total_path_m": 0.015271950255438368,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G035-B2"
+        }
+      },
+      {
+        "id": "G035-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G035-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G036-B1",
+        "geometry_id": "G036",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.00565685424949238,
+          0.009526025719263042,
+          0.00565685424949238
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.0782045369845363,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00029661950540814304,
+          "total_path_m": 0.0208397342182478,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G036-B1"
+        }
+      },
+      {
+        "id": "G036-B2",
+        "geometry_id": "G036",
+        "status": "Accepted",
+        "segment_lengths_m": [
+          0.00565685424949238,
+          0.009526025719263042,
+          0.00565685424949238
+        ],
+        "ranking": {
+          "overlap_deficit_at_1e-12": 0.0,
+          "max_3w_footprint_curvature": 0.11452332251375427,
+          "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+          "max_projected_radius_m": 0.00029661950540814304,
+          "total_path_m": 0.0208397342182478,
+          "package_evidence_missing_checks": 6,
+          "stable_id": "G036-B2"
+        }
+      },
+      {
+        "id": "G036-B3",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      },
+      {
+        "id": "G036-B4",
+        "status": "Rejected",
+        "stage": "model_domain",
+        "reason": "3w projected footprint/curvature exceeds 0.15",
+        "normalized_mode_overlap": null
+      }
+    ],
+    "distance_values_m": [
+      0.00035355339059327376,
+      0.0007071067811865475,
+      0.001,
+      0.001414213562373095,
+      0.00282842712474619,
+      0.00565685424949238
+    ],
+    "accepted_count": 56,
+    "representatives": 3,
+    "geometry_count": 36,
+    "rejection_counts": {
+      "geometry_or_power: no real exact-q power solution for one or both axes": 6,
+      "model_domain: 3w projected footprint/curvature exceeds 0.15": 64
+    },
+    "termination": "Frozen finite family exhausted",
+    "selection": "best lexicographic candidate per distinct vertex geometry; first 3"
+  },
+  "limitations": [
+    "Conceptual Geometry; prescribed aperture is not fabrication capability",
+    "Scalar paraxial normalized overlap is not Total Coupling",
+    "Finite-field aberration, coating, interface and polarization losses Uncomputed",
+    "Full Package, fabrication/yield and patentability Uncomputed",
+    "Bounded exact-matching family; no global feasibility/optimality guarantee"
+  ],
+  "actual_applicability": {
+    "status": "Uncomputed"
+  },
+  "physical_losses": {
+    "status": "Uncomputed",
+    "total_coupling": null
+  },
+  "package_feasibility": {
+    "status": "Uncomputed"
+  },
+  "fabrication_yield": {
+    "status": "Uncomputed"
+  },
+  "patentability": {
+    "status": "Uncomputed"
+  },
+  "input_sha256": "349546f1a3f4955aa8a6d4cc96fb49b28b360c3924b20ec8d0089fcad6b86196",
+  "reason": "Valid conceptual candidates generated"
+}

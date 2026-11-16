@@ -4,6 +4,21 @@
 M1은 **Synthetic external Gaussian field의 paraxial feasibility**를 평가합니다.
 실제 PIC SSC/Glass Waveguide의 총 Coupling Efficiency나 특허 신규성은 평가하지 않습니다.
 
+## 두 Port에서 자동 Design — M5-A
+
+Reflector 값을 입력하지 않고 개념 설계 후보를 생성합니다.
+
+```bash
+python -m pip install -e '.[test]'
+pae-design examples/m5a_two_ports.json --output-dir results/my-design
+```
+
+생성된 `results/my-design/design.html`을 브라우저로 열면 됩니다.
+[미리 생성된 Read-only Report](results/m5a/design.html)와
+[후보별 JSON](results/m5a/design.json), [검증·한계](docs/M5A_AUTONOMOUS_DESIGN.md)를 제공합니다.
+Synthetic 예제에서 유효 후보 56개, 대표 3개. 실제 Package와 Total Coupling은 Uncomputed입니다.
+Missing Phase나 Domain Fail은 임의 보완하지 않습니다.
+
 ## 실행
 
 Python 3.11 이상. 계산 엔진은 Standard Library만 사용합니다.
