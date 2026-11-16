@@ -4,6 +4,17 @@
 M1은 **Synthetic external Gaussian field의 paraxial feasibility**를 평가합니다.
 실제 PIC SSC/Glass Waveguide의 총 Coupling Efficiency나 특허 신규성은 평가하지 않습니다.
 
+## 화면에서 두 Port로 설계 — M5-B
+
+```bash
+python -m pip install -e .
+pae-workspace
+```
+
+[로컬 Workspace](http://127.0.0.1:8765)에서 두 Port를 입력하고 **Design**을 실행합니다.
+후보와 2D Projection을 선택하고 결과 HTML·JSON을 각각 저장할 수 있습니다.
+[입력 단위·재현·검증 범위](docs/M5B_TWO_PORT_WORKSPACE.md)를 참고하세요.
+
 ## 두 Port에서 자동 Design — M5-A
 
 Reflector 값을 입력하지 않고 개념 설계 후보를 생성합니다.

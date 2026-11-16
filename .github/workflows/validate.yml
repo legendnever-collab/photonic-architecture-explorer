@@ -45,6 +45,13 @@ jobs:
       - run: node scripts/check_inspector.cjs
       - run: python scripts/validate_m5a.py --output-dir results/runtime-m5a-browser
       - run: node scripts/check_design.cjs results/runtime-m5a-browser
+      - run: node scripts/check_workspace.cjs results/runtime-m5b-browser results/runtime-m5a-browser
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: m5b-workspace-evidence
+          path: results/runtime-m5b-browser/
+          if-no-files-found: error
       - uses: actions/upload-artifact@v4
         if: always()
         with:

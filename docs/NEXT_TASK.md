@@ -1,3 +1,29 @@
+# M5-C — Mode Match View
+
+추천 모델 **Sol Work**. 기존 Gaussian 결과를 선택 후보 화면에서 검토할 수 있게 한다.
+M5-B Draft PR을 Base로 복구한다. 병합됐다면 Main의 해당 변경을 확인한다.
+
+1. AGENTS.md, PRODUCT_CHARTER.md, M5A_DESIGN_CONTRACT.md와
+   M5B_TWO_PORT_WORKSPACE.md를 읽고 Workspace 및 기존 M5-A 결과를 재현하라.
+2. 기존 Python Gaussian의 Source·Target Mode와 선택 후보의 도착 빔을 사용한다.
+   Source는 Source Reference Plane에 표시하고, 도착 빔과 Target Mode는 같은
+   Target Reference Plane의 t/s 축, 단위, 범위와 정규화로 겹쳐 보여라.
+3. 기존 Workspace/Report에 펼쳐볼 수 있는 Mode Match 상세를 추가하라. 강도
+   분포와 상대 Wavefront Phase를 비교할 수 있게 하라. 전역 위상을 비교 기준으로
+   삼지 말고, 강도 그림을 더한 값으로 Complex Mode Overlap을 추정하지 마라.
+4. 기존 엔진의 Normalized Mode Overlap과 -10 log10(η) Mode Mismatch Loss를
+   표시하라. η=0은 무한대 손실로, 누락 또는 도메인 실패는 Uncomputed로 구분한다.
+   Total Coupling은 경로·계면·개구 손실이 검증될 때까지 Uncomputed로 둔다.
+5. Matched Synthetic case와 강도는 같지만 Phase가 다른 진단용 Synthetic control을
+   검증하라. 화면·내보내기의 후보 ID, 입력 SHA, 기준면, Overlap 일치를 검사하라.
+   유효하지 않은 경우 이전 Mode 그림과 수치를 노출하지 마라.
+6. Frozen Guards와 Fixed Ports를 보존하고 별도 Draft PR을 작성하라.
+   새 Topology, Optimizer, Vector Adapter 및 후속 자동 진행은 이번 범위 밖이다.
+
+---
+
+## 완료 전 단계 지시문 (M5-B, M4-C)
+
 # M5-B — Two-Port Design Workspace
 
 추천: **Sol Work**. 검증된 M5-A Engine을 최소 입력 흐름에 연결하는 점진적 개발이다.
