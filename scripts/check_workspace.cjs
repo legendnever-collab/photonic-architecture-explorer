@@ -324,9 +324,9 @@ async function main() {
     assert.equal(rejected.candidate_review.status, 'Uncomputed');
     await edit('source_mfd_ts_m_0', '16');
     await edit('source_mfd_ts_m_1', '24');
-    await design('Computed');
-
     await page.setViewportSize({width: 393, height: 852});
+    await edit('target_position_m_2', '2');
+    assert.equal((await design('Computed')).input_sha256, nominal.input_sha256);
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
     assert(await frame.locator('html').evaluate(el => el.scrollWidth <= el.clientWidth));
     const alternatives = frame.locator('#candidate-select option');
@@ -337,6 +337,7 @@ async function main() {
     assert.equal(await frame.locator('[data-projection="XY"]:visible').count(), 1);
     const mobileData = await result();
     const mobileCandidate = await frame.locator('#candidate-select').inputValue();
+    assert.equal(mobileCandidate, 'G015-B1');
     await verifyModeMatch(frame, mobileData, mobileCandidate);
     await verifySensitivity(frame, mobileData, mobileCandidate);
     await verifyPlacement(frame, mobileData, mobileCandidate);
