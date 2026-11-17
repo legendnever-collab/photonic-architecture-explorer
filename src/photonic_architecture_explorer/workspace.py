@@ -295,11 +295,11 @@ def render_port(port, raw, issue_path):
     mode_tip = "출사 방향" if port == "source" else "Target에 도착하는 방향"
     advanced = (mode == "q" or issue_path in ("fold_plane", port + ".sagittal_axis"))
     return f'''<section class="card" data-port="{port}" data-mode-kind="{mode}"><h2>{port.title()} Port</h2>
-    <p class="caption">External Reference Plane · 원점은 Position, 법선은 {mode_tip}입니다.</p>
+    <p class="caption">External Reference Plane · Position은 기준면의 원점, 법선은 {mode_tip}입니다. Mode는 이 면의 값으로 입력하세요.</p>
     {position}{direction}
     <div data-mode-group="mfd"{' hidden' if mode == 'q' else ''}>{mfd}{phase}
     <p class="caption" data-round-tip{' hidden' if mode != 'round' else ''}>Rotation-symmetric Mode · 같은 MFD와 Phase를 두 축에 적용합니다.</p>
-    <p class="caption">Flat Phase는 0으로 명시하세요.</p></div>
+    <p class="caption">Wavefront Curvature는 해당 기준면의 Phase 곡률입니다. Flat Phase는 0으로 명시하세요.</p></div>
     <details data-advanced{' open' if advanced else ''}><summary>상세 입력 · Mode 표현 및 좌표축</summary>
     <label class="mode">Mode 표현 <select name="{prefix}mode" data-mode>
       <option value="round"{' selected' if mode == 'round' else ''}>Rotation-symmetric · MFD + Phase</option>
@@ -308,7 +308,7 @@ def render_port(port, raw, issue_path):
     </select></label>
     <div data-mode-group="q"{' hidden' if mode != 'q' else ''}>{q}</div>
     {sagittal}
-    <p class="caption">Rotation-symmetric Mode는 Fold Plane이 유일할 때 축을 자동으로 구합니다.
+    <p class="caption">Mode 표현을 바꾸면 새 표현의 값을 입력하세요. Rotation-symmetric Mode는 Fold Plane이 유일할 때 축을 자동으로 구합니다.
     Elliptical / Astigmatic Mode에는 실제 Sagittal Axis를 입력하세요.</p></details>
     </section>'''
 
@@ -339,8 +339,12 @@ for (const select of form.querySelectorAll('[data-mode]')) {
   select.addEventListener('change', () => {
     const port = select.closest('[data-port]');
     port.dataset.modeKind = select.value;
-    port.querySelector('[data-mode-group="mfd"]').hidden = select.value === 'q';
-    port.querySelector('[data-mode-group="q"]').hidden = select.value !== 'q';
+    const mfd = port.querySelector('[data-mode-group="mfd"]');
+    const q = port.querySelector('[data-mode-group="q"]');
+    mfd.hidden = select.value === 'q';
+    q.hidden = select.value !== 'q';
+    const activeMode = mfd.hidden ? q : mfd;
+    for (const input of activeMode.querySelectorAll('input')) input.value = '';
     port.querySelector('[data-round-tip]').hidden = select.value !== 'round';
     for (const axis of port.querySelectorAll('[data-mode-axis="1"]')) axis.hidden = select.value === 'round';
   });

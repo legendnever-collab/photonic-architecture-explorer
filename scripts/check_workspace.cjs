@@ -52,6 +52,7 @@ async function main() {
       assert.equal(await output.isVisible(), false);
       assert.equal(await page.locator('#pending').isVisible(), true);
       assert.equal(await page.getByRole('button', {name: 'HTML 저장'}).isVisible(), false);
+      assert.equal(await page.getByRole('button', {name: 'JSON 저장'}).isVisible(), false);
       assert.equal(await page.locator('#design-review').isVisible(), false);
     };
     const openCandidateDetails = async view => {
@@ -231,6 +232,10 @@ async function main() {
     const alternativeId = revised.candidates[1].id;
     await frame.locator('[data-select-candidate="' + alternativeId + '"]').click();
     assert.equal(await frame.locator('#candidate-select').inputValue(), alternativeId);
+    const [lead, alternative] = revised.candidates.map(candidate => candidate.ranking);
+    const marginDelta = alternative.max_3w_footprint_curvature - lead.max_3w_footprint_curvature;
+    assert((await frame.locator('[data-candidate]:visible [data-trade-off]').innerText())
+      .includes('Max 3w·κ ' + marginDelta.toFixed(6) + ' (Guard 0.15)'));
     await verifyModeMatch(frame, revised, alternativeId);
     await verifySensitivity(frame, revised, alternativeId);
     await verifyReview(frame, revised, alternativeId);
@@ -272,7 +277,9 @@ async function main() {
     for (const expected of [exported.input_sha256, summaryValues.eta, summaryValues.displayedDelta,
                             'Path ' + (exported.candidate_review.candidates[alternativeId].total_path_m * 1000).toFixed(3) + ' mm',
                             'source-external', 'target-external', 'Package Yield Uncomputed',
-                            'Total Coupling Uncomputed']) {
+                            'Total Coupling Uncomputed', 'Off-vertex field handoff: Uncomputed',
+                            'Perturbed Mode Overlap: ' + exported.reflector_placement.perturbed_gaussian_mode_overlap,
+                            'Patentability: ' + exported.patentability.status]) {
       assert(printed.includes(expected), 'missing print value ' + expected + ' in ' + printed);
     }
     await standalone.close();
@@ -336,6 +343,28 @@ async function main() {
     await verifyReview(frame, mobileData, mobileCandidate);
     assert(await frame.locator('html').evaluate(el => el.scrollWidth <= el.clientWidth));
     await page.screenshot({path: path.join(dir, 'workspace-mobile.png'), fullPage: true});
+    const mobileSnapshot = {...mobileData, viewed_candidate_id: mobileCandidate};
+    const mobileJSON = await download('json', 'mobile-alternative');
+    const mobileHTML = await download('html', 'mobile-alternative');
+    assert.deepEqual(JSON.parse(fs.readFileSync(mobileJSON)), mobileSnapshot);
+    const mobileReport = await browser.newPage({viewport: {width: 393, height: 852}});
+    await mobileReport.route('http**://**/*', route => route.abort());
+    await mobileReport.goto('file://' + path.resolve(mobileHTML));
+    assert.deepEqual(await mobileReport.locator('#design-result').evaluate(el => JSON.parse(el.textContent)),
+                     mobileSnapshot);
+    assert.equal(await mobileReport.locator('#candidate-select').inputValue(), mobileCandidate);
+    const mobilePDF = path.join(dir, 'mobile-alternative.pdf');
+    await mobileReport.pdf({path: mobilePDF, preferCSSPageSize: true});
+    assert.match(execFileSync('pdfinfo', [mobilePDF], {encoding: 'utf8'}), /^Pages:\s+1\s*$/m);
+    const mobilePrint = execFileSync('pdftotext', [mobilePDF, '-'], {encoding: 'utf8'}).replace(/\s+/g, ' ');
+    const mobileReview = mobileSnapshot.candidate_review.candidates[mobileCandidate];
+    for (const expected of ['Candidate Review · ' + mobileCandidate, mobileSnapshot.input_sha256,
+                            'Path ' + (mobileReview.total_path_m * 1000).toFixed(3) + ' mm',
+                            'Overlap ' + (mobileReview.overlap * 100).toFixed(6) + '%',
+                            'Total Coupling Uncomputed', 'Patentability: Uncomputed']) {
+      assert(mobilePrint.includes(expected), 'missing mobile alternative print value ' + expected);
+    }
+    await mobileReport.close();
 
     await page.getByRole('link', {name: '새 입력'}).click();
     assert.equal(await byName('wavelength_m_0').inputValue(), '');
@@ -393,8 +422,25 @@ async function main() {
     assert.match((await design('Uncomputed')).reason, /Ambiguous Fold Plane/);
     assert.equal(await page.locator('[data-advanced][open]').count(), 2);
     await edit('target_position_m_1', '2');
+    await edit('target_propagation_direction_0', '0');
+    await edit('target_propagation_direction_2', '1');
+    rejected = await design('Fail');
+    assert.match(rejected.reason, /Skew/);
+    assert.equal(rejected.selected_candidate_id, null);
+    await edit('target_propagation_direction_0', '1');
+    await edit('target_propagation_direction_2', '0');
+    await page.locator('[data-port="source"] [data-advanced] summary').click();
+    await edit('source_sagittal_axis_0', '0');
+    await edit('source_sagittal_axis_1', '1');
+    await edit('source_sagittal_axis_2', '0');
+    rejected = await design('Fail');
+    assert.match(rejected.reason, /Rolled/);
+    assert.equal(rejected.selected_candidate_id, null);
+    for (const axis of [0, 1, 2]) await edit('source_sagittal_axis_' + axis, '');
     await page.locator('select[name="source_mode"]').selectOption('mfd');
+    await edit('source_mfd_ts_m_0', '20');
     await edit('source_mfd_ts_m_1', '24');
+    await edit('source_wavefront_curvature_ts_per_m_0', '50');
     await edit('source_wavefront_curvature_ts_per_m_1', '50');
     rejected = await design('Uncomputed');
     assert.match(rejected.reason, /Elliptical/);
@@ -403,19 +449,46 @@ async function main() {
     await page.locator('select[name="source_mode"]').selectOption('q');
     assert.equal(await byName('source_complex_q_ts_m_0').isVisible(), true);
     assert.equal(await byName('source_wavefront_curvature_ts_per_m_0').isVisible(), false);
+
+    const modeSwitch = [];
+    for (const viewport of [{width: 1440, height: 1050}, {width: 393, height: 852}]) {
+      await page.setViewportSize(viewport);
+      await page.goto(address);
+      await design('Computed');
+      const source = page.locator('[data-port="source"]');
+      await source.locator('[data-advanced] summary').click();
+      const selector = source.locator('[data-mode]');
+      await selector.selectOption('round');
+      await assertClean();
+      assert.equal(await byName('source_mfd_ts_m_0').inputValue(), '');
+      assert.equal(await byName('source_wavefront_curvature_ts_per_m_0').inputValue(), '');
+      rejected = await design('Uncomputed');
+      assert.equal(rejected.input_snapshot.source.mfd_ts_m.value, null);
+      assert.equal(rejected.input_snapshot.source.wavefront_curvature_ts_per_m.value, null);
+      assert.equal(rejected.selected_candidate_id, null);
+      assert.equal(await frame.locator('[data-overlap-value]').count(), 0);
+      await edit('source_mfd_ts_m_0', '20');
+      await edit('source_wavefront_curvature_ts_per_m_0', '0');
+      const confirmed = await design('Computed');
+      assert.deepEqual(confirmed.input_snapshot.source.mfd_ts_m.value, [0.00002, 0.00002]);
+      assert.deepEqual(confirmed.input_snapshot.source.wavefront_curvature_ts_per_m.value, [0, 0]);
+      modeSwitch.push({viewport, missing_status: rejected.status, confirmed_status: confirmed.status});
+    }
     assert.deepEqual(errors, []);
 
     const evidence = {status: 'Pass', evaluated_checkout_sha: head, browser: await browser.version(),
       input_simplification: {blank_round_numeric_fields: Object.keys(round).length, detail_panels_initially_open: 0,
         design_submissions: 1, candidate_id: auto.selected_candidate_id, input_sha256: auto.input_sha256},
       printed_review: {pages: 1, paper: 'A4', candidate_id: alternativeId, input_sha256: exported.input_sha256},
+      mobile_printed_review: {pages: 1, paper: 'A4', candidate_id: mobileCandidate, input_sha256: mobileSnapshot.input_sha256},
+      mode_switch: modeSwitch,
       nominal_sensitivity: sensitivity.candidates.map(entry => ({
         candidate_id: entry.candidate_id,
         delta_db: Object.fromEntries(Object.entries(entry.samples).map(([id, value]) => [id, value.delta_loss_db]))
       })),
       checks: ['fresh M5-A synthetic exact match', 'edited fixed Port and reference plane', 'immediate stale result and export hiding',
                'missing phase and recovery', 'invalid unit vector and high divergence', 'Uncomputed package and total coupling',
-               'standalone HTML and JSON identical data and viewed candidate', 'Mode Match candidate/planes/SHA/overlap agreement', 'sensitivity candidate order, values and export agreement', 'review matches candidate/ports/values and one-page PDF text', 'reflector-placement response, candidate and input provenance match JSON', 'desktop and 393px mobile', 'blank input and complex q controls', '18 visible round inputs and no advanced panels', 'rotated Fold, Mode Match, rationale and trade-off within the first mobile viewport', 'round input HTML/JSON/A4 identity', 'ambiguous Fold Plane and missing elliptical axis guidance']};
+               'standalone HTML and JSON identical data and viewed candidate', 'Mode Match candidate/planes/SHA/overlap agreement', 'sensitivity candidate order, values and export agreement', 'review matches candidate/ports/values and one-page PDF text', 'reflector-placement response, candidate and input provenance match JSON', 'desktop and 393px mobile', 'blank input and complex q controls', '18 visible round inputs and no advanced panels', 'rotated Fold, Mode Match, rationale and trade-off within the first mobile viewport', 'round input HTML/JSON/A4 identity', 'ambiguous Fold Plane and missing elliptical axis guidance', 'skew and rolled inputs rejected', 'Mode switch requires explicit MFD and Phase at both viewports', 'printed perturbed overlap and patentability remain Uncomputed']};
     fs.writeFileSync(path.join(dir, 'browser.json'), JSON.stringify(evidence, null, 2) + '\n');
     console.log(JSON.stringify(evidence));
   } finally {

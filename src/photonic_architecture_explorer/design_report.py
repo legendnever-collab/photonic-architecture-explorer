@@ -12,8 +12,8 @@ from .solver import MAX_FOOTPRINT_SLOPE
 
 CONCEPT_REASONS = {
     'short_path': '유효 후보 중 가장 좋은 Overlap 구간에서 광경로가 가장 짧습니다.',
-    'smaller_footprint': '동등한 Overlap에서 반사면 위 최대 투영 빔 반경이 더 작습니다.',
-    'model_margin': '동등한 Overlap에서 Gaussian 모델의 곡률·Footprint 한계까지 여유가 더 큽니다.',
+    'smaller_footprint': '같은 Overlap 구간에서 반사면 위 최대 투영 빔 반경이 더 작습니다.',
+    'model_margin': '같은 Overlap 구간에서 Gaussian 모델의 곡률·Footprint 한계까지 여유가 더 큽니다.',
 }
 
 
@@ -116,7 +116,9 @@ def render_design_report(result):
                 trade_off = "대안에서는 광경로를 늘려 Gaussian 모델 여유를 늘릴 수 있습니다."
         else:
             trade_off = (f"추천 대비 최대 투영 빔 반경 "
-                         f"{(r['max_projected_radius_m'] - lead['max_projected_radius_m'])*1e6:+.2f} µm.")
+                         f"{(r['max_projected_radius_m'] - lead['max_projected_radius_m'])*1e6:+.2f} µm · "
+                         f"Max 3w·κ {r['max_3w_footprint_curvature'] - lead['max_3w_footprint_curvature']:+.6f} "
+                         f"(Guard {MAX_FOOTPRINT_SLOPE}).")
         articles.append(f'''<article data-candidate="{identifier}" data-input-sha="{escape(result['input_sha256'])}"{' hidden' if i else ''}>
         <div class="layout"><section class="card drawing"><h2>{'Recommended Concept' if i==0 else 'Alternative Concept'} · {identifier}</h2>{''.join(plots)}
         <p class="caption">파랑 · Fixed Source와 Chief Path / 보라 · Fixed Target / 주황 · Quadratic Reflectors</p></section>

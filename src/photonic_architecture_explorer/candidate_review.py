@@ -185,5 +185,6 @@ def render_review_sheet(review, candidate, adapted, active):
     <h3>Model scope</h3>
     <p>{escape(data["model_scope"])}. 실제 부품 배치 공차 및 Off-vertex field handoff:
     <b data-review-placement>{escape(review["part_placement_status"])}</b>.</p>
+    <p>Perturbed Mode Overlap: Uncomputed · Patentability: Uncomputed</p>
     <p>Package Yield <b data-review-yield>{escape(review["package_yield_status"])}</b> ·
     Total Coupling <b data-review-coupling>{escape(review["total_coupling_status"])}</b></p></section>'''
