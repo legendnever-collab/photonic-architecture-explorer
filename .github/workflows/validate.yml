@@ -47,6 +47,14 @@ jobs:
       - run: node scripts/check_design.cjs results/runtime-m5a-browser
       - run: sudo apt-get install -y poppler-utils fonts-noto-cjk
       - run: node scripts/check_workspace.cjs results/runtime-m5e-browser results/runtime-m5a-browser
+      - run: python scripts/validate_m5f.py --output-dir results/runtime-m5f-acceptance
+      - run: node scripts/check_m5f_print.cjs results/runtime-m5f-acceptance
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: m5f-concept-acceptance-evidence
+          path: results/runtime-m5f-acceptance/
+          if-no-files-found: error
       - uses: actions/upload-artifact@v4
         if: always()
         with:

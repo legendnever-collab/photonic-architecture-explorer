@@ -1,3 +1,18 @@
+# M6-A — Draft Stack Integration Review
+
+추천 모델 **Sol Work**. M5-F Draft PR을 기준으로 현재 원격 Main과 PR stack을 검토한다.
+
+1. AGENTS.md, PRODUCT_CHARTER.md, M5F_TWO_PORT_CONCEPT_ACCEPTANCE.md 및 기존 M4
+   검증 기록을 읽고 Main과 열린 Draft PR의 Base·HEAD·diff·CI를 확인한다.
+2. M5-F까지 필요한 패치의 의존 순서, 충돌, 중복과 통합 전 확인 사항을 정리한다.
+   별도 M4 검증 브랜치의 범위와 적용 여부는 증거를 확인해 명시한다.
+3. 별도 검증 브랜치에서 기존 Physics와 Workspace, 세 Synthetic 입력,
+   HTML·JSON·A4 PDF를 재현하고 실제 배치 공차·Yield·Total Coupling의 상태를 확인한다.
+4. 통합 가능 여부, 정확한 SHA·CI·artifact와 병합 순서안을 제출한다.
+   Main 병합과 새 기능 개발은 별도 요청에서 진행한다.
+
+---
+
 # M5-F — Two-Port Concept Acceptance
 
 추천 모델 **Sol Work**. M5-E Draft PR을 기준으로 한다. 병합됐다면 해당 변경이 포함된

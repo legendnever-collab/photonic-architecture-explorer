@@ -1,0 +1,230 @@
+{
+  "contract_version": "M3A-1",
+  "coordinate_convention": "right-handed world XYZ; t=s cross d; target d is arriving direction",
+  "description": "M5F-003: synthetic high-divergence guard control; 1310 nm coplanar M5-A geometry.",
+  "wavelength_m": {
+    "value": 0.00000131,
+    "unit": "m",
+    "provenance": "synthetic",
+    "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+    "uncertainty": null
+  },
+  "ambient_index": {
+    "value": 1,
+    "unit": "1",
+    "provenance": "synthetic",
+    "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+    "uncertainty": null,
+    "quantity": "external_ambient_refractive_index"
+  },
+  "source": {
+    "position_m": {
+      "value": [
+        0,
+        0,
+        0
+      ],
+      "unit": "m",
+      "provenance": "synthetic",
+      "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+      "uncertainty": null
+    },
+    "propagation_direction": {
+      "value": [
+        1,
+        0,
+        0
+      ],
+      "unit": "1",
+      "provenance": "synthetic",
+      "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+      "uncertainty": null
+    },
+    "sagittal_axis": {
+      "value": [
+        0,
+        1,
+        0
+      ],
+      "unit": "1",
+      "provenance": "synthetic",
+      "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+      "uncertainty": null
+    },
+    "mfd_ts_m": {
+      "value": [
+        0.000002,
+        0.0000024
+      ],
+      "unit": "m",
+      "provenance": "synthetic",
+      "source": "M5F-003: synthetic high-divergence guard control; specified analytically for concept acceptance. No device measurement.",
+      "uncertainty": null
+    },
+    "wavefront_curvature_ts_per_m": {
+      "value": [
+        0,
+        0
+      ],
+      "unit": "m^-1",
+      "provenance": "synthetic",
+      "source": "M5F-003: synthetic high-divergence guard control; specified analytically for concept acceptance. No device measurement.",
+      "uncertainty": null
+    },
+    "polarization": {
+      "value": {
+        "treatment": "scalar_ignored",
+        "jones_ts": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "unit": "1",
+      "provenance": "synthetic",
+      "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+      "uncertainty": null
+    },
+    "reference_plane": {
+      "value": {
+        "id": "source-external",
+        "frame_id": "world",
+        "side": "external",
+        "origin_m": [
+          0,
+          0,
+          0
+        ],
+        "normal": [
+          1,
+          0,
+          0
+        ]
+      },
+      "unit": "plane",
+      "provenance": "synthetic",
+      "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+      "uncertainty": null
+    },
+    "mode_evidence": {
+      "value": {
+        "kind": "synthetic_gaussian",
+        "fixture": "examples/m5f_high_divergence.json"
+      },
+      "unit": "evidence",
+      "provenance": "synthetic",
+      "source": "M5F-003: synthetic high-divergence guard control; specified analytically for concept acceptance. No device measurement.",
+      "uncertainty": null
+    }
+  },
+  "target": {
+    "position_m": {
+      "value": [
+        0.002,
+        0,
+        0.002
+      ],
+      "unit": "m",
+      "provenance": "synthetic",
+      "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+      "uncertainty": null
+    },
+    "propagation_direction": {
+      "value": [
+        1,
+        0,
+        0
+      ],
+      "unit": "1",
+      "provenance": "synthetic",
+      "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+      "uncertainty": null
+    },
+    "sagittal_axis": {
+      "value": [
+        0,
+        1,
+        0
+      ],
+      "unit": "1",
+      "provenance": "synthetic",
+      "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+      "uncertainty": null
+    },
+    "mfd_ts_m": {
+      "value": [
+        0.000016,
+        0.000024
+      ],
+      "unit": "m",
+      "provenance": "synthetic",
+      "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+      "uncertainty": null
+    },
+    "wavefront_curvature_ts_per_m": {
+      "value": [
+        0,
+        0
+      ],
+      "unit": "m^-1",
+      "provenance": "synthetic",
+      "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+      "uncertainty": null
+    },
+    "polarization": {
+      "value": {
+        "treatment": "scalar_ignored",
+        "jones_ts": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "unit": "1",
+      "provenance": "synthetic",
+      "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+      "uncertainty": null
+    },
+    "reference_plane": {
+      "value": {
+        "id": "target-external",
+        "frame_id": "world",
+        "side": "external",
+        "origin_m": [
+          0.002,
+          0,
+          0.002
+        ],
+        "normal": [
+          1,
+          0,
+          0
+        ]
+      },
+      "unit": "plane",
+      "provenance": "synthetic",
+      "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+      "uncertainty": null
+    },
+    "mode_evidence": {
+      "value": {
+        "kind": "synthetic_gaussian",
+        "fixture": "examples/m1_001.json"
+      },
+      "unit": "evidence",
+      "provenance": "synthetic",
+      "source": "M1-001 mathematical control; package bounds are synthetic assumptions",
+      "uncertainty": null
+    }
+  }
+}
