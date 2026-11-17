@@ -286,7 +286,7 @@ def render_report(cases, editable=False, raw_groups=None, error=None):
     <p class="muted">Approximate Overlap은 Normalized Scalar Gaussian 진단입니다. 실제 Applicability·Total Coupling·Finite-Beam Clearance는 Uncomputed입니다.</p></section></main><script>{JS}</script></body></html>'''
 
 
-def make_server(cases, port=8765):
+def make_server(cases, port=8765, *, workspace=None):
     """Loopback only; no files written and no remote evaluation service."""
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, *args): pass
@@ -299,6 +299,11 @@ def make_server(cases, port=8765):
             query = urlsplit(self.path)
             if self.headers.get('Host') != f'127.0.0.1:{self.server.server_port}': self.send_error(403); return
             if query.path != '/': self.send_error(404); return
+            if workspace is not None:
+                entry = parse_qs(query.query).get('entry', ['example'])[0]
+                if entry not in workspace.templates: self.send_error(404); return
+                self.send_page(workspace.get(entry))
+                return
             key = parse_qs(query.query).get('case', [cases[0][0]])[0]
             selected = [c for c in cases if c[0] == key]
             if not selected: self.send_error(404); return
@@ -306,7 +311,8 @@ def make_server(cases, port=8765):
             ordered = selected+[c for c in cases if c[0] != key]
             self.send_page(render_report(ordered, editable=True))
         def do_POST(self):
-            if self.path != '/evaluate': self.send_error(404); return
+            expected_path = '/design' if workspace is not None else '/evaluate'
+            if self.path != expected_path: self.send_error(404); return
             if self.headers.get('Host') != f'127.0.0.1:{self.server.server_port}': self.send_error(403); return
             origin = self.headers.get('Origin')
             allowed = f'http://127.0.0.1:{self.server.server_port}'
@@ -314,10 +320,16 @@ def make_server(cases, port=8765):
             try: length = int(self.headers.get('Content-Length', '0'))
             except ValueError: self.send_error(400); return
             if not 0 < length <= 1_000_000: self.send_error(413); return
-            try: values = parse_qs(self.rfile.read(length).decode('utf-8', errors='strict'), keep_blank_values=True)
-            except UnicodeError: self.send_error(400); return
+            try:
+                values = parse_qs(self.rfile.read(length).decode('utf-8', errors='strict'),
+                                  keep_blank_values=True, max_num_fields=80 if workspace is not None else None)
+            except ValueError: self.send_error(400); return
             if any(len(v) != 1 for v in values.values()): self.send_error(400); return
             raw = {k: v[0] for k, v in values.items()}
+            if workspace is not None:
+                page, status = workspace.post(raw)
+                self.send_page(page, status)
+                return
             try:
                 document = parse_groups(raw)
                 self.send_page(render_report([('custom', '수정 입력 · 새 평가', document)], editable=True))
