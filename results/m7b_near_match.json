@@ -1,0 +1,3654 @@
+{
+  "manifest": {
+    "status": "Pass",
+    "head": "efa87859e460d1a77b41b063a7197bcf1f82db86",
+    "dirty": false,
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "maximum_adapter_calls": 139392,
+    "source_sha256": {
+      "src/photonic_architecture_explorer/__init__.py": "7e5bff7a68ccad603bf3ebc3cee6c760fd17290d1f5d5c8ce611fec41f50ca15",
+      "src/photonic_architecture_explorer/applicability.py": "1d8866bb89b887e024beb9a432bc1476885e2b2cfcb5f1da91b0fd12c46e40c0",
+      "src/photonic_architecture_explorer/benchmark.py": "2b6df43b6977b79292908879093ea79c4c28a668416f5bc21ac094070bd43e66",
+      "src/photonic_architecture_explorer/candidate_review.py": "f6036e16e26b695615d1775de465ecbf1b38b7c5a7f989e81f151a0d423b8707",
+      "src/photonic_architecture_explorer/design.py": "dcbdfccaabc328aa6f73d62a6c5243c93bc2ab25a359c56960f2bd1d553bee98",
+      "src/photonic_architecture_explorer/design_report.py": "1bd0f20d2f8d62251be7762324650d550689f5e5b2963beebec1f87ac93602e6",
+      "src/photonic_architecture_explorer/diagnostics.py": "60471c44cc3dd094768d08e8372ebeb52450e29956cf06070780e080b211902d",
+      "src/photonic_architecture_explorer/external.py": "3f290ee79021119c2a06381e3f149c12138aff6d11eed502b1b39ef09bd215e8",
+      "src/photonic_architecture_explorer/gaussian.py": "908e84962d8b5ee5be793108eaf3491ddb9465b77e51ff2817d52e5caf06261d",
+      "src/photonic_architecture_explorer/geometry.py": "a27b2c947ea3d31ebbbc4044ffd7d9d2dbedd69e8bb3bdf3f6aacbf42c38c7d2",
+      "src/photonic_architecture_explorer/inspector.py": "53f68106a7b2c13bcbc3df0f1a109480fbcf61b15e0f6f8604e8e403e606d6ed",
+      "src/photonic_architecture_explorer/mode_match.py": "d09627b5c2b611852958d8d9abc87aab71b6aac7857e48252d816603d8a47ab5",
+      "src/photonic_architecture_explorer/package_geometry.py": "dd5015af492087db9c65b2997408035b7bea8567c431faa7c9fc1d250e5367d9",
+      "src/photonic_architecture_explorer/placement.py": "80d597e81184b5ac5af5f2fc7aacba2c2ab3ee3b03b42c2eae828b0ea0f68cf2",
+      "src/photonic_architecture_explorer/sensitivity.py": "2240b26960deaa84dae001b754ebec676222418c0d121de94018c44b24426a9a",
+      "src/photonic_architecture_explorer/solver.py": "3255b530cc41b984d3bce1ccfded62796775f9ec1fd8f5974f037ad7ee136b51",
+      "src/photonic_architecture_explorer/workspace.py": "003c8ae16894230033de07e971663ff06dbb650533a35280cbe2aedb153b5bf1"
+    },
+    "fixture_sha256": "a8c1f47f7a89736cd3a98b1c527510bf40224884927981b8de212744940004f5",
+    "script_sha256": "df827240e536e5dd1f8a381ef23032b60387b3f4b717d35c5aff9f7581aebab9",
+    "contract_sha256": "6f5cfee40d168b64102ba90de9165b81f8b0d0ad308aafb6cb703a3fe690be98",
+    "result_sha256": "c556722cfdbfdb579913a3946ad1428130ada53ecf015b687c74fde6462a62c0",
+    "elapsed_seconds": 73.82271321899998
+  },
+  "input_sha256": "9d6d55bc8c4a06ca99c7ffcae205954a634678162986d2565c111b76df510988",
+  "exact_q": {
+    "status": "Completed",
+    "distance_values_m": [
+      0.00035355339059327376,
+      0.0007071067811865475,
+      0.001,
+      0.001414213562373095,
+      0.00282842712474619,
+      0.00565685424949238
+    ],
+    "accepted_count": 0,
+    "representatives": 0,
+    "geometry_count": 36,
+    "rejection_counts": {
+      "model_domain: 3w projected footprint/curvature exceeds 0.15": 141,
+      "model_domain: Gaussian divergence exceeds 0.1 rad": 3
+    },
+    "termination": "Frozen finite family exhausted",
+    "selection": "shortest path in best overlap bin, then distinct footprint and model margin alternatives"
+  },
+  "adapter_calls": 124160,
+  "deterministic_rerun": "All 36 search records match exactly; second run adds independent intermediate guard checks",
+  "geometries": [
+    {
+      "geometry_id": "G001",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 2857,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 1015
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.055499736438352196
+    },
+    {
+      "geometry_id": "G002",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 3221,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 651
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.08309385775057346
+    },
+    {
+      "geometry_id": "G003",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 3229,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 643
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.10722925218843668
+    },
+    {
+      "geometry_id": "G004",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 3205,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 667
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.21380057090965413
+    },
+    {
+      "geometry_id": "G005",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 3425,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 447
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.6245980667886676
+    },
+    {
+      "geometry_id": "G006",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 3304,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 568
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.6006154832998163
+    },
+    {
+      "geometry_id": "G007",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 2407,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 1465
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.026661187584910144
+    },
+    {
+      "geometry_id": "G008",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 3202,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 670
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.08124933167779466
+    },
+    {
+      "geometry_id": "G009",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 3213,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 659
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.10805041021215168
+    },
+    {
+      "geometry_id": "G010",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 3147,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 725
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.23201419002960158
+    },
+    {
+      "geometry_id": "G011",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 3353,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 519
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.7514848240337875
+    },
+    {
+      "geometry_id": "G012",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 3391,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 481
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.6769410411913811
+    },
+    {
+      "geometry_id": "G013",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 2446,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 1426
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.01222886907301899
+    },
+    {
+      "geometry_id": "G014",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 2249,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 1623
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.04443986235669724
+    },
+    {
+      "geometry_id": "G015",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 3234,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 638
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.10263440542680238
+    },
+    {
+      "geometry_id": "G016",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 3177,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 695
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.21245073139783915
+    },
+    {
+      "geometry_id": "G017",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 3470,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 402
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.8322783677849678
+    },
+    {
+      "geometry_id": "G018",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 3397,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 475
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.7316203774105445
+    },
+    {
+      "geometry_id": "G019",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 2439,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 1433
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.006297404576008524
+    },
+    {
+      "geometry_id": "G020",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 2510,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 1362
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.01290946410670239
+    },
+    {
+      "geometry_id": "G021",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 2343,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 1529
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.035243655053829905
+    },
+    {
+      "geometry_id": "G022",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 3139,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 733
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.16787662800142292
+    },
+    {
+      "geometry_id": "G023",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 3572,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 300
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.912467091537906
+    },
+    {
+      "geometry_id": "G024",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 3491,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 381
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.79674944973952
+    },
+    {
+      "geometry_id": "G025",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 2298,
+        "geometry: unintended reflector interception": 609,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 965
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.001742312466628317
+    },
+    {
+      "geometry_id": "G026",
+      "calls": 3872,
+      "counts": {
+        "geometry: unintended reflector interception": 577,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 853,
+        "valid_evaluations": 2442
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.0024357805650145584
+    },
+    {
+      "geometry_id": "G027",
+      "calls": 3872,
+      "counts": {
+        "geometry: unintended reflector interception": 527,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 1045,
+        "valid_evaluations": 2300
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.003406319096848011
+    },
+    {
+      "geometry_id": "G028",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 2359,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 1351,
+        "geometry: unintended reflector interception": 162
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.006246255337757166
+    },
+    {
+      "geometry_id": "G029",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 3646,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 226
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.9996127230044928
+    },
+    {
+      "geometry_id": "G030",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 3524,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 348
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.9335152064427352
+    },
+    {
+      "geometry_id": "G031",
+      "calls": 64,
+      "counts": {
+        "geometry: unintended reflector interception": 64
+      },
+      "termination": "Optimization terminated successfully.",
+      "best_overlap": null
+    },
+    {
+      "geometry_id": "G032",
+      "calls": 64,
+      "counts": {
+        "geometry: unintended reflector interception": 64
+      },
+      "termination": "Optimization terminated successfully.",
+      "best_overlap": null
+    },
+    {
+      "geometry_id": "G033",
+      "calls": 64,
+      "counts": {
+        "geometry: unintended reflector interception": 64
+      },
+      "termination": "Optimization terminated successfully.",
+      "best_overlap": null
+    },
+    {
+      "geometry_id": "G034",
+      "calls": 64,
+      "counts": {
+        "geometry: unintended reflector interception": 64
+      },
+      "termination": "Optimization terminated successfully.",
+      "best_overlap": null
+    },
+    {
+      "geometry_id": "G035",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 2017,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 1855
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.0020084986726880425
+    },
+    {
+      "geometry_id": "G036",
+      "calls": 3872,
+      "counts": {
+        "valid_evaluations": 3526,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 346
+      },
+      "termination": "Maximum number of iterations has been exceeded.",
+      "best_overlap": 0.9999366495865395
+    }
+  ],
+  "top": [
+    {
+      "id": "G036-NM",
+      "overlap": 0.9999366495865395,
+      "coordinates": [
+        0.9297793060560331,
+        0.9371087050150735,
+        0.9999910784027186,
+        0.9999599400694972
+      ],
+      "prescription": {
+        "contract_version": "M3A-1",
+        "coordinate_convention": "right-handed world XYZ; t=s cross d; target d is arriving direction",
+        "description": "M7A-REF-001: 1550 nm public-width SMF–AF45 Glass Waveguide concept proxy. Both external Gaussian fields and the fixed layout are explicit assumptions. Actual applicability and Total Coupling are Uncomputed.",
+        "wavelength_m": {
+          "value": 1.55e-06,
+          "unit": "m",
+          "provenance": "supplied",
+          "source": "Shared 1550 nm reporting wavelength in Corning PI1424 and Eaton et al. Fig. 5(c)",
+          "uncertainty": null
+        },
+        "ambient_index": {
+          "value": 1,
+          "unit": "1",
+          "provenance": "assumed",
+          "source": "Concept propagation in homogeneous air",
+          "uncertainty": null,
+          "quantity": "external_ambient_refractive_index"
+        },
+        "source": {
+          "position_m": {
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "unit": "m",
+            "provenance": "synthetic",
+            "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "propagation_direction": {
+            "value": [
+              1,
+              0,
+              0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "sagittal_axis": {
+            "value": [
+              0,
+              1,
+              0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "reference_plane": {
+            "value": {
+              "id": "m7a-smf-external",
+              "frame_id": "world",
+              "side": "external",
+              "origin_m": [
+                0,
+                0,
+                0
+              ],
+              "normal": [
+                1,
+                0,
+                0
+              ]
+            },
+            "unit": "plane",
+            "provenance": "synthetic",
+            "source": "Concept air-side plane adjacent to an ideal normal facet; Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "mfd_ts_m": {
+            "value": [
+              1.04e-05,
+              1.04e-05
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "1/e² circular external Gaussian proxy using the width scale from Corning SMF-28 Ultra PI1424, Optical Specifications, 1550 nm MFD 10.4 ± 0.5 µm",
+            "uncertainty": null
+          },
+          "wavefront_curvature_ts_per_m": {
+            "value": [
+              0,
+              0
+            ],
+            "unit": "m^-1",
+            "provenance": "assumed",
+            "source": "Concept-only flat wavefront at the external reference plane; phase not supplied by the cited width source",
+            "uncertainty": null
+          },
+          "polarization": {
+            "value": {
+              "treatment": "scalar_ignored"
+            },
+            "unit": "1",
+            "provenance": "assumed",
+            "source": "Current scalar Gaussian model; no polarization transport",
+            "uncertainty": null
+          },
+          "mode_evidence": {
+            "value": {
+              "kind": "gaussian_assumption"
+            },
+            "unit": "evidence",
+            "provenance": "assumed",
+            "source": "Published size scale only; external complex field and Gaussian fit unverified",
+            "uncertainty": null
+          }
+        },
+        "target": {
+          "position_m": {
+            "value": [
+              0.002,
+              0,
+              0.002
+            ],
+            "unit": "m",
+            "provenance": "synthetic",
+            "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "propagation_direction": {
+            "value": [
+              1,
+              0,
+              0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "sagittal_axis": {
+            "value": [
+              0,
+              1,
+              0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "reference_plane": {
+            "value": {
+              "id": "m7a-af45-external",
+              "frame_id": "world",
+              "side": "external",
+              "origin_m": [
+                0.002,
+                0,
+                0.002
+              ],
+              "normal": [
+                1,
+                0,
+                0
+              ]
+            },
+            "unit": "plane",
+            "provenance": "synthetic",
+            "source": "Concept air-side plane adjacent to an ideal normal facet; Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "mfd_ts_m": {
+            "value": [
+              1e-05,
+              1e-05
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "1/e² circular external Gaussian proxy using the width scale from Eaton et al., Optics Express 13, 4708–4716 (2005), §3.3.1 and Fig. 5(c), doi:10.1364/OPEX.13.004708, AF45 near-field MFD 10 µm",
+            "uncertainty": null
+          },
+          "wavefront_curvature_ts_per_m": {
+            "value": [
+              0,
+              0
+            ],
+            "unit": "m^-1",
+            "provenance": "assumed",
+            "source": "Concept-only flat wavefront at the external reference plane; phase not supplied by the cited width source",
+            "uncertainty": null
+          },
+          "polarization": {
+            "value": {
+              "treatment": "scalar_ignored"
+            },
+            "unit": "1",
+            "provenance": "assumed",
+            "source": "Current scalar Gaussian model; no polarization transport",
+            "uncertainty": null
+          },
+          "mode_evidence": {
+            "value": {
+              "kind": "gaussian_assumption"
+            },
+            "unit": "evidence",
+            "provenance": "assumed",
+            "source": "Published size scale only; external complex field and Gaussian fit unverified",
+            "uncertainty": null
+          }
+        },
+        "design": {
+          "reflectors": [
+            {
+              "vertex_m": {
+                "value": [
+                  0.00565685424949238,
+                  0.0,
+                  0.0
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "illuminated_normal": {
+                "value": [
+                  -0.9944123587145177,
+                  0.0,
+                  0.10556543390631798
+                ],
+                "unit": "1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "principal_curvature_ts_per_m": {
+                "value": [
+                  86.12763876971054,
+                  87.29434769427674
+                ],
+                "unit": "m^-1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "half_aperture_ts_m": {
+                "value": [
+                  0.0021590730205645462,
+                  0.0021470088950164687
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              }
+            },
+            {
+              "vertex_m": {
+                "value": [
+                  -0.00365685424949238,
+                  0.0,
+                  0.002
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "illuminated_normal": {
+                "value": [
+                  0.9944123587145177,
+                  0.0,
+                  -0.10556543390631798
+                ],
+                "unit": "1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "principal_curvature_ts_per_m": {
+                "value": [
+                  89.60107852162069,
+                  90.42663690817979
+                ],
+                "unit": "m^-1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "half_aperture_ts_m": {
+                "value": [
+                  0.0022320960747395963,
+                  0.0022116490763332748
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              }
+            }
+          ]
+        },
+        "reflectors": [
+          {
+            "surface_prescription": {
+              "value": "quadratic_patch",
+              "unit": "model",
+              "provenance": "assumed",
+              "source": "M5A autonomous concept prescription; not a measured device fact",
+              "uncertainty": null
+            }
+          },
+          {
+            "surface_prescription": {
+              "value": "quadratic_patch",
+              "unit": "model",
+              "provenance": "assumed",
+              "source": "M5A autonomous concept prescription; not a measured device fact",
+              "uncertainty": null
+            }
+          }
+        ]
+      },
+      "evaluation": {
+        "input_contract": {
+          "status": "Pass",
+          "scope": "explicit nominal external Gaussian contract; field fit not certified"
+        },
+        "geometry": {
+          "status": "Pass",
+          "scope": "fixed-port specular vertex path",
+          "lengths": [
+            0.00565685424949238,
+            0.009526025719263042,
+            0.00565685424949238
+          ],
+          "directions": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              -0.9777118783283416,
+              0.0,
+              0.20995114425900638
+            ],
+            [
+              1.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "cosines": [
+            0.9944123587145179,
+            0.9944123587145179
+          ],
+          "patch_obstruction": "Pass (chief ray, quadratic patches only)"
+        },
+        "model_domain": {
+          "status": "Pass",
+          "scope": "aligned coplanar scalar paraxial model",
+          "aperture_tail_union_estimate": 4.976768459417367e-15
+        },
+        "design_constraints": {
+          "status": "Uncomputed",
+          "scope": "declared nominal bounds only; no tolerance/yield",
+          "checks": [
+            {
+              "path": "reflectors[0].vertex_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[0].principal_curvature_bounds_per_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[0].half_aperture_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[0].normal_constraints",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].vertex_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].principal_curvature_bounds_per_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].half_aperture_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].normal_constraints",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            }
+          ]
+        },
+        "gaussian_mode_matching": {
+          "status": "Approximate",
+          "meaning": "computed within model, not a product efficiency requirement",
+          "normalized_mode_overlap": 0.9999366495865395,
+          "log_overlap": -6.335242018273846e-05,
+          "mismatch_db": 0.0002751360650057951,
+          "underflow": false,
+          "output_axes": [
+            {
+              "radius_m": 5.029852236081624e-06,
+              "curvature_per_m": 0.1203314768960485,
+              "waist_radius_m": 5.029852235985874e-06,
+              "waist_distance_m": -3.1640002076671614e-10,
+              "rayleigh_range_m": 5.127771073647178e-05,
+              "divergence_rad": 0.09809042103762136
+            },
+            {
+              "radius_m": 5.04799653273853e-06,
+              "curvature_per_m": -1.7467647200907286,
+              "waist_radius_m": 5.047996512195221e-06,
+              "waist_distance_m": 4.65958189393989e-09,
+              "rayleigh_range_m": 5.1648328011912354e-05,
+              "divergence_rad": 0.09773784953950364
+            }
+          ],
+          "scope": "normalized scalar paraxial Gaussian diagnostic; not total coupling",
+          "conditions": [
+            "explicit scalar-ignored polarization",
+            "finite-field aberration unvalidated",
+            "package/bounds status remains separate"
+          ]
+        },
+        "package_feasibility": {
+          "status": "Uncomputed",
+          "reason": "full finite-beam/body/support clearance not evaluated",
+          "envelope_geometry": {
+            "status": "Uncomputed",
+            "scope": "declared world AABBs and quadratic patch extents only",
+            "checks": [
+              {
+                "path": "package.frame_id",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "package.available_volume",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "package.required_clearance_m",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "package.keepout_bodies",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "reflectors[0].body_envelope",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "reflectors[1].body_envelope",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              }
+            ]
+          },
+          "finite_beam_clearance": {
+            "status": "Uncomputed"
+          }
+        },
+        "physical_losses": {
+          "status": "Uncomputed",
+          "total_coupling": null,
+          "reason": "coating/device interfaces/polarization/scatter not supplied"
+        },
+        "fabrication": {
+          "status": "Uncomputed",
+          "reason": "no process or assembly constraints"
+        },
+        "actual_applicability": {
+          "status": "Uncomputed",
+          "reason": "external input adapter does not independently certify actual Port field or package performance"
+        },
+        "input_snapshot": {
+          "ambient_index": {
+            "provenance": "assumed",
+            "quantity": "external_ambient_refractive_index",
+            "source": "Concept propagation in homogeneous air",
+            "uncertainty": null,
+            "unit": "1",
+            "value": 1
+          },
+          "contract_version": "M3A-1",
+          "coordinate_convention": "right-handed world XYZ; t=s cross d; target d is arriving direction",
+          "description": "M7A-REF-001: 1550 nm public-width SMF–AF45 Glass Waveguide concept proxy. Both external Gaussian fields and the fixed layout are explicit assumptions. Actual applicability and Total Coupling are Uncomputed.",
+          "design": {
+            "reflectors": [
+              {
+                "half_aperture_ts_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    0.0021590730205645462,
+                    0.0021470088950164687
+                  ]
+                },
+                "illuminated_normal": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "1",
+                  "value": [
+                    -0.9944123587145177,
+                    0.0,
+                    0.10556543390631798
+                  ]
+                },
+                "principal_curvature_ts_per_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m^-1",
+                  "value": [
+                    86.12763876971054,
+                    87.29434769427674
+                  ]
+                },
+                "vertex_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    0.00565685424949238,
+                    0.0,
+                    0.0
+                  ]
+                }
+              },
+              {
+                "half_aperture_ts_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    0.0022320960747395963,
+                    0.0022116490763332748
+                  ]
+                },
+                "illuminated_normal": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "1",
+                  "value": [
+                    0.9944123587145177,
+                    0.0,
+                    -0.10556543390631798
+                  ]
+                },
+                "principal_curvature_ts_per_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m^-1",
+                  "value": [
+                    89.60107852162069,
+                    90.42663690817979
+                  ]
+                },
+                "vertex_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    -0.00365685424949238,
+                    0.0,
+                    0.002
+                  ]
+                }
+              }
+            ]
+          },
+          "reflectors": [
+            {
+              "surface_prescription": {
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null,
+                "unit": "model",
+                "value": "quadratic_patch"
+              }
+            },
+            {
+              "surface_prescription": {
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null,
+                "unit": "model",
+                "value": "quadratic_patch"
+              }
+            }
+          ],
+          "source": {
+            "mfd_ts_m": {
+              "provenance": "assumed",
+              "source": "1/e² circular external Gaussian proxy using the width scale from Corning SMF-28 Ultra PI1424, Optical Specifications, 1550 nm MFD 10.4 ± 0.5 µm",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                1.04e-05,
+                1.04e-05
+              ]
+            },
+            "mode_evidence": {
+              "provenance": "assumed",
+              "source": "Published size scale only; external complex field and Gaussian fit unverified",
+              "uncertainty": null,
+              "unit": "evidence",
+              "value": {
+                "kind": "gaussian_assumption"
+              }
+            },
+            "polarization": {
+              "provenance": "assumed",
+              "source": "Current scalar Gaussian model; no polarization transport",
+              "uncertainty": null,
+              "unit": "1",
+              "value": {
+                "treatment": "scalar_ignored"
+              }
+            },
+            "position_m": {
+              "provenance": "synthetic",
+              "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            "propagation_direction": {
+              "provenance": "synthetic",
+              "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                1,
+                0,
+                0
+              ]
+            },
+            "reference_plane": {
+              "provenance": "synthetic",
+              "source": "Concept air-side plane adjacent to an ideal normal facet; Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "plane",
+              "value": {
+                "frame_id": "world",
+                "id": "m7a-smf-external",
+                "normal": [
+                  1,
+                  0,
+                  0
+                ],
+                "origin_m": [
+                  0,
+                  0,
+                  0
+                ],
+                "side": "external"
+              }
+            },
+            "sagittal_axis": {
+              "provenance": "synthetic",
+              "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                0,
+                1,
+                0
+              ]
+            },
+            "wavefront_curvature_ts_per_m": {
+              "provenance": "assumed",
+              "source": "Concept-only flat wavefront at the external reference plane; phase not supplied by the cited width source",
+              "uncertainty": null,
+              "unit": "m^-1",
+              "value": [
+                0,
+                0
+              ]
+            }
+          },
+          "target": {
+            "mfd_ts_m": {
+              "provenance": "assumed",
+              "source": "1/e² circular external Gaussian proxy using the width scale from Eaton et al., Optics Express 13, 4708–4716 (2005), §3.3.1 and Fig. 5(c), doi:10.1364/OPEX.13.004708, AF45 near-field MFD 10 µm",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                1e-05,
+                1e-05
+              ]
+            },
+            "mode_evidence": {
+              "provenance": "assumed",
+              "source": "Published size scale only; external complex field and Gaussian fit unverified",
+              "uncertainty": null,
+              "unit": "evidence",
+              "value": {
+                "kind": "gaussian_assumption"
+              }
+            },
+            "polarization": {
+              "provenance": "assumed",
+              "source": "Current scalar Gaussian model; no polarization transport",
+              "uncertainty": null,
+              "unit": "1",
+              "value": {
+                "treatment": "scalar_ignored"
+              }
+            },
+            "position_m": {
+              "provenance": "synthetic",
+              "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                0.002,
+                0,
+                0.002
+              ]
+            },
+            "propagation_direction": {
+              "provenance": "synthetic",
+              "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                1,
+                0,
+                0
+              ]
+            },
+            "reference_plane": {
+              "provenance": "synthetic",
+              "source": "Concept air-side plane adjacent to an ideal normal facet; Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "plane",
+              "value": {
+                "frame_id": "world",
+                "id": "m7a-af45-external",
+                "normal": [
+                  1,
+                  0,
+                  0
+                ],
+                "origin_m": [
+                  0.002,
+                  0,
+                  0.002
+                ],
+                "side": "external"
+              }
+            },
+            "sagittal_axis": {
+              "provenance": "synthetic",
+              "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                0,
+                1,
+                0
+              ]
+            },
+            "wavefront_curvature_ts_per_m": {
+              "provenance": "assumed",
+              "source": "Concept-only flat wavefront at the external reference plane; phase not supplied by the cited width source",
+              "uncertainty": null,
+              "unit": "m^-1",
+              "value": [
+                0,
+                0
+              ]
+            }
+          },
+          "wavelength_m": {
+            "provenance": "supplied",
+            "source": "Shared 1550 nm reporting wavelength in Corning PI1424 and Eaton et al. Fig. 5(c)",
+            "uncertainty": null,
+            "unit": "m",
+            "value": 1.55e-06
+          }
+        },
+        "uncertainty_treatment": "metadata preserved; no uncertainty propagation or yield calculation",
+        "evaluated_ports": {
+          "source": {
+            "position_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "direction": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "sagittal_axis": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "complex_q_ts_m": [
+              [
+                -0.0,
+                5.4805590550366456e-05
+              ],
+              [
+                -0.0,
+                5.4805590550366456e-05
+              ]
+            ],
+            "wavelength_m": 1.55e-06,
+            "ambient_index": 1
+          },
+          "target": {
+            "position_m": [
+              0.002,
+              0.0,
+              0.002
+            ],
+            "direction": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "sagittal_axis": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "complex_q_ts_m": [
+              [
+                -0.0,
+                5.0670849251448287e-05
+              ],
+              [
+                -0.0,
+                5.0670849251448287e-05
+              ]
+            ],
+            "wavelength_m": 1.55e-06,
+            "ambient_index": 1
+          }
+        },
+        "samples": [
+          {
+            "plane": "source",
+            "axes": [
+              {
+                "radius_m": 5.2e-06,
+                "curvature_per_m": 0.0,
+                "waist_radius_m": 5.2e-06,
+                "waist_distance_m": 0.0,
+                "rayleigh_range_m": 5.4805590550366456e-05,
+                "divergence_rad": 0.09488083145862991
+              },
+              {
+                "radius_m": 5.2e-06,
+                "curvature_per_m": 0.0,
+                "waist_radius_m": 5.2e-06,
+                "waist_distance_m": 0.0,
+                "rayleigh_range_m": 5.4805590550366456e-05,
+                "divergence_rad": 0.09488083145862991
+              }
+            ]
+          },
+          {
+            "plane": "M1_before",
+            "axes": [
+              {
+                "radius_m": 0.0005367522237541172,
+                "curvature_per_m": 176.76010385997955,
+                "waist_radius_m": 5.2e-06,
+                "waist_distance_m": -0.00565685424949238,
+                "rayleigh_range_m": 5.4805590550366456e-05,
+                "divergence_rad": 0.09488083145862991
+              },
+              {
+                "radius_m": 0.0005367522237541172,
+                "curvature_per_m": 176.76010385997955,
+                "waist_radius_m": 5.2e-06,
+                "waist_distance_m": -0.00565685424949238,
+                "rayleigh_range_m": 5.4805590550366456e-05,
+                "divergence_rad": 0.09488083145862991
+              }
+            ],
+            "surface_radii_m": [
+              0.0005397682551411363,
+              0.0005367522237541172
+            ],
+            "footprint_slope_3w": 0.1405663057382044,
+            "aperture_tail_union_estimate": 2.4883842297086642e-15,
+            "powers_per_m": [
+              173.22318656829285,
+              173.61315638622193
+            ]
+          },
+          {
+            "plane": "M1_after",
+            "axes": [
+              {
+                "radius_m": 0.0005367522237541173,
+                "curvature_per_m": 3.5369172916867013,
+                "waist_radius_m": 0.0002339102951280429,
+                "waist_distance_m": -0.2290380470322553,
+                "rayleigh_range_m": 0.1108962468736874,
+                "divergence_rad": 0.002109271519301014
+              },
+              {
+                "radius_m": 0.0005367522237541173,
+                "curvature_per_m": 3.1469474737576255,
+                "waist_radius_m": 0.0002565626398007201,
+                "waist_distance_m": -0.24516607756966577,
+                "rayleigh_range_m": 0.13341510594349915,
+                "divergence_rad": 0.0019230404082531223
+              }
+            ]
+          },
+          {
+            "plane": "M2_before",
+            "axes": [
+              {
+                "radius_m": 0.0005549059806398048,
+                "curvature_per_m": 3.4469200201198618,
+                "waist_radius_m": 0.0002339102951280429,
+                "waist_distance_m": -0.23856407275151834,
+                "rayleigh_range_m": 0.1108962468736874,
+                "divergence_rad": 0.002109271519301014
+              },
+              {
+                "radius_m": 0.0005529122690833186,
+                "curvature_per_m": 3.0809159172776135,
+                "waist_radius_m": 0.0002565626398007201,
+                "waist_distance_m": -0.25469210328892883,
+                "rayleigh_range_m": 0.13341510594349915,
+                "divergence_rad": 0.0019230404082531223
+              }
+            ],
+            "surface_radii_m": [
+              0.0005580240186848992,
+              0.0005529122690833186
+            ],
+            "footprint_slope_3w": 0.14999866174540796,
+            "aperture_tail_union_estimate": 2.4883842297087025e-15,
+            "powers_per_m": [
+              180.2091008551995,
+              179.8427305969687
+            ]
+          },
+          {
+            "plane": "M2_after",
+            "axes": [
+              {
+                "radius_m": 0.0005549059806398071,
+                "curvature_per_m": -176.7621808350796,
+                "waist_radius_m": 5.029852235985874e-06,
+                "waist_distance_m": 0.005656853933092359,
+                "rayleigh_range_m": 5.127771073647178e-05,
+                "divergence_rad": 0.09809042103762136
+              },
+              {
+                "radius_m": 0.0005529122690833196,
+                "curvature_per_m": -176.7618146796911,
+                "waist_radius_m": 5.047996512195221e-06,
+                "waist_distance_m": 0.005656858909074274,
+                "rayleigh_range_m": 5.1648328011912354e-05,
+                "divergence_rad": 0.09773784953950364
+              }
+            ]
+          },
+          {
+            "plane": "target",
+            "axes": [
+              {
+                "radius_m": 5.029852236081624e-06,
+                "curvature_per_m": 0.1203314768960485,
+                "waist_radius_m": 5.029852235985874e-06,
+                "waist_distance_m": -3.1640002076671614e-10,
+                "rayleigh_range_m": 5.127771073647178e-05,
+                "divergence_rad": 0.09809042103762136
+              },
+              {
+                "radius_m": 5.04799653273853e-06,
+                "curvature_per_m": -1.7467647200907286,
+                "waist_radius_m": 5.047996512195221e-06,
+                "waist_distance_m": 4.65958189393989e-09,
+                "rayleigh_range_m": 5.1648328011912354e-05,
+                "divergence_rad": 0.09773784953950364
+              }
+            ]
+          }
+        ]
+      },
+      "independent_validation": {
+        "status": "Pass",
+        "quadrature_overlap": [
+          0.9999366495865397,
+          0.9999366495865397
+        ],
+        "q_output_m": [
+          [
+            3.164000242307575e-10,
+            5.1277710736472155e-05
+          ],
+          [
+            -4.6595818956130434e-09,
+            5.1648328011912585e-05
+          ]
+        ],
+        "surface_checks": [
+          {
+            "footprint_m": [
+              0.0005397682551411363,
+              0.0005367522237541172
+            ],
+            "max_3w_curvature": 0.1405663057382044,
+            "outgoing_divergence_rad": [
+              0.0021092715193010017,
+              0.0019230404082531331
+            ]
+          },
+          {
+            "footprint_m": [
+              0.000558024018684899,
+              0.0005529122690833187
+            ],
+            "max_3w_curvature": 0.14999866174540788,
+            "outgoing_divergence_rad": [
+              0.09809042103762096,
+              0.09773784953950342
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "G029-NM",
+      "overlap": 0.9996127230044928,
+      "coordinates": [
+        0.9282291300743997,
+        0.971082452985288,
+        0.9999952542051616,
+        0.9999980211711967
+      ],
+      "prescription": {
+        "contract_version": "M3A-1",
+        "coordinate_convention": "right-handed world XYZ; t=s cross d; target d is arriving direction",
+        "description": "M7A-REF-001: 1550 nm public-width SMF–AF45 Glass Waveguide concept proxy. Both external Gaussian fields and the fixed layout are explicit assumptions. Actual applicability and Total Coupling are Uncomputed.",
+        "wavelength_m": {
+          "value": 1.55e-06,
+          "unit": "m",
+          "provenance": "supplied",
+          "source": "Shared 1550 nm reporting wavelength in Corning PI1424 and Eaton et al. Fig. 5(c)",
+          "uncertainty": null
+        },
+        "ambient_index": {
+          "value": 1,
+          "unit": "1",
+          "provenance": "assumed",
+          "source": "Concept propagation in homogeneous air",
+          "uncertainty": null,
+          "quantity": "external_ambient_refractive_index"
+        },
+        "source": {
+          "position_m": {
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "unit": "m",
+            "provenance": "synthetic",
+            "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "propagation_direction": {
+            "value": [
+              1,
+              0,
+              0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "sagittal_axis": {
+            "value": [
+              0,
+              1,
+              0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "reference_plane": {
+            "value": {
+              "id": "m7a-smf-external",
+              "frame_id": "world",
+              "side": "external",
+              "origin_m": [
+                0,
+                0,
+                0
+              ],
+              "normal": [
+                1,
+                0,
+                0
+              ]
+            },
+            "unit": "plane",
+            "provenance": "synthetic",
+            "source": "Concept air-side plane adjacent to an ideal normal facet; Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "mfd_ts_m": {
+            "value": [
+              1.04e-05,
+              1.04e-05
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "1/e² circular external Gaussian proxy using the width scale from Corning SMF-28 Ultra PI1424, Optical Specifications, 1550 nm MFD 10.4 ± 0.5 µm",
+            "uncertainty": null
+          },
+          "wavefront_curvature_ts_per_m": {
+            "value": [
+              0,
+              0
+            ],
+            "unit": "m^-1",
+            "provenance": "assumed",
+            "source": "Concept-only flat wavefront at the external reference plane; phase not supplied by the cited width source",
+            "uncertainty": null
+          },
+          "polarization": {
+            "value": {
+              "treatment": "scalar_ignored"
+            },
+            "unit": "1",
+            "provenance": "assumed",
+            "source": "Current scalar Gaussian model; no polarization transport",
+            "uncertainty": null
+          },
+          "mode_evidence": {
+            "value": {
+              "kind": "gaussian_assumption"
+            },
+            "unit": "evidence",
+            "provenance": "assumed",
+            "source": "Published size scale only; external complex field and Gaussian fit unverified",
+            "uncertainty": null
+          }
+        },
+        "target": {
+          "position_m": {
+            "value": [
+              0.002,
+              0,
+              0.002
+            ],
+            "unit": "m",
+            "provenance": "synthetic",
+            "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "propagation_direction": {
+            "value": [
+              1,
+              0,
+              0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "sagittal_axis": {
+            "value": [
+              0,
+              1,
+              0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "reference_plane": {
+            "value": {
+              "id": "m7a-af45-external",
+              "frame_id": "world",
+              "side": "external",
+              "origin_m": [
+                0.002,
+                0,
+                0.002
+              ],
+              "normal": [
+                1,
+                0,
+                0
+              ]
+            },
+            "unit": "plane",
+            "provenance": "synthetic",
+            "source": "Concept air-side plane adjacent to an ideal normal facet; Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "mfd_ts_m": {
+            "value": [
+              1e-05,
+              1e-05
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "1/e² circular external Gaussian proxy using the width scale from Eaton et al., Optics Express 13, 4708–4716 (2005), §3.3.1 and Fig. 5(c), doi:10.1364/OPEX.13.004708, AF45 near-field MFD 10 µm",
+            "uncertainty": null
+          },
+          "wavefront_curvature_ts_per_m": {
+            "value": [
+              0,
+              0
+            ],
+            "unit": "m^-1",
+            "provenance": "assumed",
+            "source": "Concept-only flat wavefront at the external reference plane; phase not supplied by the cited width source",
+            "uncertainty": null
+          },
+          "polarization": {
+            "value": {
+              "treatment": "scalar_ignored"
+            },
+            "unit": "1",
+            "provenance": "assumed",
+            "source": "Current scalar Gaussian model; no polarization transport",
+            "uncertainty": null
+          },
+          "mode_evidence": {
+            "value": {
+              "kind": "gaussian_assumption"
+            },
+            "unit": "evidence",
+            "provenance": "assumed",
+            "source": "Published size scale only; external complex field and Gaussian fit unverified",
+            "uncertainty": null
+          }
+        },
+        "design": {
+          "reflectors": [
+            {
+              "vertex_m": {
+                "value": [
+                  0.00282842712474619,
+                  0.0,
+                  0.0
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "illuminated_normal": {
+                "value": [
+                  -0.968853755208019,
+                  0.0,
+                  0.24763360236308762
+                ],
+                "unit": "1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "principal_curvature_ts_per_m": {
+                "value": [
+                  167.5245404638587,
+                  180.8927335319436
+                ],
+                "unit": "m^-1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "half_aperture_ts_m": {
+                "value": [
+                  0.0011081709311500311,
+                  0.0010736555680570747
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              }
+            },
+            {
+              "vertex_m": {
+                "value": [
+                  -0.00082842712474619,
+                  0.0,
+                  0.002
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "illuminated_normal": {
+                "value": [
+                  0.968853755208019,
+                  0.0,
+                  -0.24763360236308762
+                ],
+                "unit": "1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "principal_curvature_ts_per_m": {
+                "value": [
+                  174.86791851383424,
+                  183.978592084415
+                ],
+                "unit": "m^-1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "half_aperture_ts_m": {
+                "value": [
+                  0.001143714939371283,
+                  0.0010870808497244803
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              }
+            }
+          ]
+        },
+        "reflectors": [
+          {
+            "surface_prescription": {
+              "value": "quadratic_patch",
+              "unit": "model",
+              "provenance": "assumed",
+              "source": "M5A autonomous concept prescription; not a measured device fact",
+              "uncertainty": null
+            }
+          },
+          {
+            "surface_prescription": {
+              "value": "quadratic_patch",
+              "unit": "model",
+              "provenance": "assumed",
+              "source": "M5A autonomous concept prescription; not a measured device fact",
+              "uncertainty": null
+            }
+          }
+        ]
+      },
+      "evaluation": {
+        "input_contract": {
+          "status": "Pass",
+          "scope": "explicit nominal external Gaussian contract; field fit not certified"
+        },
+        "geometry": {
+          "status": "Pass",
+          "scope": "fixed-port specular vertex path",
+          "lengths": [
+            0.00282842712474619,
+            0.004168043066239896,
+            0.00282842712474619
+          ],
+          "directions": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              -0.8773551979613604,
+              0.0,
+              0.4798414911303337
+            ],
+            [
+              1.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "cosines": [
+            0.9688537552080192,
+            0.9688537552080193
+          ],
+          "patch_obstruction": "Pass (chief ray, quadratic patches only)"
+        },
+        "model_domain": {
+          "status": "Pass",
+          "scope": "aligned coplanar scalar paraxial model",
+          "aperture_tail_union_estimate": 4.976768459417392e-15
+        },
+        "design_constraints": {
+          "status": "Uncomputed",
+          "scope": "declared nominal bounds only; no tolerance/yield",
+          "checks": [
+            {
+              "path": "reflectors[0].vertex_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[0].principal_curvature_bounds_per_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[0].half_aperture_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[0].normal_constraints",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].vertex_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].principal_curvature_bounds_per_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].half_aperture_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].normal_constraints",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            }
+          ]
+        },
+        "gaussian_mode_matching": {
+          "status": "Approximate",
+          "meaning": "computed within model, not a product efficiency requirement",
+          "normalized_mode_overlap": 0.9996127230044928,
+          "log_overlap": -0.00038735200661021985,
+          "mismatch_db": 0.001682248390249704,
+          "underflow": false,
+          "output_axes": [
+            {
+              "radius_m": 5.038320794918069e-06,
+              "curvature_per_m": -7.7550301932494765,
+              "waist_radius_m": 5.038320393864516e-06,
+              "waist_distance_m": 2.0528775103011848e-08,
+              "rayleigh_range_m": 5.145051632133887e-05,
+              "divergence_rad": 0.09792555554539491
+            },
+            {
+              "radius_m": 5.135562675209975e-06,
+              "curvature_per_m": 34.71769396062239,
+              "waist_radius_m": 5.135553831242404e-06,
+              "waist_distance_m": -9.920598166004643e-08,
+              "rayleigh_range_m": 5.345554310305093e-05,
+              "divergence_rad": 0.0960714929290335
+            }
+          ],
+          "scope": "normalized scalar paraxial Gaussian diagnostic; not total coupling",
+          "conditions": [
+            "explicit scalar-ignored polarization",
+            "finite-field aberration unvalidated",
+            "package/bounds status remains separate"
+          ]
+        },
+        "package_feasibility": {
+          "status": "Uncomputed",
+          "reason": "full finite-beam/body/support clearance not evaluated",
+          "envelope_geometry": {
+            "status": "Uncomputed",
+            "scope": "declared world AABBs and quadratic patch extents only",
+            "checks": [
+              {
+                "path": "package.frame_id",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "package.available_volume",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "package.required_clearance_m",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "package.keepout_bodies",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "reflectors[0].body_envelope",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "reflectors[1].body_envelope",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              }
+            ]
+          },
+          "finite_beam_clearance": {
+            "status": "Uncomputed"
+          }
+        },
+        "physical_losses": {
+          "status": "Uncomputed",
+          "total_coupling": null,
+          "reason": "coating/device interfaces/polarization/scatter not supplied"
+        },
+        "fabrication": {
+          "status": "Uncomputed",
+          "reason": "no process or assembly constraints"
+        },
+        "actual_applicability": {
+          "status": "Uncomputed",
+          "reason": "external input adapter does not independently certify actual Port field or package performance"
+        },
+        "input_snapshot": {
+          "ambient_index": {
+            "provenance": "assumed",
+            "quantity": "external_ambient_refractive_index",
+            "source": "Concept propagation in homogeneous air",
+            "uncertainty": null,
+            "unit": "1",
+            "value": 1
+          },
+          "contract_version": "M3A-1",
+          "coordinate_convention": "right-handed world XYZ; t=s cross d; target d is arriving direction",
+          "description": "M7A-REF-001: 1550 nm public-width SMF–AF45 Glass Waveguide concept proxy. Both external Gaussian fields and the fixed layout are explicit assumptions. Actual applicability and Total Coupling are Uncomputed.",
+          "design": {
+            "reflectors": [
+              {
+                "half_aperture_ts_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    0.0011081709311500311,
+                    0.0010736555680570747
+                  ]
+                },
+                "illuminated_normal": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "1",
+                  "value": [
+                    -0.968853755208019,
+                    0.0,
+                    0.24763360236308762
+                  ]
+                },
+                "principal_curvature_ts_per_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m^-1",
+                  "value": [
+                    167.5245404638587,
+                    180.8927335319436
+                  ]
+                },
+                "vertex_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    0.00282842712474619,
+                    0.0,
+                    0.0
+                  ]
+                }
+              },
+              {
+                "half_aperture_ts_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    0.001143714939371283,
+                    0.0010870808497244803
+                  ]
+                },
+                "illuminated_normal": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "1",
+                  "value": [
+                    0.968853755208019,
+                    0.0,
+                    -0.24763360236308762
+                  ]
+                },
+                "principal_curvature_ts_per_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m^-1",
+                  "value": [
+                    174.86791851383424,
+                    183.978592084415
+                  ]
+                },
+                "vertex_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    -0.00082842712474619,
+                    0.0,
+                    0.002
+                  ]
+                }
+              }
+            ]
+          },
+          "reflectors": [
+            {
+              "surface_prescription": {
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null,
+                "unit": "model",
+                "value": "quadratic_patch"
+              }
+            },
+            {
+              "surface_prescription": {
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null,
+                "unit": "model",
+                "value": "quadratic_patch"
+              }
+            }
+          ],
+          "source": {
+            "mfd_ts_m": {
+              "provenance": "assumed",
+              "source": "1/e² circular external Gaussian proxy using the width scale from Corning SMF-28 Ultra PI1424, Optical Specifications, 1550 nm MFD 10.4 ± 0.5 µm",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                1.04e-05,
+                1.04e-05
+              ]
+            },
+            "mode_evidence": {
+              "provenance": "assumed",
+              "source": "Published size scale only; external complex field and Gaussian fit unverified",
+              "uncertainty": null,
+              "unit": "evidence",
+              "value": {
+                "kind": "gaussian_assumption"
+              }
+            },
+            "polarization": {
+              "provenance": "assumed",
+              "source": "Current scalar Gaussian model; no polarization transport",
+              "uncertainty": null,
+              "unit": "1",
+              "value": {
+                "treatment": "scalar_ignored"
+              }
+            },
+            "position_m": {
+              "provenance": "synthetic",
+              "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            "propagation_direction": {
+              "provenance": "synthetic",
+              "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                1,
+                0,
+                0
+              ]
+            },
+            "reference_plane": {
+              "provenance": "synthetic",
+              "source": "Concept air-side plane adjacent to an ideal normal facet; Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "plane",
+              "value": {
+                "frame_id": "world",
+                "id": "m7a-smf-external",
+                "normal": [
+                  1,
+                  0,
+                  0
+                ],
+                "origin_m": [
+                  0,
+                  0,
+                  0
+                ],
+                "side": "external"
+              }
+            },
+            "sagittal_axis": {
+              "provenance": "synthetic",
+              "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                0,
+                1,
+                0
+              ]
+            },
+            "wavefront_curvature_ts_per_m": {
+              "provenance": "assumed",
+              "source": "Concept-only flat wavefront at the external reference plane; phase not supplied by the cited width source",
+              "uncertainty": null,
+              "unit": "m^-1",
+              "value": [
+                0,
+                0
+              ]
+            }
+          },
+          "target": {
+            "mfd_ts_m": {
+              "provenance": "assumed",
+              "source": "1/e² circular external Gaussian proxy using the width scale from Eaton et al., Optics Express 13, 4708–4716 (2005), §3.3.1 and Fig. 5(c), doi:10.1364/OPEX.13.004708, AF45 near-field MFD 10 µm",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                1e-05,
+                1e-05
+              ]
+            },
+            "mode_evidence": {
+              "provenance": "assumed",
+              "source": "Published size scale only; external complex field and Gaussian fit unverified",
+              "uncertainty": null,
+              "unit": "evidence",
+              "value": {
+                "kind": "gaussian_assumption"
+              }
+            },
+            "polarization": {
+              "provenance": "assumed",
+              "source": "Current scalar Gaussian model; no polarization transport",
+              "uncertainty": null,
+              "unit": "1",
+              "value": {
+                "treatment": "scalar_ignored"
+              }
+            },
+            "position_m": {
+              "provenance": "synthetic",
+              "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                0.002,
+                0,
+                0.002
+              ]
+            },
+            "propagation_direction": {
+              "provenance": "synthetic",
+              "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                1,
+                0,
+                0
+              ]
+            },
+            "reference_plane": {
+              "provenance": "synthetic",
+              "source": "Concept air-side plane adjacent to an ideal normal facet; Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "plane",
+              "value": {
+                "frame_id": "world",
+                "id": "m7a-af45-external",
+                "normal": [
+                  1,
+                  0,
+                  0
+                ],
+                "origin_m": [
+                  0.002,
+                  0,
+                  0.002
+                ],
+                "side": "external"
+              }
+            },
+            "sagittal_axis": {
+              "provenance": "synthetic",
+              "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                0,
+                1,
+                0
+              ]
+            },
+            "wavefront_curvature_ts_per_m": {
+              "provenance": "assumed",
+              "source": "Concept-only flat wavefront at the external reference plane; phase not supplied by the cited width source",
+              "uncertainty": null,
+              "unit": "m^-1",
+              "value": [
+                0,
+                0
+              ]
+            }
+          },
+          "wavelength_m": {
+            "provenance": "supplied",
+            "source": "Shared 1550 nm reporting wavelength in Corning PI1424 and Eaton et al. Fig. 5(c)",
+            "uncertainty": null,
+            "unit": "m",
+            "value": 1.55e-06
+          }
+        },
+        "uncertainty_treatment": "metadata preserved; no uncertainty propagation or yield calculation",
+        "evaluated_ports": {
+          "source": {
+            "position_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "direction": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "sagittal_axis": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "complex_q_ts_m": [
+              [
+                -0.0,
+                5.4805590550366456e-05
+              ],
+              [
+                -0.0,
+                5.4805590550366456e-05
+              ]
+            ],
+            "wavelength_m": 1.55e-06,
+            "ambient_index": 1
+          },
+          "target": {
+            "position_m": [
+              0.002,
+              0.0,
+              0.002
+            ],
+            "direction": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "sagittal_axis": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "complex_q_ts_m": [
+              [
+                -0.0,
+                5.0670849251448287e-05
+              ],
+              [
+                -0.0,
+                5.0670849251448287e-05
+              ]
+            ],
+            "wavelength_m": 1.55e-06,
+            "ambient_index": 1
+          }
+        },
+        "samples": [
+          {
+            "plane": "source",
+            "axes": [
+              {
+                "radius_m": 5.2e-06,
+                "curvature_per_m": 0.0,
+                "waist_radius_m": 5.2e-06,
+                "waist_distance_m": 0.0,
+                "rayleigh_range_m": 5.4805590550366456e-05,
+                "divergence_rad": 0.09488083145862991
+              },
+              {
+                "radius_m": 5.2e-06,
+                "curvature_per_m": 0.0,
+                "waist_radius_m": 5.2e-06,
+                "waist_distance_m": 0.0,
+                "rayleigh_range_m": 5.4805590550366456e-05,
+                "divergence_rad": 0.09488083145862991
+              }
+            ]
+          },
+          {
+            "plane": "M1_before",
+            "axes": [
+              {
+                "radius_m": 0.00026841389201426866,
+                "curvature_per_m": 353.42069646217305,
+                "waist_radius_m": 5.2e-06,
+                "waist_distance_m": -0.00282842712474619,
+                "rayleigh_range_m": 5.4805590550366456e-05,
+                "divergence_rad": 0.09488083145862991
+              },
+              {
+                "radius_m": 0.00026841389201426866,
+                "curvature_per_m": 353.42069646217305,
+                "waist_radius_m": 5.2e-06,
+                "waist_distance_m": -0.00282842712474619,
+                "rayleigh_range_m": 5.4805590550366456e-05,
+                "divergence_rad": 0.09488083145862991
+              }
+            ],
+            "surface_radii_m": [
+              0.0002770427327875077,
+              0.00026841389201426866
+            ],
+            "footprint_slope_3w": 0.14566236793322695,
+            "aperture_tail_union_estimate": 2.48838422970869e-15,
+            "powers_per_m": [
+              345.8200777224424,
+              350.51720834453425
+            ]
+          },
+          {
+            "plane": "M1_after",
+            "axes": [
+              {
+                "radius_m": 0.00026841389201426866,
+                "curvature_per_m": 7.6006187397306455,
+                "waist_radius_m": 0.0001796691397293343,
+                "waist_distance_m": -0.07261766040376322,
+                "rayleigh_range_m": 0.06542822692345532,
+                "divergence_rad": 0.002746049345636857
+              },
+              {
+                "radius_m": 0.00026841389201426866,
+                "curvature_per_m": 2.903488117638816,
+                "waist_radius_m": 0.0002471200028515179,
+                "waist_distance_m": -0.05247859285734384,
+                "rayleigh_range_m": 0.12377529643990495,
+                "divergence_rad": 0.0019965211957419862
+              }
+            ]
+          },
+          {
+            "plane": "M2_before",
+            "axes": [
+              {
+                "radius_m": 0.0002770231284743449,
+                "curvature_per_m": 7.545099694524139,
+                "waist_radius_m": 0.0001796691397293343,
+                "waist_distance_m": -0.07678570347000312,
+                "rayleigh_range_m": 0.06542822692345532,
+                "divergence_rad": 0.002746049345636857
+              },
+              {
+                "radius_m": 0.00027177021243112,
+                "curvature_per_m": 3.057160686500664,
+                "waist_radius_m": 0.0002471200028515179,
+                "waist_distance_m": -0.05664663592358374,
+                "rayleigh_range_m": 0.12377529643990495,
+                "divergence_rad": 0.0019965211957419862
+              }
+            ],
+            "surface_radii_m": [
+              0.0002859287348428208,
+              0.00027177021243112
+            ],
+            "footprint_slope_3w": 0.14999970316067954,
+            "aperture_tail_union_estimate": 2.4883842297087025e-15,
+            "powers_per_m": [
+              360.9789765975339,
+              356.4966996377397
+            ]
+          },
+          {
+            "plane": "M2_after",
+            "axes": [
+              {
+                "radius_m": 0.00027702312847434476,
+                "curvature_per_m": -353.4338769030097,
+                "waist_radius_m": 5.038320393864516e-06,
+                "waist_distance_m": 0.002828447653521293,
+                "rayleigh_range_m": 5.145051632133887e-05,
+                "divergence_rad": 0.09792555554539491
+              },
+              {
+                "radius_m": 0.00027177021243112055,
+                "curvature_per_m": -353.43953895123894,
+                "waist_radius_m": 5.135553831242404e-06,
+                "waist_distance_m": 0.00282832791876453,
+                "rayleigh_range_m": 5.345554310305093e-05,
+                "divergence_rad": 0.0960714929290335
+              }
+            ]
+          },
+          {
+            "plane": "target",
+            "axes": [
+              {
+                "radius_m": 5.038320794918069e-06,
+                "curvature_per_m": -7.7550301932494765,
+                "waist_radius_m": 5.038320393864516e-06,
+                "waist_distance_m": 2.0528775103011848e-08,
+                "rayleigh_range_m": 5.145051632133887e-05,
+                "divergence_rad": 0.09792555554539491
+              },
+              {
+                "radius_m": 5.135562675209975e-06,
+                "curvature_per_m": 34.71769396062239,
+                "waist_radius_m": 5.135553831242404e-06,
+                "waist_distance_m": -9.920598166004643e-08,
+                "rayleigh_range_m": 5.345554310305093e-05,
+                "divergence_rad": 0.0960714929290335
+              }
+            ]
+          }
+        ]
+      },
+      "independent_validation": {
+        "status": "Pass",
+        "quadrature_overlap": [
+          0.9996127230044927,
+          0.9996127230044927
+        ],
+        "q_output_m": [
+          [
+            -2.052877510089418e-08,
+            5.145051632133876e-05
+          ],
+          [
+            9.920598165907262e-08,
+            5.345554310305113e-05
+          ]
+        ],
+        "surface_checks": [
+          {
+            "footprint_m": [
+              0.0002770427327875077,
+              0.00026841389201426866
+            ],
+            "max_3w_curvature": 0.14566236793322695,
+            "outgoing_divergence_rad": [
+              0.0027460493456368438,
+              0.001996521195741991
+            ]
+          },
+          {
+            "footprint_m": [
+              0.0002859287348428207,
+              0.00027177021243112007
+            ],
+            "max_3w_curvature": 0.14999970316067954,
+            "outgoing_divergence_rad": [
+              0.097925555545395,
+              0.09607149292903332
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "G030-NM",
+      "overlap": 0.9335152064427352,
+      "coordinates": [
+        0.710024897938089,
+        0.7231660193675506,
+        0.9999977724202525,
+        0.9999990051078882
+      ],
+      "prescription": {
+        "contract_version": "M3A-1",
+        "coordinate_convention": "right-handed world XYZ; t=s cross d; target d is arriving direction",
+        "description": "M7A-REF-001: 1550 nm public-width SMF–AF45 Glass Waveguide concept proxy. Both external Gaussian fields and the fixed layout are explicit assumptions. Actual applicability and Total Coupling are Uncomputed.",
+        "wavelength_m": {
+          "value": 1.55e-06,
+          "unit": "m",
+          "provenance": "supplied",
+          "source": "Shared 1550 nm reporting wavelength in Corning PI1424 and Eaton et al. Fig. 5(c)",
+          "uncertainty": null
+        },
+        "ambient_index": {
+          "value": 1,
+          "unit": "1",
+          "provenance": "assumed",
+          "source": "Concept propagation in homogeneous air",
+          "uncertainty": null,
+          "quantity": "external_ambient_refractive_index"
+        },
+        "source": {
+          "position_m": {
+            "value": [
+              0,
+              0,
+              0
+            ],
+            "unit": "m",
+            "provenance": "synthetic",
+            "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "propagation_direction": {
+            "value": [
+              1,
+              0,
+              0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "sagittal_axis": {
+            "value": [
+              0,
+              1,
+              0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "reference_plane": {
+            "value": {
+              "id": "m7a-smf-external",
+              "frame_id": "world",
+              "side": "external",
+              "origin_m": [
+                0,
+                0,
+                0
+              ],
+              "normal": [
+                1,
+                0,
+                0
+              ]
+            },
+            "unit": "plane",
+            "provenance": "synthetic",
+            "source": "Concept air-side plane adjacent to an ideal normal facet; Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "mfd_ts_m": {
+            "value": [
+              1.04e-05,
+              1.04e-05
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "1/e² circular external Gaussian proxy using the width scale from Corning SMF-28 Ultra PI1424, Optical Specifications, 1550 nm MFD 10.4 ± 0.5 µm",
+            "uncertainty": null
+          },
+          "wavefront_curvature_ts_per_m": {
+            "value": [
+              0,
+              0
+            ],
+            "unit": "m^-1",
+            "provenance": "assumed",
+            "source": "Concept-only flat wavefront at the external reference plane; phase not supplied by the cited width source",
+            "uncertainty": null
+          },
+          "polarization": {
+            "value": {
+              "treatment": "scalar_ignored"
+            },
+            "unit": "1",
+            "provenance": "assumed",
+            "source": "Current scalar Gaussian model; no polarization transport",
+            "uncertainty": null
+          },
+          "mode_evidence": {
+            "value": {
+              "kind": "gaussian_assumption"
+            },
+            "unit": "evidence",
+            "provenance": "assumed",
+            "source": "Published size scale only; external complex field and Gaussian fit unverified",
+            "uncertainty": null
+          }
+        },
+        "target": {
+          "position_m": {
+            "value": [
+              0.002,
+              0,
+              0.002
+            ],
+            "unit": "m",
+            "provenance": "synthetic",
+            "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "propagation_direction": {
+            "value": [
+              1,
+              0,
+              0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "sagittal_axis": {
+            "value": [
+              0,
+              1,
+              0
+            ],
+            "unit": "1",
+            "provenance": "synthetic",
+            "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "reference_plane": {
+            "value": {
+              "id": "m7a-af45-external",
+              "frame_id": "world",
+              "side": "external",
+              "origin_m": [
+                0.002,
+                0,
+                0.002
+              ],
+              "normal": [
+                1,
+                0,
+                0
+              ]
+            },
+            "unit": "plane",
+            "provenance": "synthetic",
+            "source": "Concept air-side plane adjacent to an ideal normal facet; Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+            "uncertainty": null
+          },
+          "mfd_ts_m": {
+            "value": [
+              1e-05,
+              1e-05
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "1/e² circular external Gaussian proxy using the width scale from Eaton et al., Optics Express 13, 4708–4716 (2005), §3.3.1 and Fig. 5(c), doi:10.1364/OPEX.13.004708, AF45 near-field MFD 10 µm",
+            "uncertainty": null
+          },
+          "wavefront_curvature_ts_per_m": {
+            "value": [
+              0,
+              0
+            ],
+            "unit": "m^-1",
+            "provenance": "assumed",
+            "source": "Concept-only flat wavefront at the external reference plane; phase not supplied by the cited width source",
+            "uncertainty": null
+          },
+          "polarization": {
+            "value": {
+              "treatment": "scalar_ignored"
+            },
+            "unit": "1",
+            "provenance": "assumed",
+            "source": "Current scalar Gaussian model; no polarization transport",
+            "uncertainty": null
+          },
+          "mode_evidence": {
+            "value": {
+              "kind": "gaussian_assumption"
+            },
+            "unit": "evidence",
+            "provenance": "assumed",
+            "source": "Published size scale only; external complex field and Gaussian fit unverified",
+            "uncertainty": null
+          }
+        },
+        "design": {
+          "reflectors": [
+            {
+              "vertex_m": {
+                "value": [
+                  0.00282842712474619,
+                  0.0,
+                  0.0
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "illuminated_normal": {
+                "value": [
+                  -0.9888354884091115,
+                  0.0,
+                  0.1490113313232051
+                ],
+                "unit": "1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "principal_curvature_ts_per_m": {
+                "value": [
+                  130.78641559798757,
+                  134.71098941048683
+                ],
+                "unit": "m^-1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "half_aperture_ts_m": {
+                "value": [
+                  0.0010857777462906656,
+                  0.0010736555680570747
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              }
+            },
+            {
+              "vertex_m": {
+                "value": [
+                  -0.00365685424949238,
+                  0.0,
+                  0.002
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "illuminated_normal": {
+                "value": [
+                  0.9888354884091115,
+                  0.0,
+                  -0.1490113313232051
+                ],
+                "unit": "1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "principal_curvature_ts_per_m": {
+                "value": [
+                  114.83954581702535,
+                  117.07105113823606
+                ],
+                "unit": "m^-1",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              },
+              "half_aperture_ts_m": {
+                "value": [
+                  0.0017415564737839628,
+                  0.001708362563221717
+                ],
+                "unit": "m",
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null
+              }
+            }
+          ]
+        },
+        "reflectors": [
+          {
+            "surface_prescription": {
+              "value": "quadratic_patch",
+              "unit": "model",
+              "provenance": "assumed",
+              "source": "M5A autonomous concept prescription; not a measured device fact",
+              "uncertainty": null
+            }
+          },
+          {
+            "surface_prescription": {
+              "value": "quadratic_patch",
+              "unit": "model",
+              "provenance": "assumed",
+              "source": "M5A autonomous concept prescription; not a measured device fact",
+              "uncertainty": null
+            }
+          }
+        ]
+      },
+      "evaluation": {
+        "input_contract": {
+          "status": "Pass",
+          "scope": "explicit nominal external Gaussian contract; field fit not certified"
+        },
+        "geometry": {
+          "status": "Pass",
+          "scope": "fixed-port specular vertex path",
+          "lengths": [
+            0.00282842712474619,
+            0.006786668881199797,
+            0.00565685424949238
+          ],
+          "directions": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              -0.955591246274572,
+              0.0,
+              0.29469538517494687
+            ],
+            [
+              1.0,
+              0.0,
+              0.0
+            ]
+          ],
+          "cosines": [
+            0.9888354884091115,
+            0.9888354884091115
+          ],
+          "patch_obstruction": "Pass (chief ray, quadratic patches only)"
+        },
+        "model_domain": {
+          "status": "Pass",
+          "scope": "aligned coplanar scalar paraxial model",
+          "aperture_tail_union_estimate": 4.976768459417405e-15
+        },
+        "design_constraints": {
+          "status": "Uncomputed",
+          "scope": "declared nominal bounds only; no tolerance/yield",
+          "checks": [
+            {
+              "path": "reflectors[0].vertex_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[0].principal_curvature_bounds_per_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[0].half_aperture_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[0].normal_constraints",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].vertex_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].principal_curvature_bounds_per_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].half_aperture_bounds_m",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            },
+            {
+              "path": "reflectors[1].normal_constraints",
+              "status": "Uncomputed",
+              "reason": "record not supplied"
+            }
+          ]
+        },
+        "gaussian_mode_matching": {
+          "status": "Approximate",
+          "meaning": "computed within model, not a product efficiency requirement",
+          "normalized_mode_overlap": 0.9335152064427352,
+          "log_overlap": -0.06879802642469579,
+          "mismatch_db": 0.2987860324207948,
+          "underflow": false,
+          "output_axes": [
+            {
+              "radius_m": 6.483007374430436e-06,
+              "curvature_per_m": 60.46698201622065,
+              "waist_radius_m": 6.482921370781991e-06,
+              "waist_distance_m": -4.38782382225153e-07,
+              "rayleigh_range_m": 8.518432432482642e-05,
+              "divergence_rad": 0.07610462866455567
+            },
+            {
+              "radius_m": 6.535329937319351e-06,
+              "curvature_per_m": 39.289504232555444,
+              "waist_radius_m": 6.53529213719117e-06,
+              "waist_distance_m": -2.9442721132325045e-07,
+              "rayleigh_range_m": 8.656616666044523e-05,
+              "divergence_rad": 0.07549476186032099
+            }
+          ],
+          "scope": "normalized scalar paraxial Gaussian diagnostic; not total coupling",
+          "conditions": [
+            "explicit scalar-ignored polarization",
+            "finite-field aberration unvalidated",
+            "package/bounds status remains separate"
+          ]
+        },
+        "package_feasibility": {
+          "status": "Uncomputed",
+          "reason": "full finite-beam/body/support clearance not evaluated",
+          "envelope_geometry": {
+            "status": "Uncomputed",
+            "scope": "declared world AABBs and quadratic patch extents only",
+            "checks": [
+              {
+                "path": "package.frame_id",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "package.available_volume",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "package.required_clearance_m",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "package.keepout_bodies",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "reflectors[0].body_envelope",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              },
+              {
+                "path": "reflectors[1].body_envelope",
+                "status": "Uncomputed",
+                "reason": "record not supplied"
+              }
+            ]
+          },
+          "finite_beam_clearance": {
+            "status": "Uncomputed"
+          }
+        },
+        "physical_losses": {
+          "status": "Uncomputed",
+          "total_coupling": null,
+          "reason": "coating/device interfaces/polarization/scatter not supplied"
+        },
+        "fabrication": {
+          "status": "Uncomputed",
+          "reason": "no process or assembly constraints"
+        },
+        "actual_applicability": {
+          "status": "Uncomputed",
+          "reason": "external input adapter does not independently certify actual Port field or package performance"
+        },
+        "input_snapshot": {
+          "ambient_index": {
+            "provenance": "assumed",
+            "quantity": "external_ambient_refractive_index",
+            "source": "Concept propagation in homogeneous air",
+            "uncertainty": null,
+            "unit": "1",
+            "value": 1
+          },
+          "contract_version": "M3A-1",
+          "coordinate_convention": "right-handed world XYZ; t=s cross d; target d is arriving direction",
+          "description": "M7A-REF-001: 1550 nm public-width SMF–AF45 Glass Waveguide concept proxy. Both external Gaussian fields and the fixed layout are explicit assumptions. Actual applicability and Total Coupling are Uncomputed.",
+          "design": {
+            "reflectors": [
+              {
+                "half_aperture_ts_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    0.0010857777462906656,
+                    0.0010736555680570747
+                  ]
+                },
+                "illuminated_normal": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "1",
+                  "value": [
+                    -0.9888354884091115,
+                    0.0,
+                    0.1490113313232051
+                  ]
+                },
+                "principal_curvature_ts_per_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m^-1",
+                  "value": [
+                    130.78641559798757,
+                    134.71098941048683
+                  ]
+                },
+                "vertex_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    0.00282842712474619,
+                    0.0,
+                    0.0
+                  ]
+                }
+              },
+              {
+                "half_aperture_ts_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    0.0017415564737839628,
+                    0.001708362563221717
+                  ]
+                },
+                "illuminated_normal": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "1",
+                  "value": [
+                    0.9888354884091115,
+                    0.0,
+                    -0.1490113313232051
+                  ]
+                },
+                "principal_curvature_ts_per_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m^-1",
+                  "value": [
+                    114.83954581702535,
+                    117.07105113823606
+                  ]
+                },
+                "vertex_m": {
+                  "provenance": "assumed",
+                  "source": "M5A autonomous concept prescription; not a measured device fact",
+                  "uncertainty": null,
+                  "unit": "m",
+                  "value": [
+                    -0.00365685424949238,
+                    0.0,
+                    0.002
+                  ]
+                }
+              }
+            ]
+          },
+          "reflectors": [
+            {
+              "surface_prescription": {
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null,
+                "unit": "model",
+                "value": "quadratic_patch"
+              }
+            },
+            {
+              "surface_prescription": {
+                "provenance": "assumed",
+                "source": "M5A autonomous concept prescription; not a measured device fact",
+                "uncertainty": null,
+                "unit": "model",
+                "value": "quadratic_patch"
+              }
+            }
+          ],
+          "source": {
+            "mfd_ts_m": {
+              "provenance": "assumed",
+              "source": "1/e² circular external Gaussian proxy using the width scale from Corning SMF-28 Ultra PI1424, Optical Specifications, 1550 nm MFD 10.4 ± 0.5 µm",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                1.04e-05,
+                1.04e-05
+              ]
+            },
+            "mode_evidence": {
+              "provenance": "assumed",
+              "source": "Published size scale only; external complex field and Gaussian fit unverified",
+              "uncertainty": null,
+              "unit": "evidence",
+              "value": {
+                "kind": "gaussian_assumption"
+              }
+            },
+            "polarization": {
+              "provenance": "assumed",
+              "source": "Current scalar Gaussian model; no polarization transport",
+              "uncertainty": null,
+              "unit": "1",
+              "value": {
+                "treatment": "scalar_ignored"
+              }
+            },
+            "position_m": {
+              "provenance": "synthetic",
+              "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            "propagation_direction": {
+              "provenance": "synthetic",
+              "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                1,
+                0,
+                0
+              ]
+            },
+            "reference_plane": {
+              "provenance": "synthetic",
+              "source": "Concept air-side plane adjacent to an ideal normal facet; Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "plane",
+              "value": {
+                "frame_id": "world",
+                "id": "m7a-smf-external",
+                "normal": [
+                  1,
+                  0,
+                  0
+                ],
+                "origin_m": [
+                  0,
+                  0,
+                  0
+                ],
+                "side": "external"
+              }
+            },
+            "sagittal_axis": {
+              "provenance": "synthetic",
+              "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                0,
+                1,
+                0
+              ]
+            },
+            "wavefront_curvature_ts_per_m": {
+              "provenance": "assumed",
+              "source": "Concept-only flat wavefront at the external reference plane; phase not supplied by the cited width source",
+              "uncertainty": null,
+              "unit": "m^-1",
+              "value": [
+                0,
+                0
+              ]
+            }
+          },
+          "target": {
+            "mfd_ts_m": {
+              "provenance": "assumed",
+              "source": "1/e² circular external Gaussian proxy using the width scale from Eaton et al., Optics Express 13, 4708–4716 (2005), §3.3.1 and Fig. 5(c), doi:10.1364/OPEX.13.004708, AF45 near-field MFD 10 µm",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                1e-05,
+                1e-05
+              ]
+            },
+            "mode_evidence": {
+              "provenance": "assumed",
+              "source": "Published size scale only; external complex field and Gaussian fit unverified",
+              "uncertainty": null,
+              "unit": "evidence",
+              "value": {
+                "kind": "gaussian_assumption"
+              }
+            },
+            "polarization": {
+              "provenance": "assumed",
+              "source": "Current scalar Gaussian model; no polarization transport",
+              "uncertainty": null,
+              "unit": "1",
+              "value": {
+                "treatment": "scalar_ignored"
+              }
+            },
+            "position_m": {
+              "provenance": "synthetic",
+              "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "m",
+              "value": [
+                0.002,
+                0,
+                0.002
+              ]
+            },
+            "propagation_direction": {
+              "provenance": "synthetic",
+              "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                1,
+                0,
+                0
+              ]
+            },
+            "reference_plane": {
+              "provenance": "synthetic",
+              "source": "Concept air-side plane adjacent to an ideal normal facet; Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "plane",
+              "value": {
+                "frame_id": "world",
+                "id": "m7a-af45-external",
+                "normal": [
+                  1,
+                  0,
+                  0
+                ],
+                "origin_m": [
+                  0.002,
+                  0,
+                  0.002
+                ],
+                "side": "external"
+              }
+            },
+            "sagittal_axis": {
+              "provenance": "synthetic",
+              "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+              "uncertainty": null,
+              "unit": "1",
+              "value": [
+                0,
+                1,
+                0
+              ]
+            },
+            "wavefront_curvature_ts_per_m": {
+              "provenance": "assumed",
+              "source": "Concept-only flat wavefront at the external reference plane; phase not supplied by the cited width source",
+              "uncertainty": null,
+              "unit": "m^-1",
+              "value": [
+                0,
+                0
+              ]
+            }
+          },
+          "wavelength_m": {
+            "provenance": "supplied",
+            "source": "Shared 1550 nm reporting wavelength in Corning PI1424 and Eaton et al. Fig. 5(c)",
+            "uncertainty": null,
+            "unit": "m",
+            "value": 1.55e-06
+          }
+        },
+        "uncertainty_treatment": "metadata preserved; no uncertainty propagation or yield calculation",
+        "evaluated_ports": {
+          "source": {
+            "position_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "direction": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "sagittal_axis": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "complex_q_ts_m": [
+              [
+                -0.0,
+                5.4805590550366456e-05
+              ],
+              [
+                -0.0,
+                5.4805590550366456e-05
+              ]
+            ],
+            "wavelength_m": 1.55e-06,
+            "ambient_index": 1
+          },
+          "target": {
+            "position_m": [
+              0.002,
+              0.0,
+              0.002
+            ],
+            "direction": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "sagittal_axis": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "complex_q_ts_m": [
+              [
+                -0.0,
+                5.0670849251448287e-05
+              ],
+              [
+                -0.0,
+                5.0670849251448287e-05
+              ]
+            ],
+            "wavelength_m": 1.55e-06,
+            "ambient_index": 1
+          }
+        },
+        "samples": [
+          {
+            "plane": "source",
+            "axes": [
+              {
+                "radius_m": 5.2e-06,
+                "curvature_per_m": 0.0,
+                "waist_radius_m": 5.2e-06,
+                "waist_distance_m": 0.0,
+                "rayleigh_range_m": 5.4805590550366456e-05,
+                "divergence_rad": 0.09488083145862991
+              },
+              {
+                "radius_m": 5.2e-06,
+                "curvature_per_m": 0.0,
+                "waist_radius_m": 5.2e-06,
+                "waist_distance_m": 0.0,
+                "rayleigh_range_m": 5.4805590550366456e-05,
+                "divergence_rad": 0.09488083145862991
+              }
+            ]
+          },
+          {
+            "plane": "M1_before",
+            "axes": [
+              {
+                "radius_m": 0.00026841389201426866,
+                "curvature_per_m": 353.42069646217305,
+                "waist_radius_m": 5.2e-06,
+                "waist_distance_m": -0.00282842712474619,
+                "rayleigh_range_m": 5.4805590550366456e-05,
+                "divergence_rad": 0.09488083145862991
+              },
+              {
+                "radius_m": 0.00026841389201426866,
+                "curvature_per_m": 353.42069646217305,
+                "waist_radius_m": 5.2e-06,
+                "waist_distance_m": -0.00282842712474619,
+                "rayleigh_range_m": 5.4805590550366456e-05,
+                "divergence_rad": 0.09488083145862991
+              }
+            ],
+            "surface_radii_m": [
+              0.0002714444365726664,
+              0.00026841389201426866
+            ],
+            "footprint_slope_3w": 0.1084749028942851,
+            "aperture_tail_union_estimate": 2.4883842297087025e-15,
+            "powers_per_m": [
+              264.5261363109113,
+              266.4140140155868
+            ]
+          },
+          {
+            "plane": "M1_after",
+            "axes": [
+              {
+                "radius_m": 0.00026841389201426866,
+                "curvature_per_m": 88.89456015126179,
+                "waist_radius_m": 2.0616587044871187e-05,
+                "waist_distance_m": -0.011182915858384128,
+                "rayleigh_range_m": 0.0008614929316402515,
+                "divergence_rad": 0.023931231804325943
+              },
+              {
+                "radius_m": 0.0002684138920142687,
+                "curvature_per_m": 87.00668244658625,
+                "waist_radius_m": 2.1061202216852987e-05,
+                "waist_distance_m": -0.011422607479674206,
+                "rayleigh_range_m": 0.0008990513354812896,
+                "divergence_rad": 0.023426028509905147
+              }
+            ]
+          },
+          {
+            "plane": "M2_before",
+            "axes": [
+              {
+                "radius_m": 0.00043052821158655373,
+                "curvature_per_m": 55.521976484787395,
+                "waist_radius_m": 2.0616587044871187e-05,
+                "waist_distance_m": -0.017969584739583926,
+                "rayleigh_range_m": 0.0008614929316402515,
+                "divergence_rad": 0.023931231804325943
+              },
+              {
+                "radius_m": 0.00042709064080542926,
+                "curvature_per_m": 54.783517447530194,
+                "waist_radius_m": 2.1061202216852987e-05,
+                "waist_distance_m": -0.018209276360874004,
+                "rayleigh_range_m": 0.0008990513354812896,
+                "divergence_rad": 0.023426028509905147
+              }
+            ],
+            "surface_radii_m": [
+              0.0004353891184459907,
+              0.00042709064080542926
+            ],
+            "footprint_slope_3w": 0.14999985075118324,
+            "aperture_tail_union_estimate": 2.4883842297087025e-15,
+            "powers_per_m": [
+              232.2722984017999,
+              231.52802006169145
+            ]
+          },
+          {
+            "plane": "M2_after",
+            "axes": [
+              {
+                "radius_m": 0.0004305282115865537,
+                "curvature_per_m": -176.75032191701254,
+                "waist_radius_m": 6.482921370781991e-06,
+                "waist_distance_m": 0.005656415467110155,
+                "rayleigh_range_m": 8.518432432482642e-05,
+                "divergence_rad": 0.07610462866455567
+              },
+              {
+                "radius_m": 0.00042709064080542926,
+                "curvature_per_m": -176.74450261416126,
+                "waist_radius_m": 6.53529213719117e-06,
+                "waist_distance_m": 0.005656559822281057,
+                "rayleigh_range_m": 8.656616666044523e-05,
+                "divergence_rad": 0.07549476186032099
+              }
+            ]
+          },
+          {
+            "plane": "target",
+            "axes": [
+              {
+                "radius_m": 6.483007374430436e-06,
+                "curvature_per_m": 60.46698201622065,
+                "waist_radius_m": 6.482921370781991e-06,
+                "waist_distance_m": -4.38782382225153e-07,
+                "rayleigh_range_m": 8.518432432482642e-05,
+                "divergence_rad": 0.07610462866455567
+              },
+              {
+                "radius_m": 6.535329937319351e-06,
+                "curvature_per_m": 39.289504232555444,
+                "waist_radius_m": 6.53529213719117e-06,
+                "waist_distance_m": -2.9442721132325045e-07,
+                "rayleigh_range_m": 8.656616666044523e-05,
+                "divergence_rad": 0.07549476186032099
+              }
+            ]
+          }
+        ]
+      },
+      "independent_validation": {
+        "status": "Pass",
+        "quadrature_overlap": [
+          0.9335152064427352,
+          0.9335152064427351
+        ],
+        "q_output_m": [
+          [
+            4.3878238222403516e-07,
+            8.518432432482641e-05
+          ],
+          [
+            2.9442721132292873e-07,
+            8.656616666044525e-05
+          ]
+        ],
+        "surface_checks": [
+          {
+            "footprint_m": [
+              0.0002714444365726664,
+              0.00026841389201426866
+            ],
+            "max_3w_curvature": 0.1084749028942851,
+            "outgoing_divergence_rad": [
+              0.023931231804325943,
+              0.02342602850990514
+            ]
+          },
+          {
+            "footprint_m": [
+              0.0004353891184459907,
+              0.00042709064080542926
+            ],
+            "max_3w_curvature": 0.14999985075118324,
+            "outgoing_divergence_rad": [
+              0.07610462866455567,
+              0.07549476186032097
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "actual_applicability": "Uncomputed",
+  "total_coupling": null,
+  "assembly_tolerance": "Uncomputed",
+  "package_yield": "Uncomputed"
+}
