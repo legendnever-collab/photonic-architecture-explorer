@@ -20,6 +20,18 @@ CASES = (
 )
 
 
+# These were captured at the M6-B checkout and include the complete displayed order.
+BASELINE_SHORTLISTS = {
+    "equal-q": (56, ["G036-B1", "G029-B1", "G022-B1"]),
+    "different-q": (60, ["G016-B1", "G030-B1", "G023-B1"]),
+}
+LEGACY_RANKING = (
+    "overlap_deficit_at_1e-12", "max_3w_footprint_curvature",
+    "negative_min_aperture_radius_ratio_at_1e-12", "max_projected_radius_m",
+    "total_path_m", "package_evidence_missing_checks", "stable_id",
+)
+
+
 class ReviewFrame(HTMLParser):
     html = None
 
@@ -108,6 +120,42 @@ def check_sensitivity(result, document, k):
             assert abs(sample["delta_loss_db"] - expected_delta) < 1e-8
 
 
+def check_recommendation(case_id, result):
+    accepted = [row for row in result["search"]["attempts"] if row["status"] == "Accepted"]
+    baseline_count, baseline_ids = BASELINE_SHORTLISTS[case_id]
+    assert len(accepted) == result["search"]["accepted_count"] == baseline_count
+    ranked_legacy = sorted(accepted, key=lambda row: tuple(row["ranking"][key] for key in LEGACY_RANKING))
+    legacy_by_geometry = {}
+    for row in ranked_legacy:
+        legacy_by_geometry.setdefault(row["geometry_id"], row)
+    old_shortlist = list(legacy_by_geometry.values())[:3]
+    assert [row["id"] for row in old_shortlist] == baseline_ids
+
+    candidates = result["candidates"]
+    selected = candidates[0]
+    best_deficit = min(row["ranking"]["overlap_deficit_at_1e-12"] for row in accepted)
+    peers = [row for row in accepted if row["ranking"]["overlap_deficit_at_1e-12"] == best_deficit]
+    assert selected["ranking"]["total_path_m"] <= min(
+        row["ranking"]["total_path_m"] for row in peers) + 1e-12
+    assert len({row["geometry_id"] for row in candidates}) == len(candidates) <= 3
+    assert all(row["ranking"]["overlap_deficit_at_1e-12"] == best_deficit for row in candidates)
+    expected_options = {
+        "equal-q": [("G009-B1", "short_path"), ("G015-B1", "smaller_footprint"), ("G036-B1", "model_margin")],
+        "different-q": [("G009-B1", "short_path"), ("G016-B1", "model_margin")],
+    }
+    assert [(row["id"], row["recommendation_role"]) for row in candidates] == expected_options[case_id]
+
+    def metrics(row):
+        return {"id": row["id"], **{key: row["ranking"][key] for key in
+               ("total_path_m", "max_projected_radius_m", "max_3w_footprint_curvature")}}
+
+    return {
+        "policy": result["recommendation_policy"],
+        "previous_shortlist": [metrics(row) for row in old_shortlist],
+        "shortlist": [{**metrics(row), "role": row["recommendation_role"]} for row in candidates],
+    }
+
+
 def check_case(case_id, fixture, expected, directory):
     raw = fixture.read_bytes()
     document = json.loads(raw)
@@ -128,13 +176,16 @@ def check_case(case_id, fixture, expected, directory):
     frame.feed(workspace_html)
     assert http_status == 200
     assert frame.html == (directory / "design.html").read_text(), "CLI and Workspace report differ"
-    assert result["fabrication_yield"]["status"] == "Uncomputed"
+    for field in ("actual_applicability", "fabrication_yield", "package_feasibility", "patentability"):
+        assert result[field]["status"] == "Uncomputed"
     assert result["physical_losses"] == {"status": "Uncomputed", "total_coupling": None}
 
     k = 2 * math.pi * document["ambient_index"]["value"] / document["wavelength_m"]["value"]
     q_source, _, _ = reference_mode(document["source"], k)
     q_target, _, _ = reference_mode(document["target"], k)
+    recommendation = None
     if expected == "Computed":
+        recommendation = check_recommendation(case_id, result)
         assert (q_source == q_target) == (case_id == "equal-q")
         assert result["candidates"]
         assert result["search"]["status"] == "Completed"
@@ -153,7 +204,7 @@ def check_case(case_id, fixture, expected, directory):
     return {"id": case_id, "fixture": str(fixture.relative_to(ROOT)), "fixture_bytes_sha256": hashlib.sha256(raw).hexdigest(),
             "input_sha256": result["input_sha256"], "status": expected, "reason": result["reason"],
             "recommended": result["selected_candidate_id"], "candidate_ids": [c["id"] for c in result["candidates"]],
-            "accepted_count": result["search"].get("accepted_count", 0),
+            "accepted_count": result["search"].get("accepted_count", 0), "recommendation": recommendation,
             "q_source_m": [[q.real, q.imag] for q in q_source], "q_target_m": [[q.real, q.imag] for q in q_target]}
 
 

@@ -26,11 +26,15 @@ async function checkCase(browser, root, test) {
       assert.equal(await selected.getAttribute('data-review-candidate'), id);
       assert.equal(await selected.getAttribute('data-input-sha'), payload.input_sha256);
       const record = payload.candidate_review.candidates[id];
+      assert.equal(record.recommendation_role, 'short_path');
+      assert.equal(payload.candidates[0].recommendation_role, record.recommendation_role);
+      const role = await selected.locator('[data-review-concept]').innerText();
+      assert.equal(role, '최단 광경로');
       const overlap = 'Overlap ' + (record.overlap * 100).toFixed(6) + '%';
       assert((await selected.locator('[data-review-nominal]').innerText()).startsWith(overlap));
       const length = 'Path ' + (record.total_path_m * 1000).toFixed(3) + ' mm';
       assert.equal(await selected.locator('[data-review-length]').innerText(), length);
-      visibleValues.push('Candidate Review · ' + id, overlap, length);
+      visibleValues.push('Candidate Review · ' + id, role, overlap, length);
       for (const port of ['source', 'target']) {
         const fixed = payload.input_snapshot[port].reference_plane.value;
         assert.deepEqual(record.ports[port].reference_plane, fixed);
@@ -70,6 +74,7 @@ async function checkCase(browser, root, test) {
     }
     assert.equal((printed.match(/Candidate Review ·/g) || []).length, test.status === 'Computed' ? 1 : 0);
     if (test.status === 'Computed') {
+      assert(printed.includes('실제 부품 배치 공차 및 Off-vertex field handoff: Uncomputed'));
       assert(printed.includes('Package Yield Uncomputed'));
       assert(printed.includes('Total Coupling Uncomputed'));
     } else {

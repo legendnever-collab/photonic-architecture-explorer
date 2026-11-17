@@ -9,6 +9,11 @@ from .sensitivity import format_db
 
 
 TIE_ATOL_DB = 1e-6
+CONCEPT_LABELS = {
+    "short_path": "최단 광경로",
+    "smaller_footprint": "작은 Beam Footprint",
+    "model_margin": "큰 Gaussian 모델 여유",
+}
 
 REVIEW_CSS = """
 #candidate-review { margin: 12px 0 16px; }
@@ -58,7 +63,8 @@ def build_candidate_review(result, sensitivity):
     nominal_designs = [
         {"id": c["id"], "rank": i, "total_path_m": c["ranking"]["total_path_m"],
          "max_3w_footprint_curvature": c["ranking"]["max_3w_footprint_curvature"],
-         "max_projected_radius_m": c["ranking"]["max_projected_radius_m"]}
+         "max_projected_radius_m": c["ranking"]["max_projected_radius_m"],
+         "recommendation_role": c.get("recommendation_role")}
         for i, c in enumerate(candidates, start=1)
     ]
     reviews = {}
@@ -140,6 +146,7 @@ def render_review_sheet(review, candidate, adapted, active):
     eta_label = f"{eta:.6%}" if eta is not None else "Uncomputed"
     source = data["ports"]["source"]
     status = "추천" if identifier == review["recommended_candidate_id"] else "대안"
+    concept_label = CONCEPT_LABELS.get(data["recommendation_role"], "")
     tie_note = ""
     if data["sensitivity_ties"]:
         tied_ids = ", ".join(escape(value) for value in data["sensitivity_ties"])
@@ -150,7 +157,7 @@ def render_review_sheet(review, candidate, adapted, active):
     hidden = "" if active else " hidden"
     return f'''<section class="review-sheet" data-review-candidate="{heading}" data-input-sha="{digest}"{hidden}>
     <h2>Candidate Review · {heading}</h2>
-    <p>{status} · 원래 순위 {data["rank"]} · {escape(candidate["classification"])}</p>
+    <p>{status} · <span data-review-concept>{concept_label}</span> · {escape(candidate["classification"])}</p>
     <p>Input SHA256 <code>{digest}</code></p>
     <h3>Fixed Ports</h3>
     <p>Vacuum λ {source["wavelength_m"] * 1e9:.6g} nm · Ambient n {source["ambient_index"]:.6g}</p>
@@ -174,7 +181,7 @@ def render_review_sheet(review, candidate, adapted, active):
     <th scope="col">Δ [dB]</th></tr></thead><tbody>{"".join(perturbations)}</tbody></table>
     </div></div>
     <h3>Nominal 설계 비교</h3>{tie_note}
-    <table><thead><tr><th scope="col">기존 순위</th><th scope="col">Path [mm]</th>
+    <table><thead><tr><th scope="col">대표 후보</th><th scope="col">Path [mm]</th>
     <th scope="col">Max 3w·κ</th><th scope="col">Max Radius [µm]</th></tr></thead>
     <tbody>{"".join(nominal_designs)}</tbody></table>
     <h3>Model scope</h3>

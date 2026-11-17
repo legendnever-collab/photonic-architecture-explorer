@@ -11,7 +11,7 @@ import tempfile
 import unittest
 import numpy as np
 
-from photonic_architecture_explorer.design import design_two_ports, power_pairs, prescriptions, RANKING
+from photonic_architecture_explorer.design import design_two_ports, power_pairs, prescriptions, recommendation_key, select_concepts
 from photonic_architecture_explorer.design_report import render_design_report
 from photonic_architecture_explorer.external import adapt_ports, adapt_external, evaluate_external
 from photonic_architecture_explorer.benchmark import load_case
@@ -130,10 +130,34 @@ class AutonomousDesignTests(unittest.TestCase):
         search=self.result['search'];self.assertLessEqual(search['geometry_count'],64)
         self.assertLessEqual(len([a for a in search['attempts'] if '-B' in a['id']]),256)
         candidates=self.result['candidates']
-        keys=[tuple(c['ranking'][k] for k in RANKING) for c in candidates]
-        self.assertEqual(keys,sorted(keys))
+        eligible = [c for c in search['attempts'] if c['status'] == 'Accepted']
+        self.assertEqual(candidates[0]['id'], min(eligible, key=recommendation_key)['id'])
+        self.assertEqual(
+            [c['id'] for c in select_concepts(list(reversed(eligible)))],
+            [c['id'] for c in candidates],
+        )
         self.assertEqual(len({c['geometry_id'] for c in candidates}),len(candidates))
         self.assertEqual(self.result['selected_candidate_id'],candidates[0]['id'])
+
+    def test_shortlist_keeps_best_overlap_and_only_distinct_tradeoffs(self):
+        def entry(identifier, geometry, path, radius, slope, deficit=0):
+            return {
+                'id': identifier, 'geometry_id': geometry,
+                'ranking': {'stable_id': identifier, 'overlap_deficit_at_1e-12': deficit,
+                            'total_path_m': path, 'max_projected_radius_m': radius,
+                            'max_3w_footprint_curvature': slope},
+            }
+
+        lead = entry('A1', 'A', .003, .00008, .09)
+        duplicate = entry('A2', 'A', .003, .00009, .07)
+        insignificant = entry('B', 'B', .004, .00008 - 1e-10, .09 - 1e-8)
+        footprint = entry('C', 'C', .005, .00007, .08)
+        margin = entry('D', 'D', .006, .00009, .075)
+        worse_overlap = entry('E', 'E', .002, .00006, .06, deficit=1e-12)
+        self.assertEqual([c['id'] for c in select_concepts(
+            [worse_overlap, margin, footprint, insignificant, duplicate, lead])], ['A1', 'C', 'D'])
+        self.assertEqual([c['id'] for c in select_concepts(
+            [worse_overlap, insignificant, duplicate, lead])], ['A1'])
 
     def test_no_fictitious_package_or_total_coupling(self):
         for c in self.result['candidates']:

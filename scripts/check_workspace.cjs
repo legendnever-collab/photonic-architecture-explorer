@@ -57,6 +57,13 @@ async function main() {
     const verifyModeMatch = async (view, data, candidateId) => {
       const active = view.locator('[data-candidate]:visible');
       assert.equal(await active.getAttribute('data-candidate'), candidateId);
+      const isRecommendation = candidateId === data.selected_candidate_id;
+      assert.match(await active.locator('h2').first().innerText(),
+                   isRecommendation ? /^Recommended Concept/ : /^Alternative Concept/);
+      const decision = active.locator('[data-recommendation-role]');
+      assert(await decision.isVisible());
+      assert.equal(await decision.getAttribute('data-recommendation-role'),
+                   data.candidates.find(item => item.id === candidateId).recommendation_role);
       const candidate = data.candidates.find(item => item.id === candidateId);
       const mode = active.locator('[data-mode-match]');
       assert.equal(await mode.getAttribute('data-mode-match'), candidateId);
@@ -107,6 +114,7 @@ async function main() {
       assert.equal(review.recommended_candidate_id, data.selected_candidate_id);
       assert.deepEqual(review.nominal_designs.map(row => row.id), data.candidates.map(row => row.id));
       assert.equal(selected.total_path_m, candidate.ranking.total_path_m);
+      assert.equal(selected.recommendation_role, candidate.recommendation_role);
       assert.equal(selected.overlap, candidate.evaluation.gaussian_mode_matching.normalized_mode_overlap);
       const expected = data.candidate_sensitivity.candidates.find(row => row.candidate_id === id);
       assert.deepEqual(selected.sensitivity_samples, expected.samples);

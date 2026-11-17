@@ -13,6 +13,8 @@ pae-workspace
 
 [로컬 Workspace](http://127.0.0.1:8765)에서 두 Port를 입력하고 **Design**을 실행합니다.
 후보와 2D Projection을 선택하고 결과 HTML·JSON을 각각 저장할 수 있습니다.
+[추천 정책](docs/M6C_ENGINEERING_RECOMMENDATION.md)은 같은 Overlap 구간의 짧은 경로를 기본으로 제시하고
+Beam Footprint 및 Gaussian 모델 한계 여유가 더 나은 후보를 대안으로 표시합니다.
 선택 후보의 [Mode Match 상세](docs/M5C_MODE_MATCH_VIEW.md)에서 도착 빔과 Target의
 강도·상대 Phase, Normalized Mode Overlap 및 Mode Mismatch Loss를 비교합니다.
 [Target 기준면 민감도](docs/M5D_CANDIDATE_SENSITIVITY.md)에서 같은 위치·각도 오차를
