@@ -1,3 +1,20 @@
+# M5-E — Candidate Review Summary
+
+추천 모델 **Sol Work**. M5-D Draft PR을 기준으로 한다. 병합됐다면 해당 변경이
+포함된 Main에서 시작한다.
+
+1. AGENTS.md, PRODUCT_CHARTER.md, M5C_MODE_MATCH_VIEW.md, M5D_CANDIDATE_SENSITIVITY.md를
+   읽고 Workspace와 이전 CI를 재현한다.
+2. 선택 후보 하나의 Fixed Ports, 경로, Nominal Mode Match, Target 기준면 민감도와
+   모델 범위를 1페이지 인쇄용 요약으로 제공한다. 기존 보고서의 계산 결과를 재사용한다.
+3. 추천과 대안의 민감도가 같은 경우 Nominal의 차이 및 실제 부품 공차의 미검증 범위를
+   명시한다. 근거 없는 새로운 순위, 합격 공차, Yield 또는 Total Coupling을 만들지 않는다.
+4. 화면·인쇄·HTML/JSON의 후보 ID, 입력 SHA, 수치와 Uncomputed 상태를 대조한다.
+   새 Draft PR과 CI 검증을 제출하고 다음 개발 지시문을 채팅에 복사 가능한 텍스트로 쓴다.
+   Main 병합과 후속 개발은 별도 요청에서 진행한다.
+
+---
+
 # M5-D — Candidate Sensitivity Review
 
 추천 모델 **Sol Work**. M5-C Draft PR을 기준으로 추천과 대안의 정렬 민감도를

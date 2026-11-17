@@ -15,6 +15,8 @@ pae-workspace
 후보와 2D Projection을 선택하고 결과 HTML·JSON을 각각 저장할 수 있습니다.
 선택 후보의 [Mode Match 상세](docs/M5C_MODE_MATCH_VIEW.md)에서 도착 빔과 Target의
 강도·상대 Phase, Normalized Mode Overlap 및 Mode Mismatch Loss를 비교합니다.
+[Target 기준면 민감도](docs/M5D_CANDIDATE_SENSITIVITY.md)에서 같은 위치·각도 오차를
+적용했을 때 추천과 대안의 Nominal 대비 손실을 비교합니다.
 [입력 단위·재현·검증 범위](docs/M5B_TWO_PORT_WORKSPACE.md)를 참고하세요.
 
 ## 두 Port에서 자동 Design — M5-A

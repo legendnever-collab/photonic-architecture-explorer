@@ -73,6 +73,31 @@ async function main() {
       assert.equal(await mode.locator('svg:visible').count(), 6);
       assert.match(await mode.locator('[data-mismatch-loss]').innerText(), / dB$/);
     };
+    const verifySensitivity = async (view, data, candidateId) => {
+      const active = view.locator('[data-candidate]:visible');
+      const panel = active.locator('[data-sensitivity]');
+      const diagnostic = data.candidate_sensitivity;
+      assert.equal(diagnostic.status, 'Approximate');
+      assert.equal(diagnostic.input_sha256, data.input_sha256);
+      assert.deepEqual(diagnostic.target_reference_plane, data.input_snapshot.target.reference_plane.value);
+      assert.equal(diagnostic.recommended_candidate_id, data.selected_candidate_id);
+      assert.deepEqual(diagnostic.candidates.map(row => row.candidate_id), data.candidates.map(row => row.id));
+      assert.equal(await panel.getAttribute('data-sensitivity'), candidateId);
+      assert.equal(await panel.getAttribute('data-input-sha'), data.input_sha256);
+      assert.equal(await panel.getAttribute('data-target-plane'), diagnostic.target_reference_plane.id);
+      assert.equal(await panel.locator('th[aria-current]').getAttribute('data-sensitivity-candidate'), candidateId);
+      if (!(await panel.evaluate(node => node.open))) await panel.locator('summary').click();
+      assert.equal(await panel.locator('tbody tr:visible').count(), 9);
+      for (const column of diagnostic.candidates) {
+        const row = await panel.locator('[data-sensitivity-scenario="offset_m-t-plus"]')
+          .locator('[data-sensitivity-cell="' + column.candidate_id + '"]').innerText();
+        const match = row.match(/^(\d+\.\d+) \(([+-]?\d+\.\d+)\)$/);
+        assert(match, 'expected rendered loss and delta values');
+        const sample = column.samples['offset_m-t-plus'];
+        assert(Math.abs(Number(match[1]) - sample.mode_mismatch_loss_db) <= 0.000051);
+        assert(Math.abs(Number(match[2]) - sample.delta_loss_db) <= 0.000051);
+      }
+    };
     const download = async format => {
       const [item] = await Promise.all([page.waitForEvent('download'),
                                        page.locator('[data-export="' + format + '"]').click()]);
@@ -86,7 +111,9 @@ async function main() {
     await page.goto(address);
     assert.equal(await page.locator('#design-review').count(), 0);
     const nominal = await design('Computed');
-    assert.deepEqual(nominal, JSON.parse(fs.readFileSync(path.join(baselineDir, 'design.json'))));
+    const {candidate_sensitivity: sensitivity, ...coreResult} = nominal;
+    assert.deepEqual(coreResult, JSON.parse(fs.readFileSync(path.join(baselineDir, 'design.json'))));
+    await verifySensitivity(frame, nominal, nominal.selected_candidate_id);
     await edit('target_position_m_2', '2.2');
     await assertClean();
     const revised = await design('Computed');
@@ -105,6 +132,7 @@ async function main() {
     const alternativeId = revised.candidates[1].id;
     await frame.locator('#candidate-select').selectOption(alternativeId);
     await verifyModeMatch(frame, revised, alternativeId);
+    await verifySensitivity(frame, revised, alternativeId);
     await page.screenshot({path: path.join(dir, 'workspace-desktop.png'), fullPage: true});
 
     const html = await download('html');
@@ -116,6 +144,7 @@ async function main() {
     await standalone.goto('file://' + path.resolve(html));
     assert.deepEqual(await standalone.locator('#design-result').evaluate(el => JSON.parse(el.textContent)), exported);
     await verifyModeMatch(standalone, exported, alternativeId);
+    await verifySensitivity(standalone, exported, alternativeId);
     await standalone.close();
 
     await edit('source_wavefront_curvature_ts_per_m_0', '');
@@ -126,6 +155,8 @@ async function main() {
     assert.match(rejected.reason, /no waist default/);
     assert.equal(await frame.locator('[data-overlap-value]').count(), 0);
     assert.equal(await frame.locator('[data-mode-match]').count(), 0);
+    assert.equal(rejected.candidate_sensitivity.status, 'Uncomputed');
+    assert.equal(await frame.locator('[data-sensitivity-cell]').count(), 0);
     await edit('source_wavefront_curvature_ts_per_m_0', '0');
     await edit('source_wavefront_curvature_ts_per_m_1', '0');
     assert.equal((await design('Computed')).input_sha256, revised.input_sha256);
@@ -135,6 +166,8 @@ async function main() {
     assert.match(rejected.reason, /unit vector/);
     assert.equal(await frame.locator('[data-overlap-value]').count(), 0);
     assert.equal(await frame.locator('[data-mode-match]').count(), 0);
+    assert.equal(rejected.candidate_sensitivity.status, 'Uncomputed');
+    assert.equal(await frame.locator('[data-sensitivity-cell]').count(), 0);
     await edit('source_propagation_direction_0', '1');
     await edit('source_mfd_ts_m_0', '2');
     await edit('source_mfd_ts_m_1', '2');
@@ -142,6 +175,8 @@ async function main() {
     assert.match(rejected.reason, /divergence/);
     assert.equal(await frame.locator('[data-overlap-value]').count(), 0);
     assert.equal(await frame.locator('[data-mode-match]').count(), 0);
+    assert.equal(rejected.candidate_sensitivity.status, 'Uncomputed');
+    assert.equal(await frame.locator('[data-sensitivity-cell]').count(), 0);
     await edit('source_mfd_ts_m_0', '16');
     await edit('source_mfd_ts_m_1', '24');
     await design('Computed');
@@ -155,7 +190,10 @@ async function main() {
     assert.equal(await frame.locator('[data-candidate]:visible').count(), 1);
     await frame.locator('#projection-select').selectOption('XY');
     assert.equal(await frame.locator('[data-projection="XY"]:visible').count(), 1);
-    await verifyModeMatch(frame, await result(), await frame.locator('#candidate-select').inputValue());
+    const mobileData = await result();
+    const mobileCandidate = await frame.locator('#candidate-select').inputValue();
+    await verifyModeMatch(frame, mobileData, mobileCandidate);
+    await verifySensitivity(frame, mobileData, mobileCandidate);
     assert(await frame.locator('html').evaluate(el => el.scrollWidth <= el.clientWidth));
     await page.screenshot({path: path.join(dir, 'workspace-mobile.png'), fullPage: true});
 
@@ -170,9 +208,13 @@ async function main() {
     assert.deepEqual(errors, []);
 
     const evidence = {status: 'Pass', evaluated_checkout_sha: head, browser: await browser.version(),
+      nominal_sensitivity: sensitivity.candidates.map(entry => ({
+        candidate_id: entry.candidate_id,
+        delta_db: Object.fromEntries(Object.entries(entry.samples).map(([id, value]) => [id, value.delta_loss_db]))
+      })),
       checks: ['fresh M5-A synthetic exact match', 'edited fixed Port and reference plane', 'immediate stale result and export hiding',
                'missing phase and recovery', 'invalid unit vector and high divergence', 'Uncomputed package and total coupling',
-               'standalone HTML and JSON identical data and viewed candidate', 'Mode Match candidate/planes/SHA/overlap agreement', 'desktop and 393px mobile', 'blank input and complex q controls']};
+               'standalone HTML and JSON identical data and viewed candidate', 'Mode Match candidate/planes/SHA/overlap agreement', 'sensitivity candidate order, values and export agreement', 'desktop and 393px mobile', 'blank input and complex q controls']};
     fs.writeFileSync(path.join(dir, 'browser.json'), JSON.stringify(evidence, null, 2) + '\n');
     console.log(JSON.stringify(evidence));
   } finally {

@@ -8,7 +8,7 @@ import json
 import math
 
 from .design import design_two_ports
-from .design_report import render_design_report
+from .design_report import render_design_report, review_snapshot
 from .inspector import CSS, ROOT, make_server
 
 
@@ -251,7 +251,7 @@ def render_workspace(raw, result=None, error=None):
     ports = "".join(render_port(port, raw) for port in PORTS)
     review = ""
     if result is not None:
-        report = escape(render_design_report(result))
+        report = escape(render_design_report(review_snapshot(result)))
         status = escape(result["status"])
         review = f'''<section id="design-output" class="output" data-status="{status}">
           <div class="toolbar"><button type="button" data-export="html">HTML 저장</button>
