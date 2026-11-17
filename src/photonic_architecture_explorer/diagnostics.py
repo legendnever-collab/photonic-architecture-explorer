@@ -9,6 +9,12 @@ from .benchmark import load_case
 from .solver import evaluate, MIN_COSINE
 
 
+class RayTraceError(DomainError):
+    def __init__(self, code, message):
+        super().__init__(message)
+        self.code = code
+
+
 def ray_to_target(origin, direction, target, mirrors, sagittal):
     """Forward intersections with actual patches; normal evaluated at each hit."""
     if len(mirrors) != 2:
@@ -21,38 +27,44 @@ def ray_to_target(origin, direction, target, mirrors, sagittal):
     for index, mirror in enumerate(mirrors):
         roots = [r for r in patch_intersections(origin, direction, mirror, sagittal) if r > 1e-9]
         if not roots:
-            raise DomainError(f'M{index+1}: no forward aperture hit')
+            unbounded = patch_intersections(origin, direction, mirror, sagittal, clip_aperture=False)
+            if any(r > 1e-9 for r in unbounded):
+                raise RayTraceError('aperture_miss', f'M{index+1}: forward intersection outside aperture')
+            raise RayTraceError('no_hit', f'M{index+1}: no forward intersection')
         distance = min(roots)
         other = mirrors[1-index]
         other_roots = patch_intersections(origin, direction, other, sagittal)
         if any(1e-9 < r < distance-1e-9 for r in other_roots):
-            raise DomainError('unintended reflector interception')
+            raise RayTraceError('unintended_intersection', 'unintended reflector interception')
         hit = add(origin, mul(direction, distance))
         tangent = unit(cross(sagittal, mirror.normal))
         u, v, h = to_local(sub(hit, mirror.vertex), (tangent, sagittal, mirror.normal))
         kt, ks = mirror.curvatures
         normal = unit(sub(sub(mirror.normal, mul(tangent, kt*u)), mul(sagittal, ks*v)))
         cosine = -dot(direction, normal)
+        if cosine <= 0:
+            raise RayTraceError('back_face', f'M{index+1}: local incidence is grazing or back-facing')
         if cosine < MIN_COSINE:
-            raise DomainError('local incidence is back-facing or exceeds 70 degrees')
+            raise RayTraceError('incidence_limit', f'M{index+1}: local incidence exceeds 70 degrees')
         outgoing = reflect(direction, normal)
         hits.append(dict(position_m=hit, incoming=direction, outgoing=outgoing,
                          normal=normal, surface_residual_m=h-(kt*u*u+ks*v*v)/2))
         origin, direction = hit, outgoing
     den = dot(direction, target.direction)
     if den <= 0:
-        raise DomainError('ray does not propagate toward Target plane')
+        raise RayTraceError('invalid_target_plane', 'ray does not propagate toward Target plane')
     distance = dot(sub(target.position, origin), target.direction)/den
     if distance <= 1e-9:
-        raise DomainError('Target plane is not forward')
+        raise RayTraceError('invalid_target_plane', 'Target plane is not forward')
     for mirror in mirrors:
         if any(1e-9 < r < distance-1e-9 for r in patch_intersections(origin, direction, mirror, sagittal)):
-            raise DomainError('unintended interception before Target')
+            raise RayTraceError('unintended_intersection', 'unintended interception before Target')
     point = add(origin, mul(direction, distance))
     basis = frame(target.direction, target.sagittal)
     offset = to_local(sub(point, target.position), basis)[:2]
     slope = tuple(dot(direction, axis)/den for axis in basis[:2])
-    return dict(status='Pass', target_offset_m=offset, target_slope=slope, hits=hits)
+    return dict(status='Pass', target_offset_m=offset, target_slope=slope, hits=hits,
+                target_point_m=point, target_ray_direction=direction)
 
 
 def linear_reference(height, slope, source, target, mirrors):
