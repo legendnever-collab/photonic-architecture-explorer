@@ -1,3 +1,20 @@
+# M5-F — Two-Port Concept Acceptance
+
+추천 모델 **Sol Work**. M5-E Draft PR을 기준으로 한다. 병합됐다면 해당 변경이 포함된
+Main을 기준으로 한다.
+
+1. AGENTS.md, PRODUCT_CHARTER.md, M5E_CANDIDATE_REVIEW_SUMMARY.md를 읽고 기존
+   Workspace, Frozen 입력, CI와 A4 요약을 재현한다.
+2. 비기밀 Synthetic 포트 쌍으로 같은 q의 기준 케이스, 서로 다른 Gaussian q의 설계
+   케이스, 적용 범위 밖의 케이스를 고정한다. 위치·방향·Mode 및 출처를 입력에 명시한다.
+3. 각 케이스에서 Design 결과와 실패 이유, Fixed Ports, Nominal Mode Match, 상대 오차
+   민감도, HTML/JSON/PDF 일치를 검토한다. 확인된 결함만 해당 범위에서 수정한다.
+4. 설계 검토에 사용할 수 있는 기능과 실제 반사면 공차·Package Yield·Total Coupling의
+   미검증 범위를 기록한다. 별도 Draft PR과 CI 증거, 다음 채팅 지시문을 제출한다.
+   Main 병합이나 이후 개발은 별도 요청에서 진행한다.
+
+---
+
 # M5-E — Candidate Review Summary
 
 추천 모델 **Sol Work**. M5-D Draft PR을 기준으로 한다. 병합됐다면 해당 변경이

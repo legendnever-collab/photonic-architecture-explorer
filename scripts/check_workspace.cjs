@@ -98,6 +98,47 @@ async function main() {
         assert(Math.abs(Number(match[2]) - sample.delta_loss_db) <= 0.000051);
       }
     };
+    const reviewSheet = (view, id) => view.locator('[data-review-candidate="' + id + '"]');
+    const verifyReview = async (view, data, id) => {
+      const review = data.candidate_review;
+      const selected = review.candidates[id];
+      const candidate = data.candidates.find(row => row.id === id);
+      assert.equal(review.input_sha256, data.input_sha256);
+      assert.equal(review.recommended_candidate_id, data.selected_candidate_id);
+      assert.deepEqual(review.nominal_designs.map(row => row.id), data.candidates.map(row => row.id));
+      assert.equal(selected.total_path_m, candidate.ranking.total_path_m);
+      assert.equal(selected.overlap, candidate.evaluation.gaussian_mode_matching.normalized_mode_overlap);
+      const expected = data.candidate_sensitivity.candidates.find(row => row.candidate_id === id);
+      assert.deepEqual(selected.sensitivity_samples, expected.samples);
+      if (await view.locator('#review-toggle').getAttribute('aria-expanded') === 'false') {
+        await view.locator('#review-toggle').click();
+      }
+      const sheet = reviewSheet(view, id);
+      assert.equal(await view.locator('[data-review-candidate]:visible').count(), 1);
+      assert.equal(await sheet.getAttribute('data-input-sha'), data.input_sha256);
+      assert.equal(await sheet.locator('[data-review-length]').innerText(),
+                   'Path ' + (1000 * selected.total_path_m).toFixed(3) + ' mm');
+      const eta = 'Overlap ' + (100 * selected.overlap).toFixed(6) + '%';
+      assert((await sheet.locator('[data-review-nominal]').innerText()).startsWith(eta));
+      for (const port of ['source', 'target']) {
+        assert.deepEqual(selected.ports[port].reference_plane, data.input_snapshot[port].reference_plane.value);
+        assert((await sheet.locator('[data-review-port="' + port + '"]').innerText())
+               .includes(selected.ports[port].reference_plane.id));
+      }
+      for (const [kind, status] of [['placement', review.part_placement_status],
+                                    ['yield', review.package_yield_status],
+                                    ['coupling', review.total_coupling_status]]) {
+        assert.equal(status, 'Uncomputed');
+        assert.equal(await sheet.locator('[data-review-' + kind + ']').innerText(), status);
+      }
+      const sample = selected.sensitivity_samples['offset_m-t-plus'];
+      const delta = sample.delta_loss_db;
+      const row = sheet.locator('[data-review-scenario="offset_m-t-plus"] td');
+      assert(Math.abs(Number(await row.nth(0).innerText()) - sample.mode_mismatch_loss_db) < 0.000051);
+      assert(Math.abs(Number(await row.nth(1).innerText()) - delta) < 0.000051);
+      if (selected.sensitivity_ties.length) assert(await sheet.locator('[data-review-ties]').isVisible());
+      return {eta, displayedDelta: await row.nth(1).innerText()};
+    };
     const download = async format => {
       const [item] = await Promise.all([page.waitForEvent('download'),
                                        page.locator('[data-export="' + format + '"]').click()]);
@@ -111,9 +152,12 @@ async function main() {
     await page.goto(address);
     assert.equal(await page.locator('#design-review').count(), 0);
     const nominal = await design('Computed');
-    const {candidate_sensitivity: sensitivity, ...coreResult} = nominal;
+    const {candidate_sensitivity: sensitivity, candidate_review: nominalReview, ...coreResult} = nominal;
     assert.deepEqual(coreResult, JSON.parse(fs.readFileSync(path.join(baselineDir, 'design.json'))));
     await verifySensitivity(frame, nominal, nominal.selected_candidate_id);
+    await verifyReview(frame, nominal, nominal.selected_candidate_id);
+    assert.equal(nominalReview.candidates[nominal.selected_candidate_id].sensitivity_ties.length,
+                 nominal.candidates.length - 1);
     await edit('target_position_m_2', '2.2');
     await assertClean();
     const revised = await design('Computed');
@@ -133,6 +177,12 @@ async function main() {
     await frame.locator('#candidate-select').selectOption(alternativeId);
     await verifyModeMatch(frame, revised, alternativeId);
     await verifySensitivity(frame, revised, alternativeId);
+    await verifyReview(frame, revised, alternativeId);
+    await frame.locator('#review-print').evaluate(button => {
+      button.ownerDocument.defaultView.print = () => { button.dataset.printInvoked = 'true'; };
+    });
+    await frame.locator('#review-print').click();
+    assert.equal(await frame.locator('#review-print').getAttribute('data-print-invoked'), 'true');
     await page.screenshot({path: path.join(dir, 'workspace-desktop.png'), fullPage: true});
 
     const html = await download('html');
@@ -145,6 +195,29 @@ async function main() {
     assert.deepEqual(await standalone.locator('#design-result').evaluate(el => JSON.parse(el.textContent)), exported);
     await verifyModeMatch(standalone, exported, alternativeId);
     await verifySensitivity(standalone, exported, alternativeId);
+    const summaryValues = await verifyReview(standalone, exported, alternativeId);
+    // Printing must work even when the on-screen review is collapsed.
+    await standalone.locator('#review-toggle').click();
+    await standalone.emulateMedia({media: 'print'});
+    assert.equal(await standalone.locator('[data-review-candidate]:visible').count(), 1);
+    assert(await reviewSheet(standalone, alternativeId).isVisible());
+    assert.equal(await standalone.locator('[data-candidate]:visible').count(), 0);
+    const pdf = path.join(dir, 'candidate-review.pdf');
+    await standalone.pdf({path: pdf, preferCSSPageSize: true, printBackground: true});
+    const metadata = execFileSync('pdfinfo', [pdf], {encoding: 'utf8'});
+    assert.match(metadata, /^Pages:\s+1\s*$/m);
+    const pageSize = metadata.match(/^Page size:\s+([\d.]+) x ([\d.]+) pts/m);
+    assert(pageSize && Math.abs(Number(pageSize[1]) - 595.28) < 2 &&
+           Math.abs(Number(pageSize[2]) - 841.89) < 2, metadata);
+    const printed = execFileSync('pdftotext', [pdf, '-'], {encoding: 'utf8'}).replace(/\s+/g, ' ');
+    assert(printed.includes('Candidate Review · ' + alternativeId), printed);
+    assert.equal((printed.match(/Candidate Review ·/g) || []).length, 1);
+    for (const expected of [exported.input_sha256, summaryValues.eta, summaryValues.displayedDelta,
+                            'Path ' + (exported.candidate_review.candidates[alternativeId].total_path_m * 1000).toFixed(3) + ' mm',
+                            'source-external', 'target-external', 'Package Yield Uncomputed',
+                            'Total Coupling Uncomputed']) {
+      assert(printed.includes(expected), 'missing print value ' + expected + ' in ' + printed);
+    }
     await standalone.close();
 
     await edit('source_wavefront_curvature_ts_per_m_0', '');
@@ -157,6 +230,8 @@ async function main() {
     assert.equal(await frame.locator('[data-mode-match]').count(), 0);
     assert.equal(rejected.candidate_sensitivity.status, 'Uncomputed');
     assert.equal(await frame.locator('[data-sensitivity-cell]').count(), 0);
+    assert.equal(await frame.locator('#candidate-review').count(), 0);
+    assert.equal(rejected.candidate_review.status, 'Uncomputed');
     await edit('source_wavefront_curvature_ts_per_m_0', '0');
     await edit('source_wavefront_curvature_ts_per_m_1', '0');
     assert.equal((await design('Computed')).input_sha256, revised.input_sha256);
@@ -168,6 +243,8 @@ async function main() {
     assert.equal(await frame.locator('[data-mode-match]').count(), 0);
     assert.equal(rejected.candidate_sensitivity.status, 'Uncomputed');
     assert.equal(await frame.locator('[data-sensitivity-cell]').count(), 0);
+    assert.equal(await frame.locator('#candidate-review').count(), 0);
+    assert.equal(rejected.candidate_review.status, 'Uncomputed');
     await edit('source_propagation_direction_0', '1');
     await edit('source_mfd_ts_m_0', '2');
     await edit('source_mfd_ts_m_1', '2');
@@ -177,6 +254,8 @@ async function main() {
     assert.equal(await frame.locator('[data-mode-match]').count(), 0);
     assert.equal(rejected.candidate_sensitivity.status, 'Uncomputed');
     assert.equal(await frame.locator('[data-sensitivity-cell]').count(), 0);
+    assert.equal(await frame.locator('#candidate-review').count(), 0);
+    assert.equal(rejected.candidate_review.status, 'Uncomputed');
     await edit('source_mfd_ts_m_0', '16');
     await edit('source_mfd_ts_m_1', '24');
     await design('Computed');
@@ -194,6 +273,7 @@ async function main() {
     const mobileCandidate = await frame.locator('#candidate-select').inputValue();
     await verifyModeMatch(frame, mobileData, mobileCandidate);
     await verifySensitivity(frame, mobileData, mobileCandidate);
+    await verifyReview(frame, mobileData, mobileCandidate);
     assert(await frame.locator('html').evaluate(el => el.scrollWidth <= el.clientWidth));
     await page.screenshot({path: path.join(dir, 'workspace-mobile.png'), fullPage: true});
 
@@ -208,13 +288,14 @@ async function main() {
     assert.deepEqual(errors, []);
 
     const evidence = {status: 'Pass', evaluated_checkout_sha: head, browser: await browser.version(),
+      printed_review: {pages: 1, paper: 'A4', candidate_id: alternativeId, input_sha256: exported.input_sha256},
       nominal_sensitivity: sensitivity.candidates.map(entry => ({
         candidate_id: entry.candidate_id,
         delta_db: Object.fromEntries(Object.entries(entry.samples).map(([id, value]) => [id, value.delta_loss_db]))
       })),
       checks: ['fresh M5-A synthetic exact match', 'edited fixed Port and reference plane', 'immediate stale result and export hiding',
                'missing phase and recovery', 'invalid unit vector and high divergence', 'Uncomputed package and total coupling',
-               'standalone HTML and JSON identical data and viewed candidate', 'Mode Match candidate/planes/SHA/overlap agreement', 'sensitivity candidate order, values and export agreement', 'desktop and 393px mobile', 'blank input and complex q controls']};
+               'standalone HTML and JSON identical data and viewed candidate', 'Mode Match candidate/planes/SHA/overlap agreement', 'sensitivity candidate order, values and export agreement', 'review matches candidate/ports/values and one-page PDF text', 'desktop and 393px mobile', 'blank input and complex q controls']};
     fs.writeFileSync(path.join(dir, 'browser.json'), JSON.stringify(evidence, null, 2) + '\n');
     console.log(JSON.stringify(evidence));
   } finally {
