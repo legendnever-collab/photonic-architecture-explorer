@@ -1,0 +1,208 @@
+{
+  "contract_version": "M3A-1",
+  "coordinate_convention": "right-handed world XYZ; t=s cross d; target d is arriving direction",
+  "description": "M7A-REF-001: 1550 nm public-width SMF–AF45 Glass Waveguide concept proxy. Both external Gaussian fields and the fixed layout are explicit assumptions. Actual applicability and Total Coupling are Uncomputed.",
+  "wavelength_m": {
+    "value": 1.55e-06,
+    "unit": "m",
+    "provenance": "supplied",
+    "source": "Shared 1550 nm reporting wavelength in Corning PI1424 and Eaton et al. Fig. 5(c)",
+    "uncertainty": null
+  },
+  "ambient_index": {
+    "value": 1,
+    "unit": "1",
+    "provenance": "assumed",
+    "source": "Concept propagation in homogeneous air",
+    "uncertainty": null,
+    "quantity": "external_ambient_refractive_index"
+  },
+  "source": {
+    "position_m": {
+      "value": [
+        0,
+        0,
+        0
+      ],
+      "unit": "m",
+      "provenance": "synthetic",
+      "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+      "uncertainty": null
+    },
+    "propagation_direction": {
+      "value": [
+        1,
+        0,
+        0
+      ],
+      "unit": "1",
+      "provenance": "synthetic",
+      "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+      "uncertainty": null
+    },
+    "sagittal_axis": {
+      "value": [
+        0,
+        1,
+        0
+      ],
+      "unit": "1",
+      "provenance": "synthetic",
+      "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+      "uncertainty": null
+    },
+    "reference_plane": {
+      "value": {
+        "id": "m7a-smf-external",
+        "frame_id": "world",
+        "side": "external",
+        "origin_m": [
+          0,
+          0,
+          0
+        ],
+        "normal": [
+          1,
+          0,
+          0
+        ]
+      },
+      "unit": "plane",
+      "provenance": "synthetic",
+      "source": "Concept air-side plane adjacent to an ideal normal facet; Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+      "uncertainty": null
+    },
+    "mfd_ts_m": {
+      "value": [
+        1.04e-05,
+        1.04e-05
+      ],
+      "unit": "m",
+      "provenance": "assumed",
+      "source": "1/e² circular external Gaussian proxy using the width scale from Corning SMF-28 Ultra PI1424, Optical Specifications, 1550 nm MFD 10.4 ± 0.5 µm",
+      "uncertainty": null
+    },
+    "wavefront_curvature_ts_per_m": {
+      "value": [
+        0,
+        0
+      ],
+      "unit": "m^-1",
+      "provenance": "assumed",
+      "source": "Concept-only flat wavefront at the external reference plane; phase not supplied by the cited width source",
+      "uncertainty": null
+    },
+    "polarization": {
+      "value": {
+        "treatment": "scalar_ignored"
+      },
+      "unit": "1",
+      "provenance": "assumed",
+      "source": "Current scalar Gaussian model; no polarization transport",
+      "uncertainty": null
+    },
+    "mode_evidence": {
+      "value": {
+        "kind": "gaussian_assumption"
+      },
+      "unit": "evidence",
+      "provenance": "assumed",
+      "source": "Published size scale only; external complex field and Gaussian fit unverified",
+      "uncertainty": null
+    }
+  },
+  "target": {
+    "position_m": {
+      "value": [
+        0.002,
+        0,
+        0.002
+      ],
+      "unit": "m",
+      "provenance": "synthetic",
+      "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+      "uncertainty": null
+    },
+    "propagation_direction": {
+      "value": [
+        1,
+        0,
+        0
+      ],
+      "unit": "1",
+      "provenance": "synthetic",
+      "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+      "uncertainty": null
+    },
+    "sagittal_axis": {
+      "value": [
+        0,
+        1,
+        0
+      ],
+      "unit": "1",
+      "provenance": "synthetic",
+      "source": "Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+      "uncertainty": null
+    },
+    "reference_plane": {
+      "value": {
+        "id": "m7a-af45-external",
+        "frame_id": "world",
+        "side": "external",
+        "origin_m": [
+          0.002,
+          0,
+          0.002
+        ],
+        "normal": [
+          1,
+          0,
+          0
+        ]
+      },
+      "unit": "plane",
+      "provenance": "synthetic",
+      "source": "Concept air-side plane adjacent to an ideal normal facet; Concept geometry from the fixed M5-A position/frame control; independent of either published device",
+      "uncertainty": null
+    },
+    "mfd_ts_m": {
+      "value": [
+        1e-05,
+        1e-05
+      ],
+      "unit": "m",
+      "provenance": "assumed",
+      "source": "1/e² circular external Gaussian proxy using the width scale from Eaton et al., Optics Express 13, 4708–4716 (2005), §3.3.1 and Fig. 5(c), doi:10.1364/OPEX.13.004708, AF45 near-field MFD 10 µm",
+      "uncertainty": null
+    },
+    "wavefront_curvature_ts_per_m": {
+      "value": [
+        0,
+        0
+      ],
+      "unit": "m^-1",
+      "provenance": "assumed",
+      "source": "Concept-only flat wavefront at the external reference plane; phase not supplied by the cited width source",
+      "uncertainty": null
+    },
+    "polarization": {
+      "value": {
+        "treatment": "scalar_ignored"
+      },
+      "unit": "1",
+      "provenance": "assumed",
+      "source": "Current scalar Gaussian model; no polarization transport",
+      "uncertainty": null
+    },
+    "mode_evidence": {
+      "value": {
+        "kind": "gaussian_assumption"
+      },
+      "unit": "evidence",
+      "provenance": "assumed",
+      "source": "Published size scale only; external complex field and Gaussian fit unverified",
+      "uncertainty": null
+    }
+  }
+}
