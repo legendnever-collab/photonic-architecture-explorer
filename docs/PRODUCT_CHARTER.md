@@ -6,6 +6,8 @@
 
 Given information describing two **fixed optical ports**, autonomously explore, synthesize, evaluate, and explain optical interconnect architectures useful for early engineering R&D and patent-oriented concept development. The output must be a short, evidence-backed set of buildable/plausible candidates, or a clear explanation of why such candidates cannot yet be determined. This is a **design explorer**, not merely an analyzer for a manually selected pair of mirrors and not a patentability opinion.
 
+The [Patent-Oriented Product Vision](PATENT_ORIENTED_PRODUCT_VISION.md) describes how architecture exploration, visualization, and traceable engineering evidence can support invention disclosure. The [Development Roadmap](PATENT_ORIENTED_DEVELOPMENT_ROADMAP.md) stages this direction within the existing requirements for physical validity, provenance, model domain, and integration.
+
 ## User interaction contract
 
 1. **Two-port-first.** The primary workflow starts with Port A and Port B. Request only information intrinsically needed for a meaningful physical problem: reference-plane position, propagation direction, wavelength and field/mode characterization. Offer simple import/examples for complex fields.

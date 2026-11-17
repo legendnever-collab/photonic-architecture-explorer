@@ -1,0 +1,87 @@
+# Photonic Architecture Explorer — Patent-Oriented Development Roadmap
+
+[Product Charter](PRODUCT_CHARTER.md)와 [Product Vision](PATENT_ORIENTED_PRODUCT_VISION.md)에
+따라 두 Fixed Port를 연결하는 개념을 탐색하고, 물리적 타당성과 후보 간 차이를 설명할 수 있는
+Engineering Evidence를 단계적으로 확보한다. 각 Track의 번호는 내부 선후 관계를 나타낸다.
+실제 Milestone은 당면한 설계 판단에 필요한 작업으로 한정한다.
+
+## Track A — Physical Design & Validation
+
+1. **M7-A SMF–Glass Waveguide Reference Case.** 비기밀 SMF와 Glass Waveguide 한 쌍의
+   외부 기준면, 위치, 방향, 파장, 매질, Mode 및 출처를
+   [M6-G Input Readiness](M6G_WORKFLOW_ACCEPTANCE.md#actual-input-readiness-checklist)에
+   맞춰 확인한다. Actual Applicability와 개념 입력의 출처를 명확히 기록한다.
+2. **Gaussian Applicability와 Two-Reflector 평가.** 확보한 Mode 증거로 기존 Domain을
+   검사하고 지원되는 조건에 기존 Two-Port Design을 적용한다. 후보가 나오면 현재
+   Ranking으로 추천과 대안을 비교한다. 필수 Field 증거가 부족하거나 Domain을 벗어나면
+   근거와 Uncomputed 항목을 기록한다. M7-A는 이 Reference Case에 집중한다.
+3. **Independent Field Validation.** 실제 Field가 확보되면 같은 Reference Plane의
+   Gaussian Fit, Sampled Field 및 비교 대상 Metric에 대해 적절한 독립 Reference를
+   선택하고 검증한다. Off-Vertex Field 평가는 별도 Reference 증거를 요구한다.
+4. **Package와 Manufacturing.** 제공된 Envelope와 Keepout부터 확인한다. Body
+   Clearance, 제조 제약, Assembly Tolerance와 Yield는 각 판단에 필요한 모델과 입력을
+   확보해 순차적으로 평가한다. Total Coupling은 실제 손실 항목의 검증을 요구한다.
+
+**PIC SSC → Glass Waveguide**는 장기 적용 대상으로 유지한다. SMF Reference Case의
+결과는 해당 Port와 Model Domain에 귀속된다.
+
+## Track B — Mode Input & Visualization
+
+1. 기존 Gaussian 계산과 [Mode Match View](M5C_MODE_MATCH_VIEW.md)를 재사용해
+   Source/Target Profile을 이해하기 쉽게 표시한다.
+2. Source 기준면의 Profile과 Target 기준면의 도착 빔·Target Mode Intensity 및
+   Relative Phase를 같은 비교 조건에서 설명한다. 현재 Plot과 Export를 기반으로 한다.
+3. Complex Field Grid, Phase Convention, Sampling, Coordinates, Normalization을
+   담는 Sampled-Field Data Contract를 정의한다.
+4. 측정 및 Simulation Mode Import에 Reference-Plane Metadata, 출처, Uncertainty를 연결한다.
+5. 독립 Reference와 수렴 검증을 통과한 범위에서 Field-Based Optical Evaluation을 지원한다.
+
+초기 Visualization은 기존 모델의 계산값을 사용한다. 신규 Electromagnetic Solver에는
+별도의 Engineering 필요성과 검증 근거가 필요하다.
+
+## Track C — Surface Representation & Architecture Diversity
+
+1. 현재 Quadratic Surface의 단면과 면 배치 표시를 개선한다.
+2. Frame, Units, Coefficients, Aperture 및 Reference Geometry를 위한 Generalized
+   Surface Data Contract를 정의한다.
+3. Higher-Order Surface의 Sag, Curvature, 고차항 기여를 기하학적으로 표시한다.
+4. 독립 Reference로 적용성을 확인한 Surface와 조건에 Optical Evaluation을 추가한다.
+5. Lens–Mirror, Multi-Lens 및 Hybrid 등 새 Topology Family를 실사용 설계 질문에 맞춰
+   하나씩 평가한다.
+
+확장마다 지원하는 Geometry와 Field, 독립 Reference, 비교 Metric 및 수치 오차 기준을
+먼저 명시한다. 표현·표시 확장은 해당 형상 검증을, 전파 모델 확장은 물리 오차와
+수렴 검증을 요구한다. 검증된 영역만 Optical Result에 사용한다.
+
+## Track D — Patent-Oriented Engineering Outputs
+
+1. 기존 Concept Diagram에서 Fixed Port와 주요 경로·부품·기하 관계를 명료하게 표시한다.
+2. Candidate Comparison Figure에 추천 사유와 대안의 측정 가능한 차이, 가정, Model Domain을 표시한다.
+3. Surface와 Mode Profile Figure를 해당 Candidate 기록에 연결한다.
+4. SVG 등 Vector Export에 필요한 Label, Component Reference Number와 Figure Caption을 보존한다.
+5. 후보 기술 특징, Alternative Embodiment, Engineering Evidence와 설명을 묶어
+   Invention Disclosure에 활용한다.
+
+Figure와 Export마다 사용한 Input Snapshot ID 또는 SHA, Candidate ID, 입력 출처와
+가정, 해당 수치 및 단위, Model Domain과 결과 상태를 추적할 수 있게 한다.
+현재 HTML·Engineering JSON·A4의 Snapshot 및 Candidate ID 기록을 재사용한다.
+개념 Illustration은 가정과 근거를 표시하고 해당 설계 기록에 연결한다.
+
+## Milestone handoff
+
+**M7-A가 다음 우선순위다.** Two-Port Workflow와 기존 검증을 기준으로 SMF–Glass Waveguide
+Reference Case를 진행한다. Visualization이나 Data Contract 작업은 해당 Case에서 필요한
+입력, 설계 판단 또는 결과 설명을 지원하는 작은 변경으로 제한한다. Generalized Optical
+CAD는 이 로드맵의 Milestone 범위 밖이다.
+
+향후 Work Order에는 참조할 Track과 그 작업이 지원하는 설계 판단을 적고, 검토 결과에
+아래 세 질문의 답과 근거를 남긴다.
+
+| 기준 | Milestone에서 확인할 질문 |
+|---|---|
+| Physics | 사용한 모델과 적용 범위가 문서화돼 있고 결과의 물리적 근거를 확인했는가? |
+| Usability | 사용자가 두 Port를 입력하고, 추천 이유와 대안의 절충점을 이해할 수 있는가? |
+| Patent Utility | 구조의 기술적 특징과 대안 대비 차이를 설명할 수 있고, 그림과 Engineering Evidence를 추적할 수 있는가? |
+
+Milestone 범위와 변경 심사는 [Product Charter](PRODUCT_CHARTER.md) 및
+[Repository Controls](../AGENTS.md)를 따른다.
