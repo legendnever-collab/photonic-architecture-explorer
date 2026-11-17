@@ -18,6 +18,7 @@ async function checkCase(browser, root, test) {
     assert.deepEqual(embedded, payload);
 
     const visibleValues = [];
+    const sensitivityRows = [];
     if (test.status === 'Computed') {
       const id = test.recommended;
       assert.equal(await page.locator('#candidate-select').inputValue(), id);
@@ -49,7 +50,7 @@ async function checkCase(browser, root, test) {
         const delta = await cell.nth(1).innerText();
         assert(Math.abs(Number(absolute) - entry.mode_mismatch_loss_db) < 0.000051);
         assert(Math.abs(Number(delta) - entry.delta_loss_db) < 0.000051);
-        visibleValues.push(row.label + ' ' + absolute + ' ' + delta);
+        sensitivityRows.push(row.label + ' ' + absolute + ' ' + delta);
       }
       await page.locator('#review-toggle').click();
     } else {
@@ -74,6 +75,15 @@ async function checkCase(browser, root, test) {
     }
     assert.equal((printed.match(/Candidate Review ·/g) || []).length, test.status === 'Computed' ? 1 : 0);
     if (test.status === 'Computed') {
+      // Read the right-hand table separately so the adjacent plot cannot interleave PDF text.
+      const pageWidth = Number(paper[1]);
+      const split = Math.floor(pageWidth / 2);
+      const column = execFileSync('pdftotext', ['-layout', '-x', String(split), '-y', '0',
+        '-W', String(Math.ceil(pageWidth) - split), '-H', String(Math.ceil(Number(paper[2]))),
+        file, '-'], {encoding: 'utf8'}).replace(/\s+/g, ' ');
+      for (const row of sensitivityRows) {
+        assert(column.includes(row), 'missing sensitivity row in print: ' + row);
+      }
       assert(printed.includes('실제 부품 배치 공차 및 Off-vertex field handoff: Uncomputed'));
       assert(printed.includes('Package Yield Uncomputed'));
       assert(printed.includes('Total Coupling Uncomputed'));
