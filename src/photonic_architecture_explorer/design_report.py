@@ -5,6 +5,7 @@ from .candidate_review import CONCEPT_LABELS, REVIEW_CSS, build_candidate_review
 from .external import adapt_external
 from .inspector import CSS, PROJECTIONS, plot_svg, result_panel, input_summary, visible_overlap
 from .mode_match import MODE_MATCH_CSS, render_mode_match
+from .placement import compare_placement
 from .sensitivity import compare_sensitivity, render_sensitivity
 from .solver import MAX_FOOTPRINT_SLOPE
 
@@ -20,7 +21,58 @@ def review_snapshot(result):
     """Add optional review diagnostics while preserving the engine result and ranking."""
     sensitivity = compare_sensitivity(result)
     return {**result, 'candidate_sensitivity': sensitivity,
-            'candidate_review': build_candidate_review(result, sensitivity)}
+            'candidate_review': build_candidate_review(result, sensitivity),
+            'reflector_placement': compare_placement(result)}
+
+
+def render_placement(diagnostic, identifier):
+    if not diagnostic:
+        return ''
+    if diagnostic['status'] == 'Uncomputed':
+        return '<p data-placement-status="Uncomputed">Reflector Placement Sensitivity · Uncomputed</p>'
+
+    def format_max(summary):
+        miss = summary.get('max_target_miss_m')
+        angle = summary.get('max_target_angle_rad')
+        if miss is None:
+            return f"— · {summary['failed']} 실패" if summary else '—'
+        return f"{miss * 1e6:.3f} / {angle * 1e3:.3f} · {summary['failed']} 실패"
+
+    candidate = next(c for c in diagnostic['candidates'] if c['candidate_id'] == identifier)
+    comparisons = []
+    for concept in diagnostic['candidates']:
+        summary = concept['summary']
+        comparisons.append(f'<tr><th>{escape(concept["candidate_id"])}</th>'
+                           f'<td>{format_max(summary.get("translation", {}))}</td>'
+                           f'<td>{format_max(summary.get("rotation", {}))}</td></tr>')
+
+    rows = []
+    for case in (candidate['nominal'], *candidate['cases']):
+        label = 'Nominal'
+        if case.get('kind') == 'translation':
+            label = f"M{case['mirror']} {case['axis']} {case['delta_m'] * 1e6:+g} µm"
+        elif case.get('kind') == 'rotation':
+            label = f"M{case['mirror']} s {case['delta_rad'] * 1e3:+g} mrad"
+        if case['status'] == 'Computed':
+            values = [*(v * 1e6 for v in case['target_offset_m']),
+                      *(v * 1e3 for v in case['target_angular_error_rad'])]
+            cells = ''.join(f'<td>{v:.3f}</td>' for v in values)
+        else:
+            cells = f'<td colspan="4">Fail · {escape(case["reason"])}</td>'
+        rows.append(f'<tr data-placement-case><th>{label}</th>{cells}</tr>')
+
+    plane = escape(diagnostic['target_reference_plane']['id'])
+    return f"""<details data-reflector-placement="{escape(identifier)}"
+        data-input-sha="{escape(diagnostic['input_sha256'])}" data-placement-status="{candidate['status']}">
+        <summary>Reflector Placement Sensitivity · Chief Ray</summary>
+        <p>Fixed Target plane <code>{plane}</code> · Global X/Y/Z ±5 µm 또는 Sagittal 회전 ±1 mrad를 한 번에 한 면에 적용합니다.</p>
+        <p>후보 비교 · 도달한 광선의 최대 위치 편차 [µm] / 최대 방향 편차 [mrad] 및 실패 건수.</p>
+        <div class="table-scroll"><table><thead><tr><th>후보</th><th>Translation</th><th>Rotation</th></tr></thead>
+        <tbody>{''.join(comparisons)}</tbody></table></div>
+        <div class="table-scroll"><table><thead><tr><th>오차 조건</th><th>t [µm]</th><th>s [µm]</th>
+        <th>θt [mrad]</th><th>θs [mrad]</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div>
+        <p>위치는 Target 기준면의 t/s 성분입니다. 각도는 Target 방향과 각 횡축이 만드는 평면에 투영한 부호 있는 각도입니다.
+        Perturbed Gaussian Mode Overlap과 실제 부품 배치 공차는 Uncomputed입니다.</p></details>"""
 
 
 def render_design_report(result):
@@ -63,6 +115,7 @@ def render_design_report(result):
         <p>실제 배치 공차·Package Yield·Total Coupling·Patentability는 Uncomputed입니다.</p>
         {render_mode_match(c, result.get('input_sha256', ''), adapted)}
         {render_sensitivity(result.get('candidate_sensitivity'), identifier)}
+        {render_placement(result.get('reflector_placement'), identifier)}
         <details><summary>Reflector 설계값 · 자동 생성</summary><p>Half-aperture는 각 반사면의 투영 빔 반경에 4배 규칙을 적용했습니다.</p><div class="table-scroll"><table><tr><th>면</th><th>Vertex [mm]</th><th>Normal</th><th>κt, κs [m⁻¹]</th><th>Half-aperture [mm]</th></tr>{''.join(prescription_rows)}</table></div>
         <p>Segment Lengths [mm]: {', '.join(f'{v*1000:.6g}' for v in e['geometry']['lengths'])}</p></details>
         <details><summary>상세 Physics 판정 · 미계산 항목</summary>{result_panel(e)}</details>
@@ -76,7 +129,7 @@ def render_design_report(result):
         articles = [f'''<section id="rejected-design" class="card">
         <h2>후보 생성 보류 · {status}</h2><p data-design-failure>{reason}</p>{trace}
         <p>Overlap: Uncomputed · 이 제한된 탐색의 실패는 구조의 물리적 불가능성을 입증하지 않습니다.</p>
-        {sensitivity}<p>부품 배치 공차 · Package Yield · Total Coupling: Uncomputed · Patentability: Uncomputed</p></section>''']
+        {sensitivity}{render_placement(result.get('reflector_placement'), '')}<p>부품 배치 공차 · Package Yield · Total Coupling: Uncomputed · Patentability: Uncomputed</p></section>''']
     toolbar=(f'<div class="toolbar"><label>설계 후보 <select id="candidate-select">{"".join(options)}</select></label><label>Projection <select id="projection-select"><option>XZ</option><option>XY</option><option>YZ</option></select></label></div>' if options else '')
     comparison=(f'<section class="card compare"><h2>Representative and Alternative Concepts</h2><div class="table-scroll"><table><thead><tr><th>후보</th><th>η_mode</th><th>max 3w·κ</th><th>max Radius [µm]</th><th>Path [mm]</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div><p class="caption">같은 Overlap 구간에서 Path, Beam Footprint, 모델 한계 여유를 비교합니다. 3w·κ는 Gaussian 모델의 검사 지표입니다. 실제 Package 크기, Aberration과 조립 성능은 별도 검증이 필요합니다.</p></section>' if rows else '')
     review_section = ('<section id="candidate-review"><div class="review-controls">'

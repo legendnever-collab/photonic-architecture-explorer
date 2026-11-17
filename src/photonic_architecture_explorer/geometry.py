@@ -101,10 +101,10 @@ class Reflector:
         return (2*self.curvatures[0]/cosine, 2*self.curvatures[1]*cosine)
 
 
-def patch_intersections(origin, direction, mirror, sagittal):
+def patch_intersections(origin, direction, mirror, sagittal, *, clip_aperture=True):
     """Exact intersections with local quadratic patch; signed distances returned.
 
-    This is a chief-ray obstruction guard, not a finite-beam aberration solver.
+    The optional unbounded roots distinguish aperture misses from absent intersections.
     """
     t = unit(cross(sagittal, mirror.normal))
     u, v, h = to_local(sub(origin, mirror.vertex), (t, sagittal, mirror.normal))
@@ -125,6 +125,8 @@ def patch_intersections(origin, direction, mirror, sagittal):
             return []
         q = -0.5*(b+math.copysign(math.sqrt(disc), b))
         roots = [-b/(2*a)] if q == 0 else [q/a, c/q]
+    if not clip_aperture:
+        return roots
     return [l for l in roots if abs(u+l*du) <= mirror.half_aperture[0]
             and abs(v+l*dv) <= mirror.half_aperture[1]]
 

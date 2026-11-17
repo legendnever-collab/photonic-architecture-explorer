@@ -183,6 +183,11 @@ def check_case(case_id, fixture, expected, directory):
     k = 2 * math.pi * document["ambient_index"]["value"] / document["wavelength_m"]["value"]
     q_source, _, _ = reference_mode(document["source"], k)
     q_target, _, _ = reference_mode(document["target"], k)
+    placement = result["reflector_placement"]
+    assert placement["input_sha256"] == result["input_sha256"]
+    assert placement["recommended_candidate_id"] == result["selected_candidate_id"]
+    assert placement["perturbed_gaussian_mode_overlap"] == "Uncomputed"
+    placement_summaries = []
     recommendation = None
     if expected == "Computed":
         recommendation = check_recommendation(case_id, result)
@@ -193,18 +198,29 @@ def check_case(case_id, fixture, expected, directory):
         for candidate in result["candidates"]:
             check_candidate(candidate, document, q_source, q_target, k)
         check_sensitivity(result, document, k)
+        assert placement["status"] == "Computed"
+        assert placement["target_reference_plane"] == document["target"]["reference_plane"]["value"]
+        assert [entry["candidate_id"] for entry in placement["candidates"]] == [
+            candidate["id"] for candidate in result["candidates"]]
+        for entry in placement["candidates"]:
+            assert entry["nominal"]["status"] == "Computed" and len(entry["cases"]) == 16
+            assert entry["summary"]["translation"]["computed"] == 12
+            assert entry["summary"]["rotation"]["computed"] == 4
+            placement_summaries.append({"candidate_id": entry["candidate_id"], **entry["summary"]})
     else:
         assert max(math.sqrt(2 / (k * q.imag)) for q in q_source) > 0.1
         assert result["reason"] == "Gaussian divergence exceeds 0.1 rad"
         assert result["search"]["status"] == "Not started"
         assert result["selected_candidate_id"] is None and result["candidates"] == []
-        for key in ("candidate_review", "candidate_sensitivity"):
+        assert placement["candidates"] == []
+        for key in ("candidate_review", "candidate_sensitivity", "reflector_placement"):
             assert result[key]["status"] == "Uncomputed"
 
     return {"id": case_id, "fixture": str(fixture.relative_to(ROOT)), "fixture_bytes_sha256": hashlib.sha256(raw).hexdigest(),
             "input_sha256": result["input_sha256"], "status": expected, "reason": result["reason"],
             "recommended": result["selected_candidate_id"], "candidate_ids": [c["id"] for c in result["candidates"]],
             "accepted_count": result["search"].get("accepted_count", 0), "recommendation": recommendation,
+            "placement_summaries": placement_summaries,
             "q_source_m": [[q.real, q.imag] for q in q_source], "q_target_m": [[q.real, q.imag] for q in q_target]}
 
 

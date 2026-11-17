@@ -105,6 +105,35 @@ async function main() {
         assert(Math.abs(Number(match[2]) - sample.delta_loss_db) <= 0.000051);
       }
     };
+    const verifyPlacement = async (view, data, id) => {
+      const diagnostic = data.reflector_placement;
+      assert.equal(diagnostic.recommended_candidate_id, data.selected_candidate_id);
+      assert.deepEqual(diagnostic.target_reference_plane, data.input_snapshot.target.reference_plane.value);
+      assert.equal(diagnostic.input_sha256, data.input_sha256);
+      assert.equal(diagnostic.perturbed_gaussian_mode_overlap, 'Uncomputed');
+      const candidate = diagnostic.candidates.find(row => row.candidate_id === id);
+      const panel = view.locator('[data-candidate]:visible [data-reflector-placement]');
+      assert.equal(await panel.getAttribute('data-reflector-placement'), id);
+      assert.equal(await panel.getAttribute('data-input-sha'), data.input_sha256);
+      assert.equal(await panel.getAttribute('data-placement-status'), candidate.status);
+      if (!(await panel.evaluate(node => node.open))) await panel.locator('summary').click();
+      const rows = panel.locator('[data-placement-case]:visible');
+      const traces = [candidate.nominal, ...candidate.cases];
+      assert.equal(await rows.count(), traces.length);
+      for (const [i, trace] of traces.entries()) {
+        if (trace.status === 'Fail') {
+          assert((await rows.nth(i).innerText()).includes(trace.reason));
+        } else {
+          const expected = [...trace.target_offset_m.map(v => v * 1e6),
+                            ...trace.target_angular_error_rad.map(v => v * 1e3)];
+          const cells = await rows.nth(i).locator('td').allTextContents();
+          assert.equal(cells.length, expected.length);
+          for (const [j, value] of expected.entries()) {
+            assert(Math.abs(Number(cells[j]) - value) < .000501);
+          }
+        }
+      }
+    };
     const reviewSheet = (view, id) => view.locator('[data-review-candidate="' + id + '"]');
     const verifyReview = async (view, data, id) => {
       const review = data.candidate_review;
@@ -160,9 +189,12 @@ async function main() {
     await page.goto(address);
     assert.equal(await page.locator('#design-review').count(), 0);
     const nominal = await design('Computed');
-    const {candidate_sensitivity: sensitivity, candidate_review: nominalReview, ...coreResult} = nominal;
+    const {candidate_sensitivity: sensitivity, candidate_review: nominalReview,
+           reflector_placement: placement, ...coreResult} = nominal;
+    assert.equal(placement.status, 'Computed');
     assert.deepEqual(coreResult, JSON.parse(fs.readFileSync(path.join(baselineDir, 'design.json'))));
     await verifySensitivity(frame, nominal, nominal.selected_candidate_id);
+    await verifyPlacement(frame, nominal, nominal.selected_candidate_id);
     await verifyReview(frame, nominal, nominal.selected_candidate_id);
     assert.equal(nominalReview.candidates[nominal.selected_candidate_id].sensitivity_ties.length,
                  nominal.candidates.length - 1);
@@ -203,6 +235,7 @@ async function main() {
     assert.deepEqual(await standalone.locator('#design-result').evaluate(el => JSON.parse(el.textContent)), exported);
     await verifyModeMatch(standalone, exported, alternativeId);
     await verifySensitivity(standalone, exported, alternativeId);
+    await verifyPlacement(standalone, exported, alternativeId);
     const summaryValues = await verifyReview(standalone, exported, alternativeId);
     // Printing must work even when the on-screen review is collapsed.
     await standalone.locator('#review-toggle').click();
@@ -258,6 +291,8 @@ async function main() {
     await edit('source_mfd_ts_m_1', '2');
     rejected = await design('Fail');
     assert.match(rejected.reason, /divergence/);
+    assert.equal(rejected.reflector_placement.status, 'Uncomputed');
+    assert.equal(await frame.locator('[data-placement-status="Uncomputed"]').count(), 1);
     assert.equal(await frame.locator('[data-overlap-value]').count(), 0);
     assert.equal(await frame.locator('[data-mode-match]').count(), 0);
     assert.equal(rejected.candidate_sensitivity.status, 'Uncomputed');
@@ -281,6 +316,7 @@ async function main() {
     const mobileCandidate = await frame.locator('#candidate-select').inputValue();
     await verifyModeMatch(frame, mobileData, mobileCandidate);
     await verifySensitivity(frame, mobileData, mobileCandidate);
+    await verifyPlacement(frame, mobileData, mobileCandidate);
     await verifyReview(frame, mobileData, mobileCandidate);
     assert(await frame.locator('html').evaluate(el => el.scrollWidth <= el.clientWidth));
     await page.screenshot({path: path.join(dir, 'workspace-mobile.png'), fullPage: true});
@@ -303,7 +339,7 @@ async function main() {
       })),
       checks: ['fresh M5-A synthetic exact match', 'edited fixed Port and reference plane', 'immediate stale result and export hiding',
                'missing phase and recovery', 'invalid unit vector and high divergence', 'Uncomputed package and total coupling',
-               'standalone HTML and JSON identical data and viewed candidate', 'Mode Match candidate/planes/SHA/overlap agreement', 'sensitivity candidate order, values and export agreement', 'review matches candidate/ports/values and one-page PDF text', 'desktop and 393px mobile', 'blank input and complex q controls']};
+               'standalone HTML and JSON identical data and viewed candidate', 'Mode Match candidate/planes/SHA/overlap agreement', 'sensitivity candidate order, values and export agreement', 'review matches candidate/ports/values and one-page PDF text', 'reflector-placement response, candidate and input provenance match JSON', 'desktop and 393px mobile', 'blank input and complex q controls']};
     fs.writeFileSync(path.join(dir, 'browser.json'), JSON.stringify(evidence, null, 2) + '\n');
     console.log(JSON.stringify(evidence));
   } finally {
