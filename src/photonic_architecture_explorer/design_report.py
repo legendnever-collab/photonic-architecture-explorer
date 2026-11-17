@@ -52,7 +52,15 @@ def render_design_report(result):
         <details><summary>상세 Physics 판정 · 미계산 항목</summary>{result_panel(e)}</details>
         <details><summary>입력·생성 가정·수동 Adapter 재현 JSON</summary><pre>{escape(json.dumps(d,ensure_ascii=False,indent=2))}</pre></details></section></div></article>''')
     if not articles:
-        articles=[f'<section class="card"><h2>후보 생성 보류 · {escape(result["status"])}</h2><p data-design-failure>{escape(result.get("reason",""))}</p><p>Overlap: Uncomputed · 이 제한된 탐색의 실패는 구조의 물리적 불가능성을 입증하지 않습니다.</p>{render_sensitivity(result.get("candidate_sensitivity"), "")}</section>']
+        status = escape(result["status"])
+        reason = escape(result.get("reason", ""))
+        digest = result.get("input_sha256")
+        trace = f'<p>Input SHA256 <code>{escape(digest)}</code></p>' if digest else ''
+        sensitivity = render_sensitivity(result.get("candidate_sensitivity"), "")
+        articles = [f'''<section id="rejected-design" class="card">
+        <h2>후보 생성 보류 · {status}</h2><p data-design-failure>{reason}</p>{trace}
+        <p>Overlap: Uncomputed · 이 제한된 탐색의 실패는 구조의 물리적 불가능성을 입증하지 않습니다.</p>
+        {sensitivity}<p>부품 배치 공차 · Package Yield · Total Coupling: Uncomputed</p></section>''']
     toolbar=(f'<div class="toolbar"><label>설계 후보 <select id="candidate-select">{"".join(options)}</select></label><label>Projection <select id="projection-select"><option>XZ</option><option>XY</option><option>YZ</option></select></label></div>' if options else '')
     comparison=(f'<section class="card compare"><h2>대표 후보 비교</h2><div class="table-scroll"><table><thead><tr><th>후보</th><th>η_mode</th><th>max 3w·κ</th><th>max Radius [µm]</th><th>Path [mm]</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div><p class="caption">가중합 Score 없음. Mode Matching → Footprint/Aperture 여유 → Path Length 순서. 서로 다른 Vertex Geometry의 상위 후보를 표시합니다.</p></section>' if rows else '')
     review_section = ('<section id="candidate-review"><div class="review-controls">'
@@ -62,6 +70,9 @@ def render_design_report(result):
                       f'<div id="review-sheets" hidden>{"".join(sheets)}</div></section>') if sheets else ''
     search=result.get('search',{})
     return f'''<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PAE · Two-Port Design</title><style>{CSS}{MODE_MATCH_CSS}{REVIEW_CSS}
+    @media print{{body:has(#rejected-design)>header, main:has(#rejected-design)>:not(#rejected-design){{display:none !important}}
+    main:has(#rejected-design){{padding:0;margin:0;max-width:none}}
+    #rejected-design{{padding:0;border:0}}}}
     .wrap{{max-width:1240px}}.compare{{margin:18px 0}}th{{text-align:left;padding:9px 3px;font-size:12px}}.table-scroll{{overflow:auto}}.mode-match th[aria-current]{{color:#176d92}}.mode-match caption{{text-align:left;padding:8px 0}}.results .metric{{display:none}}.overview{{margin-bottom:18px}}code{{overflow-wrap:anywhere}}</style></head><body>
     <header><h1>Photonic Architecture Explorer / Two-Port Design</h1><p>Fixed Source + Fixed Target → 자동 생성한 Two-Reflector 후보 · Read-only Report</p></header>
     <main class="wrap"><section class="card overview"><h2>두 Port에서 설계한 결과</h2><p>탐색 상태: <b>{escape(result['status'])}</b> · 유효 후보 {search.get('accepted_count',0)}개 중 대표 {len(result['candidates'])}개</p>
