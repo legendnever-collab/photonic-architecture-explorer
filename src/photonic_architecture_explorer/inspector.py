@@ -12,7 +12,7 @@ import re
 from urllib.parse import parse_qs, urlsplit
 
 from .external import adapt_external, evaluate_external, read, InputIssue
-from .geometry import cross, dot, unit
+from .geometry import cross, dot, sub, unit
 
 ROOT = Path(__file__).resolve().parents[2]
 PROJECTIONS = {'XZ': (0, 2, 'Y'), 'XY': (0, 1, 'Z'), 'YZ': (1, 2, 'X')}
@@ -122,22 +122,39 @@ def declared_boxes(document, adapted):
 def plot_svg(document, result, adapted, projection, seed):
     if adapted is None:
         return '<div class="empty-plot">Geometry 표시 보류<br><small>Input Contract를 먼저 확인하세요. 잘못된 단위를 좌표로 그리지 않습니다.</small></div>'
-    a, b, omitted = PROJECTIONS[projection]
+    if projection == 'Fold':
+        # Use the actual optical plane, including when it is oblique to world XYZ.
+        horizontal = adapted.source.direction
+        vertical = cross(horizontal, adapted.source.sagittal)
+        origin = adapted.source.position
+        labels = ('Source d', 'In-plane transverse')
+        omitted = 'Sagittal'
+        def project(point):
+            delta = sub(point, origin)
+            return dot(delta, horizontal), dot(delta, vertical)
+    else:
+        a, b, omitted = PROJECTIONS[projection]
+        labels = projection
+        def project(point):
+            return point[a], point[b]
     ports = [('Source', adapted.source), ('Target', adapted.target)]
     surfaces = [surface_lines(m, adapted.source.sagittal)
                 if abs(dot(adapted.source.sagittal, m.normal)) <= 1e-10 else []
                 for m in adapted.reflectors]
-    boxes = declared_boxes(document, adapted)
+    # AABB rectangles are exact only in the world projections.
+    boxes = [] if projection == 'Fold' else declared_boxes(document, adapted)
     points = [p.position for _, p in ports]+[point for lines in surfaces for line in lines for point in line]
     points += [v for _, _, lo, hi in boxes for v in (lo, hi)]
-    xs, ys = [p[a]*1000 for p in points], [p[b]*1000 for p in points]
+    xs, ys = zip(*((x*1000, y*1000) for x, y in map(project, points)))
     xlo, xhi, ylo, yhi = min(xs), max(xs), min(ys), max(ys)
     span = max(xhi-xlo, yhi-ylo, .001)
     cx, cy = (xlo+xhi)/2, (ylo+yhi)/2
     # Equal mm-to-screen scale, including degenerate projections.
     sx, sy = max(xhi-xlo, span*.25)*1.25, max(yhi-ylo, span*.25)*1.25
     scale = min(620/sx, 380/sy)
-    def xy(p): return (360+(p[a]*1000-cx)*scale, 250-(p[b]*1000-cy)*scale)
+    def xy(point):
+        x, y = project(point)
+        return 360+(x*1000-cx)*scale, 250-(y*1000-cy)*scale
     def pairs(line): return ' '.join(f'{x:.5f},{y:.5f}' for x, y in map(xy, line))
     out = [f'<svg viewBox="0 0 720 510" role="img" aria-label="{projection} geometry projection [mm]" data-scale="equal">',
            f'<defs><marker id="{seed}-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7" fill="context-stroke"/></marker></defs>']
@@ -148,8 +165,8 @@ def plot_svg(document, result, adapted, projection, seed):
                 f'<line x1="50" y1="{py}" x2="670" y2="{py}" class="grid"/>',
                 f'<text x="{px}" y="474" text-anchor="middle" class="tick">{x:.3g}</text>',
                 f'<text x="45" y="{py+4}" text-anchor="end" class="tick">{y:.3g}</text>']
-    out += [f'<text x="658" y="498" class="axis">{projection[0]} [mm]</text>',
-            f'<text x="18" y="30" class="axis">{projection[1]} [mm]</text>']
+    out += [f'<text x="658" y="498" text-anchor="end" class="axis">{labels[0]} [mm]</text>',
+            f'<text x="18" y="30" class="axis">{labels[1]} [mm]</text>']
     for label, kind, lo, hi in boxes:
         x1, y1 = xy(lo); x2, y2 = xy(hi)
         out.append(f'<rect x="{min(x1,x2)}" y="{min(y1,y2)}" width="{abs(x2-x1)}" height="{abs(y2-y1)}" class="box {kind}" data-kind="{kind}"><title>{escape(label)}</title></rect>')
