@@ -1,5 +1,7 @@
 # M5-B — Two-Port Design Workspace
 
+최신 사용 흐름과 자동 좌표계 적용 조건은 [M6-F Workspace](M6F_TWO_PORT_WORKFLOW.md)를 참조하세요.
+
 ```bash
 python -m pip install -e .
 pae-workspace

@@ -3,7 +3,7 @@
 from html import escape
 import math
 
-from .inspector import PROJECTIONS, plot_svg, visible_overlap
+from .inspector import plot_svg, visible_overlap
 from .mode_match import loss_label
 from .sensitivity import format_db
 
@@ -139,9 +139,7 @@ def render_review_sheet(review, candidate, adapted, active):
                                f'<td>{design["max_3w_footprint_curvature"]:.6f}</td>'
                                f'<td>{design["max_projected_radius_m"] * 1e6:.2f}</td></tr>')
 
-    # Show the fold from the principal projection with the largest plane-normal component.
-    projection = max(PROJECTIONS, key=lambda key: abs(adapted.source.sagittal["XYZ".index(PROJECTIONS[key][2])]))
-    plot = plot_svg(candidate["prescription"], candidate["evaluation"], adapted, projection, "review-" + identifier)
+    plot = plot_svg(candidate["prescription"], candidate["evaluation"], adapted, "Fold", "review-" + identifier)
     eta = data["overlap"]
     eta_label = f"{eta:.6%}" if eta is not None else "Uncomputed"
     source = data["ports"]["source"]
@@ -169,7 +167,7 @@ def render_review_sheet(review, candidate, adapted, active):
     <p>Source → M1 → M2 → Target</p>
     <p data-review-length>Path {data["total_path_m"] * 1e3:.3f} mm</p>
     <p>구간 [mm] {numbers(data["segment_lengths_m"], 1e3)}</p>
-    <figure class="review-figure">{plot}<figcaption>{projection} 투영 · 생략 축 {PROJECTIONS[projection][2]} · Equal Scale</figcaption></figure>
+    <figure class="review-figure">{plot}<figcaption>Fold Plane · 생략 축 Sagittal · Equal Scale</figcaption></figure>
     <h3>Nominal Mode Match</h3>
     <p data-review-nominal>Overlap {eta_label} · Mode Mismatch Loss {loss_label(eta)}</p>
     <p>Geometry {escape(data["geometry_status"])} · Gaussian Domain {escape(data["domain_status"])}

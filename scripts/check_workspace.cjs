@@ -54,6 +54,10 @@ async function main() {
       assert.equal(await page.getByRole('button', {name: 'HTML 저장'}).isVisible(), false);
       assert.equal(await page.locator('#design-review').isVisible(), false);
     };
+    const openCandidateDetails = async view => {
+      const details = view.locator('[data-candidate]:visible .candidate-details');
+      if (!(await details.evaluate(node => node.open))) await details.locator(':scope > summary').click();
+    };
     const verifyModeMatch = async (view, data, candidateId) => {
       const active = view.locator('[data-candidate]:visible');
       assert.equal(await active.getAttribute('data-candidate'), candidateId);
@@ -76,6 +80,7 @@ async function main() {
       const eta = candidate.evaluation.gaussian_mode_matching.normalized_mode_overlap;
       assert.equal(Number(await mode.getAttribute('data-mode-eta')), eta);
       assert.equal(Number(await active.locator('[data-overlap-value]:visible').innerText()), eta);
+      await openCandidateDetails(view);
       if (!(await mode.evaluate(node => node.open))) await mode.locator('summary').click();
       assert.equal(await mode.locator('svg:visible').count(), 6);
       assert.match(await mode.locator('[data-mismatch-loss]').innerText(), / dB$/);
@@ -93,6 +98,7 @@ async function main() {
       assert.equal(await panel.getAttribute('data-input-sha'), data.input_sha256);
       assert.equal(await panel.getAttribute('data-target-plane'), diagnostic.target_reference_plane.id);
       assert.equal(await panel.locator('th[aria-current]').getAttribute('data-sensitivity-candidate'), candidateId);
+      await openCandidateDetails(view);
       if (!(await panel.evaluate(node => node.open))) await panel.locator('summary').click();
       assert.equal(await panel.locator('tbody tr:visible').count(), 9);
       for (const column of diagnostic.candidates) {
@@ -116,6 +122,7 @@ async function main() {
       assert.equal(await panel.getAttribute('data-reflector-placement'), id);
       assert.equal(await panel.getAttribute('data-input-sha'), data.input_sha256);
       assert.equal(await panel.getAttribute('data-placement-status'), candidate.status);
+      await openCandidateDetails(view);
       if (!(await panel.evaluate(node => node.open))) await panel.locator('summary').click();
       const rows = panel.locator('[data-placement-case]:visible');
       const traces = [candidate.nominal, ...candidate.cases];
@@ -176,11 +183,11 @@ async function main() {
       if (selected.sensitivity_ties.length) assert(await sheet.locator('[data-review-ties]').isVisible());
       return {eta, displayedDelta: await row.nth(1).innerText()};
     };
-    const download = async format => {
+    const download = async (format, basename = "design") => {
       const [item] = await Promise.all([page.waitForEvent('download'),
                                        page.locator('[data-export="' + format + '"]').click()]);
       assert.equal(item.suggestedFilename(), 'design.' + format);
-      const dest = path.join(dir, 'design.' + format);
+      const dest = path.join(dir, basename + '.' + format);
       await item.saveAs(dest);
       assert.equal(await item.failure(), null);
       return dest;
@@ -189,6 +196,14 @@ async function main() {
     await page.goto(address);
     assert.equal(await page.locator('#design-review').count(), 0);
     const nominal = await design('Computed');
+    const defaultCandidate = frame.locator('[data-candidate]:visible');
+    assert.equal(await defaultCandidate.getAttribute('data-input-sha'), nominal.input_sha256);
+    assert(await defaultCandidate.locator('[data-projection="Fold"] [data-kind="verified-chief"]').isVisible());
+    assert(await defaultCandidate.getByRole('heading', {name: 'Nominal Mode Match'}).isVisible());
+    assert(await defaultCandidate.locator('[data-recommendation-role="short_path"]').isVisible());
+    assert.equal(await defaultCandidate.locator('.candidate-details').evaluate(node => node.open), false);
+    assert.equal(await frame.locator('#concept-alternatives button').count(), 2);
+    await page.screenshot({path: path.join(dir, 'recommendation-desktop.png')});
     const {candidate_sensitivity: sensitivity, candidate_review: nominalReview,
            reflector_placement: placement, ...coreResult} = nominal;
     assert.equal(placement.status, 'Computed');
@@ -214,7 +229,8 @@ async function main() {
     }
     assert.equal(revised.physical_losses.total_coupling, null);
     const alternativeId = revised.candidates[1].id;
-    await frame.locator('#candidate-select').selectOption(alternativeId);
+    await frame.locator('[data-select-candidate="' + alternativeId + '"]').click();
+    assert.equal(await frame.locator('#candidate-select').inputValue(), alternativeId);
     await verifyModeMatch(frame, revised, alternativeId);
     await verifySensitivity(frame, revised, alternativeId);
     await verifyReview(frame, revised, alternativeId);
@@ -326,12 +342,67 @@ async function main() {
     assert.equal(await byName('target_position_m_2').inputValue(), '');
     assert.equal(await byName('source_wavefront_curvature_ts_per_m_0').inputValue(), '');
     assert.equal(await page.locator('#design-review').count(), 0);
+    const visibleNumericInputs = page.locator('#design-form input[inputmode="decimal"]:visible');
+    assert.equal(await visibleNumericInputs.count(), 18);
+    assert.equal(await page.locator('[data-advanced][open]').count(), 0);
+    await page.screenshot({path: path.join(dir, 'blank-mobile.png'), fullPage: true});
+    const round = {
+      wavelength_m_0: '1310', ambient_index_0: '1',
+      source_position_m_0: '0', source_position_m_1: '0', source_position_m_2: '0',
+      source_propagation_direction_0: '1', source_propagation_direction_1: '0', source_propagation_direction_2: '0',
+      source_mfd_ts_m_0: '20', source_wavefront_curvature_ts_per_m_0: '50',
+      target_position_m_0: '2', target_position_m_1: '2', target_position_m_2: '0',
+      target_propagation_direction_0: '1', target_propagation_direction_1: '0', target_propagation_direction_2: '0',
+      target_mfd_ts_m_0: '20', target_wavefront_curvature_ts_per_m_0: '-50',
+    };
+    assert.equal(Object.keys(round).length, await visibleNumericInputs.count());
+    for (const [name, value] of Object.entries(round)) await edit(name, value);
+    const auto = await design('Computed');
+    assert.equal(auto.selected_candidate_id, 'G008-B1');
+    assert.deepEqual(auto.input_snapshot.source.sagittal_axis.value, [0, 0, 1]);
+    assert.match(auto.input_snapshot.source.sagittal_axis.source, /Derived by Workspace/);
+    assert.deepEqual(auto.input_snapshot.target.wavefront_curvature_ts_per_m.value, [-50, -50]);
+    assert(await frame.locator('[data-candidate]:visible [data-projection="Fold"] svg').isVisible());
+    assert(await frame.locator('html').evaluate(el => el.scrollWidth <= el.clientWidth));
+    await page.screenshot({path: path.join(dir, 'recommendation-mobile.png')});
+    const roundExport = await download('json', 'round-design');
+    const viewed = {...auto, viewed_candidate_id: auto.selected_candidate_id};
+    assert.deepEqual(JSON.parse(fs.readFileSync(roundExport)), viewed);
+    const roundHTML = await download('html', 'round-design');
+    const roundReport = await browser.newPage();
+    await roundReport.route('http**://**/*', route => route.abort());
+    await roundReport.goto('file://' + path.resolve(roundHTML));
+    assert.deepEqual(await roundReport.locator('#design-result').evaluate(el => JSON.parse(el.textContent)), viewed);
+    await roundReport.emulateMedia({media: 'print'});
+    const roundPdf = path.join(dir, 'round-review.pdf');
+    await roundReport.pdf({path: roundPdf, preferCSSPageSize: true});
+    assert.match(execFileSync('pdfinfo', [roundPdf], {encoding: 'utf8'}), /^Pages:\s+1\s*$/m);
+    const roundPrint = execFileSync('pdftotext', [roundPdf, '-'], {encoding: 'utf8'}).replace(/\s+/g, ' ');
+    for (const expected of [auto.input_sha256, 'Candidate Review · G008-B1', 'Overlap 100.000000%']) {
+      assert(roundPrint.includes(expected), 'missing round print value ' + expected);
+    }
+    await roundReport.close();
+
+    await edit('target_position_m_1', '0');
+    await assertClean();
+    assert.match((await design('Uncomputed')).reason, /Ambiguous Fold Plane/);
+    assert.equal(await page.locator('[data-advanced][open]').count(), 2);
+    await edit('target_position_m_1', '2');
+    await page.locator('select[name="source_mode"]').selectOption('mfd');
+    await edit('source_mfd_ts_m_1', '24');
+    await edit('source_wavefront_curvature_ts_per_m_1', '50');
+    rejected = await design('Uncomputed');
+    assert.match(rejected.reason, /Elliptical/);
+    assert.equal(rejected.input_snapshot.source.sagittal_axis.value, null);
+    assert.equal(await page.locator('[data-port="source"] [data-advanced]').evaluate(el => el.open), true);
     await page.locator('select[name="source_mode"]').selectOption('q');
     assert.equal(await byName('source_complex_q_ts_m_0').isVisible(), true);
     assert.equal(await byName('source_wavefront_curvature_ts_per_m_0').isVisible(), false);
     assert.deepEqual(errors, []);
 
     const evidence = {status: 'Pass', evaluated_checkout_sha: head, browser: await browser.version(),
+      input_simplification: {blank_round_numeric_fields: Object.keys(round).length, detail_panels_initially_open: 0,
+        design_submissions: 1, candidate_id: auto.selected_candidate_id, input_sha256: auto.input_sha256},
       printed_review: {pages: 1, paper: 'A4', candidate_id: alternativeId, input_sha256: exported.input_sha256},
       nominal_sensitivity: sensitivity.candidates.map(entry => ({
         candidate_id: entry.candidate_id,
@@ -339,7 +410,7 @@ async function main() {
       })),
       checks: ['fresh M5-A synthetic exact match', 'edited fixed Port and reference plane', 'immediate stale result and export hiding',
                'missing phase and recovery', 'invalid unit vector and high divergence', 'Uncomputed package and total coupling',
-               'standalone HTML and JSON identical data and viewed candidate', 'Mode Match candidate/planes/SHA/overlap agreement', 'sensitivity candidate order, values and export agreement', 'review matches candidate/ports/values and one-page PDF text', 'reflector-placement response, candidate and input provenance match JSON', 'desktop and 393px mobile', 'blank input and complex q controls']};
+               'standalone HTML and JSON identical data and viewed candidate', 'Mode Match candidate/planes/SHA/overlap agreement', 'sensitivity candidate order, values and export agreement', 'review matches candidate/ports/values and one-page PDF text', 'reflector-placement response, candidate and input provenance match JSON', 'desktop and 393px mobile', 'blank input and complex q controls', '18 visible round inputs and no advanced panels', 'rotated Fold view and round input HTML/JSON/A4 identity', 'ambiguous Fold Plane and missing elliptical axis guidance']};
     fs.writeFileSync(path.join(dir, 'browser.json'), JSON.stringify(evidence, null, 2) + '\n');
     console.log(JSON.stringify(evidence));
   } finally {

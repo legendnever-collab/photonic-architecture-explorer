@@ -5,7 +5,10 @@ import json
 import unittest
 
 from photonic_architecture_explorer.design import design_two_ports
-from photonic_architecture_explorer.workspace import Workspace, build_document, initial_values
+from photonic_architecture_explorer.external import InputIssue
+from photonic_architecture_explorer.workspace import (
+    Workspace, build_document, initial_values, resolve_coordinates,
+)
 
 
 class WorkspaceTests(unittest.TestCase):
@@ -73,3 +76,94 @@ class WorkspaceTests(unittest.TestCase):
         snapshot = json.loads(json.dumps(document))
         document["source"]["position_m"]["value"][0] = 0.25
         self.assertEqual(self.example, snapshot)
+
+    def round_input(self):
+        self.blank = self.workspace.templates["blank"]
+        raw = initial_values(self.blank, "blank")
+        raw.update(wavelength_m_0="1310", ambient_index_0="1")
+        for name, position, phase in (("source", (0, 0, 0), "50"), ("target", (2, 2, 0), "-50")):
+            for key, values in (("position_m", position), ("propagation_direction", (1, 0, 0))):
+                for i, value in enumerate(values):
+                    raw[f"{name}_{key}_{i}"] = str(value)
+            raw[f"{name}_mfd_ts_m_0"] = "20"
+            raw[f"{name}_wavefront_curvature_ts_per_m_0"] = phase
+        return raw
+
+    def test_round_modes_derive_unique_plane_and_reproduce_explicit_design(self):
+        raw = self.round_input()
+        inferred = build_document(self.blank, raw)
+        resolve_coordinates(inferred)
+        for name, phase in (("source", 50), ("target", -50)):
+            port = inferred[name]
+            self.assertEqual(port["sagittal_axis"]["value"], [0., 0., 1.])
+            self.assertIn("Derived by Workspace", port["sagittal_axis"]["source"])
+            self.assertEqual(port["wavefront_curvature_ts_per_m"]["value"], [phase] * 2)
+            plane = port["reference_plane"]
+            self.assertEqual(plane["value"]["origin_m"], port["position_m"]["value"])
+            self.assertEqual(plane["value"]["normal"], port["propagation_direction"]["value"])
+            self.assertIn("origin_m = position_m", plane["source"])
+            raw.update({f"{name}_sagittal_axis_{i}": str(v) for i, v in enumerate((0, 0, 1))})
+        explicit = build_document(self.blank, raw)
+        resolve_coordinates(explicit)
+        automatic, manual = design_two_ports(inferred), design_two_ports(explicit)
+        self.assertEqual(automatic["status"], "Computed")
+        self.assertEqual(automatic["selected_candidate_id"], "G008-B1")
+        self.assertEqual(automatic["search"], manual["search"])
+        self.assertNotEqual(automatic["input_sha256"], manual["input_sha256"])
+        for auto, hand in zip(automatic["candidates"], manual["candidates"], strict=True):
+            self.assertEqual(auto["id"], hand["id"])
+            for key in ("geometry", "model_domain", "gaussian_mode_matching", "evaluated_ports"):
+                self.assertEqual(auto["evaluation"][key], hand["evaluation"][key])
+            for name in ("source", "target"):
+                self.assertEqual(auto["prescription"][name], inferred[name])
+        self.assertIsNone(self.blank["source"]["sagittal_axis"]["value"])
+
+    def test_coordinate_gate_reports_anisotropy_skew_roll_and_ambiguity_separately(self):
+        for changes, status, reason in (
+            ({"source_mode": "mfd", "source_mfd_ts_m_1": "24",
+              "source_wavefront_curvature_ts_per_m_1": "50"}, "Uncomputed", "Elliptical"),
+            ({"source_mode": "mfd", "source_mfd_ts_m_1": "20",
+              "source_wavefront_curvature_ts_per_m_1": "55"}, "Uncomputed", "Astigmatic"),
+            ({"target_position_m_1": "0"}, "Uncomputed", "Ambiguous Fold Plane"),
+            ({"target_propagation_direction_0": "0",
+              "target_propagation_direction_2": "1"}, "Fail", "Skew"),
+            ({"source_sagittal_axis_0": "0", "source_sagittal_axis_1": "1",
+              "source_sagittal_axis_2": "0"}, "Fail", "Rolled"),
+            ({"target_propagation_direction_0": "0"}, "Fail", "unit vector"),
+            ({"source_wavefront_curvature_ts_per_m_0": ""}, "Uncomputed", "Wavefront Phase"),
+        ):
+            with self.subTest(reason=reason):
+                raw = self.round_input()
+                raw.update(changes)
+                document = build_document(self.blank, raw)
+                with self.assertRaisesRegex(InputIssue, reason) as context:
+                    resolve_coordinates(document)
+                self.assertEqual(context.exception.status, status)
+                self.assertIsNone(document["target"]["sagittal_axis"]["value"])
+
+    def test_retains_explicit_q_phase_frame_and_axis_metadata(self):
+        document = copy.deepcopy(self.example)
+        for name in ("source", "target"):
+            port = document[name]
+            port["reference_plane"]["value"].update(frame_id="package-frame", id=f"{name}-plane")
+            q = port["complex_q_ts_m"] = copy.deepcopy(port["mfd_ts_m"])
+            q["value"] = [[0.0, 0.0001534823891830128], [0.0, 0.00034533537566177886]]
+        edited = build_document(document, initial_values(document, "example"))
+        resolve_coordinates(edited)
+        self.assertEqual(edited, document)
+        self.assertEqual(design_two_ports(edited)["status"], "Computed")
+
+    def test_oblique_round_q_preserves_explicit_axis_sign(self):
+        raw = self.round_input()
+        raw.update(target_position_m_1="1.2", target_position_m_2="1.6",
+                   source_mode="q", source_complex_q_ts_m_0="-0.02", source_complex_q_ts_m_1="0.24",
+                   source_complex_q_ts_m_2="-0.02", source_complex_q_ts_m_3="0.24",
+                   target_sagittal_axis_0="0", target_sagittal_axis_1="-0.8",
+                   target_sagittal_axis_2="0.6")
+        document = build_document(self.blank, raw)
+        resolve_coordinates(document)
+        self.assertEqual(document["source"]["sagittal_axis"]["value"], [0, -0.8, 0.6])
+        self.assertEqual(document["target"]["sagittal_axis"]["source"],
+                         "User input in Two-Port Workspace")
+        self.assertEqual(document["source"]["complex_q_ts_m"]["value"],
+                         [[-0.00002, 0.00024]] * 2)

@@ -4,7 +4,7 @@ import json
 from .candidate_review import CONCEPT_LABELS, REVIEW_CSS, build_candidate_review, render_review_sheet
 from .external import adapt_external
 from .inspector import CSS, PROJECTIONS, plot_svg, result_panel, input_summary, visible_overlap
-from .mode_match import MODE_MATCH_CSS, render_mode_match
+from .mode_match import MODE_MATCH_CSS, loss_label, render_mode_match
 from .placement import compare_placement
 from .sensitivity import compare_sensitivity, render_sensitivity
 from .solver import MAX_FOOTPRINT_SLOPE
@@ -12,8 +12,8 @@ from .solver import MAX_FOOTPRINT_SLOPE
 
 CONCEPT_REASONS = {
     'short_path': '유효 후보 중 가장 좋은 Overlap 구간에서 광경로가 가장 짧습니다.',
-    'smaller_footprint': '동등한 Overlap에서 반사면 위 최대 투영 빔 반경을 줄여야 할 때 검토할 대안입니다.',
-    'model_margin': '동등한 Overlap에서 3w·κ 한계까지의 여유를 우선할 때 검토할 대안입니다.',
+    'smaller_footprint': '동등한 Overlap에서 반사면 위 최대 투영 빔 반경이 더 작습니다.',
+    'model_margin': '동등한 Overlap에서 Gaussian 모델의 곡률·Footprint 한계까지 여유가 더 큽니다.',
 }
 
 
@@ -77,7 +77,7 @@ def render_placement(diagnostic, identifier):
 
 def render_design_report(result):
     payload=json.dumps(result,sort_keys=True,ensure_ascii=False,allow_nan=False).replace('&','\\u0026').replace('<','\\u003c').replace('>','\\u003e')
-    rows=[]; articles=[]; options=[]; sheets=[]
+    rows=[]; articles=[]; options=[]; sheets=[]; alternatives=[]
     review = result.get('candidate_review', {})
     lead = result['candidates'][0]['ranking'] if result['candidates'] else None
     for i,c in enumerate(result['candidates']):
@@ -91,35 +91,52 @@ def render_design_report(result):
         if i and role:
             extra_path = (r['total_path_m'] - lead['total_path_m']) * 1000
             reason += f' 추천 대비 광경로 {extra_path:+.3f} mm.'
+            alternatives.append(f'<li><button type="button" data-select-candidate="{identifier}">'
+                                f'{concept} · {identifier}</button><p>{reason}</p></li>')
         options.append(f'<option value="{identifier}">{identifier} · {concept}</option>')
         rows.append(f'<tr data-compared-concept="{identifier}"><td>{identifier} · {concept}</td><td>{table_eta}</td><td>{r["max_3w_footprint_curvature"]:.6f}</td><td>{r["max_projected_radius_m"]*1e6:.2f}</td><td>{r["total_path_m"]*1000:.3f}</td></tr>')
         adapted=adapt_external(d)
         if review.get('status') == 'Computed':
             sheets.append(render_review_sheet(review, c, adapted, i == 0))
         plots=[]
-        for proj,(_,_,omitted) in PROJECTIONS.items():
-            plots.append(f'<div class="projection" data-projection="{proj}"'+(' hidden' if proj!='XZ' else '')+f'><h3>{proj} · 생략 축 {omitted} · mm · Equal Scale</h3>'+plot_svg(d,e,adapted,proj,identifier+'-'+proj)+'</div>')
+        for proj, omitted in [('Fold', 'Sagittal'), *((key, axes[2]) for key, axes in PROJECTIONS.items())]:
+            plots.append(f'<div class="projection" data-projection="{proj}"'
+                         + (' hidden' if proj != 'Fold' else '')
+                         + f'><h3>{proj} · 생략 축 {omitted} · mm · Equal Scale</h3>'
+                         + plot_svg(d, e, adapted, proj, identifier + '-' + proj) + '</div>')
         prescription_rows=[]
         for j,m in enumerate(adapted.reflectors,1):
             fmt=lambda vals: ', '.join(f'{v:.6g}' for v in vals)
             prescription_rows.append(f'<tr><td>M{j}</td><td>{fmt(v*1e3 for v in m.vertex)}</td><td>{fmt(m.normal)}</td><td>{fmt(m.curvatures)}</td><td>{fmt(v*1e3 for v in m.half_aperture)}</td></tr>')
-        articles.append(f'''<article data-candidate="{identifier}"{' hidden' if i else ''}>
+        if i == 0:
+            trade_off = "대안에서는 광경로를 늘려 Beam Footprint를 줄이거나 Gaussian 모델 여유를 늘릴 수 있습니다."
+            if len(result["candidates"]) == 1:
+                trade_off = "현재 검증 범위에서 비교할 별도 대안이 없습니다."
+            elif not any(item.get("recommendation_role") == "smaller_footprint" for item in result["candidates"]):
+                trade_off = "대안에서는 광경로를 늘려 Gaussian 모델 여유를 늘릴 수 있습니다."
+        else:
+            trade_off = (f"추천 대비 최대 투영 빔 반경 "
+                         f"{(r['max_projected_radius_m'] - lead['max_projected_radius_m'])*1e6:+.2f} µm.")
+        articles.append(f'''<article data-candidate="{identifier}" data-input-sha="{escape(result['input_sha256'])}"{' hidden' if i else ''}>
         <div class="layout"><section class="card drawing"><h2>{'Recommended Concept' if i==0 else 'Alternative Concept'} · {identifier}</h2>{''.join(plots)}
-        <p class="caption">파랑: Fixed Source / Chief Path · 보라: Fixed Target · 주황: Quadratic Reflectors</p>
-        <p class="notice">Conceptual Geometry · 실제 Package와 제작 가능성은 Uncomputed입니다.</p></section>
-        <section class="card"><h2>설계 판단</h2><div class="metric"><span>Normalized Mode Overlap · Approximate</span>{metric}<small>Total Coupling: Uncomputed · 실제 전송 효율이 아닙니다.</small></div>
-        <p>Geometry와 Gaussian Domain 검사 통과. Path Length <b>{r['total_path_m']*1000:.3f} mm</b>.</p>
+        <p class="caption">파랑 · Fixed Source와 Chief Path / 보라 · Fixed Target / 주황 · Quadratic Reflectors</p></section>
+        <section class="card decision"><h2>Nominal Mode Match</h2>
+        <div class="metric"><span>Normalized Mode Overlap · Approximate</span>{metric}
+        <small>Mode Mismatch {loss_label(eta)} · Total Coupling Uncomputed</small></div>
         <p data-recommendation-role="{role or ''}"><b>{concept}</b> · {reason}</p>
+        <p><b>광경로 {r['total_path_m']*1000:.3f} mm</b> · {trade_off}</p></section></div>
+        <details class="card candidate-details"><summary>Mode Match, Sensitivity, Reflector 상세</summary>
         <p>최대 Projected Beam Radius <b>{r['max_projected_radius_m']*1e6:.2f} µm</b> ·
         Max 3w·κ <b>{r['max_3w_footprint_curvature']:.6f}</b> (Guard {MAX_FOOTPRINT_SLOPE}).</p>
-        <p>실제 배치 공차·Package Yield·Total Coupling·Patentability는 Uncomputed입니다.</p>
         {render_mode_match(c, result.get('input_sha256', ''), adapted)}
         {render_sensitivity(result.get('candidate_sensitivity'), identifier)}
         {render_placement(result.get('reflector_placement'), identifier)}
         <details><summary>Reflector 설계값 · 자동 생성</summary><p>Half-aperture는 각 반사면의 투영 빔 반경에 4배 규칙을 적용했습니다.</p><div class="table-scroll"><table><tr><th>면</th><th>Vertex [mm]</th><th>Normal</th><th>κt, κs [m⁻¹]</th><th>Half-aperture [mm]</th></tr>{''.join(prescription_rows)}</table></div>
         <p>Segment Lengths [mm]: {', '.join(f'{v*1000:.6g}' for v in e['geometry']['lengths'])}</p></details>
-        <details><summary>상세 Physics 판정 · 미계산 항목</summary>{result_panel(e)}</details>
-        <details><summary>입력·생성 가정·수동 Adapter 재현 JSON</summary><pre>{escape(json.dumps(d,ensure_ascii=False,indent=2))}</pre></details></section></div></article>''')
+        <details><summary>상세 Physics 판정 · 미계산 항목</summary>
+        <p>Off-vertex Field 및 Perturbed Mode Overlap · Uncomputed. 실제 배치 공차, Package Yield, Total Coupling, Patentability · Uncomputed.</p>
+        {result_panel(e)}</details>
+        <details><summary>입력·생성 가정·수동 Adapter 재현 JSON</summary><pre>{escape(json.dumps(d,ensure_ascii=False,indent=2))}</pre></details></details></article>''')
     if not articles:
         status = escape(result["status"])
         reason = escape(result.get("reason", ""))
@@ -130,26 +147,34 @@ def render_design_report(result):
         <h2>후보 생성 보류 · {status}</h2><p data-design-failure>{reason}</p>{trace}
         <p>Overlap: Uncomputed · 이 제한된 탐색의 실패는 구조의 물리적 불가능성을 입증하지 않습니다.</p>
         {sensitivity}{render_placement(result.get('reflector_placement'), '')}<p>부품 배치 공차 · Package Yield · Total Coupling: Uncomputed · Patentability: Uncomputed</p></section>''']
-    toolbar=(f'<div class="toolbar"><label>설계 후보 <select id="candidate-select">{"".join(options)}</select></label><label>Projection <select id="projection-select"><option>XZ</option><option>XY</option><option>YZ</option></select></label></div>' if options else '')
-    comparison=(f'<section class="card compare"><h2>Representative and Alternative Concepts</h2><div class="table-scroll"><table><thead><tr><th>후보</th><th>η_mode</th><th>max 3w·κ</th><th>max Radius [µm]</th><th>Path [mm]</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div><p class="caption">같은 Overlap 구간에서 Path, Beam Footprint, 모델 한계 여유를 비교합니다. 3w·κ는 Gaussian 모델의 검사 지표입니다. 실제 Package 크기, Aberration과 조립 성능은 별도 검증이 필요합니다.</p></section>' if rows else '')
+    toolbar=(f'<div class="toolbar"><label>설계 후보 <select id="candidate-select">{"".join(options)}</select></label><label>Projection <select id="projection-select"><option>Fold</option><option>XZ</option><option>XY</option><option>YZ</option></select></label></div>' if options else '')
+    comparison=(f'<details class="card compare"><summary>후보 수치 비교 · Ranking 지표</summary><div class="table-scroll"><table><thead><tr><th>후보</th><th>η_mode</th><th>max 3w·κ</th><th>max Radius [µm]</th><th>Path [mm]</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div><p class="caption">같은 Overlap 구간에서 Path, Beam Footprint, 모델 한계 여유를 비교합니다. 3w·κ는 Gaussian 모델의 검사 지표입니다. 실제 Package 크기, Aberration과 조립 성능은 별도 검증이 필요합니다.</p></details>' if rows else '')
     review_section = ('<section id="candidate-review"><div class="review-controls">'
                       '<button type="button" id="review-toggle" aria-controls="review-sheets" '
                       'aria-expanded="false">후보 요약 보기</button>'
                       '<button type="button" id="review-print">후보 요약 인쇄</button></div>'
                       f'<div id="review-sheets" hidden>{"".join(sheets)}</div></section>') if sheets else ''
+    alternative_section = ('<section id="concept-alternatives" class="card"><h2>Alternative Concepts</h2>'
+                           f'<ul>{"".join(alternatives)}</ul></section>') if alternatives else ''
     search=result.get('search',{})
     return f'''<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PAE · Two-Port Design</title><style>{CSS}{MODE_MATCH_CSS}{REVIEW_CSS}
     @media print{{body:has(#rejected-design)>header, main:has(#rejected-design)>:not(#rejected-design){{display:none !important}}
     main:has(#rejected-design){{padding:0;margin:0;max-width:none}}
     #rejected-design{{padding:0;border:0}}}}
-    .wrap{{max-width:1240px}}.compare{{margin:18px 0}}th{{text-align:left;padding:9px 3px;font-size:12px}}.table-scroll{{overflow:auto}}.mode-match th[aria-current]{{color:#176d92}}.mode-match caption{{text-align:left;padding:8px 0}}.results .metric{{display:none}}.overview{{margin-bottom:18px}}code{{overflow-wrap:anywhere}}</style></head><body>
-    <header><h1>Photonic Architecture Explorer / Two-Port Design</h1><p>Fixed Source + Fixed Target → 자동 생성한 Two-Reflector 후보 · Read-only Report</p></header>
-    <main class="wrap"><section class="card overview"><h2>두 Port에서 설계한 결과</h2><p>탐색 상태: <b>{escape(result['status'])}</b> · 유효 후보 {search.get('accepted_count',0)}개 중 대표 {len(result['candidates'])}개</p>
-    <p>Port Position·Direction·Mode는 고정했습니다. Reflector 위치·Normal·Curvature·Aperture를 입력할 필요가 없습니다.</p>
-    <details><summary>두 Port 입력 확인</summary>{input_summary(result.get('input_snapshot'))}</details>
-    <p class="caption">Synthetic 또는 명시 Gaussian 가정의 모델 내 개념 설계입니다. Actual Field·Total Coupling·Package·Fabrication Yield·Patentability는 Uncomputed입니다.</p></section>
-    {toolbar}{review_section}{''.join(articles)}{comparison}
-    <section class="card"><details><summary>탐색 범위·순위 근거·실패 진단</summary><p>최대 64 Geometry / 256 Curvature 후보. Frozen family를 모두 검사하며 범위를 자동 확대하지 않습니다.</p><p>대표 선정은 추천 정책과 후보별 선택 근거를 따릅니다.</p><pre>{escape(json.dumps({'policy':result['search_policy'],'ranking_order':result['ranking_order'],'recommendation_policy':result.get('recommendation_policy'),'search':search,'limitations':result['limitations']},ensure_ascii=False,indent=2))}</pre></details>
+    .wrap{{max-width:1240px}}.compare,.candidate-details,#concept-alternatives{{margin:14px 0}}
+    th{{text-align:left;padding:9px 3px;font-size:12px}}.table-scroll{{overflow:auto}}.mode-match th[aria-current]{{color:#176d92}}
+    .mode-match caption{{text-align:left;padding:8px 0}}.results .metric{{display:none}}code{{overflow-wrap:anywhere}}
+    .drawing{{position:static}}.drawing svg{{max-height:420px}}.decision p{{line-height:1.55}}
+    #concept-alternatives ul{{padding-left:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
+    #concept-alternatives li{{list-style:none;margin:0}}#concept-alternatives button{{background:white;color:#176d92;text-align:left}}
+    @media(max-width:560px){{.drawing svg{{max-height:255px}}#concept-alternatives ul{{grid-template-columns:minmax(0,1fr)}}}}
+    </style></head><body>
+    <header><h1>Two-Port Design</h1></header>
+    <main class="wrap">
+    {toolbar}{''.join(articles)}{alternative_section}{review_section}{comparison}
+    <section class="card"><details><summary>Fixed Ports · 입력 SHA · 기준면</summary>
+    <p>Input SHA256 <code>{escape(result.get('input_sha256', ''))}</code></p>{input_summary(result.get('input_snapshot'))}</details>
+    <details><summary>탐색 범위·순위 근거·실패 진단</summary><p>최대 64 Geometry / 256 Curvature 후보. Frozen family를 모두 검사하며 범위를 자동 확대하지 않습니다.</p><p>대표 선정은 추천 정책과 후보별 선택 근거를 따릅니다.</p><pre>{escape(json.dumps({'policy':result['search_policy'],'ranking_order':result['ranking_order'],'recommendation_policy':result.get('recommendation_policy'),'search':search,'limitations':result['limitations']},ensure_ascii=False,indent=2))}</pre></details>
     <details><summary>전체 결과 JSON · 입력 Snapshot 포함</summary><pre>{escape(json.dumps(result,ensure_ascii=False,indent=2))}</pre></details>
     <p class="caption">이 파일은 재계산하지 않는 결과 Snapshot입니다. 다른 두 Port의 Design 실행은 Repository의 <code>pae-design ports.json</code> 진입점을 사용합니다.</p></section></main>
     <script type="application/json" id="design-result">{payload}</script><script>
@@ -172,6 +197,13 @@ def render_design_report(result):
     if(selector){{
       const viewed=JSON.parse(document.querySelector('#design-result').textContent).viewed_candidate_id;
       if(Array.from(selector.options).some(option=>option.value===viewed)) selector.value=viewed;
+      document.querySelectorAll('[data-select-candidate]').forEach(button=>{{
+        button.addEventListener('click',()=>{{
+          selector.value=button.dataset.selectCandidate;
+          show();
+          document.querySelector('[data-candidate]:not([hidden])').scrollIntoView({{block:'start'}});
+        }});
+      }});
       selector.addEventListener('change',show);projection.addEventListener('change',show);show();
     }}
     </script></body></html>'''
