@@ -124,7 +124,7 @@ def render_design_report(result):
         <div class="metric"><span>Normalized Mode Overlap · Approximate</span>{metric}
         <small>Mode Mismatch {loss_label(eta)} · Total Coupling Uncomputed</small></div>
         <p data-recommendation-role="{role or ''}"><b>{concept}</b> · {reason}</p>
-        <p><b>광경로 {r['total_path_m']*1000:.3f} mm</b> · {trade_off}</p></section></div>
+        <p data-trade-off><b>광경로 {r['total_path_m']*1000:.3f} mm</b> · {trade_off}</p></section></div>
         <details class="card candidate-details"><summary>Mode Match, Sensitivity, Reflector 상세</summary>
         <p>최대 Projected Beam Radius <b>{r['max_projected_radius_m']*1e6:.2f} µm</b> ·
         Max 3w·κ <b>{r['max_3w_footprint_curvature']:.6f}</b> (Guard {MAX_FOOTPRINT_SLOPE}).</p>
@@ -167,11 +167,12 @@ def render_design_report(result):
     .drawing{{position:static}}.drawing svg{{max-height:420px}}.decision p{{line-height:1.55}}
     #concept-alternatives ul{{padding-left:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
     #concept-alternatives li{{list-style:none;margin:0}}#concept-alternatives button{{background:white;color:#176d92;text-align:left}}
-    @media(max-width:560px){{.drawing svg{{max-height:255px}}#concept-alternatives ul{{grid-template-columns:minmax(0,1fr)}}}}
+    @media(max-width:560px){{body>header{{display:none}}.drawing svg{{max-height:205px}}
+    .layout{{gap:10px}}#concept-alternatives ul{{grid-template-columns:minmax(0,1fr)}}}}
     </style></head><body>
     <header><h1>Two-Port Design</h1></header>
     <main class="wrap">
-    {toolbar}{''.join(articles)}{alternative_section}{review_section}{comparison}
+    {''.join(articles)}{toolbar}{alternative_section}{review_section}{comparison}
     <section class="card"><details><summary>Fixed Ports · 입력 SHA · 기준면</summary>
     <p>Input SHA256 <code>{escape(result.get('input_sha256', ''))}</code></p>{input_summary(result.get('input_snapshot'))}</details>
     <details><summary>탐색 범위·순위 근거·실패 진단</summary><p>최대 64 Geometry / 256 Curvature 후보. Frozen family를 모두 검사하며 범위를 자동 확대하지 않습니다.</p><p>대표 선정은 추천 정책과 후보별 선택 근거를 따릅니다.</p><pre>{escape(json.dumps({'policy':result['search_policy'],'ranking_order':result['ranking_order'],'recommendation_policy':result.get('recommendation_policy'),'search':search,'limitations':result['limitations']},ensure_ascii=False,indent=2))}</pre></details>

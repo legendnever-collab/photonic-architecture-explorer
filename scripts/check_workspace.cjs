@@ -362,7 +362,12 @@ async function main() {
     assert.deepEqual(auto.input_snapshot.source.sagittal_axis.value, [0, 0, 1]);
     assert.match(auto.input_snapshot.source.sagittal_axis.source, /Derived by Workspace/);
     assert.deepEqual(auto.input_snapshot.target.wavefront_curvature_ts_per_m.value, [-50, -50]);
-    assert(await frame.locator('[data-candidate]:visible [data-projection="Fold"] svg').isVisible());
+    const mobileRecommendation = frame.locator('[data-candidate]:visible');
+    for (const selector of ['[data-projection="Fold"] svg', '.metric', '[data-recommendation-role]', '[data-trade-off]']) {
+      const bounds = await mobileRecommendation.locator(selector).boundingBox();
+      assert(bounds && bounds.y >= 0 && bounds.y + bounds.height <= 852,
+             'Mobile result must show ' + selector + ' without scrolling: ' + JSON.stringify(bounds));
+    }
     assert(await frame.locator('html').evaluate(el => el.scrollWidth <= el.clientWidth));
     await page.screenshot({path: path.join(dir, 'recommendation-mobile.png')});
     const roundExport = await download('json', 'round-design');
@@ -410,7 +415,7 @@ async function main() {
       })),
       checks: ['fresh M5-A synthetic exact match', 'edited fixed Port and reference plane', 'immediate stale result and export hiding',
                'missing phase and recovery', 'invalid unit vector and high divergence', 'Uncomputed package and total coupling',
-               'standalone HTML and JSON identical data and viewed candidate', 'Mode Match candidate/planes/SHA/overlap agreement', 'sensitivity candidate order, values and export agreement', 'review matches candidate/ports/values and one-page PDF text', 'reflector-placement response, candidate and input provenance match JSON', 'desktop and 393px mobile', 'blank input and complex q controls', '18 visible round inputs and no advanced panels', 'rotated Fold view and round input HTML/JSON/A4 identity', 'ambiguous Fold Plane and missing elliptical axis guidance']};
+               'standalone HTML and JSON identical data and viewed candidate', 'Mode Match candidate/planes/SHA/overlap agreement', 'sensitivity candidate order, values and export agreement', 'review matches candidate/ports/values and one-page PDF text', 'reflector-placement response, candidate and input provenance match JSON', 'desktop and 393px mobile', 'blank input and complex q controls', '18 visible round inputs and no advanced panels', 'rotated Fold, Mode Match, rationale and trade-off within the first mobile viewport', 'round input HTML/JSON/A4 identity', 'ambiguous Fold Plane and missing elliptical axis guidance']};
     fs.writeFileSync(path.join(dir, 'browser.json'), JSON.stringify(evidence, null, 2) + '\n');
     console.log(JSON.stringify(evidence));
   } finally {
