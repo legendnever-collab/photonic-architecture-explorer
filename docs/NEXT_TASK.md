@@ -1,3 +1,32 @@
+# M6-F — Two-Port Input Simplification & Design Workflow Improvement
+
+추천 모델 **Sol Work**. M6-E Draft의 기록을 읽되 구현 Base는 M6-D가 병합된
+최신 Main이다. 현재 Main은 `c3c66585d089c1c3c8a8a385dee192e18f89aec8`.
+M6-E Reference 판정은 [B — Reference Not Ready](M6E_OFF_VERTEX_REFERENCE_GATE.md)다.
+M6-E Draft 및 M4 #10/#11을 임의 병합하지 않는다.
+
+1. AGENTS.md, PRODUCT_CHARTER.md, M6E_OFF_VERTEX_REFERENCE_GATE.md와 기존
+   Workspace 입력 계약을 읽고 원격 HEAD/CI/Artifacts와 세 Synthetic 사례를 복구한다.
+2. 기존 화면의 필수 입력을 audit하고 Two-Port → Design → 추천/대안 검토의
+   단일 흐름을 개선한다. Mirror/Curvature/Solver/민감도 옵션을 필수로 요구하지 않는다.
+3. 현재 지원되는 Coplanar 입력에서 좌표계 처리를 단순화한다. 유일하게 정당화되는
+   basis만 자동 유도하고 기존 물리값은 보존한다. Elliptical Mode의 실제 축 방향,
+   complex q/Phase 또는 Reference Plane을 임의로 채우지 않는다. 자동 basis가
+   모호하거나 skew/rolled 조건이면 현재 한계를 명시한다. 새 Vector Adapter는 제외한다.
+4. 입력 변경 시 이전 결과를 숨기고 실행 snapshot/후보 ID/입력 SHA를 맞춘다.
+   추천의 2D 경로, Mode Match, Trade-off와 한계를 기본 화면에서 이해하기 쉽게 한다.
+   상세 Physics는 선택형으로 유지하며 기존 Engineering JSON과 HTML/A4 Export를 재사용한다.
+5. 같은 입력의 Physics/추천/Fixed Ports/Guards 불변성, Missing Phase/Invalid Direction/
+   High Divergence, Desktop/Mobile 및 화면·HTML·JSON·PDF 일치를 검증한다.
+6. 별도 Draft PR, 정확한 HEAD/CI/Artifact와 다음 지시문을 채팅에 제출한다.
+   Off-vertex Field 경로는 보류한다. Perturbed Overlap/실제 Assembly Tolerance/
+   Package Yield/Total Coupling/Patentability는 Uncomputed로 유지한다.
+   Main 병합과 후속 자동 실행은 별도 요청에서 진행한다.
+
+---
+
+## Historical work orders (preserved)
+
 # M6-A — Draft Stack Integration Review
 
 추천 모델 **Sol Work**. M5-F Draft PR을 기준으로 현재 원격 Main과 PR stack을 검토한다.
