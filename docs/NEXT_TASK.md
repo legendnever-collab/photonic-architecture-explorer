@@ -1,3 +1,23 @@
+# M5-D — Candidate Sensitivity Review
+
+추천 모델 **Sol Work**. M5-C Draft PR을 기준으로 추천과 대안의 정렬 민감도를
+비교한다. 병합됐다면 해당 변경이 포함된 Main을 기준으로 한다.
+
+1. AGENTS.md, PRODUCT_CHARTER.md, M5C_MODE_MATCH_VIEW.md와 기존 M2 진단 문서를 읽고
+   정확한 Base HEAD·CI를 확인한다. Workspace와 Mode Match 결과를 재현한다.
+2. 설계는 그대로 고정하고, 기존 Gaussian overlap의 상대 offset/slope 또는 검증된
+   M2 배치 진단만 재사용한다. 먼저 기존 진단이 지원하는 조립 오차와 Target-plane
+   상대 오차를 구분하고, 같은 위치·각도 가정에서 추천과 대안을 비교한다.
+3. 명시한 범위와 단위로 Nominal과 perturbation의 Mode Mismatch Loss를 비교한다.
+   물리 적용 범위를 벗어나면 Uncomputed로 표시한다. Package Yield와 Total Coupling은
+   별도 유효 증거가 있을 때까지 Uncomputed다.
+4. Mode Match 뒤의 선택형 상세로 결과를 제공하고 기존 Fixed Ports, 후보 순위, Frozen
+   Guards, HTML/JSON 동기화를 검증한다. 작은 Synthetic 오차의 독립 검산을 포함한다.
+5. 별도 Draft PR과 CI 증거를 제출한다. Main 병합이나 다음 단계 실행은 범위 밖이다.
+   다음 개발 지시문은 채팅에 바로 복사할 수 있는 텍스트로 작성한다.
+
+---
+
 # M5-C — Mode Match View
 
 추천 모델 **Sol Work**. 기존 Gaussian 결과를 선택 후보 화면에서 검토할 수 있게 한다.
