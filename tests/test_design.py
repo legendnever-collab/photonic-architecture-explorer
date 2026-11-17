@@ -64,6 +64,42 @@ class AutonomousDesignTests(unittest.TestCase):
                 self.assertAlmostEqual(r['gaussian_mode_matching']['normalized_mode_overlap'],1.,places=12)
         self.assertTrue(found,'M1 geometry and powers must arise without importing reflector fixture values')
 
+    def test_m7a_proxy_ports_pass_but_all_prescriptions_fail_model_domain(self):
+        document = json.loads((ROOT / 'examples/m7a_smf_glass_proxy.json').read_text(encoding='utf-8'))
+        original = copy.deepcopy(document)
+        ports = adapt_ports(document)
+        for label, port in (('source', ports.source), ('target', ports.target)):
+            with self.subTest(port=label):
+                widths = document[label]['mfd_ts_m']['value']
+                for width, axis in zip(widths, port.mode.parameters(), strict=True):
+                    expected = 2 * document['wavelength_m']['value'] / (math.pi * width)
+                    self.assertLess(expected, 0.1)
+                    self.assertAlmostEqual(axis['divergence_rad'], expected, places=12)
+
+        result = design_two_ports(document)
+        self.assertEqual(document, original)
+        self.assertEqual(result['input_snapshot'], original)
+        self.assertEqual(result['input_contract']['status'], 'Pass')
+        self.assertEqual(result['status'], 'Fail')
+        self.assertEqual(result['search']['status'], 'Completed')
+        self.assertEqual(result['search']['geometry_count'], 36)
+        self.assertEqual(result['search']['rejection_counts'], {
+            'model_domain: 3w projected footprint/curvature exceeds 0.15': 141,
+            'model_domain: Gaussian divergence exceeds 0.1 rad': 3,
+        })
+        self.assertTrue(all(attempt['normalized_mode_overlap'] is None
+                            for attempt in result['search']['attempts']))
+        self.assertEqual(result['candidates'], [])
+        self.assertIsNone(result['selected_candidate_id'])
+        self.assertEqual(result['actual_applicability']['status'], 'Uncomputed')
+        self.assertIsNone(result['physical_losses']['total_coupling'])
+
+        del document['target']['wavefront_curvature_ts_per_m']
+        missing_phase = design_two_ports(document)
+        self.assertEqual(missing_phase['status'], 'Uncomputed')
+        self.assertIn('no waist default', missing_phase['reason'])
+        self.assertEqual(missing_phase['search']['attempts'], [])
+
     def test_reflection_closure_and_manual_adapter_agreement(self):
         for c in self.result['candidates']:
             d=c['prescription'];a=adapt_external(d)

@@ -40,6 +40,9 @@ pae-design examples/m5a_two_ports.json --output-dir results/my-design
 Synthetic 예제에서 유효 후보 56개, 대표 3개. 실제 Package와 Total Coupling은 Uncomputed입니다.
 Missing Phase나 Domain Fail은 임의 보완하지 않습니다.
 
+[M7-A SMF–Glass Waveguide Reference Case](docs/M7A_SMF_GLASS_WAVEGUIDE_REFERENCE.md)에서
+1550 nm 공개 Mode Width를 사용한 개념 입력과 기존 가드의 판정 근거를 확인할 수 있습니다.
+
 ## 실행
 
 Python 3.11 이상. 계산 엔진은 Standard Library만 사용합니다.
