@@ -1,0 +1,434 @@
+{
+  "recovered_at": "2026-11-16/17 UTC/KST",
+  "main_sha": "f42a6b1701eeb8c0500092a95e0b4202be86aa8b",
+  "main_artifacts": [
+    {
+      "id": 13807885298,
+      "name": "m4c-planar-reference-evidence",
+      "size_in_bytes": 159362,
+      "url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/13807885298",
+      "archive_download_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/13807885298/zip",
+      "expired": false,
+      "created_at": "2026-11-10T22:01:23Z",
+      "expires_at": "2027-02-08T22:01:08Z",
+      "updated_at": "2026-11-10T22:01:23Z",
+      "digest": "sha256:40281dc563286bc9b4a943cbd2a94b433e50fe6b3d1773266fa641835c7cf7a6",
+      "workflow_run": {
+        "id": 42910559738,
+        "repository_id": 1451354576,
+        "head_repository_id": 1451354576,
+        "head_branch": "main",
+        "head_sha": "f42a6b1701eeb8c0500092a95e0b4202be86aa8b"
+      }
+    },
+    {
+      "id": 13807515870,
+      "name": "physics-evidence-python-3.11",
+      "size_in_bytes": 111166,
+      "url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/13807515870",
+      "archive_download_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/13807515870/zip",
+      "expired": false,
+      "created_at": "2026-11-10T22:01:22Z",
+      "expires_at": "2027-02-08T22:01:08Z",
+      "updated_at": "2026-11-10T22:01:22Z",
+      "digest": "sha256:2896a54e2341e538020b06686f79ce12e61bd42ebc43cbe7d6d9cf4ee8d09a37",
+      "workflow_run": {
+        "id": 42910559738,
+        "repository_id": 1451354576,
+        "head_repository_id": 1451354576,
+        "head_branch": "main",
+        "head_sha": "f42a6b1701eeb8c0500092a95e0b4202be86aa8b"
+      }
+    },
+    {
+      "id": 13805944732,
+      "name": "inspector-browser-evidence",
+      "size_in_bytes": 1398229,
+      "url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/13805944732",
+      "archive_download_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/13805944732/zip",
+      "expired": false,
+      "created_at": "2026-11-10T22:01:41Z",
+      "expires_at": "2027-02-08T22:01:08Z",
+      "updated_at": "2026-11-10T22:01:41Z",
+      "digest": "sha256:cb43ead2397215a110d7b4f4aa901e6607154e72e106a06177f6bbc1480ef84c",
+      "workflow_run": {
+        "id": 42910559738,
+        "repository_id": 1451354576,
+        "head_repository_id": 1451354576,
+        "head_branch": "main",
+        "head_sha": "f42a6b1701eeb8c0500092a95e0b4202be86aa8b"
+      }
+    },
+    {
+      "id": 13805859883,
+      "name": "physics-evidence-python-3.12",
+      "size_in_bytes": 111170,
+      "url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/13805859883",
+      "archive_download_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/13805859883/zip",
+      "expired": false,
+      "created_at": "2026-11-10T22:01:22Z",
+      "expires_at": "2027-02-08T22:01:08Z",
+      "updated_at": "2026-11-10T22:01:22Z",
+      "digest": "sha256:101ff0096ebc504e78c895e2c19098c87559021f8ae35d249d2cf9bc05324006",
+      "workflow_run": {
+        "id": 42910559738,
+        "repository_id": 1451354576,
+        "head_repository_id": 1451354576,
+        "head_branch": "main",
+        "head_sha": "f42a6b1701eeb8c0500092a95e0b4202be86aa8b"
+      }
+    }
+  ],
+  "pull_requests": [
+    {
+      "number": 10,
+      "url": "https://github.com/legendnever-collab/photonic-architecture-explorer/pull/10",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "head": "assessment/m4c1-angular-verification",
+      "head_sha": "e164f7aa3c255a03f9c54f11af699b49c86c78e6",
+      "base": "main",
+      "base_sha": "f42a6b1701eeb8c0500092a95e0b4202be86aa8b",
+      "changed_files": 13,
+      "additions": 1234,
+      "deletions": 61,
+      "runs": [
+        {
+          "id": 42920925168,
+          "name": "Photonic physics validation",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 27,
+          "jobs_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/runs/42920925168/jobs",
+          "logs_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/runs/42920925168/logs",
+          "workflow_id": 412081488
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 13812425638,
+          "name": "m4c1-window-reference-evidence",
+          "size_in_bytes": 4944896,
+          "url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/13812425638",
+          "archive_download_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/13812425638/zip",
+          "expired": false,
+          "created_at": "2026-11-10T23:09:33Z",
+          "expires_at": "2027-02-08T23:09:15Z",
+          "updated_at": "2026-11-10T23:09:33Z",
+          "digest": "sha256:f8f1d27a5d1eeb3393a07a2aa29c39600afee2f589cc5cd07adffa83e7162e11",
+          "workflow_run": {
+            "id": 42920925168,
+            "repository_id": 1451354576,
+            "head_repository_id": 1451354576,
+            "head_branch": "assessment/m4c1-angular-verification",
+            "head_sha": "e164f7aa3c255a03f9c54f11af699b49c86c78e6"
+          }
+        },
+        {
+          "id": 13812170462,
+          "name": "m4c-planar-reference-evidence",
+          "size_in_bytes": 157776,
+          "url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/13812170462",
+          "archive_download_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/13812170462/zip",
+          "expired": false,
+          "created_at": "2026-11-10T23:09:30Z",
+          "expires_at": "2027-02-08T23:09:15Z",
+          "updated_at": "2026-11-10T23:09:30Z",
+          "digest": "sha256:107fb18455b18dacce57baa1f9b25c1b5464c4a8eb766b4afd8020182b947564",
+          "workflow_run": {
+            "id": 42920925168,
+            "repository_id": 1451354576,
+            "head_repository_id": 1451354576,
+            "head_branch": "assessment/m4c1-angular-verification",
+            "head_sha": "e164f7aa3c255a03f9c54f11af699b49c86c78e6"
+          }
+        },
+        {
+          "id": 13810824320,
+          "name": "physics-evidence-python-3.12",
+          "size_in_bytes": 115948,
+          "url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/13810824320",
+          "archive_download_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/13810824320/zip",
+          "expired": false,
+          "created_at": "2026-11-10T23:09:30Z",
+          "expires_at": "2027-02-08T23:09:15Z",
+          "updated_at": "2026-11-10T23:09:30Z",
+          "digest": "sha256:1b27544fcf759a3ce95250e633a1c583de9e53a1501fca53fab1803fe11681a5",
+          "workflow_run": {
+            "id": 42920925168,
+            "repository_id": 1451354576,
+            "head_repository_id": 1451354576,
+            "head_branch": "assessment/m4c1-angular-verification",
+            "head_sha": "e164f7aa3c255a03f9c54f11af699b49c86c78e6"
+          }
+        },
+        {
+          "id": 13810584910,
+          "name": "inspector-browser-evidence",
+          "size_in_bytes": 1398229,
+          "url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/13810584910",
+          "archive_download_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/13810584910/zip",
+          "expired": false,
+          "created_at": "2026-11-10T23:09:52Z",
+          "expires_at": "2027-02-08T23:09:15Z",
+          "updated_at": "2026-11-10T23:09:52Z",
+          "digest": "sha256:fd33fa3b21d127019d26f5fb595c68f3735b484e5e38a8c21aded6bd90a2bc25",
+          "workflow_run": {
+            "id": 42920925168,
+            "repository_id": 1451354576,
+            "head_repository_id": 1451354576,
+            "head_branch": "assessment/m4c1-angular-verification",
+            "head_sha": "e164f7aa3c255a03f9c54f11af699b49c86c78e6"
+          }
+        },
+        {
+          "id": 13810529879,
+          "name": "physics-evidence-python-3.11",
+          "size_in_bytes": 115946,
+          "url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/13810529879",
+          "archive_download_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/13810529879/zip",
+          "expired": false,
+          "created_at": "2026-11-10T23:09:28Z",
+          "expires_at": "2027-02-08T23:09:15Z",
+          "updated_at": "2026-11-10T23:09:28Z",
+          "digest": "sha256:a5aae2642681f4af3fff288b351e642f7a6fd2c1b4af3bfd5b75be53900faa26",
+          "workflow_run": {
+            "id": 42920925168,
+            "repository_id": 1451354576,
+            "head_repository_id": 1451354576,
+            "head_branch": "assessment/m4c1-angular-verification",
+            "head_sha": "e164f7aa3c255a03f9c54f11af699b49c86c78e6"
+          }
+        }
+      ]
+    },
+    {
+      "number": 11,
+      "url": "https://github.com/legendnever-collab/photonic-architecture-explorer/pull/11",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "head": "assessment/m4d-external-input-intake",
+      "head_sha": "cfd7f4087089faabbe7c6c323637ddad84eda12e",
+      "base": "assessment/m4c1-angular-verification",
+      "base_sha": "e164f7aa3c255a03f9c54f11af699b49c86c78e6",
+      "changed_files": 4,
+      "additions": 466,
+      "deletions": 27,
+      "runs": [
+        {
+          "id": 43590592868,
+          "name": "Photonic physics validation",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 28,
+          "jobs_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/runs/43590592868/jobs",
+          "logs_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/runs/43590592868/logs",
+          "workflow_id": 412081488
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 14112610263,
+          "name": "physics-evidence-python-3.11",
+          "size_in_bytes": 122378,
+          "url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/14112610263",
+          "archive_download_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/14112610263/zip",
+          "expired": false,
+          "created_at": "2026-11-14T11:33:46Z",
+          "expires_at": "2027-02-12T11:33:31Z",
+          "updated_at": "2026-11-14T11:33:46Z",
+          "digest": "sha256:232c17b5a8234692e0c131287f50ff618e3c5d6f316eaea3cacf936ea9f2a035",
+          "workflow_run": {
+            "id": 43590592868,
+            "repository_id": 1451354576,
+            "head_repository_id": 1451354576,
+            "head_branch": "assessment/m4d-external-input-intake",
+            "head_sha": "cfd7f4087089faabbe7c6c323637ddad84eda12e"
+          }
+        },
+        {
+          "id": 14112480441,
+          "name": "physics-evidence-python-3.12",
+          "size_in_bytes": 122378,
+          "url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/14112480441",
+          "archive_download_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/14112480441/zip",
+          "expired": false,
+          "created_at": "2026-11-14T11:33:42Z",
+          "expires_at": "2027-02-12T11:33:31Z",
+          "updated_at": "2026-11-14T11:33:42Z",
+          "digest": "sha256:82a55d2f1f420472b48f09dc48c85b74f1763b684ab4f2d35c4910e1cd703860",
+          "workflow_run": {
+            "id": 43590592868,
+            "repository_id": 1451354576,
+            "head_repository_id": 1451354576,
+            "head_branch": "assessment/m4d-external-input-intake",
+            "head_sha": "cfd7f4087089faabbe7c6c323637ddad84eda12e"
+          }
+        },
+        {
+          "id": 14112350864,
+          "name": "inspector-browser-evidence",
+          "size_in_bytes": 1398229,
+          "url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/14112350864",
+          "archive_download_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/14112350864/zip",
+          "expired": false,
+          "created_at": "2026-11-14T11:33:57Z",
+          "expires_at": "2027-02-12T11:33:31Z",
+          "updated_at": "2026-11-14T11:33:57Z",
+          "digest": "sha256:0470c37aee665b4f9a12e6f974a65fb0ae15e40e173b0ef5e04251dd2f846f67",
+          "workflow_run": {
+            "id": 43590592868,
+            "repository_id": 1451354576,
+            "head_repository_id": 1451354576,
+            "head_branch": "assessment/m4d-external-input-intake",
+            "head_sha": "cfd7f4087089faabbe7c6c323637ddad84eda12e"
+          }
+        },
+        {
+          "id": 14111868265,
+          "name": "m4c1-window-reference-evidence",
+          "size_in_bytes": 4944898,
+          "url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/14111868265",
+          "archive_download_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/14111868265/zip",
+          "expired": false,
+          "created_at": "2026-11-14T11:33:49Z",
+          "expires_at": "2027-02-12T11:33:31Z",
+          "updated_at": "2026-11-14T11:33:49Z",
+          "digest": "sha256:7dc39b6196ef148e0025376183b402b68a5fdea032e73f80e62163e0a4d543d5",
+          "workflow_run": {
+            "id": 43590592868,
+            "repository_id": 1451354576,
+            "head_repository_id": 1451354576,
+            "head_branch": "assessment/m4d-external-input-intake",
+            "head_sha": "cfd7f4087089faabbe7c6c323637ddad84eda12e"
+          }
+        },
+        {
+          "id": 14111458747,
+          "name": "m4c-planar-reference-evidence",
+          "size_in_bytes": 157774,
+          "url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/14111458747",
+          "archive_download_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/14111458747/zip",
+          "expired": false,
+          "created_at": "2026-11-14T11:33:46Z",
+          "expires_at": "2027-02-12T11:33:31Z",
+          "updated_at": "2026-11-14T11:33:46Z",
+          "digest": "sha256:bd2b18897ab525fd8cc1317977f5be66ed430a5226efaa0a7ca2361ff2a94e68",
+          "workflow_run": {
+            "id": 43590592868,
+            "repository_id": 1451354576,
+            "head_repository_id": 1451354576,
+            "head_branch": "assessment/m4d-external-input-intake",
+            "head_sha": "cfd7f4087089faabbe7c6c323637ddad84eda12e"
+          }
+        }
+      ]
+    },
+    {
+      "number": 12,
+      "url": "https://github.com/legendnever-collab/photonic-architecture-explorer/pull/12",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "head": "governance/product-vision-low-input",
+      "head_sha": "c1525d7750476d03f675feee12a3198b1a76c02f",
+      "base": "main",
+      "base_sha": "f42a6b1701eeb8c0500092a95e0b4202be86aa8b",
+      "changed_files": 2,
+      "additions": 48,
+      "deletions": 2,
+      "runs": [
+        {
+          "id": 43629756434,
+          "name": "Photonic physics validation",
+          "status": "completed",
+          "conclusion": "success",
+          "run_number": 29,
+          "jobs_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/runs/43629756434/jobs",
+          "logs_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/runs/43629756434/logs",
+          "workflow_id": 412081488
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 14128040387,
+          "name": "inspector-browser-evidence",
+          "size_in_bytes": 1398229,
+          "url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/14128040387",
+          "archive_download_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/14128040387/zip",
+          "expired": false,
+          "created_at": "2026-11-14T19:01:35Z",
+          "expires_at": "2027-02-12T19:01:01Z",
+          "updated_at": "2026-11-14T19:01:35Z",
+          "digest": "sha256:a5e612c1f4a76f155fa24358328917ea6055cd7708c473334631d735eea65121",
+          "workflow_run": {
+            "id": 43629756434,
+            "repository_id": 1451354576,
+            "head_repository_id": 1451354576,
+            "head_branch": "governance/product-vision-low-input",
+            "head_sha": "c1525d7750476d03f675feee12a3198b1a76c02f"
+          }
+        },
+        {
+          "id": 14127985380,
+          "name": "physics-evidence-python-3.12",
+          "size_in_bytes": 111170,
+          "url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/14127985380",
+          "archive_download_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/14127985380/zip",
+          "expired": false,
+          "created_at": "2026-11-14T19:01:15Z",
+          "expires_at": "2027-02-12T19:01:01Z",
+          "updated_at": "2026-11-14T19:01:15Z",
+          "digest": "sha256:05eba65e225d4fd59bfd44c82103f6785d941050398cf050d35965103d773fa6",
+          "workflow_run": {
+            "id": 43629756434,
+            "repository_id": 1451354576,
+            "head_repository_id": 1451354576,
+            "head_branch": "governance/product-vision-low-input",
+            "head_sha": "c1525d7750476d03f675feee12a3198b1a76c02f"
+          }
+        },
+        {
+          "id": 14127556773,
+          "name": "m4c-planar-reference-evidence",
+          "size_in_bytes": 159359,
+          "url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/14127556773",
+          "archive_download_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/14127556773/zip",
+          "expired": false,
+          "created_at": "2026-11-14T19:01:15Z",
+          "expires_at": "2027-02-12T19:01:01Z",
+          "updated_at": "2026-11-14T19:01:15Z",
+          "digest": "sha256:8e40e140cbd85f189f331b938a8ed048a4e3b991c5a56ea4dc77e3a5ce360cb0",
+          "workflow_run": {
+            "id": 43629756434,
+            "repository_id": 1451354576,
+            "head_repository_id": 1451354576,
+            "head_branch": "governance/product-vision-low-input",
+            "head_sha": "c1525d7750476d03f675feee12a3198b1a76c02f"
+          }
+        },
+        {
+          "id": 14127521005,
+          "name": "physics-evidence-python-3.11",
+          "size_in_bytes": 111167,
+          "url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/14127521005",
+          "archive_download_url": "https://api.github.com/repos/legendnever-collab/photonic-architecture-explorer/actions/artifacts/14127521005/zip",
+          "expired": false,
+          "created_at": "2026-11-14T19:01:14Z",
+          "expires_at": "2027-02-12T19:01:01Z",
+          "updated_at": "2026-11-14T19:01:14Z",
+          "digest": "sha256:921af4452fc69cd987defde0b2472fdabd89b7854f8da3706114ab6f3938e9ae",
+          "workflow_run": {
+            "id": 43629756434,
+            "repository_id": 1451354576,
+            "head_repository_id": 1451354576,
+            "head_branch": "governance/product-vision-low-input",
+            "head_sha": "c1525d7750476d03f675feee12a3198b1a76c02f"
+          }
+        }
+      ]
+    }
+  ]
+}
