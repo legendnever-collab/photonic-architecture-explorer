@@ -19,9 +19,13 @@ POLICY = {
     'aperture_projected_radius_factor': 4., 'dedup_relative_decimals': 12,
     'termination': 'exhaust frozen finite family; never expand or optimize Target',
 }
-RANKING = ['overlap_deficit_at_1e-12', 'max_3w_footprint_curvature',
-           'negative_min_aperture_radius_ratio_at_1e-12', 'max_projected_radius_m',
-           'total_path_m', 'package_evidence_missing_checks', 'stable_id']
+RANKING = ['overlap_deficit_at_1e-12', 'total_path_m', 'max_projected_radius_m',
+           'max_3w_footprint_curvature', 'stable_id']
+RECOMMENDATION_POLICY = 'M6C-PATH-WITH-TRADEOFFS-1'
+ALTERNATIVE_OBJECTIVES = (
+    ('smaller_footprint', 'max_projected_radius_m', 1e-8),  # 0.01 µm
+    ('model_margin', 'max_3w_footprint_curvature', 1e-6),
+)
 LIMITS = ['Conceptual Geometry; prescribed aperture is not fabrication capability',
           'Scalar paraxial normalized overlap is not Total Coupling',
           'Finite-field aberration, coating, interface and polarization losses Uncomputed',
@@ -143,11 +147,38 @@ def ranking(evaluation, document, identifier):
     return metrics
 
 
+def recommendation_key(candidate):
+    metrics = candidate['ranking']
+    return (*(round(metrics[key], 12) for key in RANKING[:-1]), metrics['stable_id'])
+
+
+def select_concepts(accepted):
+    """Lead with a short path and show distinct, same-overlap trade-offs."""
+    if not accepted:
+        return []
+    ordered = sorted(accepted, key=recommendation_key)
+    lead = ordered[0]
+    best_bin = lead['ranking']['overlap_deficit_at_1e-12']
+    peers = [c for c in ordered if c['ranking']['overlap_deficit_at_1e-12'] == best_bin]
+    chosen = [{**lead, 'recommendation_role': 'short_path'}]
+    shown_geometries = {lead['geometry_id']}
+    for role, metric, resolution in ALTERNATIVE_OBJECTIVES:
+        shown_best = min(c['ranking'][metric] for c in chosen)
+        contenders = (c for c in peers if c['geometry_id'] not in shown_geometries
+                      and shown_best - c['ranking'][metric] >= resolution)
+        # Stable min uses the default ordering for equal objective values.
+        alternative = min(contenders, key=lambda c: round(c['ranking'][metric], 12), default=None)
+        if alternative is not None:
+            chosen.append({**alternative, 'recommendation_role': role})
+            shown_geometries.add(alternative['geometry_id'])
+    return chosen
+
+
 def design_two_ports(document):
     """Two fixed optical ports in; up to 3 independently Engine-checked concepts out."""
     result = {'schema':'M5A-design-result-1','status':'Uncomputed','input_snapshot':None,
               'input_contract':{'status':'Uncomputed'}, 'search_policy':copy.deepcopy(POLICY),
-              'ranking_order':RANKING, 'candidates':[], 'selected_candidate_id':None,
+              'ranking_order':RANKING, 'recommendation_policy':RECOMMENDATION_POLICY, 'candidates':[], 'selected_candidate_id':None,
               'search':{'status':'Uncomputed','attempts':[]}, 'limitations':LIMITS,
               'actual_applicability':{'status':'Uncomputed'},
               'physical_losses':{'status':'Uncomputed','total_coupling':None},
@@ -194,13 +225,7 @@ def design_two_ports(document):
                              'advantages':['Fixed Port closure and frozen domain guards passed',
                                            'Two-axis exact-q design, checked by existing manual Adapter'],
                              'limitations':LIMITS})
-        accepted.sort(key=lambda c:tuple(c['ranking'][k] for k in RANKING))
-        # Diversify vertices, preserving the lexicographic order among geometry winners.
-        chosen=[];geometries=set()
-        for candidate in accepted:
-            if candidate['geometry_id'] in geometries: continue
-            chosen.append(candidate);geometries.add(candidate['geometry_id'])
-            if len(chosen)==POLICY['representatives']:break
+        chosen = select_concepts(accepted)
         result['candidates'] = chosen
         result['selected_candidate_id'] = chosen[0]['id'] if chosen else None
         result['status'] = 'Computed' if chosen else 'Fail'
@@ -209,7 +234,7 @@ def design_two_ports(document):
             rejection_counts=dict(sorted(Counter(a.get('stage','')+': '+a.get('reason','')
                 for a in ledger if a['status']=='Rejected').items())),
             termination='Frozen finite family exhausted',
-            selection='best lexicographic candidate per distinct vertex geometry; first 3')
+            selection='shortest path in best overlap bin, then distinct footprint and model margin alternatives')
         result['reason'] = ('Valid conceptual candidates generated' if chosen else
                             'No valid candidate in bounded exact-q family; not proof of physical impossibility')
     except InputIssue as exc:
