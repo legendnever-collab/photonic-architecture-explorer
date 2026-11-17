@@ -84,6 +84,7 @@ Checks에서 확인하며, 로컬 검증을 원격 CI 성공으로 대체해 표
 
 ## 문서와 구조
 
+- [Product Charter](docs/PRODUCT_CHARTER.md), [Patent-Oriented Product Vision](docs/PATENT_ORIENTED_PRODUCT_VISION.md), [Development Roadmap](docs/PATENT_ORIENTED_DEVELOPMENT_ROADMAP.md)
 - [Frozen Benchmark](docs/M1_BENCHMARK.md), [Physics assumptions](docs/PHYSICS.md)
 - [검증 방법·결과](docs/VALIDATION.md), [재사용 검토](docs/REUSE_REVIEW.md)
 - [MVP 범위](docs/MVP_SCOPE.md), [M2 최소 제안](docs/NEXT_TASK.md)
