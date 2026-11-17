@@ -362,14 +362,14 @@ async function main() {
     assert.deepEqual(auto.input_snapshot.source.sagittal_axis.value, [0, 0, 1]);
     assert.match(auto.input_snapshot.source.sagittal_axis.source, /Derived by Workspace/);
     assert.deepEqual(auto.input_snapshot.target.wavefront_curvature_ts_per_m.value, [-50, -50]);
+    await page.screenshot({path: path.join(dir, 'recommendation-mobile.png')});
     const mobileRecommendation = frame.locator('[data-candidate]:visible');
-    for (const selector of ['[data-projection="Fold"] svg', '.metric', '[data-recommendation-role]', '[data-trade-off]']) {
+    for (const selector of ['[data-projection="Fold"] svg', '.decision .metric', '[data-recommendation-role]', '[data-trade-off]']) {
       const bounds = await mobileRecommendation.locator(selector).boundingBox();
       assert(bounds && bounds.y >= 0 && bounds.y + bounds.height <= 852,
              'Mobile result must show ' + selector + ' without scrolling: ' + JSON.stringify(bounds));
     }
     assert(await frame.locator('html').evaluate(el => el.scrollWidth <= el.clientWidth));
-    await page.screenshot({path: path.join(dir, 'recommendation-mobile.png')});
     const roundExport = await download('json', 'round-design');
     const viewed = {...auto, viewed_candidate_id: auto.selected_candidate_id};
     assert.deepEqual(JSON.parse(fs.readFileSync(roundExport)), viewed);
