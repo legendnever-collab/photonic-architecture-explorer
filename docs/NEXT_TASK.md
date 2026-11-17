@@ -1,3 +1,15 @@
+# M7-D — Local Background Near-Match Workflow
+
+추천 모델 **Sol Work**. 최신 Main과 M7-C Draft를 복구하고
+[M7-C 실행 계약·Production Handoff](M7C_NEAR_MATCH_WORKFLOW.md)를 따른다.
+기존 exact-q 결과가 정상 완료됐지만 후보가 없을 때에만 Near-Match worker를 시작한다.
+동일 입력·가드·M6-C Ranking과 600 s 예산을 유지하며 Input Revision/SHA, 취소,
+Timeout, Worker Failure, Late Response와 Export 일치를 검증한다. 별도 Draft PR,
+정확한 HEAD·CI·Evidence를 제출한다. Main 병합은 별도 승인 후 진행한다.
+아래 지시문은 완료된 단계의 이력이다.
+
+---
+
 # M6-A — Draft Stack Integration Review
 
 추천 모델 **Sol Work**. M5-F Draft PR을 기준으로 현재 원격 Main과 PR stack을 검토한다.

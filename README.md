@@ -42,6 +42,9 @@ Missing Phase나 Domain Fail은 임의 보완하지 않습니다.
 
 [M7-A SMF–Glass Waveguide Reference Case](docs/M7A_SMF_GLASS_WAVEGUIDE_REFERENCE.md)에서
 1550 nm 공개 Mode Width를 사용한 개념 입력과 기존 가드의 판정 근거를 확인할 수 있습니다.
+[M7-B Near-Match 결과](docs/M7B_GUARDED_NEAR_MATCH.md)와
+[M7-C Workflow 통합 Prototype·후속 계획](docs/M7C_NEAR_MATCH_WORKFLOW.md)을 제공합니다.
+Near-Match는 현재 별도 실행하는 Trial이며 기본 Workspace에는 아직 연결되지 않았습니다.
 
 ## 실행
 

@@ -1,0 +1,132 @@
+{
+  "status": "Pass",
+  "cases": {
+    "equal-q": {
+      "state": "NotNeeded",
+      "input_sha256": "349546f1a3f4955aa8a6d4cc96fb49b28b360c3924b20ec8d0089fcad6b86196",
+      "exact_seconds": 0.14679820500009555,
+      "trial_seconds": 0.12808640000002924,
+      "selected": "G009-B1",
+      "exact_result_equal": true,
+      "fallback_started": false
+    },
+    "different-q": {
+      "state": "NotNeeded",
+      "input_sha256": "a55f31efa9ad357fd1334079f852425c6ff0749c22e8b69ec29c14112476a930",
+      "exact_seconds": 0.10978398400015976,
+      "trial_seconds": 0.1257262259998697,
+      "selected": "G009-B1",
+      "exact_result_equal": true,
+      "fallback_started": false
+    },
+    "high-divergence": {
+      "state": "Ineligible",
+      "input_sha256": "7c0dd19faf1441085971f29955dc5adcf500684f7ac4905d72b36c82d5c4daa8",
+      "exact_seconds": 0.0006183660000260716,
+      "trial_seconds": 0.0008384760001263203,
+      "selected": null,
+      "exact_result_equal": true,
+      "fallback_started": false
+    },
+    "smf-glass": {
+      "state": "Succeeded",
+      "input_sha256": "9d6d55bc8c4a06ca99c7ffcae205954a634678162986d2565c111b76df510988",
+      "trial_seconds": 205.20757482,
+      "calls": 124160,
+      "counts": {
+        "valid_evaluations": 95533,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 26496,
+        "geometry: unintended reflector interception": 2131
+      },
+      "all_36_search_summaries_match_m7b": true,
+      "selected": "G036-NM",
+      "representatives": 1,
+      "overlap": 0.9999366495865395,
+      "ranking": {
+        "overlap_deficit_at_1e-12": 6.3350413e-05,
+        "max_3w_footprint_curvature": 0.14999866174540796,
+        "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+        "max_projected_radius_m": 0.0005580240186848992,
+        "total_path_m": 0.0208397342182478,
+        "package_evidence_missing_checks": 6,
+        "stable_id": "G036-NM"
+      },
+      "independent_validation": {
+        "status": "Pass",
+        "quadrature_overlap": [
+          0.9999366495865397,
+          0.9999366495865397
+        ],
+        "q_output_m": [
+          [
+            3.164000242307575e-10,
+            5.1277710736472155e-05
+          ],
+          [
+            -4.6595818956130434e-09,
+            5.1648328011912585e-05
+          ]
+        ],
+        "surface_checks": [
+          {
+            "footprint_m": [
+              0.0005397682551411363,
+              0.0005367522237541172
+            ],
+            "max_3w_curvature": 0.1405663057382044,
+            "outgoing_divergence_rad": [
+              0.0021092715193010017,
+              0.0019230404082531331
+            ]
+          },
+          {
+            "footprint_m": [
+              0.000558024018684899,
+              0.0005529122690833187
+            ],
+            "max_3w_curvature": 0.14999866174540788,
+            "outgoing_divergence_rad": [
+              0.09809042103762096,
+              0.09773784953950342
+            ]
+          }
+        ]
+      },
+      "html_json_equal": true,
+      "provenance": {
+        "head": "61996b28e120ca7c0ab1bf750ae00f5de914557c",
+        "dirty": true,
+        "source_sha256": {
+          "docs/M7C_NEAR_MATCH_WORKFLOW.md": "d1b585d479bdf6ecf0b67051b8f987557b4173345d1c8a19270445084fde8fbb",
+          "scripts/m7b_near_match.py": "df827240e536e5dd1f8a381ef23032b60387b3f4b717d35c5aff9f7581aebab9",
+          "scripts/m7c_workflow_trial.py": "941a9bda0fe800bbdd27807a89ce02134b89820b5296ef39568a384dda405137",
+          "src/photonic_architecture_explorer/__init__.py": "7e5bff7a68ccad603bf3ebc3cee6c760fd17290d1f5d5c8ce611fec41f50ca15",
+          "src/photonic_architecture_explorer/applicability.py": "1d8866bb89b887e024beb9a432bc1476885e2b2cfcb5f1da91b0fd12c46e40c0",
+          "src/photonic_architecture_explorer/benchmark.py": "2b6df43b6977b79292908879093ea79c4c28a668416f5bc21ac094070bd43e66",
+          "src/photonic_architecture_explorer/candidate_review.py": "f6036e16e26b695615d1775de465ecbf1b38b7c5a7f989e81f151a0d423b8707",
+          "src/photonic_architecture_explorer/design.py": "dcbdfccaabc328aa6f73d62a6c5243c93bc2ab25a359c56960f2bd1d553bee98",
+          "src/photonic_architecture_explorer/design_report.py": "1bd0f20d2f8d62251be7762324650d550689f5e5b2963beebec1f87ac93602e6",
+          "src/photonic_architecture_explorer/diagnostics.py": "60471c44cc3dd094768d08e8372ebeb52450e29956cf06070780e080b211902d",
+          "src/photonic_architecture_explorer/external.py": "3f290ee79021119c2a06381e3f149c12138aff6d11eed502b1b39ef09bd215e8",
+          "src/photonic_architecture_explorer/gaussian.py": "908e84962d8b5ee5be793108eaf3491ddb9465b77e51ff2817d52e5caf06261d",
+          "src/photonic_architecture_explorer/geometry.py": "a27b2c947ea3d31ebbbc4044ffd7d9d2dbedd69e8bb3bdf3f6aacbf42c38c7d2",
+          "src/photonic_architecture_explorer/inspector.py": "53f68106a7b2c13bcbc3df0f1a109480fbcf61b15e0f6f8604e8e403e606d6ed",
+          "src/photonic_architecture_explorer/mode_match.py": "d09627b5c2b611852958d8d9abc87aab71b6aac7857e48252d816603d8a47ab5",
+          "src/photonic_architecture_explorer/package_geometry.py": "dd5015af492087db9c65b2997408035b7bea8567c431faa7c9fc1d250e5367d9",
+          "src/photonic_architecture_explorer/placement.py": "80d597e81184b5ac5af5f2fc7aacba2c2ab3ee3b03b42c2eae828b0ea0f68cf2",
+          "src/photonic_architecture_explorer/sensitivity.py": "2240b26960deaa84dae001b754ebec676222418c0d121de94018c44b24426a9a",
+          "src/photonic_architecture_explorer/solver.py": "3255b530cc41b984d3bce1ccfded62796775f9ec1fd8f5974f037ad7ee136b51",
+          "src/photonic_architecture_explorer/workspace.py": "003c8ae16894230033de07e971663ff06dbb650533a35280cbe2aedb153b5bf1"
+        }
+      }
+    }
+  },
+  "production_changed": false,
+  "cancellation": {
+    "state": "Cancelled",
+    "calls": 3872,
+    "seconds": 5.499620278000066,
+    "recommendation_withheld": true
+  },
+  "evidence_scope": "Local pre-publication trial observation; final source replay and lifecycle checks are supplied by the M7-C CI artifact."
+}
