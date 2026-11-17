@@ -110,6 +110,24 @@ def numbers(values, scale=1.):
     return ", ".join(f"{scale * value:.5g}" for value in values)
 
 
+def near_match_note(candidate, adapted):
+    if not candidate.get('origin', {}).get('method', '').startswith('M7D'):
+        return ''
+    axes = candidate['evaluation']['gaussian_mode_matching']['output_axes']
+    q_out = [complex(-axis['waist_distance_m'], axis['rayleigh_range_m']) for axis in axes]
+    relative = max(abs(out - target) / abs(target) for out, target in zip(q_out, adapted.target.mode.q))
+    checks = candidate['independent_validation']['surface_checks']
+    readings = ' / '.join(f'M{i+1}: {value["max_3w_curvature"]:.9g}, '
+        f'margin {0.15-value["max_3w_curvature"]:.6g}' for i, value in enumerate(checks))
+    divergence = ' / '.join(f'M{i+1}: {max(value["outgoing_divergence_rad"]):.9g}, '
+        f'margin {0.1-max(value["outgoing_divergence_rad"]):.6g}' for i, value in enumerate(checks))
+    return (f'<div data-near-match><p><b>Near-Match Gaussian Concept</b> · Target q 고정, '
+            f'도착 q 최대 상대 차이 {relative:.6g}</p>'
+            f'<p>Max 3w·κ (limit 0.15) · {readings}</p>'
+            f'<p>Outgoing Divergence [rad] (limit 0.1) · {divergence}</p>'
+            '<p>Guard margin은 조립 공차나 Aberration 오차 상한이 아닙니다.</p></div>')
+
+
 def render_review_sheet(review, candidate, adapted, active):
     identifier = candidate["id"]
     data = review["candidates"][identifier]
@@ -156,7 +174,7 @@ def render_review_sheet(review, candidate, adapted, active):
     return f'''<section class="review-sheet" data-review-candidate="{heading}" data-input-sha="{digest}"{hidden}>
     <h2>Candidate Review · {heading}</h2>
     <p>{status} · <span data-review-concept>{concept_label}</span> · {escape(candidate["classification"])}</p>
-    <p>Input SHA256 <code>{digest}</code></p>
+    <p>Input SHA256 <code>{digest}</code></p>{near_match_note(candidate, adapted)}
     <h3>Fixed Ports</h3>
     <p>Vacuum λ {source["wavelength_m"] * 1e9:.6g} nm · Ambient n {source["ambient_index"]:.6g}</p>
     <div class="review-table"><table><thead><tr><th scope="col">Port / Plane</th><th scope="col">XYZ [mm]</th>

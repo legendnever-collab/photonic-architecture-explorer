@@ -1,4 +1,14 @@
-# M7-D — Local Background Near-Match Workflow
+# M7-E — Integrated Workflow Acceptance & Distribution
+
+추천 모델 **Sol Work**. 최신 Main과 M7-D Draft HEAD/CI/Artifact를 복구하고
+[M7-D](M7D_BACKGROUND_WORKFLOW.md)를 따른다. 기본 Two-Port 경로와 SMF–Glass Proxy를
+검토하고 의존성·출처가 포함된 사용자 검토용 실행 패키지를 준비한다. 확인된 Workflow/
+Distribution 결함만 수정하며 물리 가드·순위·Uncomputed를 보존한다. 별도 Draft PR,
+정확한 HEAD·CI·Artifact·사용자 검토 절차를 제출한다. Main 병합은 별도 승인한다.
+
+---
+
+# M7-D — Local Background Near-Match Workflow (historical)
 
 추천 모델 **Sol Work**. 최신 Main과 M7-C Draft를 복구하고
 [M7-C 실행 계약·Production Handoff](M7C_NEAR_MATCH_WORKFLOW.md)를 따른다.

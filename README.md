@@ -44,12 +44,16 @@ Missing Phase나 Domain Fail은 임의 보완하지 않습니다.
 1550 nm 공개 Mode Width를 사용한 개념 입력과 기존 가드의 판정 근거를 확인할 수 있습니다.
 [M7-B Near-Match 결과](docs/M7B_GUARDED_NEAR_MATCH.md)와
 [M7-C Workflow 통합 Prototype·후속 계획](docs/M7C_NEAR_MATCH_WORKFLOW.md)을 제공합니다.
-Near-Match는 현재 별도 실행하는 Trial이며 기본 Workspace에는 아직 연결되지 않았습니다.
+[M7-D Background Workflow](docs/M7D_BACKGROUND_WORKFLOW.md)에서는 exact-q 후보가 없을 때
+같은 **Design** 동작으로 Near-Match를 자동 탐색합니다. `SMF–Glass Proxy` 예제로 확인할 수
+있으며, 진행 표시·취소·입력 변경 시 결과 무효화와 기존 HTML/JSON/A4 출력을 지원합니다.
+전체 탐색은 수분 걸릴 수 있습니다. 이 Proxy는 공개 Width와 가정 Phase를 사용하며
+실제 Device Field, Assembly Tolerance 및 Total Coupling은 Uncomputed입니다.
 
 ## 실행
 
-Python 3.11 이상. 계산 엔진은 Standard Library만 사용합니다.
-독립 Fresnel/수치 검증은 NumPy 2.x를 사용합니다.
+Python 3.11 이상. Gaussian/Geometry 계산 커널은 Standard Library를 사용합니다.
+앱 설치에는 Near-Match 탐색과 독립 검산용 NumPy 2.3.5 / SciPy 1.17.0이 포함됩니다.
 
 ```bash
 python -m pip install -e '.[test]'

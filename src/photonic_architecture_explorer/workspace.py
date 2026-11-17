@@ -6,12 +6,15 @@ from decimal import Decimal, InvalidOperation
 from html import escape
 import json
 import math
+import signal
+import threading
 
 from .design import design_two_ports
 from .design_report import render_design_report, review_snapshot
 from .external import InputIssue, unit_vector, vector
 from .geometry import cross, dot, mul, norm, sub
 from .inspector import CSS, ROOT, make_server
+from .near_match import eligible
 
 
 POSITION = ("position_m", "Position [mm]", ("X", "Y", "Z"), 3)
@@ -318,13 +321,77 @@ const form = document.querySelector('#design-form');
 const output = document.querySelector('#design-output');
 const pending = document.querySelector('#pending');
 const frame = document.querySelector('#design-review');
+const jobNode = document.querySelector('#workflow-job');
+const job = jobNode ? JSON.parse(jobNode.textContent) : null;
+let revision = job?.revision;
+let finished = false;
+const jobStatus = document.querySelector('#job-status');
+const cancelButton = document.querySelector('#cancel-design');
+const identityQuery = job ? new URLSearchParams(job).toString() : '';
+function cancelJob() {
+  if (job && !finished) fetch('/jobs/cancel?' + identityQuery, {method:'POST',keepalive:true}).catch(() => {});
+}
 function edit() {
   if (output) output.hidden = true;
   pending.hidden = false;
+  if (job) {
+    revision = null;
+    cancelJob();
+    cancelButton.hidden = true;
+    jobStatus.textContent = '입력이 변경됐습니다. 현재 입력으로 Design을 다시 실행하세요.';
+  }
 }
 form.addEventListener('input', edit);
 form.addEventListener('change', edit);
 form.addEventListener('submit', edit);
+if (job) {
+  cancelButton.addEventListener('click', () => {
+    revision = null;
+    cancelJob();
+    cancelButton.hidden = true;
+    jobStatus.textContent = '취소했습니다. 다시 실행하려면 Design을 누르세요.';
+  });
+  window.addEventListener('pagehide', cancelJob);
+  async function pollJob() {
+    if (revision !== job.revision || finished) return;
+    try {
+      const response = await fetch('/jobs/status?' + identityQuery, {cache:'no-store'});
+      if (!response.ok) throw new Error('작업을 찾을 수 없습니다.');
+      const data = await response.json();
+      if (revision !== job.revision) return;
+      if (data.job_id !== job.job_id || data.revision !== revision || data.input_sha256 !== job.input_sha256)
+        throw new Error('작업 입력이 일치하지 않습니다.');
+      if (data.report_html) {
+        finished = true;
+        frame.srcdoc = data.report_html;
+        output.dataset.status = data.result_status;
+        output.hidden = false;
+        pending.hidden = true;
+        cancelButton.hidden = true;
+        jobStatus.textContent = data.state === 'Succeeded' ? 'Near-Match 설계 완료' : '제한된 탐색에서 유효 후보를 찾지 못했습니다.';
+        return;
+      }
+      if (['Cancelled','TimedOut','Failed'].includes(data.state)) {
+        finished = true;
+        cancelButton.hidden = true;
+        const labels = {Cancelled:'취소됨', TimedOut:'실행 시간 초과', Failed:'실행 실패'};
+        jobStatus.textContent = labels[data.state] + ' · 추천은 보류됐습니다. Design으로 다시 실행하세요.';
+        return;
+      }
+      const p = data.progress || {};
+      jobStatus.textContent = 'Near-Match 탐색 중 · 완료 배치 ' + (p.completed_geometries || 0) +
+        '/' + (p.geometry_count || '?') + ' · 평가 ' + (p.adapter_calls || 0) + '회';
+      setTimeout(pollJob, 500);
+    } catch (error) {
+      if (revision !== job.revision) return;
+      revision = null;
+      cancelJob();
+      cancelButton.hidden = true;
+      jobStatus.textContent = '작업 상태를 확인할 수 없습니다. Design으로 다시 실행하세요.';
+    }
+  }
+  pollJob();
+}
 window.addEventListener('pageshow', () => {
   // Browsers can restore edited values when returning via history.
   for (const control of form.elements) {
@@ -394,18 +461,19 @@ if (frame) {
 """
 
 
-def render_workspace(raw, result=None, error=None):
+def render_workspace(raw, result=None, error=None, job=None):
     entry = raw["entry"]
-    description = ("M5-A Synthetic Example · 입력값을 바꾸면 다음 실행의 고정 조건이 됩니다."
-                   if entry == "example" else "새 입력 · External Gaussian 가정, 편광은 scalar 모델에서 제외")
+    description = {"example": "M5-A Synthetic Example · 입력값을 바꾸면 다음 실행의 고정 조건이 됩니다.",
+                   "smf-glass": "SMF–Glass Gaussian Proxy · 공개 Width와 가정 Flat Phase, 실제 장치 Field가 아닙니다."}.get(
+                       entry, "새 입력 · External Gaussian 가정, 편광은 scalar 모델에서 제외")
     fields = "".join(render_fields("", spec, raw) for spec in SHARED_FIELDS)
     issue_path = result.get("input_contract", {}).get("path") if result else None
     ports = "".join(render_port(port, raw, issue_path) for port in PORTS)
     review = ""
-    if result is not None:
-        report = escape(render_design_report(review_snapshot(result)))
-        status = escape(result["status"])
-        review = f'''<section id="design-output" class="output" data-status="{status}">
+    if result is not None or job is not None:
+        report = escape(render_design_report(review_snapshot(result))) if result is not None else ''
+        status = escape(result["status"]) if result is not None else 'Running'
+        review = f'''<section id="design-output" class="output" data-status="{status}"{' hidden' if job else ''}>
           <div class="toolbar"><a href="#design-form">입력 편집</a><div class="export-actions">
           <button type="button" data-export="html">HTML 저장</button>
           <button type="button" data-export="json">JSON 저장</button></div></div>
@@ -413,6 +481,10 @@ def render_workspace(raw, result=None, error=None):
     elif error:
         review = f'<section id="design-output" class="card output" role="alert">입력 오류 · {escape(error)}</section>'
 
+    job_view = '' if job is None else (f'<section class="card"><p id="job-status" role="status">Near-Match 준비 중</p>'
+        '<button type="button" id="cancel-design">취소</button></section>'
+        '<script type="application/json" id="workflow-job">'
+        + json.dumps(job).replace('<', '\\u003c') + '</script>')
     return f'''<!doctype html><html lang="ko"><head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Photonic Architecture Explorer · Two-Port Workspace</title><style>{CSS}
@@ -431,10 +503,10 @@ def render_workspace(raw, result=None, error=None):
     @media(max-width:760px){{.ports{{grid-template-columns:minmax(0,1fr)}}}}
     </style></head><body><header><h1>Photonic Architecture Explorer</h1>
     <p>Two-Port Design Workspace</p></header><main class="wrap">
-    {review}
+    {review}{job_view}
     <p class="notice" id="pending" role="status" hidden>지금 입력으로 결과를 확인하려면 Design을 실행하세요.</p>
     <div class="toolbar"><div class="example-links"><a href="/">Synthetic Example</a>
-    <a href="/?entry=blank">새 입력</a></div><span>{description}</span></div>
+    <a href="/?entry=blank">새 입력</a><a href="/?entry=smf-glass">SMF–Glass Proxy</a></div><span>{description}</span></div>
     <form id="design-form" method="post" action="/design#design-output">
       <input type="hidden" name="entry" value="{entry}">
       <div class="ports">{ports}</div>
@@ -447,12 +519,18 @@ class Workspace:
     def __init__(self):
         example = json.loads((ROOT / "examples/m5a_two_ports.json").read_text(encoding="utf-8"))
         self.templates = {"example": example, "blank": new_input(example)}
+        self.templates['smf-glass'] = json.loads((ROOT / 'examples/m7a_smf_glass_proxy.json').read_text())
         self.fields = set(initial_values(example, "example"))
+        self.jobs = None
+        self.job_reports = {}
+        self.job_lock = threading.RLock()
 
     def get(self, entry):
         return render_workspace(initial_values(self.templates[entry], entry))
 
     def post(self, raw):
+        if self.jobs:
+            self.jobs.cancel_active()
         entry = raw.get("entry")
         if entry not in self.templates or set(raw) != self.fields:
             return self.get("example"), 400
@@ -472,13 +550,42 @@ class Workspace:
                 result.update(status=exc.status, reason=str(exc),
                               input_contract={"status": exc.status, "path": exc.path, "reason": exc.reason})
             return render_workspace(raw, result=result), 200
-        return render_workspace(raw, result=design_two_ports(document)), 200
+        result = design_two_ports(document)
+        if eligible(result):
+            from .workflow_jobs import JobManager
+            with self.job_lock:
+                if self.jobs is None:
+                    self.jobs = JobManager()
+                identity = self.jobs.submit(document, result)
+            return render_workspace(raw, job=identity), 200
+        return render_workspace(raw, result=result), 200
+
+    def job_status(self, identity):
+        status = self.jobs.poll(identity) if self.jobs else None
+        if status is None:
+            return None
+        result = status.pop('result')
+        if result is not None:
+            key = identity['job_id']
+            if key not in self.job_reports:
+                self.job_reports[key] = render_design_report(review_snapshot(result))
+                for old in list(self.job_reports)[:-16]:
+                    del self.job_reports[old]
+            status.update(report_html=self.job_reports[key], result_status=result['status'])
+        return status
+
+    def close(self):
+        if self.jobs:
+            self.jobs.close()
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--port", type=int, default=8765)
     args = parser.parse_args()
+    def stop_server(signum, frame):
+        raise KeyboardInterrupt
+    signal.signal(signal.SIGTERM, stop_server)
     with make_server((), args.port, workspace=Workspace()) as server:
         print(f"Workspace: http://127.0.0.1:{server.server_port}", flush=True)
         try:
