@@ -53,7 +53,8 @@ class ModeHandoffTests(unittest.TestCase):
                         self.assertEqual(markup.tags.count("polyline"), 6)
                         self.assertNotIn("form", markup.tags)
                         self.assertIn(hashlib.sha256(CATALOG.read_bytes()).hexdigest(), html)
-                        self.assertIn("Glass Waveguide Mode · Uncomputed", html)
+                        self.assertIn("Glass Waveguide External Port · Uncomputed", html)
+                        self.assertIn("sun-fldw-55mw-1310", markup.ids)
                         self.assertIn("/?entry=blank", markup.hrefs)
                         self.assertIn("/?entry=smf-glass", markup.hrefs)
                     with urlopen(base + "/?entry=blank", timeout=3) as response:

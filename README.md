@@ -63,7 +63,8 @@ Missing Phase나 Domain Fail은 임의 보완하지 않습니다.
 [Offline Mode Comparison](results/m7r1-mode-library.html)에서 Gaussian Intensity
 Preview와 문헌 근거를 확인할 수 있습니다.
 Workspace의 **SMF–Glass Mode Reference**에서 1550 nm Mode를 비교하고 1310 nm
-입력 준비 상태를 확인할 수 있습니다. [M7-R2 사용법](docs/M7R2_REFERENCE_PORT_HANDOFF.md)
+Fused-Silica Glass Waveguide 실측 Width와 추가 입력 요건을 확인할 수 있습니다.
+[Reference 사용법](docs/M7R2_REFERENCE_PORT_HANDOFF.md) · [1310 nm Port 판정](docs/M7R3_1310_PORT_READINESS.md)
 
 ## 실행
 

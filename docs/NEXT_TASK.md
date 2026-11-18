@@ -1,10 +1,12 @@
-# 1310 nm Glass Waveguide Port Readiness
+# 1310 nm External Complex Field Evidence
 
-추천 모델 **Sol Work**. 최신 Main과 [M7-F 통합 검토](M7F_INTEGRATED_WINDOWS_REVIEW.md)를 확인한다.
-비기밀 1310 nm Glass Waveguide 사례 하나에 대해 외부 Reference Plane, 파장·매질, 두 Mode Axis의
-Width 정의와 Phase/Curvature 또는 Complex Field, 출처와 불확도를 [입력 계약](EXTERNAL_PORT_CONTRACT.md)에 맞춰 확인한다.
-입력이 충분하면 기존 Adapter에서 Gaussian 적용성을 평가하고, 누락이 있으면 필요한 입력과 측정·시뮬레이션 경로를 기록한다.
-1550 nm Proxy는 독립 개념 사례로 유지한다. Complex Field가 확보되어 Gaussian Fit의 독립 검증이 필요하면 Astra Work 범위를 별도로 제안한다.
+추천 모델 **Sol Work**로 데이터 입수를 확인하고, 동일 Plane의 Complex Field가 확보되면
+독립 Gaussian Fit 검증에는 **Astra Work**를 권장한다. 최신 Main과
+[M7-R3 입력 판정](M7R3_1310_PORT_READINESS.md)을 확인한다. 비기밀 1310 nm 사례에서 공통 시스템
+Frame에 등록한 두 External Reference Plane, 해당 매질, 축·Polarization 및 Complex Field 또는
+검증된 Gaussian 파라미터를 [입력 계약](EXTERNAL_PORT_CONTRACT.md)에 따라 확보한다.
+Field가 준비되면 설계별 Mode-Mismatch 오차 예산을 먼저 고정하고 Fit Residual과 Sampling 수렴을 검증한다.
+입력이 부족하면 실제 적용성은 Uncomputed로 유지하고 필요한 측정 또는 모델 데이터를 기록한다.
 
 ---
 

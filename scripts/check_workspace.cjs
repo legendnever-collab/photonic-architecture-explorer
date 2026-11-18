@@ -387,7 +387,8 @@ async function main() {
     await mobileReport.close();
 
     await page.goto(address + '/?entry=mode-references#readiness-1310');
-    assert(await page.getByText('Glass Waveguide Mode · Uncomputed', {exact: true}).isVisible());
+    assert(await page.getByText('Glass Waveguide External Port · Uncomputed', {exact: true}).isVisible());
+    assert.match(await page.locator('#sun-fldw-55mw-1310').innerText(), /x 11 µm \/ y 18 µm/);
     assert.equal(await page.locator('#readiness-1310 svg').count(), 0);
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
     await page.screenshot({path: path.join(dir, 'mode-readiness-mobile.png')});

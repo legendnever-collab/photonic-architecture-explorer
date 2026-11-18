@@ -1,0 +1,12 @@
+{
+  "description": "1310 nm literature readiness check. Sun's image-derived x/y MFD is reference evidence only until its width convention, external plane and phase are established.",
+  "contract_version": "M3A-1",
+  "coordinate_convention": "right-handed world XYZ; t=s cross d; target d is arriving direction",
+  "wavelength_m": {
+    "value": 1.31e-06,
+    "unit": "vacuum m",
+    "provenance": "supplied",
+    "source": "Qi Sun, University of Southampton PhD thesis (2021), Fig. 3.5(c-d), printed p. 36",
+    "uncertainty": null
+  }
+}

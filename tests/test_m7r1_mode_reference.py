@@ -3,8 +3,11 @@
 import hashlib
 import json
 import math
+from pathlib import Path
 import unittest
+from unittest.mock import patch
 
+from photonic_architecture_explorer.external import evaluate_external
 from photonic_architecture_explorer.mode_reference import CATALOG, gaussian_intensity
 from scripts.m7r1_mode_report import OUTPUT, render
 
@@ -19,7 +22,7 @@ class ModeReferenceTests(unittest.TestCase):
     def test_catalog_has_usable_source_locators_and_no_external_fields(self):
         self.assertEqual(self.catalog["actual_external_port"]["status"], "Uncomputed")
         self.assertEqual(len(self.catalog["records"]), len(self.records))
-        self.assertEqual(len(self.catalog["sources"]), 5)
+        self.assertEqual(len(self.catalog["sources"]), 6)
         self.assertEqual({record["process"] for record in self.records.values()}, {"SMF", "LDW", "IOX"})
         for record in self.records.values():
             with self.subTest(record=record["id"]):
@@ -57,6 +60,31 @@ class ModeReferenceTests(unittest.TestCase):
         self.assertEqual(gaussian_intensity(0, diameter), 1)
         self.assertAlmostEqual(gaussian_intensity(diameter / 2, diameter), math.exp(-2))
         self.assertAlmostEqual(gaussian_intensity(-diameter / 4, diameter), math.exp(-0.5))
+
+    def test_sun_1310_intensity_evidence_cannot_supply_a_port(self):
+        record = self.records["sun-fldw-55mw-1310"]
+        evidence = record["mode_evidence"]
+        width = evidence["width"]
+        self.assertEqual(width["axes"], ["x", "y"])
+        self.assertEqual(width["diameter_m"], [1.1e-5, 1.8e-5])
+        self.assertIn("threshold unconfirmed", width["definition"])
+        self.assertIsNone(width["plus_minus_m"])
+        self.assertIsNone(evidence["complex_field"])
+        self.assertIsNone(record["gaussian_intensity_preview"])
+
+        path = Path(__file__).resolve().parents[1] / "examples/m7r3_sun_1310_readiness.json"
+        document = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(document["wavelength_m"]["value"], record["wavelength_m"])
+        self.assertNotIn("target", document)
+        with patch("photonic_architecture_explorer.external.evaluate") as engine:
+            result = evaluate_external(document)
+        engine.assert_not_called()
+        self.assertEqual(result["input_contract"]["status"], "Uncomputed")
+        self.assertEqual(result["input_contract"]["path"], "ambient_index")
+        for key in ("geometry", "model_domain", "actual_applicability"):
+            self.assertEqual(result[key]["status"], "Uncomputed")
+        self.assertIsNone(result["gaussian_mode_matching"]["normalized_mode_overlap"])
+        self.assertIsNone(result["physical_losses"]["total_coupling"])
 
     def test_noninterchangeable_loss_metrics_keep_their_provenance(self):
         desmet = {obs["quantity"]: obs for obs in self.records["desmet-fldw-1550"]["observations"]}

@@ -167,10 +167,11 @@ def render_reference_handoff():
     records = {record["id"]: record for record in catalog["records"]}
     comparison = [records[record_id] for record_id in
                   ("smf28-ultra-1550", "desmet-fldw-1550", "lee-uncracked-y-1550")]
-    control = records["smf28-ultra-1310"]
     cards = "".join(render_record(record, catalog["sources"][record["source_id"]])
                     for record in comparison)
-    control_card = render_record(control, catalog["sources"][control["source_id"]])
+    readiness_cards = "".join(render_record(record, catalog["sources"][record["source_id"]])
+                               for record in (records["smf28-ultra-1310"],
+                                              records["sun-fldw-55mw-1310"]))
     return f"""<!doctype html>
 <html lang="ko">
 <head>
@@ -184,7 +185,8 @@ section {{ margin-bottom: 1.6rem; }}
 </head>
 <body>
 <main>
-<nav aria-label="Two-Port Workspace"><a href="/">Workspace</a></nav>
+<nav aria-label="Mode Reference navigation"><a href="/">Workspace</a>
+<a href="#comparison-1550">1550 nm 비교</a><a href="#readiness-1310">1310 nm 입력 준비</a></nav>
 <h1>SMF–Glass Mode Reference</h1>
 <p>Actual External Port, Complex Overlap, Total Coupling은 <strong>Uncomputed</strong>입니다.
 이 페이지의 곡선은 문헌 Mode Width로 그린 Gaussian Intensity Preview입니다.</p>
@@ -203,9 +205,10 @@ Desmet과 Lee의 실측 Intensity Image는 아래 출처 링크에서 볼 수 �
 M7-A 예제의 공개 Width, 가정 Flat Phase, 고정 배치로 Concept Design을 검토합니다.</p>
 </section>
 <section id="readiness-1310">
-<h2>1310 nm · SMF는 문헌 MFD 확인, Glass는 Mode 미제공</h2>
-<p class="missing"><strong>Glass Waveguide Mode · Uncomputed</strong> · 이 사례의 1310 nm Mode Profile이 필요합니다.</p>
-{control_card}
+<h2>1310 nm · SMF 사양과 Glass Waveguide 실측</h2>
+<p class="missing"><strong>Glass Waveguide External Port · Uncomputed</strong> · 공개 강도 자료에는
+설계에 필요한 Width 정의, Phase 및 등록된 External Reference Plane이 빠져 있습니다.</p>
+{readiness_cards}
 <h3>실제 입력을 준비할 때</h3>
 <ul>
 <li>두 Port의 1310 nm 외부 Mode를 같은 기준으로 확인합니다. 기존 Design 입력은 1/e² MFD와 Wavefront Curvature 또는 Ordinary Complex q를 받습니다.</li>

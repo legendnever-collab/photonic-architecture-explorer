@@ -105,9 +105,53 @@
         }
       ],
       "access_notes": "Repository copy hosted by Fraunhofer IZM. Figure 5 shows normalized optical intensity with horizontal and vertical cuts. No intensity threshold for the annotated widths or raw calibrated field grid was established. Figure 4 uses a separate 678 nm refractive near-field measurement for the material index map."
+    },
+    "sun-2021-thesis": {
+      "authors": "Qi Sun",
+      "title": "Femtosecond Laser Written Diffractive Optical Devices",
+      "publication": "University of Southampton PhD thesis, October 2021",
+      "url": "https://eprints.soton.ac.uk/467364/1/Qi_Sun_Thesis_for_Award.pdf",
+      "links": [
+        {
+          "label": "Thesis Fig. 3.5(c–d), 1310 nm intensity and fit (printed p. 36)",
+          "url": "https://eprints.soton.ac.uk/467364/1/Qi_Sun_Thesis_for_Award.pdf"
+        }
+      ],
+      "access_notes": "Section 2.2 and Fig. 2.6 describe a butt-coupled fiber launch and a 0.6 NA objective with IR camera at the output. The figure is linked in the thesis. Calibrated raw intensity, phase and external-plane registration are not available from those figures."
     }
   },
   "records": [
+    {
+      "id": "sun-fldw-55mw-1310",
+      "source_id": "sun-2021-thesis",
+      "label": "Sun · Fused Silica FLDW, 55 mW writing power",
+      "process": "LDW",
+      "material": "Fused silica",
+      "wavelength_m": 1.31e-06,
+      "wavelength_band_m": null,
+      "geometry": "55 mW written guide in the Chapter 3 writing-power study",
+      "polarization": null,
+      "mode_evidence": {
+        "kind": "measured_intensity_figure",
+        "locator": "Fig. 3.5(c–d), §3.1.3 (printed p. 36)",
+        "plane": "Objective-imaged waveguide output; calibrated external reference plane not established",
+        "raw_intensity_grid": null,
+        "complex_field": null,
+        "width": {
+          "axes": ["x", "y"],
+          "diameter_m": [1.1e-05, 1.8e-05],
+          "definition": "Author-labeled MFD from Gaussian fits to intensity cutlines; width threshold unconfirmed",
+          "plus_minus_m": null,
+          "plus_minus_meaning": null
+        }
+      },
+      "gaussian_intensity_preview": null,
+      "observations": [],
+      "notes": [
+        "Nominal figure annotations. No uncertainty is given for Fig. 3.5(d). The figure's x/y axes have no registered mapping to the design's t/s axes.",
+        "Wavefront curvature, external ambient index and a registered complex field are unprovided for a design Port."
+      ]
+    },
     {
       "id": "smf28-ultra-1310",
       "source_id": "corning-pi1424",
