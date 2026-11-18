@@ -50,6 +50,8 @@ Near-Match는 현재 별도 실행하는 Trial이며 기본 Workspace에는 아�
 공개 LDW·IOX의 Mode Width, Intensity Image 출처 및 측정 조건을 제공합니다.
 [Offline Mode Comparison](results/m7r1-mode-library.html)에서 Gaussian Intensity
 Preview와 문헌 근거를 확인할 수 있습니다.
+Workspace의 **SMF–Glass Mode Reference**에서 1550 nm Mode를 비교하고 1310 nm
+입력 준비 상태를 확인할 수 있습니다. [M7-R2 사용법](docs/M7R2_REFERENCE_PORT_HANDOFF.md)
 
 ## 실행
 

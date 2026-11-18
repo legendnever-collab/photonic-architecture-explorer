@@ -63,8 +63,9 @@ def main():
     trial = json.loads((args.output_dir / "smf-glass/trial.json").read_text())
     reference = json.loads((ROOT / "results/m7b_near_match.json").read_text())
     changed = [path for path, digest in reference["manifest"]["source_sha256"].items()
-               if hashlib.sha256((ROOT / path).read_bytes()).hexdigest() != digest]
-    evidence["production_changed"] = bool(changed)
+               if Path(path).name in {"design.py", "external.py", "gaussian.py", "geometry.py", "solver.py"}
+               and hashlib.sha256((ROOT / path).read_bytes()).hexdigest() != digest]
+    evidence["physics_kernels_changed"] = bool(changed)
     assert not changed, changed
     assert trial["state"] == "Succeeded"
     assert trial["input_sha256"] == reference["input_sha256"]

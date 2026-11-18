@@ -196,6 +196,25 @@ async function main() {
 
     await page.goto(address);
     assert.equal(await page.locator('#design-review').count(), 0);
+    const originalMfd = await byName('source_mfd_ts_m_0').inputValue();
+    const [references] = await Promise.all([
+      page.context().waitForEvent('page'),
+      page.getByRole('link', {name: 'SMF–Glass Mode Reference'}).click(),
+    ]);
+    references.on('pageerror', error => errors.push(error.message));
+    await references.waitForURL(url => url.searchParams.get('entry') === 'mode-references');
+    const comparison = references.locator('#comparison-1550');
+    assert.equal(await comparison.locator('figure svg').count(), 2);
+    assert.equal(await comparison.locator('polyline').count(), 6);
+    assert(await comparison.getByRole('link', {name: /Fig. 5\(b\) measured intensity/}).isVisible());
+    assert(await comparison.getByRole('link', {name: 'Publisher Figure 5 · original image'}).isVisible());
+    assert.equal(await references.locator('form, #design-review').count(), 0);
+    assert.equal(await byName('source_mfd_ts_m_0').inputValue(), originalMfd);
+    await references.screenshot({path: path.join(dir, 'mode-reference-desktop.png')});
+    await references.getByRole('link', {name: '1550 nm SMF–Glass 개념 Proxy 열기'}).click();
+    assert.equal(await references.locator('input[name="wavelength_m_0"]').inputValue(), '1550');
+    assert.equal(await references.locator('#design-review').count(), 0);
+    await references.close();
     const nominal = await design('Computed');
     const defaultCandidate = frame.locator('[data-candidate]:visible');
     assert.equal(await defaultCandidate.getAttribute('data-input-sha'), nominal.input_sha256);
@@ -367,7 +386,15 @@ async function main() {
     }
     await mobileReport.close();
 
-    await page.getByRole('link', {name: '새 입력'}).click();
+    await page.goto(address + '/?entry=mode-references#readiness-1310');
+    assert(await page.getByText('Glass Waveguide Mode · Uncomputed', {exact: true}).isVisible());
+    assert.equal(await page.locator('#readiness-1310 svg').count(), 0);
+    assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+    await page.screenshot({path: path.join(dir, 'mode-readiness-mobile.png')});
+    await page.getByRole('link', {name: '검증한 Port 데이터로 새 입력 열기'}).click();
+    assert.equal(await byName('source_mfd_ts_m_0').inputValue(), '');
+    assert.equal(await byName('target_mfd_ts_m_0').inputValue(), '');
+    assert.equal(await byName('target_wavefront_curvature_ts_per_m_0').inputValue(), '');
     assert.equal(await byName('wavelength_m_0').inputValue(), '');
     assert.equal(await byName('target_position_m_2').inputValue(), '');
     assert.equal(await byName('source_wavefront_curvature_ts_per_m_0').inputValue(), '');
@@ -386,8 +413,19 @@ async function main() {
       target_mfd_ts_m_0: '20', target_wavefront_curvature_ts_per_m_0: '-50',
     };
     assert.equal(Object.keys(round).length, await visibleNumericInputs.count());
-    for (const [name, value] of Object.entries(round)) await edit(name, value);
+    const missingGlass = ['target_mfd_ts_m_0', 'target_wavefront_curvature_ts_per_m_0'];
+    for (const [name, value] of Object.entries(round)) {
+      if (!missingGlass.includes(name)) await edit(name, value);
+    }
+    const incompleteMode = await design('Uncomputed');
+    assert.equal(incompleteMode.input_snapshot.target.mfd_ts_m.value, null);
+    assert.equal(incompleteMode.input_snapshot.target.wavefront_curvature_ts_per_m.value, null);
+    assert.equal(incompleteMode.selected_candidate_id, null);
+    assert.equal(await frame.locator('[data-overlap-value]').count(), 0);
+    for (const name of missingGlass) await edit(name, round[name]);
     const auto = await design('Computed');
+    assert.deepEqual(auto.input_snapshot.target.mfd_ts_m.value, [20e-6, 20e-6]);
+    assert.deepEqual(auto.input_snapshot.target.wavefront_curvature_ts_per_m.value, [-50, -50]);
     assert.equal(auto.selected_candidate_id, 'G008-B1');
     assert.deepEqual(auto.input_snapshot.source.sagittal_axis.value, [0, 0, 1]);
     assert.match(auto.input_snapshot.source.sagittal_axis.source, /Derived by Workspace/);
@@ -483,6 +521,8 @@ async function main() {
       printed_review: {pages: 1, paper: 'A4', candidate_id: alternativeId, input_sha256: exported.input_sha256},
       mobile_printed_review: {pages: 1, paper: 'A4', candidate_id: mobileCandidate, input_sha256: mobileSnapshot.input_sha256},
       mode_switch: modeSwitch,
+      mode_reference_handoff: {reference_1550: 'read-only', incomplete_1310: incompleteMode.status,
+        completed_manual_input: auto.status, input_sha256: auto.input_sha256},
       nominal_sensitivity: sensitivity.candidates.map(entry => ({
         candidate_id: entry.candidate_id,
         delta_db: Object.fromEntries(Object.entries(entry.samples).map(([id, value]) => [id, value.delta_loss_db]))

@@ -5,7 +5,8 @@ import json
 import math
 import unittest
 
-from scripts.m7r1_mode_report import CATALOG, OUTPUT, gaussian_intensity, render
+from photonic_architecture_explorer.mode_reference import CATALOG, gaussian_intensity
+from scripts.m7r1_mode_report import OUTPUT, render
 
 
 class ModeReferenceTests(unittest.TestCase):

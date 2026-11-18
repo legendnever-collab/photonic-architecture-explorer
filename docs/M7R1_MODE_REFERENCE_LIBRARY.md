@@ -4,7 +4,7 @@ SMF, femtosecond LDW와 IOX의 공개 Mode Width, Mode Image, Loss를 설계 검
 사용할 수 있도록 기록했다. JSON의 각 record는 파장, 재료, 형상, polarization,
 측정 기준면, 값의 출처, 원문 위치를 보존한다. 읽기 전용 HTML은 같은 JSON에서
 생성하며, 출처별 Mode Image와 측정 조건을 바로 확인할 수 있다.
-[Reference JSON](../references/m7r1/mode_references.json) ·
+[Reference JSON](../src/photonic_architecture_explorer/data/m7r1_mode_references.json) ·
 [Mode Comparison HTML](../results/m7r1-mode-library.html)
 
 | Source | Vacuum wavelength | Mode evidence 및 실무 적용 |

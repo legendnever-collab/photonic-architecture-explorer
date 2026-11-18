@@ -11,6 +11,7 @@ from .design import design_two_ports
 from .design_report import render_design_report, review_snapshot
 from .external import InputIssue, unit_vector, vector
 from .geometry import cross, dot, mul, norm, sub
+from .mode_reference import render_reference_handoff
 from .inspector import CSS, ROOT, make_server
 
 
@@ -396,8 +397,9 @@ if (frame) {
 
 def render_workspace(raw, result=None, error=None):
     entry = raw["entry"]
-    description = ("M5-A Synthetic Example · 입력값을 바꾸면 다음 실행의 고정 조건이 됩니다."
-                   if entry == "example" else "새 입력 · External Gaussian 가정, 편광은 scalar 모델에서 제외")
+    description = {"example": "M5-A Synthetic Example · 입력값을 바꾸면 다음 실행의 고정 조건이 됩니다.",
+                   "smf-glass": "SMF–Glass Gaussian Proxy · 공개 Width와 가정 Flat Phase, 실제 장치 Field가 아닙니다."}.get(
+                       entry, "새 입력 · External Gaussian 가정, 편광은 scalar 모델에서 제외")
     fields = "".join(render_fields("", spec, raw) for spec in SHARED_FIELDS)
     issue_path = result.get("input_contract", {}).get("path") if result else None
     ports = "".join(render_port(port, raw, issue_path) for port in PORTS)
@@ -433,6 +435,7 @@ def render_workspace(raw, result=None, error=None):
     <p>Two-Port Design Workspace</p></header><main class="wrap">
     {review}
     <p class="notice" id="pending" role="status" hidden>지금 입력으로 결과를 확인하려면 Design을 실행하세요.</p>
+    <p><a href="/?entry=mode-references" target="_blank" rel="noopener">SMF–Glass Mode Reference</a></p>
     <div class="toolbar"><div class="example-links"><a href="/">Synthetic Example</a>
     <a href="/?entry=blank">새 입력</a></div><span>{description}</span></div>
     <form id="design-form" method="post" action="/design#design-output">
@@ -447,7 +450,11 @@ class Workspace:
     def __init__(self):
         example = json.loads((ROOT / "examples/m5a_two_ports.json").read_text(encoding="utf-8"))
         self.templates = {"example": example, "blank": new_input(example)}
+        self.templates['smf-glass'] = json.loads((ROOT / 'examples/m7a_smf_glass_proxy.json').read_text())
         self.fields = set(initial_values(example, "example"))
+
+    def mode_references(self):
+        return render_reference_handoff()
 
     def get(self, entry):
         return render_workspace(initial_values(self.templates[entry], entry))
