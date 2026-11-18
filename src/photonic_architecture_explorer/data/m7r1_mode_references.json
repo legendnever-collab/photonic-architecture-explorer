@@ -115,9 +115,13 @@
         {
           "label": "Thesis Fig. 3.5(c–d), 1310 nm intensity and fit (printed p. 36)",
           "url": "https://eprints.soton.ac.uk/467364/1/Qi_Sun_Thesis_for_Award.pdf"
+        },
+        {
+          "label": "Associated thesis dataset · 10.5258/SOTON/D2043",
+          "url": "https://doi.org/10.5258/SOTON/D2043"
         }
       ],
-      "access_notes": "Section 2.2 and Fig. 2.6 describe a butt-coupled fiber launch and a 0.6 NA objective with IR camera at the output. The figure is linked in the thesis. Calibrated raw intensity, phase and external-plane registration are not available from those figures."
+      "access_notes": "Section 2.2 and Fig. 2.6 describe a butt-coupled fiber launch and a 0.6 NA objective with IR camera at the output. Calibrated raw intensity, phase and external-plane registration are not available from those figures. The thesis dataset registration was confirmed in DataCite. Its repository files could not be inspected."
     }
   },
   "records": [

@@ -9,6 +9,10 @@ Image, Fig. 3.5(d)는 x/y Intensity Cut에 Gaussian을 fit한 결과다. 그림�
 Fiber Butt Launch와 출력 측 0.6 NA Objective·IR Camera를 설명한다.
 [원문 · Fig. 3.5(c–d), 인쇄 p. 36 및 §2.2](https://eprints.soton.ac.uk/467364/1/Qi_Sun_Thesis_for_Award.pdf)
 
+연계 데이터셋은 DataCite에 등록돼 있다. 등록 정보에는 파일 목록이 없었고
+저장소의 첨부 파일에 접근할 수 없어 Phase·Plane·Width 정의의 포함 여부는 미확인이다.
+[데이터셋 DOI 10.5258/SOTON/D2043](https://doi.org/10.5258/SOTON/D2043)
+
 | 근거 | Adapter 입력 판단 |
 |---|---|
 | Fig. 3.5(c–d)의 1310 nm | Vacuum Wavelength 1.31 × 10⁻⁶ m로 기록한다. |
