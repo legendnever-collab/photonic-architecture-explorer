@@ -3,6 +3,7 @@ import hashlib
 import json
 from pathlib import Path
 import sys
+import time
 
 from .near_match import run_workflow
 
@@ -15,7 +16,16 @@ def fingerprint():
 def atomic_json(path, value):
     temporary = path.with_suffix('.tmp')
     temporary.write_text(json.dumps(value, ensure_ascii=False, allow_nan=False) + '\n')
-    temporary.replace(path)
+    # A Windows reader can briefly deny replacement of the old progress file.
+    # Retry only this atomic transport operation, with a fixed one-second bound.
+    for attempt in range(100):
+        try:
+            temporary.replace(path)
+            return
+        except PermissionError:
+            if attempt == 99:
+                raise
+            time.sleep(.01)
 
 
 def main():

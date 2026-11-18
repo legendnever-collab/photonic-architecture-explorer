@@ -4,6 +4,8 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
+from photonic_architecture_explorer.workflow_worker import atomic_json
 
 ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('review_build',ROOT/'scripts/build_m7e_review.py')
@@ -12,6 +14,33 @@ spec.loader.exec_module(build)
 
 
 class DistributionManifestTests(unittest.TestCase):
+    def test_transient_windows_read_lock_retries_atomic_publication(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target=Path(directory)/'progress.json'
+            target.write_text('{"old":true}')
+            original=Path.replace
+            calls=[]
+            def replace(source,destination):
+                calls.append(1)
+                if len(calls)<3:
+                    self.assertEqual(json.loads(target.read_text()),{'old':True})
+                    raise PermissionError('simulated Windows reader lock')
+                return original(source,destination)
+            with patch.object(Path,'replace',replace), patch('photonic_architecture_explorer.workflow_worker.time.sleep'):
+                atomic_json(target,{'complete':True})
+            self.assertEqual(len(calls),3)
+            self.assertEqual(json.loads(target.read_text()),{'complete':True})
+
+    def test_persistent_read_lock_is_bounded_and_keeps_old_complete_record(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target=Path(directory)/'progress.json'
+            target.write_text('{"old":true}')
+            with patch.object(Path,'replace',side_effect=PermissionError('locked')) as replace:
+                with patch('photonic_architecture_explorer.workflow_worker.time.sleep'):
+                    with self.assertRaises(PermissionError):atomic_json(target,{'complete':True})
+            self.assertEqual(replace.call_count,100)
+            self.assertEqual(json.loads(target.read_text()),{'old':True})
+
     def test_inventory_detects_changed_missing_and_extra_files(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory)

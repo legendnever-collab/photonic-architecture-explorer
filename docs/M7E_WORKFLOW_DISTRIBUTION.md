@@ -71,8 +71,12 @@ dispatch, dependency imports and the file inventory after use. All previous Linu
 gates remain. Raw evidence is uploaded as `m7e-windows-review-evidence`.
 
 The portable Browser test uses `pathToFileURL` for Windows paths; Linux file URLs
-retain their previous behavior. Application/physics/guard/ranking sources are
-unchanged relative to M7-D. The CLI launch wrapper sets UTF-8 for child workers,
+retain their previous behavior. Physics/guard/ranking sources are unchanged
+relative to M7-D. A confirmed Windows reader lock on progress-file replacement is
+handled with at most 100 attempts at 10 ms intervals; publication stays atomic,
+persistent failure stays Failed, and the 600 s watchdog remains unchanged. Tests
+cover transient/persistent locks. The Browser gate reports worker terminal failures
+promptly instead of waiting for the result-frame timeout. The CLI wrapper sets UTF-8 for child workers,
 while isolated startup ignores an unrelated system Python configuration.
 
 ## Next development instruction — M7-F / Sol Work

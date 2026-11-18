@@ -119,7 +119,23 @@ with make_server((),0,workspace=workspace) as server:
     assert.notEqual(completed.revision,edited.revision);
     assert.equal(completed.input_sha256,cancelled.input_sha256);
     await hidden();
-    await frame().locator('#design-result').waitFor({state:'attached',timeout:650000});
+    let terminalObserved=false;
+    const monitor=async()=>{
+      let reportAt=0;
+      while(!terminalObserved){
+        const current=await status(completed);
+        if(['Failed','TimedOut','Cancelled'].includes(current.state))
+          throw new Error('Worker did not publish a result: '+JSON.stringify(current));
+        if(Date.now()-reportAt>10000){
+          console.log(JSON.stringify({job_id:completed.job_id,state:current.state,progress:current.progress}));
+          reportAt=Date.now();
+        }
+        await page.waitForTimeout(500);
+      }
+    };
+    try {
+      await Promise.race([frame().locator('#design-result').waitFor({state:'attached',timeout:650000}),monitor()]);
+    } finally { terminalObserved=true; }
     const near=await result();
     assert.equal(near.selected_candidate_id,'G036-NM');
     assert.equal(near.workflow.job_id,completed.job_id);
