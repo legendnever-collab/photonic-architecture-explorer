@@ -1,4 +1,14 @@
-# M7-E — Integrated Workflow Acceptance & Distribution
+# M7-F — User Review & Bounded Follow-Up
+
+추천 모델 **Sol Work**. 최신 Main과 M7-D/M7-E Draft HEAD·CI·Windows 패키지를 복구하고
+[M7-E 검토 절차](M7E_WORKFLOW_DISTRIBUTION.md)에 따라 실제 사용자 검토를 진행한다.
+확인된 Usability/Distribution 문제를 수정하고, 기존 모델 한계와 피드백으로 다음
+Engineering 질문을 정한다. 가드·순위·Fixed Ports·Uncomputed를 보존하고 별도 Draft PR과
+검증·다음 지시문을 제출한다. Main 병합과 새 Physics/Topology는 별도 승인 범위다.
+
+---
+
+# M7-E — Integrated Workflow Acceptance & Distribution (historical)
 
 추천 모델 **Sol Work**. 최신 Main과 M7-D Draft HEAD/CI/Artifact를 복구하고
 [M7-D](M7D_BACKGROUND_WORKFLOW.md)를 따른다. 기본 Two-Port 경로와 SMF–Glass Proxy를

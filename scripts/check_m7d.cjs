@@ -5,16 +5,20 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const assert = require('node:assert/strict');
 const {spawn, execFileSync} = require('node:child_process');
+const {pathToFileURL} = require('node:url');
 
 async function main() {
   const dir = path.resolve(process.argv[2]);
   fs.mkdirSync(dir);
   const serverCode = `
-import signal,sys
+import signal,sys,os
 from pathlib import Path
 from photonic_architecture_explorer.workspace import Workspace
 from photonic_architecture_explorer.workflow_jobs import JobManager
 from photonic_architecture_explorer.inspector import make_server
+import photonic_architecture_explorer as module
+if os.environ.get('PAE_EXPECT_ROOT'):
+ assert Path(module.__file__).resolve().is_relative_to(Path(os.environ['PAE_EXPECT_ROOT']).resolve())
 def stop(*args): raise KeyboardInterrupt
 signal.signal(signal.SIGTERM,stop)
 workspace=Workspace()
@@ -24,7 +28,7 @@ with make_server((),0,workspace=workspace) as server:
  try: server.serve_forever()
  except KeyboardInterrupt: pass
 `;
-  const server = spawn('python', ['-u','-c',serverCode,dir], {stdio:['ignore','pipe','inherit']});
+  const server = spawn(process.env.PAE_PYTHON || 'python', ['-u','-c',serverCode,dir], {stdio:['ignore','pipe','inherit']});
   let browser;
   try {
     const address = await new Promise((resolve,reject) => {
@@ -160,7 +164,7 @@ with make_server((),0,workspace=workspace) as server:
     delete exported.viewed_candidate_id;
     assert.deepEqual(exported,near);
     const offline=await browser.newPage();
-    await offline.goto('file://'+htmlFile);
+    await offline.goto(pathToFileURL(htmlFile).href);
     const embedded=await offline.locator('#design-result').evaluate(e=>JSON.parse(e.textContent));
     delete embedded.viewed_candidate_id;
     assert.deepEqual(embedded,near);

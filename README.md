@@ -4,6 +4,14 @@
 M1은 **Synthetic external Gaussian field의 paraxial feasibility**를 평가합니다.
 실제 PIC SSC/Glass Waveguide의 총 Coupling Efficiency나 특허 신규성은 평가하지 않습니다.
 
+## Windows 사용자 검토 패키지 — M7-E
+
+[Windows Review CI](https://github.com/legendnever-collab/photonic-architecture-explorer/actions/workflows/windows-review.yml)의 성공한 실행에서
+`m7e-windows-review-package` Artifact를 받습니다. Artifact 안의
+`Photonic-Architecture-Explorer-M7E-Windows-x64.zip`을 전체 압축 해제한 뒤
+`Start-Photonic-Architecture-Explorer.cmd`를 실행하세요. Python/NumPy/SciPy가 포함됩니다.
+[검토 절차·검증 범위](docs/M7E_WORKFLOW_DISTRIBUTION.md)를 참고하세요.
+
 ## 화면에서 두 Port로 설계 — M5-B
 
 ```bash
