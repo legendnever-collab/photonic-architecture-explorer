@@ -304,7 +304,7 @@ def render_report(cases, editable=False, raw_groups=None, error=None):
 
 
 def make_server(cases, port=8765, *, workspace=None):
-    """Loopback only; no files written and no remote evaluation service."""
+    """Loopback only; Workspace workers use private local run directories."""
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, *args): pass
         def send_page(self, page, status=200):
@@ -312,12 +312,31 @@ def make_server(cases, port=8765, *, workspace=None):
             self.send_response(status); self.send_header('Content-Type', 'text/html; charset=utf-8')
             self.send_header('Content-Length', str(len(payload))); self.send_header('Cache-Control', 'no-store')
             self.end_headers(); self.wfile.write(payload)
+        def send_json(self, value, status=200):
+            payload = json.dumps(value, ensure_ascii=False, allow_nan=False).encode()
+            self.send_response(status); self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.send_header('Content-Length', str(len(payload))); self.send_header('Cache-Control', 'no-store')
+            self.end_headers(); self.wfile.write(payload)
+        def job_identity(self, query):
+            values = parse_qs(query)
+            if set(values) != {'job_id', 'revision', 'input_sha256'} or any(len(v) != 1 for v in values.values()):
+                return None
+            return {key: value[0] for key, value in values.items()}
         def do_GET(self):
             query = urlsplit(self.path)
             if self.headers.get('Host') != f'127.0.0.1:{self.server.server_port}': self.send_error(403); return
+            if workspace is not None and query.path == '/jobs/status':
+                identity = self.job_identity(query.query)
+                status = workspace.job_status(identity) if identity else None
+                if status is None: self.send_error(404); return
+                self.send_json(status)
+                return
             if query.path != '/': self.send_error(404); return
             if workspace is not None:
                 entry = parse_qs(query.query).get('entry', ['example'])[0]
+                if entry == 'mode-references':
+                    self.send_page(workspace.mode_references())
+                    return
                 if entry not in workspace.templates: self.send_error(404); return
                 self.send_page(workspace.get(entry))
                 return
@@ -329,11 +348,18 @@ def make_server(cases, port=8765, *, workspace=None):
             self.send_page(render_report(ordered, editable=True))
         def do_POST(self):
             expected_path = '/design' if workspace is not None else '/evaluate'
-            if self.path != expected_path: self.send_error(404); return
+            query = urlsplit(self.path)
+            allowed_paths = (expected_path, '/jobs/cancel') if workspace is not None else (expected_path,)
+            if query.path not in allowed_paths: self.send_error(404); return
             if self.headers.get('Host') != f'127.0.0.1:{self.server.server_port}': self.send_error(403); return
             origin = self.headers.get('Origin')
             allowed = f'http://127.0.0.1:{self.server.server_port}'
             if origin and origin != allowed: self.send_error(403); return
+            if query.path == '/jobs/cancel':
+                identity = self.job_identity(query.query)
+                cancelled = bool(identity and workspace.jobs and workspace.jobs.cancel(identity))
+                self.send_json({'cancelled': cancelled}, 200 if cancelled else 404)
+                return
             try: length = int(self.headers.get('Content-Length', '0'))
             except ValueError: self.send_error(400); return
             if not 0 < length <= 1_000_000: self.send_error(413); return
@@ -353,7 +379,12 @@ def make_server(cases, port=8765, *, workspace=None):
             except (ValueError, TypeError, OverflowError) as exc:
                 safe = {k: raw.get(k, '') for k in ('ports', 'reflectors', 'package')}
                 self.send_page(render_report([('custom', '입력 오류 · 평가 보류', {})], editable=True, raw_groups=safe, error=exc))
-    return ThreadingHTTPServer(('127.0.0.1', port), Handler)
+    class Server(ThreadingHTTPServer):
+        def server_close(self):
+            if workspace is not None:
+                workspace.close()
+            super().server_close()
+    return Server(('127.0.0.1', port), Handler)
 
 
 def main():

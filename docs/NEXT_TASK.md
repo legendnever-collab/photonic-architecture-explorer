@@ -1,4 +1,24 @@
-# M7-D — Local Background Near-Match Workflow
+# 1310 nm Glass Waveguide Port Readiness
+
+추천 모델 **Sol Work**. 최신 Main과 [M7-F 통합 검토](M7F_INTEGRATED_WINDOWS_REVIEW.md)를 확인한다.
+비기밀 1310 nm Glass Waveguide 사례 하나에 대해 외부 Reference Plane, 파장·매질, 두 Mode Axis의
+Width 정의와 Phase/Curvature 또는 Complex Field, 출처와 불확도를 [입력 계약](EXTERNAL_PORT_CONTRACT.md)에 맞춰 확인한다.
+입력이 충분하면 기존 Adapter에서 Gaussian 적용성을 평가하고, 누락이 있으면 필요한 입력과 측정·시뮬레이션 경로를 기록한다.
+1550 nm Proxy는 독립 개념 사례로 유지한다. Complex Field가 확보되어 Gaussian Fit의 독립 검증이 필요하면 Astra Work 범위를 별도로 제안한다.
+
+---
+
+# M7-E — Integrated Workflow Acceptance & Distribution (historical)
+
+추천 모델 **Sol Work**. 최신 Main과 M7-D Draft HEAD/CI/Artifact를 복구하고
+[M7-D](M7D_BACKGROUND_WORKFLOW.md)를 따른다. 기본 Two-Port 경로와 SMF–Glass Proxy를
+검토하고 의존성·출처가 포함된 사용자 검토용 실행 패키지를 준비한다. 확인된 Workflow/
+Distribution 결함만 수정하며 물리 가드·순위·Uncomputed를 보존한다. 별도 Draft PR,
+정확한 HEAD·CI·Artifact·사용자 검토 절차를 제출한다. Main 병합은 별도 승인한다.
+
+---
+
+# M7-D — Local Background Near-Match Workflow (historical)
 
 추천 모델 **Sol Work**. 최신 Main과 M7-C Draft를 복구하고
 [M7-C 실행 계약·Production Handoff](M7C_NEAR_MATCH_WORKFLOW.md)를 따른다.

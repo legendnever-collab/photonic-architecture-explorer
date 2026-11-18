@@ -1,7 +1,7 @@
 """Read-only design report; reuse Inspector drawing, never calculate physics in JS."""
 from html import escape
 import json
-from .candidate_review import CONCEPT_LABELS, REVIEW_CSS, build_candidate_review, render_review_sheet
+from .candidate_review import CONCEPT_LABELS, REVIEW_CSS, build_candidate_review, render_review_sheet, near_match_note
 from .external import adapt_external
 from .inspector import CSS, PROJECTIONS, plot_svg, result_panel, input_summary, visible_overlap
 from .mode_match import MODE_MATCH_CSS, loss_label, render_mode_match
@@ -125,7 +125,7 @@ def render_design_report(result):
         <section class="card decision"><h2>Nominal Mode Match</h2>
         <div class="metric"><span>Normalized Mode Overlap · Approximate</span>{metric}
         <small>Mode Mismatch {loss_label(eta)} · Total Coupling Uncomputed</small></div>
-        <p data-recommendation-role="{role or ''}"><b>{concept}</b> · {reason}</p>
+        {near_match_note(c, adapted)}<p data-recommendation-role="{role or ''}"><b>{concept}</b> · {reason}</p>
         <p data-trade-off><b>광경로 {r['total_path_m']*1000:.3f} mm</b> · {trade_off}</p></section></div>
         <details class="card candidate-details"><summary>Mode Match, Sensitivity, Reflector 상세</summary>
         <p>최대 Projected Beam Radius <b>{r['max_projected_radius_m']*1e6:.2f} µm</b> ·
@@ -159,6 +159,13 @@ def render_design_report(result):
     alternative_section = ('<section id="concept-alternatives" class="card"><h2>Alternative Concepts</h2>'
                            f'<ul>{"".join(alternatives)}</ul></section>') if alternatives else ''
     search=result.get('search',{})
+    budget_caption = '최대 64 Geometry / 256 Curvature 후보. Frozen family를 모두 검사하며 범위를 자동 확대하지 않습니다.'
+    if result.get('workflow'):
+        cost = result['workflow']['near_match']
+        budget_caption = (f'Near-Match · {cost["geometry_count"]} Geometry / {cost["adapter_calls"]} Adapter 평가, '
+                          f'상한 {cost["maximum_adapter_calls"]}회 / 600 s. '
+                          '유한 탐색의 최고 관측값이며 전역 최적성은 보장하지 않습니다.')
+    rerun_entry = 'pae-workspace' if result.get('workflow') else 'pae-design ports.json'
     return f'''<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PAE · Two-Port Design</title><style>{CSS}{MODE_MATCH_CSS}{REVIEW_CSS}
     @media print{{body:has(#rejected-design)>header, main:has(#rejected-design)>:not(#rejected-design){{display:none !important}}
     main:has(#rejected-design){{padding:0;margin:0;max-width:none}}
@@ -177,9 +184,9 @@ def render_design_report(result):
     {''.join(articles)}{toolbar}{alternative_section}{review_section}{comparison}
     <section class="card"><details><summary>Fixed Ports · 입력 SHA · 기준면</summary>
     <p>Input SHA256 <code>{escape(result.get('input_sha256', ''))}</code></p>{input_summary(result.get('input_snapshot'))}</details>
-    <details><summary>탐색 범위·순위 근거·실패 진단</summary><p>최대 64 Geometry / 256 Curvature 후보. Frozen family를 모두 검사하며 범위를 자동 확대하지 않습니다.</p><p>대표 선정은 추천 정책과 후보별 선택 근거를 따릅니다.</p><pre>{escape(json.dumps({'policy':result['search_policy'],'ranking_order':result['ranking_order'],'recommendation_policy':result.get('recommendation_policy'),'search':search,'limitations':result['limitations']},ensure_ascii=False,indent=2))}</pre></details>
+    <details><summary>탐색 범위·순위 근거·실패 진단</summary><p>{budget_caption}</p><p>대표 선정은 추천 정책과 후보별 선택 근거를 따릅니다.</p><pre>{escape(json.dumps({'policy':result['search_policy'],'ranking_order':result['ranking_order'],'recommendation_policy':result.get('recommendation_policy'),'search':search,'limitations':result['limitations']},ensure_ascii=False,indent=2))}</pre></details>
     <details><summary>전체 결과 JSON · 입력 Snapshot 포함</summary><pre>{escape(json.dumps(result,ensure_ascii=False,indent=2))}</pre></details>
-    <p class="caption">이 파일은 재계산하지 않는 결과 Snapshot입니다. 다른 두 Port의 Design 실행은 Repository의 <code>pae-design ports.json</code> 진입점을 사용합니다.</p></section></main>
+    <p class="caption">이 파일은 재계산하지 않는 결과 Snapshot입니다. 다른 두 Port의 Design 실행은 Repository의 <code>{rerun_entry}</code> 진입점을 사용합니다.</p></section></main>
     <script type="application/json" id="design-result">{payload}</script><script>
     const selector=document.querySelector('#candidate-select'), projection=document.querySelector('#projection-select');
     function show(){{

@@ -1,0 +1,638 @@
+{
+  "schema_version": "M7R1-1",
+  "title": "SMF–Glass Waveguide Mode Reference Library",
+  "actual_external_port": {
+    "status": "Uncomputed",
+    "reason": "Calibrated complex field or validated Gaussian phase/curvature, external plane and medium, axes and polarization are required before actual-port use."
+  },
+  "sources": {
+    "corning-pi1424": {
+      "authors": "Corning Incorporated",
+      "title": "Corning SMF-28 Ultra Optical Fiber",
+      "publication": "Product Information PI1424",
+      "url": "https://www.corning.com/media/worldwide/coc/documents/Fiber/product-information-sheets/PI-1424-AEN.pdf",
+      "links": [
+        {
+          "label": "PI1424, Optical Specifications, p. 1",
+          "url": "https://www.corning.com/media/worldwide/coc/documents/Fiber/product-information-sheets/PI-1424-AEN.pdf#page=1"
+        },
+        {
+          "label": "Corning WP7071, Petermann II definition",
+          "url": "https://www.corning.com/media/worldwide/global/documents/sfiber%20WP7071_Mode%20Field%20Diam%20and%20Eff%20Area_10-01-3.pdf"
+        },
+        {
+          "label": "ITU-T G.650.1, §3.4.1.4 and §5.1.1",
+          "url": "https://www.itu.int/rec/T-REC-G.650.1-202401-I/en"
+        }
+      ],
+      "access_notes": "The PI1424 table gives MFD specifications but no test method or near-field profile. Corning WP7071 and ITU-T G.650.1 give the industry far-field Petermann II definition. This supporting definition does not establish PI1424's specimen measurement method."
+    },
+    "desmet-2021": {
+      "authors": "Andres Desmet et al.",
+      "title": "Laser Written Glass Interposer for Fiber Coupling to Silicon Photonic Integrated Circuits",
+      "publication": "IEEE Photonics Journal 13(1), 2021, 2400112",
+      "doi": "10.1109/JPHOT.2020.3039900",
+      "url": "https://www.photonics.intec.ugent.be/download/pub_4648.pdf",
+      "license": "CC BY 4.0",
+      "links": [
+        {
+          "label": "Fig. 5(b) measured intensity and Fig. 6 OFDR",
+          "url": "https://www.photonics.intec.ugent.be/download/pub_4648.pdf#page=8"
+        },
+        {
+          "label": "Fig. 8 passive V-groove coupling",
+          "url": "https://www.photonics.intec.ugent.be/download/pub_4648.pdf#page=9"
+        }
+      ],
+      "access_notes": "Published near-field intensity image and stated widths. No raw field grid acquired."
+    },
+    "lee-2021": {
+      "authors": "Timothy Lee, Qi Sun, Martynas Beresna, Gilberto Brambilla",
+      "title": "Low bend loss femtosecond laser written waveguides exploiting integrated microcrack",
+      "publication": "Scientific Reports 11, 23770 (2021)",
+      "doi": "10.1038/s41598-021-03116-y",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8660921/",
+      "license": "CC BY 4.0",
+      "links": [
+        {
+          "label": "Publisher Figure 5 · original image",
+          "url": "https://static-content.springer.com/image/art%3A10.1038%2Fs41598-021-03116-y/MediaObjects/41598_2021_3116_Fig5_HTML.png"
+        },
+        {
+          "label": "Fig. 5 measured intensity and bend losses",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8660921/#Fig5"
+        },
+        {
+          "label": "Southampton copy, Fig. 5 on PDF p. 5",
+          "url": "https://eprints.soton.ac.uk/452944/1/s41598_021_03116_y.pdf#page=5"
+        }
+      ],
+      "access_notes": "Near-field camera intensity and labeled widths in Fig. 5(a–c). The test procedure butt-couples with a polarization-maintaining launch fiber and images the output through an objective. Writing-beam polarization is a separate condition. The data-availability section provides data upon request."
+    },
+    "wang-2024": {
+      "authors": "Yuying Wang et al.",
+      "title": "Precise mode control of laser-written waveguides for broadband, low-dispersion 3D integrated optics",
+      "publication": "Light: Science & Applications 13, 130 (2024)",
+      "doi": "10.1038/s41377-024-01473-7",
+      "url": "https://link.springer.com/article/10.1038/s41377-024-01473-7",
+      "license": "CC BY 4.0",
+      "links": [
+        {
+          "label": "Springer full text and figures",
+          "url": "https://link.springer.com/article/10.1038/s41377-024-01473-7"
+        },
+        {
+          "label": "Publisher Supplementary Information (DOCX)",
+          "url": "https://static-content.springer.com/esm/art%3A10.1038%2Fs41377-024-01473-7/MediaObjects/41377_2024_1473_MOESM1_ESM.docx"
+        }
+      ],
+      "access_notes": "Main text, methods and publisher supplementary DOCX inspected. Text S7 defines circularity as minor/major axes, Fig. S9 summarizes MFD, and Figs. S8 and S13–S15 provide mode images. No standalone source-data or data-availability statement was found in the publisher's article. The DOCX contains an embedded Origin graph at Fig. S9. No calibrated camera grids or phase data were identified in the material reviewed.",
+      "supplement_sha256": "583dc6d1084a31a871a96a310b515c38ca3bc42050f591c4cdbddad0ed0b0dff"
+    },
+    "brusberg-2012": {
+      "authors": "Lars Brusberg, Henning Schröder, Marco Queisser, Klaus-Dieter Lang",
+      "title": "Single-mode Glass Waveguide Platform for DWDM Chip-to-Chip Interconnects",
+      "publication": "IEEE ECTC 2012, Fraunhofer IZM and TU Berlin",
+      "url": "https://www.izm.fraunhofer.de/content/dam/izm/de/documents/Abteilungen/System_Integration_Interconnection_Technologies/Photonik_Packaging/EOCB/IEEE%20ECTC2012%20Brusberg%20et%20al.pdf",
+      "links": [
+        {
+          "label": "Fig. 4 index map and Fig. 5 optical intensity",
+          "url": "https://www.izm.fraunhofer.de/content/dam/izm/de/documents/Abteilungen/System_Integration_Interconnection_Technologies/Photonik_Packaging/EOCB/IEEE%20ECTC2012%20Brusberg%20et%20al.pdf#page=3"
+        },
+        {
+          "label": "Fig. 6 bend results and straight cut-back text",
+          "url": "https://www.izm.fraunhofer.de/content/dam/izm/de/documents/Abteilungen/System_Integration_Interconnection_Technologies/Photonik_Packaging/EOCB/IEEE%20ECTC2012%20Brusberg%20et%20al.pdf#page=4"
+        }
+      ],
+      "access_notes": "Repository copy hosted by Fraunhofer IZM. Figure 5 shows normalized optical intensity with horizontal and vertical cuts. No intensity threshold for the annotated widths or raw calibrated field grid was established. Figure 4 uses a separate 678 nm refractive near-field measurement for the material index map."
+    }
+  },
+  "records": [
+    {
+      "id": "smf28-ultra-1310",
+      "source_id": "corning-pi1424",
+      "label": "Corning SMF-28 Ultra · 1310 nm",
+      "process": "SMF",
+      "material": "Silica telecom fiber",
+      "wavelength_m": 1.31e-06,
+      "wavelength_band_m": null,
+      "geometry": "Standard single-mode fiber, ITU-T G.652.D",
+      "polarization": null,
+      "mode_evidence": {
+        "kind": "manufacturer_mfd",
+        "plane": "Fiber cross section per MFD specification, external plane unprovided",
+        "locator": "PI1424, Optical Specifications, p. 1",
+        "width": {
+          "axes": [
+            "scalar"
+          ],
+          "diameter_m": [
+            9.2e-06
+          ],
+          "plus_minus_m": [
+            4e-07
+          ],
+          "plus_minus_meaning": "Specification tolerance",
+          "definition": "Manufacturer MFD. Petermann II is the supporting telecom convention; PI1424 gives no product test method.",
+          "provenance": "manufacturer_specification",
+          "locator": "PI1424 MFD table"
+        },
+        "raw_intensity_grid": null,
+        "complex_field": null
+      },
+      "gaussian_intensity_preview": {
+        "shape": "circular",
+        "assumption": "Treat the nominal scalar MFD as a circular 1/e² intensity diameter. Centered Gaussian magnitude |A| = sqrt(I/Ipeak) if needed. Phase remains unspecified."
+      },
+      "observations": [],
+      "notes": []
+    },
+    {
+      "id": "smf28-ultra-1550",
+      "source_id": "corning-pi1424",
+      "label": "Corning SMF-28 Ultra · 1550 nm",
+      "process": "SMF",
+      "material": "Silica telecom fiber",
+      "wavelength_m": 1.55e-06,
+      "wavelength_band_m": null,
+      "geometry": "Standard single-mode fiber, ITU-T G.652.D",
+      "polarization": null,
+      "mode_evidence": {
+        "kind": "manufacturer_mfd",
+        "plane": "Fiber cross section per MFD specification, external plane unprovided",
+        "locator": "PI1424, Optical Specifications, p. 1",
+        "width": {
+          "axes": [
+            "scalar"
+          ],
+          "diameter_m": [
+            1.04e-05
+          ],
+          "plus_minus_m": [
+            5e-07
+          ],
+          "plus_minus_meaning": "Specification tolerance",
+          "definition": "Manufacturer MFD. Petermann II is the supporting telecom convention; PI1424 gives no product test method.",
+          "provenance": "manufacturer_specification",
+          "locator": "PI1424 MFD table"
+        },
+        "raw_intensity_grid": null,
+        "complex_field": null
+      },
+      "gaussian_intensity_preview": {
+        "shape": "circular",
+        "assumption": "Treat the nominal scalar MFD as a circular 1/e² intensity diameter. Centered Gaussian magnitude |A| = sqrt(I/Ipeak) if needed. Phase remains unspecified."
+      },
+      "observations": [],
+      "notes": []
+    },
+    {
+      "id": "desmet-fldw-1550",
+      "source_id": "desmet-2021",
+      "label": "Desmet FLDW · fused silica",
+      "process": "LDW",
+      "material": "Fused silica",
+      "wavelength_m": 1.55e-06,
+      "wavelength_band_m": null,
+      "geometry": "Buried straight guide ~43 µm below surface in Fig. 5(a)",
+      "polarization": null,
+      "mode_evidence": {
+        "kind": "published_measured_intensity",
+        "plane": "Reported waveguide mode image, external complex-field plane unprovided",
+        "locator": "§3.1, Fig. 5(b)",
+        "width": {
+          "axes": [
+            "lateral",
+            "vertical"
+          ],
+          "diameter_m": [
+            1.28e-05,
+            1.21e-05
+          ],
+          "plus_minus_m": [
+            4e-07,
+            1.3e-06
+          ],
+          "plus_minus_meaning": "Reported ± values; statistic unspecified here",
+          "definition": "1/e² intensity diameters",
+          "provenance": "measured",
+          "locator": "§3.1 and Fig. 5(b)"
+        },
+        "raw_intensity_grid": null,
+        "complex_field": null
+      },
+      "gaussian_intensity_preview": {
+        "shape": "axis_aligned_elliptical",
+        "assumption": "Centered, separable Gaussian magnitude uses the measured lateral and vertical widths. Phase remains unspecified."
+      },
+      "observations": [
+        {
+          "quantity": "straight propagation loss",
+          "value": 0.88,
+          "unit": "dB/cm",
+          "provenance": "measured",
+          "locator": "§3.1, Fig. 6",
+          "conditions": "One-way loss from OFDR.",
+          "plus_minus": null,
+          "reported_convention": null
+        },
+        {
+          "quantity": "active-alignment total insertion loss",
+          "value": 2.17,
+          "unit": "dB",
+          "provenance": "measured",
+          "locator": "§3.1",
+          "conditions": "1.5 cm guide, fiber to glass guide to fiber.",
+          "plus_minus": 0.01,
+          "reported_convention": null
+        },
+        {
+          "quantity": "active-alignment coupling loss",
+          "value": 0.43,
+          "unit": "dB/facet",
+          "provenance": "inferred_from_measurements",
+          "locator": "§3.1",
+          "conditions": "Rounded [(2.17 dB) − (1.5 cm × 0.88 dB/cm)]/2, assuming equal facet losses.",
+          "plus_minus": null,
+          "reported_convention": null
+        },
+        {
+          "quantity": "passive V-groove coupling loss",
+          "value": 1.24,
+          "unit": "dB",
+          "provenance": "measured",
+          "locator": "§3.2, Fig. 8",
+          "conditions": "Fiber-to-guide interface at the best height offset, 7.5 mm guide, mean of three measurements.",
+          "plus_minus": 0.32,
+          "reported_convention": null
+        },
+        {
+          "quantity": "perfectly aligned mode mismatch",
+          "value": 0.22,
+          "unit": "dB",
+          "provenance": "simulated",
+          "locator": "§3.2, Fig. 8",
+          "conditions": "Lumerical finite-difference eigenmode simulation, aligned fiber and guide. Scope is mode mismatch.",
+          "plus_minus": null,
+          "reported_convention": null
+        }
+      ],
+      "notes": [
+        "Fig. 6 reports an OFDR round-trip slope of 176 dB/m and corrects it to one-way propagation loss. The mode-image polarization is unspecified; the authors describe propagation loss as polarization insensitive."
+      ]
+    },
+    {
+      "id": "lee-uncracked-y-1550",
+      "source_id": "lee-2021",
+      "label": "Lee FLDW · uncracked, y-pol",
+      "process": "LDW",
+      "material": "Fused silica (Altechna UVFS C7980 0F)",
+      "wavelength_m": 1.55e-06,
+      "wavelength_band_m": null,
+      "geometry": "1 cm straight control, nominal 10 × 10 µm written cross section, facets pre-polished",
+      "polarization": "y-axis guided-light polarization in panel (a)",
+      "mode_evidence": {
+        "kind": "published_measured_intensity",
+        "plane": "Objective-imaged near field of output facet; camera captures intensity",
+        "locator": "Fig. 5(a), Waveguide characterisation",
+        "width": {
+          "axes": [
+            "x",
+            "y"
+          ],
+          "diameter_m": [
+            1.02e-05,
+            1e-05
+          ],
+          "plus_minus_m": [
+            1e-07,
+            1e-07
+          ],
+          "plus_minus_meaning": "Paper states ±0.1 µm in both dimensions",
+          "definition": "1/e² intensity diameters, intensity peak normalized to unity",
+          "provenance": "measured",
+          "locator": "Fig. 5(a) and Experimental waveguide bends"
+        },
+        "raw_intensity_grid": null,
+        "complex_field": null
+      },
+      "gaussian_intensity_preview": {
+        "shape": "axis_aligned_elliptical",
+        "assumption": "Centered, separable Gaussian magnitude uses the measured x/y widths. Phase remains unspecified."
+      },
+      "observations": [],
+      "notes": [
+        "The width refers to the optical mode; the 10 × 10 µm cross section describes the written guide."
+      ]
+    },
+    {
+      "id": "lee-microcrack-x-1550",
+      "source_id": "lee-2021",
+      "label": "Lee FLDW · microcrack, x-pol",
+      "process": "LDW",
+      "material": "Fused silica (Altechna UVFS C7980 0F)",
+      "wavelength_m": 1.55e-06,
+      "wavelength_band_m": null,
+      "geometry": "Straight guide with crack on the image's right side",
+      "polarization": "x-axis guided-light polarization",
+      "mode_evidence": {
+        "kind": "published_measured_intensity",
+        "plane": "Objective-imaged near field of output facet; camera captures intensity",
+        "locator": "Fig. 5(b)",
+        "width": {
+          "axes": [
+            "x",
+            "y"
+          ],
+          "diameter_m": [
+            9.3e-06,
+            9.6e-06
+          ],
+          "plus_minus_m": null,
+          "plus_minus_meaning": null,
+          "definition": "1/e² intensity diameters, intensity peak normalized to unity",
+          "provenance": "measured",
+          "locator": "Fig. 5(b) image annotations"
+        },
+        "raw_intensity_grid": null,
+        "complex_field": null
+      },
+      "gaussian_intensity_preview": null,
+      "observations": [],
+      "notes": [
+        "The measured distribution is asymmetric on the crack side. The paper reports x-axis narrowing of 6–7% for both polarizations in its text, while the widths here are the Figure 5 annotations."
+      ]
+    },
+    {
+      "id": "lee-microcrack-y-1550",
+      "source_id": "lee-2021",
+      "label": "Lee FLDW · microcrack, y-pol",
+      "process": "LDW",
+      "material": "Fused silica (Altechna UVFS C7980 0F)",
+      "wavelength_m": 1.55e-06,
+      "wavelength_band_m": null,
+      "geometry": "Straight guide with crack on the image's right side",
+      "polarization": "y-axis guided-light polarization",
+      "mode_evidence": {
+        "kind": "published_measured_intensity",
+        "plane": "Objective-imaged near field of output facet; camera captures intensity",
+        "locator": "Fig. 5(c)",
+        "width": {
+          "axes": [
+            "x",
+            "y"
+          ],
+          "diameter_m": [
+            9.4e-06,
+            1e-05
+          ],
+          "plus_minus_m": null,
+          "plus_minus_meaning": null,
+          "definition": "1/e² intensity diameters, intensity peak normalized to unity",
+          "provenance": "measured",
+          "locator": "Fig. 5(c) image annotations"
+        },
+        "raw_intensity_grid": null,
+        "complex_field": null
+      },
+      "gaussian_intensity_preview": null,
+      "observations": [],
+      "notes": [
+        "The measured distribution is asymmetric on the crack side. The paper reports x-axis narrowing of 6–7% for both polarizations in its text, while the widths here are the Figure 5 annotations."
+      ]
+    },
+    {
+      "id": "wang-ocms-fundamental",
+      "source_id": "wang-2024",
+      "label": "Wang OCMS · circular fundamental modes",
+      "process": "LDW",
+      "material": "Corning EAGLE XG",
+      "wavelength_m": null,
+      "wavelength_band_m": null,
+      "geometry": "Step, GRIN, W-like and U-like refractive-index profiles; distinct guide designs",
+      "polarization": null,
+      "mode_evidence": {
+        "kind": "published_measured_intensity",
+        "plane": "Near-infrared beam-profiler image",
+        "locator": "Fig. 2(c), Supplementary Text S7 and Fig. S9",
+        "width": null,
+        "raw_intensity_grid": null,
+        "complex_field": null
+      },
+      "gaussian_intensity_preview": null,
+      "observations": [
+        {
+          "quantity": "MFD across the design family",
+          "value": [
+            8e-06,
+            1.8e-05
+          ],
+          "unit": "m",
+          "provenance": "measured",
+          "locator": "Results following Fig. 2(c), Supplementary Fig. S9",
+          "conditions": "Range across the step, GRIN, W-like and U-like guides. Displayed in micrometers in the comparison.",
+          "plus_minus": null,
+          "reported_convention": null
+        },
+        {
+          "quantity": "mode circularity across the design family",
+          "value": [
+            97,
+            99.5
+          ],
+          "unit": "%",
+          "provenance": "measured",
+          "locator": "Fig. 2(c), Supplementary Text S7",
+          "conditions": "Ratio of minor axis to major axis of the measured intensity distribution.",
+          "plus_minus": null,
+          "reported_convention": "Greater than 97%, up to 99.5%"
+        }
+      ],
+      "notes": [
+        "The width range describes multiple guides. The W-like and U-like labels describe refractive-index profiles. Distinct higher-order intensity patterns appear in the LP₁₁ and LP₂₁ records."
+      ]
+    },
+    {
+      "id": "wang-ocms-grin-1550",
+      "source_id": "wang-2024",
+      "label": "Wang OCMS · GRIN loss example",
+      "process": "LDW",
+      "material": "Corning EAGLE XG",
+      "wavelength_m": 1.55e-06,
+      "wavelength_band_m": null,
+      "geometry": "10 mm GRIN guide for the Fig. 2(b) insertion-loss result",
+      "polarization": null,
+      "mode_evidence": {
+        "kind": "loss_reference",
+        "plane": null,
+        "locator": "Fig. 2(b) and associated results text",
+        "width": null,
+        "raw_intensity_grid": null,
+        "complex_field": null
+      },
+      "gaussian_intensity_preview": null,
+      "observations": [
+        {
+          "quantity": "GRIN assembly insertion loss",
+          "value": 0.29,
+          "unit": "dB",
+          "provenance": "measured",
+          "locator": "Fig. 2(b)",
+          "conditions": "10 mm guide, reported with a single-mode GRIN fiber, exact fiber product unspecified in this example.",
+          "plus_minus": null,
+          "reported_convention": null
+        },
+        {
+          "quantity": "GRIN propagation loss",
+          "value": 0.2,
+          "unit": "dB/cm",
+          "provenance": "measured",
+          "locator": "Results following Fig. 2",
+          "conditions": "Propagation reported for the GRIN guide.",
+          "plus_minus": null,
+          "reported_convention": null
+        },
+        {
+          "quantity": "GRIN assembly coupling loss",
+          "value": 0.045,
+          "unit": "dB/facet",
+          "provenance": "inferred_from_measurements",
+          "locator": "Results following Fig. 2",
+          "conditions": "[(0.29 dB) − (1 cm × 0.2 dB/cm)]/2, assuming equal facets. Specific GRIN-fiber example.",
+          "plus_minus": null,
+          "reported_convention": null
+        }
+      ],
+      "notes": [
+        "Fig. 2(b) identifies a single-mode GRIN fiber. The general Methods section separately describes Corning SMF-28 at both ends with index-matching oil for insertion-loss measurements. The specific GRIN result takes its fiber designation from Fig. 2(b) and the results text."
+      ]
+    },
+    {
+      "id": "wang-ocms-lp11",
+      "source_id": "wang-2024",
+      "label": "Wang OCMS · LP₁₁ mode conversion",
+      "process": "LDW",
+      "material": "Corning EAGLE XG",
+      "wavelength_m": null,
+      "wavelength_band_m": [
+        1.5e-06,
+        1.61e-06
+      ],
+      "geometry": "Directional coupler with 0°, 45° and 90° modal orientations",
+      "polarization": null,
+      "mode_evidence": {
+        "kind": "published_measured_intensity",
+        "plane": "Imaged glass end facet (CinCam CMOS)",
+        "locator": "Fig. 3(a–b), Supplementary Figs. S13–S15",
+        "width": null,
+        "raw_intensity_grid": null,
+        "complex_field": null
+      },
+      "gaussian_intensity_preview": null,
+      "observations": [
+        {
+          "quantity": "LP₁₁ mode extinction ratio",
+          "value": 25,
+          "unit": "dB",
+          "provenance": "inferred_from_measurements",
+          "locator": "Fig. 3(a–b) and Supplementary S10",
+          "conditions": "Calculated from measured mode distribution over 1500–1610 nm. Modal purity, not a facet-loss measurement.",
+          "plus_minus": null,
+          "reported_convention": "Lower bound: >25 dB",
+          "comparison": ">"
+        }
+      ],
+      "notes": [
+        "Orientation refers to mode lobes. Spectral transfer is the ratio of integrated output intensities of the two guides. Modal extinction ratio is a mode-purity diagnostic."
+      ]
+    },
+    {
+      "id": "wang-ocms-lp21",
+      "source_id": "wang-2024",
+      "label": "Wang OCMS · LP₂₁ mode conversion",
+      "process": "LDW",
+      "material": "Corning EAGLE XG",
+      "wavelength_m": null,
+      "wavelength_band_m": [
+        9.8e-07,
+        1.16e-06
+      ],
+      "geometry": "Directional coupler; complementary higher-order / non-Gaussian mode shape",
+      "polarization": null,
+      "mode_evidence": {
+        "kind": "published_measured_intensity",
+        "plane": "Imaged glass end facet (CinCam CMOS)",
+        "locator": "Fig. 3(c–d), Supplementary Figs. S8 and S17",
+        "width": null,
+        "raw_intensity_grid": null,
+        "complex_field": null
+      },
+      "gaussian_intensity_preview": null,
+      "observations": [],
+      "notes": [
+        "Measured examples at 980, 1030 and 1160 nm. Fig. 4 is a separate pulsed/supercontinuum experiment. Inter-guide power transfer and relative changes in transfer are separate from fiber coupling loss."
+      ]
+    },
+    {
+      "id": "brusberg-iox-1550",
+      "source_id": "brusberg-2012",
+      "label": "Fraunhofer IZM IOX · D263Teco",
+      "process": "IOX",
+      "material": "Schott D263Teco thin glass",
+      "wavelength_m": 1.55e-06,
+      "wavelength_band_m": null,
+      "geometry": "Buried elliptical guide, core about 5 µm below surface; thermal silver and sodium exchange",
+      "polarization": null,
+      "mode_evidence": {
+        "kind": "published_measured_intensity",
+        "plane": "Published mode-image plane, calibrated external field plane unprovided",
+        "locator": "Figs. 4–5 and adjacent text",
+        "width": {
+          "axes": [
+            "horizontal",
+            "vertical"
+          ],
+          "diameter_m": [
+            1.88e-05,
+            1.2e-05
+          ],
+          "plus_minus_m": null,
+          "plus_minus_meaning": null,
+          "definition": "Figure-annotated mode diameters; intensity criterion unspecified",
+          "provenance": "measured",
+          "locator": "Fig. 5, pp. 1533–1534"
+        },
+        "raw_intensity_grid": null,
+        "complex_field": null
+      },
+      "gaussian_intensity_preview": null,
+      "observations": [
+        {
+          "quantity": "straight guide propagation loss",
+          "value": 0.05,
+          "unit": "dB/cm",
+          "provenance": "measured",
+          "locator": "Cut-back text, p. 1534",
+          "conditions": "Polished glass guide, input SMF with six-axis alignment and output MMF detector. Signed loss normalized to positive magnitude.",
+          "plus_minus": null,
+          "reported_convention": "About −0.05 dB/cm in the source's signed notation (abstract and p. 1534)",
+          "comparison": "≈"
+        },
+        {
+          "quantity": "fiber-to-waveguide coupling loss",
+          "value": 0.3,
+          "unit": "dB",
+          "provenance": "reported_from_cutback",
+          "locator": "Cut-back text, p. 1534",
+          "conditions": "Six-axis-aligned butt-coupled input SMF, output MMF detector. Launch model and independent per-facet de-embedding are unspecified for this cut-back.",
+          "plus_minus": null,
+          "reported_convention": "About −0.3 dB in the source's signed notation (abstract and p. 1534)",
+          "comparison": "≈"
+        }
+      ],
+      "notes": [
+        "Fig. 4 is the material-index map at 678 nm. Fig. 5 is the optical mode at 1550 nm. Fig. 6 includes 1310 nm bend data; no corresponding 1310 nm mode width is extracted."
+      ]
+    }
+  ]
+}

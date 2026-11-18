@@ -4,6 +4,14 @@
 M1은 **Synthetic external Gaussian field의 paraxial feasibility**를 평가합니다.
 실제 PIC SSC/Glass Waveguide의 총 Coupling Efficiency나 특허 신규성은 평가하지 않습니다.
 
+## Windows 사용자 검토 패키지 — M7-F
+
+[Windows Review CI](https://github.com/legendnever-collab/photonic-architecture-explorer/actions/workflows/windows-review.yml)의 성공한 실행에서
+`m7f-windows-review-package` Artifact를 받습니다. Artifact 안의
+`Photonic-Architecture-Explorer-M7F-Windows-x64.zip`을 전체 압축 해제한 뒤
+`Start-Photonic-Architecture-Explorer.cmd`를 실행하세요. Python/NumPy/SciPy가 포함됩니다.
+[검토 절차·검증 범위](docs/M7F_INTEGRATED_WINDOWS_REVIEW.md)를 참고하세요.
+
 ## 화면에서 두 Port로 설계 — M5-B
 
 ```bash
@@ -44,12 +52,23 @@ Missing Phase나 Domain Fail은 임의 보완하지 않습니다.
 1550 nm 공개 Mode Width를 사용한 개념 입력과 기존 가드의 판정 근거를 확인할 수 있습니다.
 [M7-B Near-Match 결과](docs/M7B_GUARDED_NEAR_MATCH.md)와
 [M7-C Workflow 통합 Prototype·후속 계획](docs/M7C_NEAR_MATCH_WORKFLOW.md)을 제공합니다.
-Near-Match는 현재 별도 실행하는 Trial이며 기본 Workspace에는 아직 연결되지 않았습니다.
+[M7-D Background Workflow](docs/M7D_BACKGROUND_WORKFLOW.md)에서는 exact-q 후보가 없을 때
+같은 **Design** 동작으로 Near-Match를 자동 탐색합니다. `SMF–Glass Proxy` 예제로 확인할 수
+있으며, 진행 표시·취소·입력 변경 시 결과 무효화와 기존 HTML/JSON/A4 출력을 지원합니다.
+전체 탐색은 수분 걸릴 수 있습니다. 이 Proxy는 공개 Width와 가정 Phase를 사용하며
+실제 Device Field, Assembly Tolerance 및 Total Coupling은 Uncomputed입니다.
+
+[M7-R1 Mode Reference Library](docs/M7R1_MODE_REFERENCE_LIBRARY.md)는 1310/1550 nm SMF와
+공개 LDW·IOX의 Mode Width, Intensity Image 출처 및 측정 조건을 제공합니다.
+[Offline Mode Comparison](results/m7r1-mode-library.html)에서 Gaussian Intensity
+Preview와 문헌 근거를 확인할 수 있습니다.
+Workspace의 **SMF–Glass Mode Reference**에서 1550 nm Mode를 비교하고 1310 nm
+입력 준비 상태를 확인할 수 있습니다. [M7-R2 사용법](docs/M7R2_REFERENCE_PORT_HANDOFF.md)
 
 ## 실행
 
-Python 3.11 이상. 계산 엔진은 Standard Library만 사용합니다.
-독립 Fresnel/수치 검증은 NumPy 2.x를 사용합니다.
+Python 3.11 이상. Gaussian/Geometry 계산 커널은 Standard Library를 사용합니다.
+앱 설치에는 Near-Match 탐색과 독립 검산용 NumPy 2.3.5 / SciPy 1.17.0이 포함됩니다.
 
 ```bash
 python -m pip install -e '.[test]'

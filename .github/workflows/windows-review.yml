@@ -1,0 +1,65 @@
+name: Windows review distribution
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  bundled-review:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    env:
+      PYTHONUTF8: '1'
+      PYTHONNOUSERSITE: '1'
+    steps:
+      - name: Preserve source bytes for cross-platform reference hashes
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@v4
+        with:
+          ref: '${{ github.event.pull_request.head.sha || github.sha }}'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e '.[test]'
+      - run: python -m unittest discover -s tests -q
+      - run: python scripts/build_m7e_review.py --output-dir dist/m7e-review
+      - name: Extract review ZIP outside the checkout
+        shell: pwsh
+        run: |
+          $destination = Join-Path $env:RUNNER_TEMP 'PAE 검토 with spaces'
+          Expand-Archive -LiteralPath 'dist/m7e-review/Photonic-Architecture-Explorer-M7F-Windows-x64.zip' -DestinationPath $destination
+          $package = Join-Path $destination 'Photonic-Architecture-Explorer-M7F-Windows-x64'
+          "PAE_REVIEW_PACKAGE=$package" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "PAE_PYTHON=$package\runtime\python.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "PAE_EXPECT_ROOT=$package\app" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          'PYTHONPATH=' | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - run: python scripts/validate_m7e_review.py "$env:PAE_REVIEW_PACKAGE" --output-dir results/runtime-m7e-package
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save --package-lock=false playwright@1.62.1
+      - run: npx playwright install chromium
+      - name: Install PDF inspection tools
+        shell: pwsh
+        run: |
+          choco install poppler --no-progress -y
+          $info = Get-ChildItem 'C:\ProgramData\chocolatey' -Filter pdfinfo.exe -Recurse | Select-Object -First 1
+          if (-not $info) { throw 'pdfinfo not found' }
+          $info.DirectoryName | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      - run: node scripts/check_m7d.cjs results/runtime-m7e-windows
+      - name: Recheck extracted file inventory after use
+        run: python -c "import sys; sys.path.insert(0,'scripts'); from build_m7e_review import verify; verify(__import__('pathlib').Path(__import__('os').environ['PAE_REVIEW_PACKAGE'])); print('Distribution inventory remains intact')"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: m7f-windows-review-package
+          path: |
+            dist/m7e-review/*.zip
+            dist/m7e-review/*.sha256
+            dist/m7e-review/Photonic-Architecture-Explorer-M7F-Windows-x64/PACKAGE_MANIFEST.json
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: m7f-windows-review-evidence
+          path: results/runtime-m7e*/
+          if-no-files-found: warn

@@ -49,6 +49,13 @@ jobs:
       - run: node scripts/check_workspace.cjs results/runtime-m5e-browser results/runtime-m5a-browser
       - run: python scripts/validate_m5f.py --output-dir results/runtime-m5f-acceptance
       - run: node scripts/check_m5f_print.cjs results/runtime-m5f-acceptance
+      - run: node scripts/check_m7d.cjs results/runtime-m7d-browser
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: m7d-background-workflow-evidence
+          path: results/runtime-m7d-browser/
+          if-no-files-found: error
       - uses: actions/upload-artifact@v4
         if: always()
         with:
