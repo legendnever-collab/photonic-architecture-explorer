@@ -46,6 +46,11 @@ Missing Phase나 Domain Fail은 임의 보완하지 않습니다.
 [M7-C Workflow 통합 Prototype·후속 계획](docs/M7C_NEAR_MATCH_WORKFLOW.md)을 제공합니다.
 Near-Match는 현재 별도 실행하는 Trial이며 기본 Workspace에는 아직 연결되지 않았습니다.
 
+[M7-R1 Mode Reference Library](docs/M7R1_MODE_REFERENCE_LIBRARY.md)는 1310/1550 nm SMF와
+공개 LDW·IOX의 Mode Width, Intensity Image 출처 및 측정 조건을 제공합니다.
+[Offline Mode Comparison](results/m7r1-mode-library.html)에서 Gaussian Intensity
+Preview와 문헌 근거를 확인할 수 있습니다.
+
 ## 실행
 
 Python 3.11 이상. 계산 엔진은 Standard Library만 사용합니다.
