@@ -56,9 +56,14 @@ print(json.dumps({name:design_two_ports(json.loads((ROOT/'examples'/name).read_t
     (args.output_dir/'frozen.json').write_text(json.dumps(results,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
     # Verify the .cmd dispatch too; the tested folder contains both spaces and Unicode.
     cmd = package/'Start-Photonic-Architecture-Explorer.cmd'
-    command = f'""{cmd}" --self-test"'
-    launched = subprocess.run(['cmd','/d','/c',command],cwd=args.output_dir,env=poisoned,
-                             capture_output=True,text=True,encoding='utf-8',check=True,timeout=30)
+    # Popen supplies cmd.exe's outer /c quoting. A list containing manually nested
+    # quotes is escaped again by list2cmdline and breaks a path containing spaces.
+    command = f'"{cmd}" --self-test'
+    launched = subprocess.run(command,shell=True,cwd=args.output_dir,env=poisoned,
+                             capture_output=True,text=True,encoding='utf-8',timeout=30)
+    if launched.returncode:
+        (args.output_dir/'cmd-error.txt').write_text(launched.stdout+'\n'+launched.stderr,encoding='utf-8')
+        raise RuntimeError('CMD self-test failed: '+launched.stdout+'\n'+launched.stderr)
     assert json.loads(launched.stdout)['proxy_sha256'] == manifest['input_proxy_sha256']
     process = subprocess.Popen([str(executable),'-I','-X','utf8',str(launcher),'--no-browser'],
         cwd=args.output_dir,env=poisoned,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,encoding='utf-8')
