@@ -5,10 +5,13 @@
 3. 기본 Browser에서 Two-Port Workspace가 열립니다. 자동으로 열리지 않으면 콘솔에
    출력된 `http://127.0.0.1:...` 주소를 여세요. 콘솔은 실행 중 계속 열어 두세요.
 4. `Synthetic Example → Design`으로 기준 설계를 확인하세요.
-5. `SMF–Glass Proxy → Design`으로 자동 Near-Match를 확인하세요. 수분 걸릴 수 있으며
-   취소하거나 입력을 수정할 수 있습니다. 입력 수정 후 이전 결과와 Export는 숨겨집니다.
+5. **SMF–Glass Mode Reference**에서 1550 nm Mode를 비교한 후 **1550 nm SMF–Glass 개념 Proxy 열기 → Design**으로 자동 Near-Match를 확인하세요. 수분 걸릴 수 있으며 취소하거나 입력을 수정할 수 있습니다.
 6. 결과에서 Mode Match 상세, HTML/JSON 저장과 후보 요약 인쇄(A4)를 확인하세요.
 7. 종료하려면 콘솔에서 Ctrl+C를 누르세요. 다시 실행할 때는 시작 파일을 여세요.
+
+1310 nm 비교에서는 Glass Waveguide Mode에 필요한 입력을 확인할 수 있습니다.
+**검증한 Port 데이터로 새 입력 열기**는 빈 Workspace를 엽니다. 인터넷 연결 없이
+비교표를 보려면 `app/results/m7r1-mode-library.html`을 여세요. 원문 그림 링크는 인터넷을 사용합니다.
 
 Windows x64 검토용입니다. CPython과 NumPy/SciPy가 포함돼 있어 별도의 Python 설치나
 다운로드가 필요하지 않습니다. 앱은 이 컴퓨터의 Loopback에서 실행됩니다.

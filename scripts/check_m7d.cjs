@@ -41,7 +41,8 @@ with make_server((),0,workspace=workspace) as server:
       });
     });
     browser=await chromium.launch(process.env.PAE_CHROMIUM ? {executablePath:process.env.PAE_CHROMIUM} : {});
-    const page=await browser.newPage({viewport:{width:1440,height:1050},acceptDownloads:true});
+    const context=await browser.newContext({viewport:{width:1440,height:1050},acceptDownloads:true});
+    let page=await context.newPage();
     const errors=[];
     page.on('pageerror',e=>errors.push(e.message));
     page.setDefaultTimeout(10000);
@@ -61,6 +62,17 @@ with make_server((),0,workspace=workspace) as server:
     const hidden=async()=>{
       assert.equal(await page.locator('#design-output').isVisible(),false);
       assert.equal(await page.locator('[data-export]:visible').count(),0);
+    };
+    const openReference=async()=>{
+      const [referencePage]=await Promise.all([
+        page.context().waitForEvent('page'),
+        page.getByRole('link',{name:'SMF–Glass Mode Reference'}).click(),
+      ]);
+      referencePage.on('pageerror',e=>errors.push(e.message));
+      referencePage.setDefaultTimeout(10000);
+      await referencePage.setViewportSize(page.viewportSize());
+      await referencePage.waitForURL(url=>url.searchParams.get('entry')==='mode-references');
+      return referencePage;
     };
     await page.goto(address);
     await design();
@@ -111,8 +123,18 @@ with make_server((),0,workspace=workspace) as server:
     await expectTerminal(edited,'Cancelled');
     await page.unroute('**/jobs/status?**');
 
-    // Retry unchanged Proxy inputs: fresh ID, same SHA, full real search (no fixture result cache).
-    await page.goto(address+'/?entry=smf-glass');
+    // Start the full retry through the packaged read-only reference and explicit Proxy link.
+    const referencePage=await openReference();
+    const comparison=referencePage.locator('#comparison-1550');
+    assert.equal(await comparison.locator('polyline').count(),6);
+    assert(await comparison.getByRole('link',{name:/Fig. 5\(b\) measured intensity/}).isVisible());
+    assert.equal(await referencePage.locator('form, #design-review, #workflow-job').count(),0);
+    await referencePage.screenshot({path:path.join(dir,'reference-1550.png'),fullPage:true});
+    await referencePage.getByRole('link',{name:'1550 nm SMF–Glass 개념 Proxy 열기'}).click();
+    assert.equal(await referencePage.locator('input[name="wavelength_m_0"]').inputValue(),'1550');
+    assert.equal(await referencePage.locator('#design-review, #workflow-job').count(),0);
+    await page.close();
+    page=referencePage;
     await design();
     const completed=await identity();
     assert.notEqual(completed.job_id,cancelled.job_id);
@@ -198,13 +220,44 @@ with make_server((),0,workspace=workspace) as server:
     await design();
     assert.equal((await result()).status,'Uncomputed');
     assert.equal(await page.locator('#workflow-job').count(),0);
+
+    await page.setViewportSize({width:393,height:852});
+    const readinessPage=await openReference();
+    assert(await readinessPage.getByText('Glass Waveguide Mode · Uncomputed',{exact:true}).isVisible());
+    assert.equal(await readinessPage.locator('#readiness-1310 svg').count(),0);
+    await readinessPage.locator('#readiness-1310').scrollIntoViewIfNeeded();
+    await readinessPage.screenshot({path:path.join(dir,'readiness-1310.png'),fullPage:true});
+    await readinessPage.getByRole('link',{name:'검증한 Port 데이터로 새 입력 열기'}).click();
+    await page.close();
+    page=readinessPage;
+    // Synthetic geometry and source input isolate the missing Glass Waveguide mode.
+    const knownInputs={
+      wavelength_m_0:'1310',ambient_index_0:'1',
+      source_position_m_0:'0',source_position_m_1:'0',source_position_m_2:'0',
+      source_propagation_direction_0:'1',source_propagation_direction_1:'0',source_propagation_direction_2:'0',
+      source_mfd_ts_m_0:'20',source_wavefront_curvature_ts_per_m_0:'50',
+      target_position_m_0:'2',target_position_m_1:'2',target_position_m_2:'0',
+      target_propagation_direction_0:'1',target_propagation_direction_1:'0',target_propagation_direction_2:'0',
+    };
+    for(const [name,value] of Object.entries(knownInputs))
+      await page.locator(`input[name="${name}"]`).fill(value);
+    await design();
+    const incomplete=await result();
+    assert.equal(incomplete.status,'Uncomputed');
+    assert.equal(incomplete.input_snapshot.target.mfd_ts_m.value,null);
+    assert.equal(incomplete.input_snapshot.target.wavefront_curvature_ts_per_m.value,null);
+    assert.equal(incomplete.selected_candidate_id,null);
+    assert.equal(await page.locator('#workflow-job').count(),0);
+    assert.equal(await frame().locator('[data-overlap-value]').count(),0);
     assert.deepEqual(errors,[]);
     const evidence={status:'Pass',head:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),
       cancelled,edited,completed,selected:near.selected_candidate_id,
       overlap:candidate.evaluation.gaussian_mode_matching.normalized_mode_overlap,
       elapsed_seconds:near.workflow.elapsed_seconds,all_36_summaries_equal:true,
       input_edit_and_late_reply_withheld:true,export_equal:true,a4_pages:1,browser_errors:errors,
-      http_ping_ms:pingMs,identity_checks:'job ID + revision + SHA'};
+      http_ping_ms:pingMs,identity_checks:'job ID + revision + SHA',
+      reference_handoff:{concept_1550:'Reference → Proxy → Design → Background Near-Match',
+        incomplete_1310:incomplete.status,worker_started_for_incomplete_1310:false}};
     fs.writeFileSync(path.join(dir,'acceptance.json'),JSON.stringify(evidence,null,2)+'\n');
     console.log(JSON.stringify(evidence));
 

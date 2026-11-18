@@ -1,10 +1,10 @@
-# M7-F — User Review & Bounded Follow-Up
+# 1310 nm Glass Waveguide Port Readiness
 
-추천 모델 **Sol Work**. 최신 Main과 M7-D/M7-E Draft HEAD·CI·Windows 패키지를 복구하고
-[M7-E 검토 절차](M7E_WORKFLOW_DISTRIBUTION.md)에 따라 실제 사용자 검토를 진행한다.
-확인된 Usability/Distribution 문제를 수정하고, 기존 모델 한계와 피드백으로 다음
-Engineering 질문을 정한다. 가드·순위·Fixed Ports·Uncomputed를 보존하고 별도 Draft PR과
-검증·다음 지시문을 제출한다. Main 병합과 새 Physics/Topology는 별도 승인 범위다.
+추천 모델 **Sol Work**. 최신 Main과 [M7-F 통합 검토](M7F_INTEGRATED_WINDOWS_REVIEW.md)를 확인한다.
+비기밀 1310 nm Glass Waveguide 사례 하나에 대해 외부 Reference Plane, 파장·매질, 두 Mode Axis의
+Width 정의와 Phase/Curvature 또는 Complex Field, 출처와 불확도를 [입력 계약](EXTERNAL_PORT_CONTRACT.md)에 맞춰 확인한다.
+입력이 충분하면 기존 Adapter에서 Gaussian 적용성을 평가하고, 누락이 있으면 필요한 입력과 측정·시뮬레이션 경로를 기록한다.
+1550 nm Proxy는 독립 개념 사례로 유지한다. Complex Field가 확보되어 Gaussian Fit의 독립 검증이 필요하면 Astra Work 범위를 별도로 제안한다.
 
 ---
 

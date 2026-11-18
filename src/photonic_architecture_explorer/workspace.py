@@ -13,6 +13,7 @@ from .design import design_two_ports
 from .design_report import render_design_report, review_snapshot
 from .external import InputIssue, unit_vector, vector
 from .geometry import cross, dot, mul, norm, sub
+from .mode_reference import render_reference_handoff
 from .inspector import CSS, ROOT, make_server
 from .near_match import eligible
 
@@ -505,6 +506,7 @@ def render_workspace(raw, result=None, error=None, job=None):
     <p>Two-Port Design Workspace</p></header><main class="wrap">
     {review}{job_view}
     <p class="notice" id="pending" role="status" hidden>지금 입력으로 결과를 확인하려면 Design을 실행하세요.</p>
+    <p><a href="/?entry=mode-references" target="_blank" rel="noopener">SMF–Glass Mode Reference</a></p>
     <div class="toolbar"><div class="example-links"><a href="/">Synthetic Example</a>
     <a href="/?entry=blank">새 입력</a><a href="/?entry=smf-glass">SMF–Glass Proxy</a></div><span>{description}</span></div>
     <form id="design-form" method="post" action="/design#design-output">
@@ -524,6 +526,9 @@ class Workspace:
         self.jobs = None
         self.job_reports = {}
         self.job_lock = threading.RLock()
+
+    def mode_references(self):
+        return render_reference_handoff()
 
     def get(self, entry):
         return render_workspace(initial_values(self.templates[entry], entry))

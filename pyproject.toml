@@ -21,3 +21,6 @@ pae-benchmark = "photonic_architecture_explorer.benchmark:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+photonic_architecture_explorer = ["data/m7r1_mode_references.json"]

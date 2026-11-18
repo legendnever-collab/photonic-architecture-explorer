@@ -12,7 +12,8 @@ import sys
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-NAME = 'Photonic-Architecture-Explorer-M7E-Windows-x64'
+NAME = 'Photonic-Architecture-Explorer-M7F-Windows-x64'
+MODE_REPORT = Path('results/m7r1-mode-library.html')
 PINS = ['numpy==2.3.5', 'scipy==1.17.0']
 
 
@@ -63,6 +64,8 @@ def main():
                         ignore=shutil.ignore_patterns('__pycache__', '*.pyc', '*.egg-info'))
     for name in ('README.md', 'AGENTS.md', 'pyproject.toml'):
         shutil.copy2(ROOT / name, app / name)
+    (app / MODE_REPORT.parent).mkdir()
+    shutil.copy2(ROOT / MODE_REPORT, app / MODE_REPORT)
     shutil.copy2(ROOT / 'distribution/review_launcher.py', app / 'review_launcher.py')
     for name in ('README_REVIEW.md', 'Start-Photonic-Architecture-Explorer.cmd'):
         shutil.copy2(ROOT / 'distribution' / name, package / name)

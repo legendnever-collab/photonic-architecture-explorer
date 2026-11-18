@@ -334,6 +334,9 @@ def make_server(cases, port=8765, *, workspace=None):
             if query.path != '/': self.send_error(404); return
             if workspace is not None:
                 entry = parse_qs(query.query).get('entry', ['example'])[0]
+                if entry == 'mode-references':
+                    self.send_page(workspace.mode_references())
+                    return
                 if entry not in workspace.templates: self.send_error(404); return
                 self.send_page(workspace.get(entry))
                 return

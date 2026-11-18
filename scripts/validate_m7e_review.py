@@ -10,7 +10,7 @@ import sys
 import threading
 import urllib.request
 
-from build_m7e_review import ROOT, verify
+from build_m7e_review import MODE_REPORT, ROOT, verify
 
 
 def main():
@@ -22,8 +22,10 @@ def main():
     args.output_dir.mkdir(parents=True, exist_ok=False)
     manifest = verify(package)
     head = subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
-    if manifest['source_head'] != head or manifest['source_dirty']:
+    tree = subprocess.check_output(['git','rev-parse','HEAD^{tree}'],cwd=ROOT,text=True).strip()
+    if manifest['source_head'] != head or manifest['source_tree'] != tree or manifest['source_dirty']:
         raise RuntimeError('Package must match the clean verification HEAD')
+    assert (package/'app'/MODE_REPORT).read_bytes() == (ROOT/MODE_REPORT).read_bytes()
     executable = package / 'runtime/python.exe'
     launcher = package / 'app/review_launcher.py'
     poisoned = dict(os.environ, PYTHONHOME=str(package/'wrong-home'),
@@ -83,7 +85,7 @@ print(json.dumps({name:design_two_ports(json.loads((ROOT/'examples'/name).read_t
         opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
         with opener.open(address,timeout=5) as response:
             html = response.read().decode('utf-8')
-        assert 'SMF–Glass Proxy' in html and 'Design' in html
+        assert 'SMF–Glass Proxy' in html and 'Design' in html and 'SMF–Glass Mode Reference' in html
     finally:
         process.terminate();process.wait(timeout=10)
         reader.join(timeout=2)
@@ -92,7 +94,7 @@ print(json.dumps({name:design_two_ports(json.loads((ROOT/'examples'/name).read_t
     evidence = {'status':'Pass','source_head':head,'package':str(package),
                 'runtime':runtime,'file_inventory_verified':True,'poisoned_environment_ignored':True,
                 'frozen_results_equal':True,'cmd_launcher':True,'actual_launcher_http':True,
-                'packaged_application_import':True}
+                'packaged_application_import':True,'offline_mode_report_equal':True}
     (args.output_dir/'acceptance.json').write_text(json.dumps(evidence,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
     print(json.dumps(evidence))
 
