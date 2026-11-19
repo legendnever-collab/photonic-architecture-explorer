@@ -1,0 +1,25 @@
+{
+  "id": "M7R7-NOMINAL-001",
+  "evidence": "Synthetic engineering screen to compare the existing 2 mm shifted 1310 nm Ports. No measured product/CAD geometry, optical keepout map, support drawing, or assembly tolerance supplied.",
+  "available_volume_mm": [[-1.15, -1.35, -1.35], [3.15, 1.35, 3.35]],
+  "keepouts_mm": [
+    {"name": "SMF upstream body proxy", "bounds": [[-0.42, -0.15, -0.15], [-0.02, 0.15, 0.15]]},
+    {"name": "Glass downstream body proxy", "bounds": [[2.02, -0.15, 1.85], [2.45, 0.15, 2.15]]}
+  ],
+  "max_full_clear_aperture_ts_mm": [2.2, 2.2],
+  "search_aperture_policy": "Clip each generated 4w half-aperture to the declared per-axis cap, then apply the original cumulative Gaussian-tail guard. Archived R6 apertures are replayed unchanged.",
+  "mirror_body_padding_mm": 0.05,
+  "mirror_backing_depth_mm": 0.15,
+  "minimum_envelope_clearance_mm": 0.05,
+  "guard_margin_targets": {
+    "max_3w_footprint_curvature": 0.135,
+    "max_post_mirror_divergence_rad": 0.095
+  },
+  "min_normalized_gaussian_overlap": 0.99,
+  "rationale": {
+    "volume": "Nominal compact review window for the 2 mm X/Z Port displacement, with 1.15 mm longitudinal overhang on each side. This is a scenario, not a customer package spec.",
+    "aperture_and_clearance": "2.2 mm per-axis clear-opening cap, quadratic patch AABB thickened behind the illuminated normal by 0.15 mm and padded by 0.05 mm, 0.05 mm declared AABB clearance.",
+    "margin": "Reserve 10 percent of the 0.15 footprint-curvature limit and 5 mrad below the 0.1 rad post-mirror divergence limit. Report fixed Glass Port divergence separately.",
+    "overlap": "0.99 minimum normalized scalar Gaussian overlap for comparing screening candidates. Actual total coupling and production yield are Uncomputed."
+  }
+}

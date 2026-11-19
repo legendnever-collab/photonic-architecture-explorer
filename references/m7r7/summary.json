@@ -1,0 +1,747 @@
+{
+  "case_id": "M7R7-NOMINAL-001",
+  "fixed_input_sha256": "20461fd9868b9450c0df7eff0464e6454a06811e5f09c244f4bc579d66efbcad",
+  "scenario_input_sha256": "34c3f41194cbf5738347c721db737ecdbd220de0f6ab5a9b101c1d715751b55b",
+  "baseline": [
+    {
+      "id": "G036-NM",
+      "path_m": 0.0208397342182478,
+      "normalized_gaussian_overlap": 0.9990889546173051,
+      "nominal_limits": {
+        "max_3w_footprint_curvature": 0.14999992821061084,
+        "max_post_mirror_divergence_rad": 0.09553369318898339,
+        "fixed_target_divergence_rad": 0.09970104685503062,
+        "aperture_tail_union_estimate": 4.976768459417303e-15
+      },
+      "remaining_footprint_guard_margin": 7.17893891555299e-08,
+      "remaining_post_mirror_divergence_guard_margin_rad": 0.004466306811016618,
+      "margin_targets_met": false,
+      "overlap_target_met": true,
+      "placement": {
+        "status": "Computed",
+        "summary": {
+          "translation": {
+            "computed": 12,
+            "failed": 0,
+            "max_target_miss_m": 5.199759601086473e-06,
+            "max_target_angle_rad": 0.0009191962464476064
+          },
+          "rotation": {
+            "computed": 4,
+            "failed": 0,
+            "max_target_miss_m": 1.1313723583954681e-05,
+            "max_target_angle_rad": 0.002000000000000069
+          }
+        }
+      },
+      "package": {
+        "envelope_geometry": "Fail",
+        "failed_checks": [
+          "reflectors[0].half_aperture_bounds_m",
+          "reflectors[1].half_aperture_bounds_m",
+          "patch[0].volume",
+          "body[0].volume",
+          "patch[1].volume",
+          "body[1].volume",
+          "path_point[1].volume",
+          "path_point[2].volume"
+        ],
+        "minimum_boundary_gap_m": -0.0027705658572987337,
+        "mirror_pair_aabb_gap_m": 0.00803220355709779,
+        "minimum_body_keepout_aabb_gap_m": 0.002566600332919575,
+        "max_full_clear_aperture_m": 0.004327310150427204,
+        "finite_beam_clearance": "Uncomputed"
+      },
+      "package_screen_overlap": null,
+      "package_screen_aperture_tail": 4.976768459417303e-15,
+      "independent_overlap": [
+        0.9990889546173052,
+        0.9990889546173045
+      ]
+    },
+    {
+      "id": "G029-NM",
+      "path_m": 0.009824897315732276,
+      "normalized_gaussian_overlap": 0.9980603001813527,
+      "nominal_limits": {
+        "max_3w_footprint_curvature": 0.14999998218172048,
+        "max_post_mirror_divergence_rad": 0.09367635157311988,
+        "fixed_target_divergence_rad": 0.09970104685503062,
+        "aperture_tail_union_estimate": 4.976768459417341e-15
+      },
+      "remaining_footprint_guard_margin": 1.7818279518522218e-08,
+      "remaining_post_mirror_divergence_guard_margin_rad": 0.00632364842688013,
+      "margin_targets_met": false,
+      "overlap_target_met": true,
+      "placement": {
+        "status": "Computed",
+        "summary": {
+          "translation": {
+            "computed": 12,
+            "failed": 0,
+            "max_target_miss_m": 5.1615058513569115e-06,
+            "max_target_angle_rad": 0.0018248673408760286
+          },
+          "rotation": {
+            "computed": 4,
+            "failed": 0,
+            "max_target_miss_m": 5.656861791976907e-06,
+            "max_target_angle_rad": 0.002000000000000014
+          }
+        }
+      },
+      "package": {
+        "envelope_geometry": "Fail",
+        "failed_checks": [
+          "body[0].volume",
+          "body[1].volume"
+        ],
+        "minimum_boundary_gap_m": -4.2814308599422885e-05,
+        "mirror_pair_aabb_gap_m": 0.0026657847912195057,
+        "minimum_body_keepout_aabb_gap_m": 0.0007235901141813747,
+        "max_full_clear_aperture_m": 0.002123668563785765,
+        "finite_beam_clearance": "Uncomputed"
+      },
+      "package_screen_overlap": null,
+      "package_screen_aperture_tail": 4.976768459417341e-15,
+      "independent_overlap": [
+        0.9980603001813526,
+        0.998060300181352
+      ]
+    }
+  ],
+  "aperture_diagnostic": {
+    "projected_radius_factor": 2.588699781719126,
+    "resized_archive": [
+      {
+        "id": "G036-NM",
+        "path_m": 0.0208397342182478,
+        "normalized_gaussian_overlap": 0.9990889546173051,
+        "nominal_limits": {
+          "max_3w_footprint_curvature": 0.14999992821061084,
+          "max_post_mirror_divergence_rad": 0.09553369318898339,
+          "fixed_target_divergence_rad": 0.09970104685503062,
+          "aperture_tail_union_estimate": 4.976768459417303e-15
+        },
+        "remaining_footprint_guard_margin": 7.17893891555299e-08,
+        "remaining_post_mirror_divergence_guard_margin_rad": 0.004466306811016618,
+        "margin_targets_met": false,
+        "overlap_target_met": true,
+        "placement": {
+          "status": "Computed",
+          "summary": {
+            "translation": {
+              "computed": 12,
+              "failed": 0,
+              "max_target_miss_m": 5.199759601086473e-06,
+              "max_target_angle_rad": 0.0009191962464476064
+            },
+            "rotation": {
+              "computed": 4,
+              "failed": 0,
+              "max_target_miss_m": 1.1313723583954681e-05,
+              "max_target_angle_rad": 0.002000000000000069
+            }
+          }
+        },
+        "package": {
+          "envelope_geometry": "Fail",
+          "failed_checks": [
+            "patch[0].volume",
+            "body[0].volume",
+            "patch[1].volume",
+            "body[1].volume",
+            "path_point[1].volume",
+            "path_point[2].volume"
+          ],
+          "minimum_boundary_gap_m": -0.002769913584080512,
+          "mirror_pair_aabb_gap_m": 0.008769120645065806,
+          "minimum_body_keepout_aabb_gap_m": 0.0030185672407037965,
+          "max_full_clear_aperture_m": 0.0022,
+          "finite_beam_clearance": "Uncomputed"
+        },
+        "package_screen_overlap": null,
+        "package_screen_aperture_tail": null,
+        "independent_overlap": [
+          0.9990889546173052,
+          0.9990889546173045
+        ]
+      },
+      {
+        "id": "G029-NM",
+        "path_m": 0.009824897315732276,
+        "normalized_gaussian_overlap": 0.9980603001813527,
+        "nominal_limits": {
+          "max_3w_footprint_curvature": 0.14999998218172048,
+          "max_post_mirror_divergence_rad": 0.09367635157311988,
+          "fixed_target_divergence_rad": 0.09970104685503062,
+          "aperture_tail_union_estimate": 4.976768459417341e-15
+        },
+        "remaining_footprint_guard_margin": 1.7818279518522218e-08,
+        "remaining_post_mirror_divergence_guard_margin_rad": 0.00632364842688013,
+        "margin_targets_met": false,
+        "overlap_target_met": true,
+        "placement": {
+          "status": "Computed",
+          "summary": {
+            "translation": {
+              "computed": 12,
+              "failed": 0,
+              "max_target_miss_m": 5.1615058513569115e-06,
+              "max_target_angle_rad": 0.0018248673408760286
+            },
+            "rotation": {
+              "computed": 4,
+              "failed": 0,
+              "max_target_miss_m": 5.656861791976907e-06,
+              "max_target_angle_rad": 0.002000000000000014
+            }
+          }
+        },
+        "package": {
+          "envelope_geometry": "Fail",
+          "failed_checks": [
+            "body[0].volume",
+            "body[1].volume"
+          ],
+          "minimum_boundary_gap_m": -4.068305114639367e-06,
+          "mirror_pair_aabb_gap_m": 0.0031130943855850342,
+          "minimum_body_keepout_aabb_gap_m": 0.0011199173267252619,
+          "max_full_clear_aperture_m": 0.001374385086878995,
+          "finite_beam_clearance": "Uncomputed"
+        },
+        "package_screen_overlap": null,
+        "package_screen_aperture_tail": 8.999999999999924e-07,
+        "independent_overlap": [
+          0.9980603001813526,
+          0.998060300181352
+        ]
+      }
+    ]
+  },
+  "searches": [
+    {
+      "name": "package_only",
+      "aperture_scale": 1.0,
+      "coordinate_scale": 1.0,
+      "geometry_count": 36,
+      "adapter_calls": 48000,
+      "valid_evaluations": 35835,
+      "rejections_first_reason": {
+        "model_domain: cumulative aperture-tail estimate exceeds 1e-6": 555,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 10506,
+        "package_feasibility: known package constraint failed": 1104
+      },
+      "failed_design_and_package_checks": {
+        "body[1].keepout[1]": 2618,
+        "patch[1].volume": 601,
+        "body[1].volume": 768,
+        "path_point[2].volume": 384,
+        "patch[0].volume": 644,
+        "body[0].volume": 764,
+        "reflector_envelope_pair": 56,
+        "path_point[1].volume": 384
+      },
+      "margin_checks_failed_where_package_and_model_passed": {},
+      "valid_geometries": 12,
+      "geometries_meeting_overlap_target": 0,
+      "selected_by_existing_ranking": "G010-NM",
+      "candidates": [
+        {
+          "id": "G010-NM",
+          "path_m": 0.004124996621245594,
+          "normalized_gaussian_overlap": 0.4395850835747264,
+          "nominal_limits": {
+            "max_3w_footprint_curvature": 0.14999999714614984,
+            "max_post_mirror_divergence_rad": 0.07695261017662454,
+            "fixed_target_divergence_rad": 0.09970104685503062,
+            "aperture_tail_union_estimate": 4.976768459417405e-15
+          },
+          "remaining_footprint_guard_margin": 2.85385015619255e-09,
+          "remaining_post_mirror_divergence_guard_margin_rad": 0.023047389823375466,
+          "margin_targets_met": false,
+          "overlap_target_met": false,
+          "placement": {
+            "status": "Computed",
+            "summary": {
+              "translation": {
+                "computed": 12,
+                "failed": 0,
+                "max_target_miss_m": 7.307109966268707e-06,
+                "max_target_angle_rad": 0.004571205462508886
+              },
+              "rotation": {
+                "computed": 4,
+                "failed": 0,
+                "max_target_miss_m": 2.828430895988887e-06,
+                "max_target_angle_rad": 0.0020000000000001796
+              }
+            }
+          },
+          "package": {
+            "envelope_geometry": "Pass",
+            "failed_checks": [],
+            "minimum_boundary_gap_m": 0.0008011552720782454,
+            "mirror_pair_aabb_gap_m": 0.0011085371744423455,
+            "minimum_body_keepout_aabb_gap_m": 0.00040321631740611357,
+            "max_full_clear_aperture_m": 0.001200733927586142,
+            "finite_beam_clearance": "Uncomputed"
+          },
+          "package_screen_overlap": 0.4395850835747264,
+          "package_screen_aperture_tail": 4.976768459417405e-15,
+          "independent_overlap": [
+            0.4395850835747266,
+            0.4395850835747265
+          ]
+        },
+        {
+          "id": "G016-NM",
+          "path_m": 0.004456656431893271,
+          "normalized_gaussian_overlap": 0.39411588257250335,
+          "nominal_limits": {
+            "max_3w_footprint_curvature": 0.14999999993578803,
+            "max_post_mirror_divergence_rad": 0.08475049508445094,
+            "fixed_target_divergence_rad": 0.09970104685503062,
+            "aperture_tail_union_estimate": 4.976768459417367e-15
+          },
+          "remaining_footprint_guard_margin": 6.421196907524518e-11,
+          "remaining_post_mirror_divergence_guard_margin_rad": 0.015249504915549064,
+          "margin_targets_met": false,
+          "overlap_target_met": false,
+          "placement": {
+            "status": "Computed",
+            "summary": {
+              "translation": {
+                "computed": 12,
+                "failed": 0,
+                "max_target_miss_m": 6.384744477937364e-06,
+                "max_target_angle_rad": 0.0040716610843157105
+              },
+              "rotation": {
+                "computed": 4,
+                "failed": 0,
+                "max_target_miss_m": 2.8284308959893208e-06,
+                "max_target_angle_rad": 0.0020000000000004016
+              }
+            }
+          },
+          "package": {
+            "envelope_geometry": "Pass",
+            "failed_checks": [],
+            "minimum_boundary_gap_m": 0.0007631124700895309,
+            "mirror_pair_aabb_gap_m": 0.0009495028483030648,
+            "minimum_body_keepout_aabb_gap_m": 0.0006249721738692044,
+            "max_full_clear_aperture_m": 0.0012414517977709762,
+            "finite_beam_clearance": "Uncomputed"
+          },
+          "package_screen_overlap": 0.39411588257250335,
+          "package_screen_aperture_tail": 4.976768459417367e-15,
+          "independent_overlap": [
+            0.3941158825725028,
+            0.3941158825725028
+          ]
+        },
+        {
+          "id": "G004-NM",
+          "path_m": 0.00378120485569258,
+          "normalized_gaussian_overlap": 0.35616735193083987,
+          "nominal_limits": {
+            "max_3w_footprint_curvature": 0.14999999532134445,
+            "max_post_mirror_divergence_rad": 0.06773109897512168,
+            "fixed_target_divergence_rad": 0.09970104685503062,
+            "aperture_tail_union_estimate": 4.9767684594173285e-15
+          },
+          "remaining_footprint_guard_margin": 4.678655546319632e-09,
+          "remaining_post_mirror_divergence_guard_margin_rad": 0.032268901024878324,
+          "margin_targets_met": false,
+          "overlap_target_met": false,
+          "placement": {
+            "status": "Computed",
+            "summary": {
+              "translation": {
+                "computed": 12,
+                "failed": 0,
+                "max_target_miss_m": 1.0912281587657119e-05,
+                "max_target_angle_rad": 0.006967841429802286
+              },
+              "rotation": {
+                "computed": 4,
+                "failed": 0,
+                "max_target_miss_m": 2.8284308959884534e-06,
+                "max_target_angle_rad": 0.002189510163629738
+              }
+            }
+          },
+          "package": {
+            "envelope_geometry": "Pass",
+            "failed_checks": [],
+            "minimum_boundary_gap_m": 0.0008463175556665129,
+            "mirror_pair_aabb_gap_m": 0.0013013441330834265,
+            "minimum_body_keepout_aabb_gap_m": 0.00016302401967281316,
+            "max_full_clear_aperture_m": 0.001157404261697465,
+            "finite_beam_clearance": "Uncomputed"
+          },
+          "package_screen_overlap": 0.35616735193083987,
+          "package_screen_aperture_tail": 4.9767684594173285e-15,
+          "independent_overlap": [
+            0.3561673519308393,
+            0.3561673519308392
+          ]
+        }
+      ],
+      "shortest_passing_geometry": null
+    },
+    {
+      "name": "package_and_margin",
+      "aperture_scale": 1.0,
+      "coordinate_scale": 0.9000000000000001,
+      "geometry_count": 36,
+      "adapter_calls": 48000,
+      "valid_evaluations": 36604,
+      "rejections_first_reason": {
+        "model_domain: cumulative aperture-tail estimate exceeds 1e-6": 575,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 8948,
+        "package_feasibility: known package constraint failed": 1192,
+        "scenario: max_post_mirror_divergence_rad": 681
+      },
+      "failed_design_and_package_checks": {
+        "body[1].keepout[1]": 2832,
+        "patch[1].volume": 605,
+        "body[1].volume": 768,
+        "path_point[2].volume": 384,
+        "patch[0].volume": 646,
+        "body[0].volume": 765,
+        "reflector_envelope_pair": 57,
+        "path_point[1].volume": 384
+      },
+      "margin_checks_failed_where_package_and_model_passed": {
+        "max_post_mirror_divergence_rad": 681
+      },
+      "valid_geometries": 12,
+      "geometries_meeting_overlap_target": 0,
+      "selected_by_existing_ranking": "G010-NM",
+      "candidates": [
+        {
+          "id": "G010-NM",
+          "path_m": 0.004124996621245594,
+          "normalized_gaussian_overlap": 0.1557905578582754,
+          "nominal_limits": {
+            "max_3w_footprint_curvature": 0.13499999946011013,
+            "max_post_mirror_divergence_rad": 0.07109037178433295,
+            "fixed_target_divergence_rad": 0.09970104685503062,
+            "aperture_tail_union_estimate": 4.976768459417405e-15
+          },
+          "remaining_footprint_guard_margin": 0.015000000539889868,
+          "remaining_post_mirror_divergence_guard_margin_rad": 0.02890962821566706,
+          "margin_targets_met": true,
+          "overlap_target_met": false,
+          "placement": {
+            "status": "Computed",
+            "summary": {
+              "translation": {
+                "computed": 12,
+                "failed": 0,
+                "max_target_miss_m": 8.98166747551985e-06,
+                "max_target_angle_rad": 0.004452910502498884
+              },
+              "rotation": {
+                "computed": 4,
+                "failed": 0,
+                "max_target_miss_m": 2.828430895988887e-06,
+                "max_target_angle_rad": 0.0020000000000001796
+              }
+            }
+          },
+          "package": {
+            "envelope_geometry": "Pass",
+            "failed_checks": [],
+            "minimum_boundary_gap_m": 0.0008274980813995029,
+            "mirror_pair_aabb_gap_m": 0.0011485583163769052,
+            "minimum_body_keepout_aabb_gap_m": 0.00040400554215187654,
+            "max_full_clear_aperture_m": 0.0011093411213659366,
+            "finite_beam_clearance": "Uncomputed"
+          },
+          "package_screen_overlap": 0.1557905578582754,
+          "package_screen_aperture_tail": 4.976768459417405e-15,
+          "independent_overlap": [
+            0.1557905578582754,
+            0.1557905578582754
+          ]
+        },
+        {
+          "id": "G004-NM",
+          "path_m": 0.00378120485569258,
+          "normalized_gaussian_overlap": 0.14985796086436964,
+          "nominal_limits": {
+            "max_3w_footprint_curvature": 0.13499999710656793,
+            "max_post_mirror_divergence_rad": 0.061819846501526624,
+            "fixed_target_divergence_rad": 0.09970104685503062,
+            "aperture_tail_union_estimate": 4.9767684594173545e-15
+          },
+          "remaining_footprint_guard_margin": 0.015000002893432063,
+          "remaining_post_mirror_divergence_guard_margin_rad": 0.03818015349847338,
+          "margin_targets_met": true,
+          "overlap_target_met": false,
+          "placement": {
+            "status": "Computed",
+            "summary": {
+              "translation": {
+                "computed": 12,
+                "failed": 0,
+                "max_target_miss_m": 1.4745827423592926e-05,
+                "max_target_angle_rad": 0.005096648652749646
+              },
+              "rotation": {
+                "computed": 4,
+                "failed": 0,
+                "max_target_miss_m": 2.8284308959884534e-06,
+                "max_target_angle_rad": 0.0021308681993542555
+              }
+            }
+          },
+          "package": {
+            "envelope_geometry": "Pass",
+            "failed_checks": [],
+            "minimum_boundary_gap_m": 0.0008721689143477698,
+            "mirror_pair_aabb_gap_m": 0.0013419132938732163,
+            "minimum_body_keepout_aabb_gap_m": 0.0001633223649652518,
+            "max_full_clear_aperture_m": 0.0010564693300496525,
+            "finite_beam_clearance": "Uncomputed"
+          },
+          "package_screen_overlap": 0.14985796086436964,
+          "package_screen_aperture_tail": 4.9767684594173545e-15,
+          "independent_overlap": [
+            0.1498579608643695,
+            0.14985796086436948
+          ]
+        },
+        {
+          "id": "G016-NM",
+          "path_m": 0.004456656431893271,
+          "normalized_gaussian_overlap": 0.14360298598413448,
+          "nominal_limits": {
+            "max_3w_footprint_curvature": 0.1349999986988739,
+            "max_post_mirror_divergence_rad": 0.07884588167616167,
+            "fixed_target_divergence_rad": 0.09970104685503062,
+            "aperture_tail_union_estimate": 4.976768459417367e-15
+          },
+          "remaining_footprint_guard_margin": 0.015000001301126081,
+          "remaining_post_mirror_divergence_guard_margin_rad": 0.02115411832383833,
+          "margin_targets_met": true,
+          "overlap_target_met": false,
+          "placement": {
+            "status": "Computed",
+            "summary": {
+              "translation": {
+                "computed": 12,
+                "failed": 0,
+                "max_target_miss_m": 7.371593638989647e-06,
+                "max_target_angle_rad": 0.003938306537274921
+              },
+              "rotation": {
+                "computed": 4,
+                "failed": 0,
+                "max_target_miss_m": 2.8284308959893208e-06,
+                "max_target_angle_rad": 0.0020000000000004016
+              }
+            }
+          },
+          "package": {
+            "envelope_geometry": "Pass",
+            "failed_checks": [],
+            "minimum_boundary_gap_m": 0.0007848716121756538,
+            "mirror_pair_aabb_gap_m": 0.000989666153747699,
+            "minimum_body_keepout_aabb_gap_m": 0.0006262807118580864,
+            "max_full_clear_aperture_m": 0.0011551491818254966,
+            "finite_beam_clearance": "Uncomputed"
+          },
+          "package_screen_overlap": 0.14360298598413448,
+          "package_screen_aperture_tail": 4.976768459417367e-15,
+          "independent_overlap": [
+            0.14360298598413426,
+            0.14360298598413437
+          ]
+        }
+      ],
+      "shortest_passing_geometry": null
+    },
+    {
+      "name": "equal_tail_package_and_margin",
+      "aperture_scale": 0.6471749454297815,
+      "coordinate_scale": 0.9000000000000001,
+      "geometry_count": 36,
+      "adapter_calls": 51808,
+      "valid_evaluations": 39471,
+      "rejections_first_reason": {
+        "model_domain: cumulative aperture-tail estimate exceeds 1e-6": 679,
+        "model_domain: Gaussian divergence exceeds 0.1 rad": 8993,
+        "package_feasibility: known package constraint failed": 1916,
+        "scenario: max_post_mirror_divergence_rad": 749
+      },
+      "failed_design_and_package_checks": {
+        "body[1].keepout[1]": 2039,
+        "patch[1].volume": 591,
+        "body[1].volume": 2272,
+        "path_point[2].volume": 384,
+        "patch[0].volume": 503,
+        "body[0].volume": 762,
+        "path_point[1].volume": 384
+      },
+      "margin_checks_failed_where_package_and_model_passed": {
+        "max_post_mirror_divergence_rad": 749
+      },
+      "valid_geometries": 13,
+      "geometries_meeting_overlap_target": 0,
+      "selected_by_existing_ranking": "G005-NM",
+      "candidates": [
+        {
+          "id": "G005-NM",
+          "path_m": 0.005505141710487606,
+          "normalized_gaussian_overlap": 0.33494757612214726,
+          "nominal_limits": {
+            "max_3w_footprint_curvature": 0.13499999936252502,
+            "max_post_mirror_divergence_rad": 0.041334881163402316,
+            "fixed_target_divergence_rad": 0.09970104685503062,
+            "aperture_tail_union_estimate": 8.999999999999992e-07
+          },
+          "remaining_footprint_guard_margin": 0.015000000637474975,
+          "remaining_post_mirror_divergence_guard_margin_rad": 0.05866511883659769,
+          "margin_targets_met": true,
+          "overlap_target_met": false,
+          "placement": {
+            "status": "Computed",
+            "summary": {
+              "translation": {
+                "computed": 12,
+                "failed": 0,
+                "max_target_miss_m": 1.663395327031669e-05,
+                "max_target_angle_rad": 0.004543003233919937
+              },
+              "rotation": {
+                "computed": 4,
+                "failed": 0,
+                "max_target_miss_m": 5.6568617919773405e-06,
+                "max_target_angle_rad": 0.0020000000000001787
+              }
+            }
+          },
+          "package": {
+            "envelope_geometry": "Pass",
+            "failed_checks": [],
+            "minimum_boundary_gap_m": 5.000000285612172e-05,
+            "mirror_pair_aabb_gap_m": 0.0018717788504197805,
+            "minimum_body_keepout_aabb_gap_m": 0.0002690003906281616,
+            "max_full_clear_aperture_m": 0.0006062413785931086,
+            "finite_beam_clearance": "Uncomputed"
+          },
+          "package_screen_overlap": 0.33494757612214726,
+          "package_screen_aperture_tail": 8.999999999999992e-07,
+          "independent_overlap": [
+            0.3349475761221476,
+            0.3349475761221475
+          ]
+        },
+        {
+          "id": "G010-NM",
+          "path_m": 0.004124996621245594,
+          "normalized_gaussian_overlap": 0.1557905578582754,
+          "nominal_limits": {
+            "max_3w_footprint_curvature": 0.13499999946011013,
+            "max_post_mirror_divergence_rad": 0.07109037178433295,
+            "fixed_target_divergence_rad": 0.09970104685503062,
+            "aperture_tail_union_estimate": 8.999999999999976e-07
+          },
+          "remaining_footprint_guard_margin": 0.015000000539889868,
+          "remaining_post_mirror_divergence_guard_margin_rad": 0.02890962821566706,
+          "margin_targets_met": true,
+          "overlap_target_met": false,
+          "placement": {
+            "status": "Computed",
+            "summary": {
+              "translation": {
+                "computed": 12,
+                "failed": 0,
+                "max_target_miss_m": 8.98166747551985e-06,
+                "max_target_angle_rad": 0.004452910502498884
+              },
+              "rotation": {
+                "computed": 4,
+                "failed": 0,
+                "max_target_miss_m": 2.828430895988887e-06,
+                "max_target_angle_rad": 0.0020000000000001796
+              }
+            }
+          },
+          "package": {
+            "envelope_geometry": "Pass",
+            "failed_checks": [],
+            "minimum_boundary_gap_m": 0.0009501241570339276,
+            "mirror_pair_aabb_gap_m": 0.0014351423500265045,
+            "minimum_body_keepout_aabb_gap_m": 0.0005082295562461591,
+            "max_full_clear_aperture_m": 0.0007179377796830127,
+            "finite_beam_clearance": "Uncomputed"
+          },
+          "package_screen_overlap": 0.1557905578582754,
+          "package_screen_aperture_tail": 8.999999999999976e-07,
+          "independent_overlap": [
+            0.1557905578582754,
+            0.1557905578582754
+          ]
+        },
+        {
+          "id": "G004-NM",
+          "path_m": 0.00378120485569258,
+          "normalized_gaussian_overlap": 0.14985796086436964,
+          "nominal_limits": {
+            "max_3w_footprint_curvature": 0.13499999710656793,
+            "max_post_mirror_divergence_rad": 0.061819846501526624,
+            "fixed_target_divergence_rad": 0.09970104685503062,
+            "aperture_tail_union_estimate": 8.999999999999917e-07
+          },
+          "remaining_footprint_guard_margin": 0.015000002893432063,
+          "remaining_post_mirror_divergence_guard_margin_rad": 0.03818015349847338,
+          "margin_targets_met": true,
+          "overlap_target_met": false,
+          "placement": {
+            "status": "Computed",
+            "summary": {
+              "translation": {
+                "computed": 12,
+                "failed": 0,
+                "max_target_miss_m": 1.4745827423592926e-05,
+                "max_target_angle_rad": 0.005096648652749646
+              },
+              "rotation": {
+                "computed": 4,
+                "failed": 0,
+                "max_target_miss_m": 2.8284308959884534e-06,
+                "max_target_angle_rad": 0.0021308681993542555
+              }
+            }
+          },
+          "package": {
+            "envelope_geometry": "Pass",
+            "failed_checks": [],
+            "minimum_boundary_gap_m": 0.0009754897757617963,
+            "mirror_pair_aabb_gap_m": 0.0015566458145470628,
+            "minimum_body_keepout_aabb_gap_m": 0.00022344501940940582,
+            "max_full_clear_aperture_m": 0.0006837204810231217,
+            "finite_beam_clearance": "Uncomputed"
+          },
+          "package_screen_overlap": 0.14985796086436964,
+          "package_screen_aperture_tail": 8.999999999999917e-07,
+          "independent_overlap": [
+            0.1498579608643695,
+            0.14985796086436948
+          ]
+        }
+      ],
+      "shortest_passing_geometry": null
+    }
+  ],
+  "status": "NoCandidate",
+  "actual_package_feasibility": "Uncomputed",
+  "perturbed_gaussian_mode_overlap": "Uncomputed",
+  "total_coupling": null,
+  "fabrication_yield": "Uncomputed"
+}
