@@ -1,0 +1,6 @@
+{
+  "case_id": "M7R6-NOMINAL-001",
+  "provenance": "Reuse of the M7-A nominal layout. Positions are reference-plane centers, not facet centers. No package or mechanical bounds supplied.",
+  "source": {"position_m": [0, 0, 0], "propagation_direction": [1, 0, 0], "sagittal_axis": [0, 1, 0]},
+  "target": {"position_m": [0.002, 0, 0.002], "propagation_direction": [1, 0, 0], "sagittal_axis": [0, 1, 0]}
+}

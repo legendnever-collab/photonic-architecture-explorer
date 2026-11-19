@@ -1,3 +1,14 @@
+# M7-R7 — 1310 nm Fixed-Port Package와 설계 여유
+
+[M7-R6](M7R6_SMF_GLASS_FIXED_PORT.md)의 고정 배치와 G036-NM·G029-NM을 재현한다.
+Package·Aperture·Clearance와 수치 Guard 여유의 목표를 명시하고, 입수한 실측 조건 또는
+명시적 Nominal Envelope를 기존 Adapter에 입력한다. M6-D 배치 민감도와 기존 Near-Match
+평가를 재사용해 Overlap·경로 길이·Guard 여유를 함께 비교한다. 두 Port 및 기존 Guard는
+고정하고, 허용 후보가 없으면 지배적인 제약을 보고한다. 실제 손실과 생산 수율은 근거를
+확보할 때까지 Uncomputed다. Main 병합은 별도 승인한다.
+
+---
+
 # M7-R6 — 1310 nm 두 번째 Port와 Fixed-Port 설계 준비
 
 [M7-R5 단일 Guide의 결과](M7R5_SINGLE_PORT_FIELD.md)를 기준으로 1310 nm에서 같은 공기 매질을 사용하는 SMF Port의 출처와 독립적인 외부 Complex Field를 확인한다. Port의 진행 방향·Phase Convention·기준면을 등록하고 이 Port의 Fit 예산을 먼저 정한다. 측정 자료 또는 별도 시뮬레이션을 사용하면 Case ID와 입력 가정을 기록한다. 두 Port가 각각 통과하고 상대 위치·방향이 명시될 때 기존 Adapter와 전체 Guard로 설계를 평가한다. Nominal 모의 설계와 실제 Device 판정을 구분한다. Southampton 원본을 입수하면 M7-R3의 55 mW 사례에만 대조한다. Main 병합은 별도 승인한다.
