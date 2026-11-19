@@ -1,0 +1,146 @@
+{
+  "case_id": "M7R5-SIM-GLASS-001",
+  "nominal_simulated_fit": "Pass",
+  "fitted_port_divergence": {
+    "status": "Pass",
+    "scope": "per-Port divergence precheck only",
+    "reason": "inside divergence guard only",
+    "axes": [
+      {
+        "radius_m": 4.629176960840465e-06,
+        "curvature_per_m": 1921.099412355349,
+        "waist_radius_m": 4.606780208951579e-06,
+        "waist_distance_m": -5.024693136291287e-06,
+        "rayleigh_range_m": 5.0894817553789625e-05,
+        "divergence_rad": 0.0905157033735856
+      },
+      {
+        "radius_m": 4.212298615182396e-06,
+        "curvature_per_m": 2816.8158120920352,
+        "waist_radius_m": 4.182362814174663e-06,
+        "waist_distance_m": -5.028023695849517e-06,
+        "rayleigh_range_m": 4.194903610446528e-05,
+        "divergence_rad": 0.09970104685503062
+      }
+    ],
+    "max_divergence_rad": 0.1
+  },
+  "runs": {
+    "base": {
+      "eta_transverse": 0.9909326875298933,
+      "loss_dB": 0.03955845441261836,
+      "phase_rms_rad": 0.028169329020844177,
+      "phase_mask_Ex_energy_fraction": 0.9787268044054134,
+      "MFD_um_xy": [
+        9.261029740376452,
+        8.427827494464985
+      ],
+      "curvature_per_m_xy": [
+        1918.8604979808065,
+        2812.415279075076
+      ],
+      "Ey_transverse_fraction": 1.943087317859302e-06,
+      "Ez_all_E_fraction": 0.002109914187866043,
+      "eta_fourier_quadrature": 0.990932687653186,
+      "n_eff": 1.4491776735794757,
+      "n_cladding": 1.4468043175527276,
+      "incident_x_fraction": 0.9999993215007221,
+      "power_balance_abs": 3.3306690738754696e-16,
+      "export_max_abs": 6.866350197783356e-16,
+      "terms": 193,
+      "sha256": "cbb2e9c53be4551e96968301090a4adeb3a682cd2f5a2d80dda3d808e5f7e83e"
+    },
+    "grid": {
+      "eta_transverse": 0.9909326877557257,
+      "loss_dB": 0.03955845342286604,
+      "phase_rms_rad": 0.028169206015978988,
+      "phase_mask_Ex_energy_fraction": 0.9787535536709392,
+      "MFD_um_xy": [
+        9.261029757192102,
+        8.427827498122598
+      ],
+      "curvature_per_m_xy": [
+        1918.8604168560578,
+        2812.4152642572767
+      ],
+      "Ey_transverse_fraction": 1.943087315503126e-06,
+      "Ez_all_E_fraction": 0.002109914189346199,
+      "eta_fourier_quadrature": 0.9909326877866116,
+      "n_eff": 1.449177673598892,
+      "n_cladding": 1.4468043175527276,
+      "incident_x_fraction": 0.9999993215007227,
+      "power_balance_abs": 3.3306690738754696e-16,
+      "export_max_abs": 3.395697738166721e-16,
+      "terms": 193,
+      "sha256": "81a987a61d930321c5fcd0f8cef9473a0925aa61d1a6cc5a071a058126709bd1"
+    },
+    "basis": {
+      "eta_transverse": 0.9908963837135141,
+      "loss_dB": 0.03971756548184279,
+      "phase_rms_rad": 0.028196586086278317,
+      "phase_mask_Ex_energy_fraction": 0.9786877160403976,
+      "MFD_um_xy": [
+        9.259683968232093,
+        8.425479366241897
+      ],
+      "curvature_per_m_xy": [
+        1919.992622942342,
+        2815.6148462967963
+      ],
+      "Ey_transverse_fraction": 1.9517256578602844e-06,
+      "Ez_all_E_fraction": 0.002110955001824952,
+      "eta_fourier_quadrature": 0.9908963837419192,
+      "n_eff": 1.4491781655950708,
+      "n_cladding": 1.4468043175527276,
+      "incident_x_fraction": 0.9999993183859877,
+      "power_balance_abs": 2.220446049250313e-16,
+      "export_max_abs": 4.445768331151997e-16,
+      "terms": 317,
+      "sha256": "af5d77af5c4fcf4b2c4f21d1d28f6b247298c1c8b9a07d88cc11d31853b0dc55"
+    },
+    "window": {
+      "eta_transverse": 0.9909818664094536,
+      "loss_dB": 0.03934292427302504,
+      "phase_rms_rad": 0.028183308336958784,
+      "phase_mask_Ex_energy_fraction": 0.9787691858754215,
+      "MFD_um_xy": [
+        9.25835392168093,
+        8.424597230364794
+      ],
+      "curvature_per_m_xy": [
+        1921.0994123553485,
+        2816.815812092035
+      ],
+      "Ey_transverse_fraction": 1.952204104026853e-06,
+      "Ez_all_E_fraction": 0.0021118657882479787,
+      "eta_fourier_quadrature": 0.9909818664094563,
+      "n_eff": 1.4491781015256873,
+      "n_cladding": 1.4468043175527276,
+      "incident_x_fraction": 0.999999318226033,
+      "power_balance_abs": 1.5543122344752192e-15,
+      "export_max_abs": 3.3710814849392077e-16,
+      "terms": 497,
+      "sha256": "b6ecb48919877a213f45581d9ec844164b60a1e0950d6a866fe82b9ee6f1b027"
+    }
+  },
+  "convergence": {
+    "base_grid": {
+      "E_relative_l2": 1.5911204966924093e-08,
+      "delta_loss_dB": 9.897523217672344e-10,
+      "delta_phase_rad": 1.230048651892912e-07
+    },
+    "grid_basis": {
+      "E_relative_l2": 0.0035944432685282215,
+      "delta_loss_dB": 0.00015911205897675001,
+      "delta_phase_rad": 2.7380070299329318e-05
+    },
+    "basis_window": {
+      "E_relative_l2": 0.002569347468068617,
+      "delta_loss_dB": 0.00037464120881774976,
+      "delta_phase_rad": 1.3277749319532545e-05
+    }
+  },
+  "actual_device_fit": null,
+  "two_port_overlap": null,
+  "total_coupling": null
+}
