@@ -1,0 +1,6 @@
+{
+  "id": "M7R7-EQUAL-TAIL-001",
+  "fraction_of_existing_tail_guard": 0.9,
+  "policy": "Reserve 10 percent of the existing cumulative Gaussian-tail limit. Allocate the remaining bound equally to the four mirror/axis terms; apply nominal aperture caps and re-run the unchanged physical guard.",
+  "scope": "Resize archived G029-NM apertures for a package-only diagnostic. Repeat the margin-constrained Near-Match with the same frozen nominal targets and the alternate aperture allocation."
+}
