@@ -119,9 +119,13 @@
         {
           "label": "Associated thesis dataset · 10.5258/SOTON/D2043",
           "url": "https://doi.org/10.5258/SOTON/D2043"
+        },
+        {
+          "label": "Southampton repository · Chapter 3 archive listing",
+          "url": "https://eprints.soton.ac.uk/id/eprint/453747/"
         }
       ],
-      "access_notes": "Section 2.2 and Fig. 2.6 describe a butt-coupled fiber launch and a 0.6 NA objective with IR camera at the output. Calibrated raw intensity, phase and external-plane registration are not available from those figures. The thesis dataset registration was confirmed in DataCite. Its repository files could not be inspected."
+      "access_notes": "Section 2.2 and Fig. 2.6 describe a butt-coupled fiber launch and a 0.6 NA objective with IR camera at the output. Calibrated raw intensity, phase and external-plane registration are not available from those figures. The repository listing and OAI-PMH metadata identify Chapter3.zip. The download was denied in the review session, so the contents remain unverified."
     }
   },
   "records": [

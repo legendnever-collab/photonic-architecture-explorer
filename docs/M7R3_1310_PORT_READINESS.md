@@ -12,6 +12,7 @@ Fiber Butt Launch와 출력 측 0.6 NA Objective·IR Camera를 설명한다.
 연계 데이터셋은 DataCite에 등록돼 있다. 등록 정보에는 파일 목록이 없었고
 저장소의 첨부 파일에 접근할 수 없어 Phase·Plane·Width 정의의 포함 여부는 미확인이다.
 [데이터셋 DOI 10.5258/SOTON/D2043](https://doi.org/10.5258/SOTON/D2043)
+후속 파일 목록 및 접근 결과는 [M7-R4](M7R4_1310_EXTERNAL_FIELD_EVIDENCE.md)에 기록한다.
 
 | 근거 | Adapter 입력 판단 |
 |---|---|

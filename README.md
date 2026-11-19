@@ -65,6 +65,7 @@ Preview와 문헌 근거를 확인할 수 있습니다.
 Workspace의 **SMF–Glass Mode Reference**에서 1550 nm Mode를 비교하고 1310 nm
 Fused-Silica Glass Waveguide 실측 Width와 추가 입력 요건을 확인할 수 있습니다.
 [Reference 사용법](docs/M7R2_REFERENCE_PORT_HANDOFF.md) · [1310 nm Port 판정](docs/M7R3_1310_PORT_READINESS.md)
+· [1310 nm 원본 자료와 복소장 취득 절차](docs/M7R4_1310_EXTERNAL_FIELD_EVIDENCE.md)
 
 ## 실행
 

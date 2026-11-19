@@ -1,12 +1,13 @@
-# 1310 nm External Complex Field Evidence
+# 1310 nm Single-Port Field Capture and Fit
 
-추천 모델 **Sol Work**로 데이터 입수를 확인하고, 동일 Plane의 Complex Field가 확보되면
+추천 모델 **Sol Work**로 비기밀 1310 nm 한 Port의 자료를 우선 확보한다. 복소장이 준비되면
 독립 Gaussian Fit 검증에는 **Astra Work**를 권장한다. 최신 Main과
-[M7-R3 입력 판정](M7R3_1310_PORT_READINESS.md)을 확인한다. 비기밀 1310 nm 사례에서 공통 시스템
-Frame에 등록한 두 External Reference Plane, 해당 매질, 축·Polarization 및 Complex Field 또는
-검증된 Gaussian 파라미터를 [입력 계약](EXTERNAL_PORT_CONTRACT.md)에 따라 확보한다.
-Field가 준비되면 설계별 Mode-Mismatch 오차 예산을 먼저 고정하고 Fit Residual과 Sampling 수렴을 검증한다.
-입력이 부족하면 실제 적용성은 Uncomputed로 유지하고 필요한 측정 또는 모델 데이터를 기록한다.
+[M7-R4 원본 확인·최소 취득 절차](M7R4_1310_EXTERNAL_FIELD_EVIDENCE.md)를 기준으로 한다.
+Southampton 파일을 받으면 Fig. 3.5(c–d)의 55 mW 사례와 측정 메타데이터를 대조한다.
+별도 Guide를 측정하거나 외부 Solver 자료를 쓰는 경우 독립 Case ID로 등록한다.
+[입력 계약](EXTERNAL_PORT_CONTRACT.md)에 맞춰 External Plane, 매질, 축, Polarization과
+복소장·Sampling·불확도를 기록한다. Fit 오차 예산을 먼저 정하고 한 Port를 평가한다.
+두 번째 Port가 확보되면 기존 Adapter와 Guard에 연결한다. 미확보 항목의 판정은 Uncomputed다.
 
 ---
 
