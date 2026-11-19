@@ -48,7 +48,15 @@ def eligible(exact):
             and exact["search"].get("accepted_count") == 0)
 
 
-def search_near_match(document, exact, report, checkpoint, progress):
+def search_near_match(document, exact, report, checkpoint, progress, *,
+                      screen_candidate=None, coordinate_scale=1.):
+    """Explore the frozen family, optionally screening proposals for a nominal scenario.
+
+    A screen returns the evaluated prescription, Adapter result, and an optional
+    scenario rejection reason. A coordinate scale only narrows the search box.
+    """
+    if not 0 < coordinate_scale <= 1:
+        raise ValueError("Near-Match coordinate scale must be in (0, 1]")
     # Optional reference dependencies are loaded only for an eligible fallback.
     import numpy as np
     import scipy
@@ -98,8 +106,14 @@ def search_near_match(document, exact, report, checkpoint, progress):
             row["calls"] += 1
             if fallback["adapter_calls"] % 64 == 0:
                 progress(fallback)
+            if coordinate_scale != 1.:
+                coordinates = coordinates * coordinate_scale
             prescription = make_prescription(document, ports, vertices, normals, (a, b, c), coordinates)
-            evaluation = evaluate_external(prescription)
+            screen_rejection = None
+            if screen_candidate is None:
+                evaluation = evaluate_external(prescription)
+            else:
+                prescription, evaluation, screen_rejection = screen_candidate(prescription)
             bad = [key for key in ("input_contract", "geometry", "model_domain")
                    if evaluation[key]["status"] != "Pass"]
             bad += [key for key in ("design_constraints", "package_feasibility")
@@ -107,6 +121,9 @@ def search_near_match(document, exact, report, checkpoint, progress):
             if bad:
                 key = bad[0]
                 counts[key + ": " + evaluation[key].get("reason", "incomplete evaluation")] += 1
+                return 2.
+            if screen_rejection:
+                counts["scenario: " + screen_rejection] += 1
                 return 2.
             eta = evaluation["gaussian_mode_matching"].get("normalized_mode_overlap")
             if eta is None:
@@ -126,9 +143,10 @@ def search_near_match(document, exact, report, checkpoint, progress):
             recombination=.7, tol=0, atol=0, polish=False, workers=1, updating="immediate")
         row.update(counts=dict(counts), iterations=optimization.nit, termination=str(optimization.message))
         if best is not None:
-            for mirror in best["prescription"]["design"]["reflectors"]:
-                for record in mirror.values():
-                    record["source"] = "M7D near-match concept prescription; not a measured device fact"
+            if screen_candidate is None:
+                for mirror in best["prescription"]["design"]["reflectors"]:
+                    for record in mirror.values():
+                        record["source"] = "M7D near-match concept prescription; not a measured device fact"
             best.update(ranking=ranking(best["evaluation"], best["prescription"], best["id"]),
                         classification="Conceptual Geometry",
                         advantages=["Fixed Ports and frozen guards passed; approximate q match"],

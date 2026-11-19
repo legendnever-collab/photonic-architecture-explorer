@@ -68,6 +68,7 @@ Fused-Silica Glass Waveguide 실측 Width와 추가 입력 요건을 확인할 �
 · [1310 nm 원본 자료와 복소장 취득 절차](docs/M7R4_1310_EXTERNAL_FIELD_EVIDENCE.md)
 · [1310 nm 독립 Glass Guide 시뮬레이션의 한 Port Field와 Fit](docs/M7R5_SINGLE_PORT_FIELD.md)
 · [1310 nm SMF–Glass Fixed-Port 평가](docs/M7R6_SMF_GLASS_FIXED_PORT.md)
+· [1310 nm Package와 Guard 여유 평가](docs/M7R7_PACKAGE_AND_MARGIN.md)
 
 ## 실행
 

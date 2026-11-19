@@ -1,3 +1,14 @@
+# M7-R8 — Package 내부의 반사면 위치 탐색
+
+[M7-R7](M7R7_PACKAGE_AND_MARGIN.md)의 고정 Port와 Nominal Envelope, Aperture, Clearance 및
+Guard 목표를 사용한다. G029-NM 주변에서 두 반사면까지의 거리 a/c를 기존 고정 구간 내에서
+촘촘하게 탐색할 예산을 사전 기록한다. 기존 Adapter로 Package, Chief Ray와 Guard를 검사하고
+독립 ABCD/Quadrature로 유효 후보를 검증한다. η ≥ 0.99와 여유를 함께 만족하는지 판정한다.
+관측 범위에서 후보가 없으면 지배 제약과 필요한 치수를 기록한다. Draft PR을 작성하고 Main
+병합은 별도 승인한다.
+
+---
+
 # M7-R7 — 1310 nm Fixed-Port Package와 설계 여유
 
 [M7-R6](M7R6_SMF_GLASS_FIXED_PORT.md)의 고정 배치와 G036-NM·G029-NM을 재현한다.
