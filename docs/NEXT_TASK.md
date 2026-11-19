@@ -1,3 +1,14 @@
+# M7-R10 — 확장안 Finite-beam 검증 범위
+
+[M7-R9](M7R9_ENVELOPE_ASSEMBLY_REVIEW.md)의 확장 처방을 동결하고, 1310 nm에서
+두 Aperture와 Backing·Keepout에 대한 Finite-beam 검증 입력과 합격 기준을 명시한다.
+M4-C 외부 필드 검증 근거를 참고해 기존 유한 필드 방법의 적용 범위를 먼저 판단한다.
+사용 가능한 실제 형상과 공차가 없으면 개념 검증 범위와 필요한 자료를 기록한다.
+명목 및 배치 교란 상태의 η 검증 필요 범위를 제시하고, 검증 근거가 없는 실물 성능은
+Uncomputed로 유지한다. Draft PR을 작성하고 Main 병합은 별도 승인한다.
+
+---
+
 # M7-R9 — Envelope 결정과 조립 여유 검토
 
 [M7-R8](M7R8_LOCAL_PACKAGE_SEARCH.md)의 고정 Package η = 0.985044 처방과 X 폭
