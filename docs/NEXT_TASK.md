@@ -1,3 +1,13 @@
+# M7-R9 — Envelope 결정과 조립 여유 검토
+
+[M7-R8](M7R8_LOCAL_PACKAGE_SEARCH.md)의 고정 Package η = 0.985044 처방과 X 폭
+5.023725 mm 확장 처방을 재현한다. 두 안의 Package·곡률 여유와 기존 M6-D 배치
+민감도를 비교하고, 합격에 필요한 공차 자료와 Finite-beam 검증을 명시한다.
+실제 고객 치수가 미제공이면 M7-R7 Nominal 입력과 확장 진단을 유지한다.
+Draft PR을 작성하고 Main 병합은 별도 승인한다.
+
+---
+
 # M7-R8 — Package 내부의 반사면 위치 탐색
 
 [M7-R7](M7R7_PACKAGE_AND_MARGIN.md)의 고정 Port와 Nominal Envelope, Aperture, Clearance 및

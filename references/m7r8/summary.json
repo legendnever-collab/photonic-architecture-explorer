@@ -1,0 +1,459 @@
+{
+  "search_id": "M7R8-G029-LOCAL-001",
+  "status": "NoCandidate",
+  "fixed_input_sha256": "20461fd9868b9450c0df7eff0464e6454a06811e5f09c244f4bc579d66efbcad",
+  "range_ac_mm": [
+    [
+      2.42842712474619,
+      3.2284271247461898
+    ],
+    [
+      2.42842712474619,
+      3.2284271247461898
+    ]
+  ],
+  "counts": {
+    "grid_geometries": 1089,
+    "prescription_trials": 29320,
+    "grid_exact_q": 4356,
+    "adapter_evaluations": 46576,
+    "model_domain: 3w projected footprint/curvature exceeds 0.15": 4291,
+    "grid_bounded_seed": 4356,
+    "guard_margin_pass": 24198,
+    "nominal_package_and_margin_pass": 6942,
+    "continuous_optical": 10304,
+    "model_domain: Gaussian divergence exceeds 0.1 rad": 439,
+    "model_domain: cumulative aperture-tail estimate exceeds 1e-6": 321,
+    "continuous_package": 10304
+  },
+  "package_failure_checks": {
+    "body[1].volume": 17755,
+    "patch[1].volume": 9640,
+    "path_point[2].volume": 7215,
+    "body[0].volume": 14952,
+    "patch[0].volume": 11155,
+    "path_point[1].volume": 1288
+  },
+  "margin_failure_checks": {
+    "max_3w_footprint_curvature": 65,
+    "max_post_mirror_divergence_rad": 71
+  },
+  "nominal_target_geometries": 0,
+  "candidates": {
+    "nominal": {
+      "a_c_mm": [
+        2.5254920570418746,
+        2.7683515606748292
+      ],
+      "path_mm": 9.147336290341508,
+      "normalized_gaussian_overlap": 0.9850444681668674,
+      "quadrature_overlap": [
+        0.9850444681668667,
+        0.9850444681668667
+      ],
+      "nominal_package": {
+        "envelope_geometry": "Pass",
+        "failed_checks": [],
+        "minimum_boundary_gap_m": 5.0000000000234536e-05,
+        "mirror_pair_aabb_gap_m": 0.0028022669461618224,
+        "minimum_body_keepout_aabb_gap_m": 0.0011625224408861627,
+        "max_full_clear_aperture_m": 0.0012859302452447132,
+        "finite_beam_clearance": "Uncomputed"
+      },
+      "guard_metrics": {
+        "max_3w_footprint_curvature": 0.1349999999865,
+        "max_post_mirror_divergence_rad": 0.08622874402397104,
+        "fixed_target_divergence_rad": 0.09970104685503062,
+        "aperture_tail_union_estimate": 8.999999999999947e-07
+      },
+      "mirror_prescriptions": [
+        {
+          "vertex_m": {
+            "value": [
+              0.0025254920570418745,
+              0.0,
+              0.0
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M5A autonomous concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "illuminated_normal": {
+            "value": [
+              -0.9630078819693383,
+              0.0,
+              0.2694732255065963
+            ],
+            "unit": "1",
+            "provenance": "assumed",
+            "source": "M5A autonomous concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "principal_curvature_ts_per_m": {
+            "value": [
+              182.1917423315655,
+              199.85003278958382
+            ],
+            "unit": "m^-1",
+            "provenance": "assumed",
+            "source": "M5A autonomous concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "half_aperture_ts_m": {
+            "value": [
+              0.0006039871747690743,
+              0.0005828945261588321
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M7R7-NOMINAL-001 generated half-aperture scaled by 0.64717494543 and capped",
+            "uncertainty": null
+          }
+        },
+        {
+          "vertex_m": {
+            "value": [
+              -0.0007683515606748291,
+              0.0,
+              0.002
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M5A autonomous concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "illuminated_normal": {
+            "value": [
+              0.9630078819693383,
+              0.0,
+              -0.2694732255065963
+            ],
+            "unit": "1",
+            "provenance": "assumed",
+            "source": "M5A autonomous concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "principal_curvature_ts_per_m": {
+            "value": [
+              181.17855240825,
+              192.28001631012876
+            ],
+            "unit": "m^-1",
+            "provenance": "assumed",
+            "source": "M5A autonomous concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "half_aperture_ts_m": {
+            "value": [
+              0.0006429651226223566,
+              0.000605842938861739
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M7R7-NOMINAL-001 generated half-aperture scaled by 0.64717494543 and capped",
+            "uncertainty": null
+          }
+        }
+      ],
+      "additional_envelope_mm": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "optical": {
+      "a_c_mm": [
+        3.0929282035872885,
+        3.2284271247461733
+      ],
+      "path_mm": 11.083089452968728,
+      "normalized_gaussian_overlap": 0.9901021583003105,
+      "quadrature_overlap": [
+        0.9901021583003092,
+        0.9901021583003102
+      ],
+      "nominal_package": {
+        "envelope_geometry": "Fail",
+        "failed_checks": [
+          "patch[0].volume",
+          "body[0].volume",
+          "patch[1].volume",
+          "body[1].volume",
+          "path_point[2].volume"
+        ],
+        "minimum_boundary_gap_m": -0.0003942141040073723,
+        "mirror_pair_aabb_gap_m": 0.003760520550946404,
+        "minimum_body_keepout_aabb_gap_m": 0.001127759907341483,
+        "max_full_clear_aperture_m": 0.0015085968842984694,
+        "finite_beam_clearance": "Uncomputed"
+      },
+      "guard_metrics": {
+        "max_3w_footprint_curvature": 0.13499999998650003,
+        "max_post_mirror_divergence_rad": 0.08799527120341817,
+        "fixed_target_divergence_rad": 0.09970104685503062,
+        "aperture_tail_union_estimate": 8.999999999999969e-07
+      },
+      "mirror_prescriptions": [
+        {
+          "vertex_m": {
+            "value": [
+              0.0030929282035872885,
+              0.0,
+              0.0
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M5A autonomous concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "illuminated_normal": {
+            "value": [
+              -0.976605636570312,
+              0.0,
+              0.21503820734719653
+            ],
+            "unit": "1",
+            "provenance": "assumed",
+            "source": "M5A autonomous concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "principal_curvature_ts_per_m": {
+            "value": [
+              154.0617701310213,
+              163.2562551245807
+            ],
+            "unit": "m^-1",
+            "provenance": "assumed",
+            "source": "M5A autonomous concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "half_aperture_ts_m": {
+            "value": [
+              0.0007290754195228,
+              0.0007135499345909715
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M7R7-NOMINAL-001 generated half-aperture scaled by 0.64717494543 and capped",
+            "uncertainty": null
+          }
+        },
+        {
+          "vertex_m": {
+            "value": [
+              -0.0012284271247461733,
+              0.0,
+              0.002
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M5A autonomous concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "illuminated_normal": {
+            "value": [
+              0.976605636570312,
+              0.0,
+              -0.21503820734719653
+            ],
+            "unit": "1",
+            "provenance": "assumed",
+            "source": "M5A autonomous concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "principal_curvature_ts_per_m": {
+            "value": [
+              154.4368696212476,
+              160.2817559704743
+            ],
+            "unit": "m^-1",
+            "provenance": "assumed",
+            "source": "M5A autonomous concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "half_aperture_ts_m": {
+            "value": [
+              0.0007542984421492347,
+              0.0007267919512135277
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M7R7-NOMINAL-001 generated half-aperture scaled by 0.64717494543 and capped",
+            "uncertainty": null
+          }
+        }
+      ],
+      "additional_envelope_mm": [
+        [
+          0.4442141040073722,
+          0.0,
+          0.0
+        ],
+        [
+          0.30621018073168776,
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "expansion": {
+      "a_c_mm": [
+        3.077954886673812,
+        3.21601121681848
+      ],
+      "path_mm": 11.03085800620031,
+      "normalized_gaussian_overlap": 0.9900109725310262,
+      "quadrature_overlap": [
+        0.9900109725310264,
+        0.9900109725310265
+      ],
+      "nominal_package": {
+        "envelope_geometry": "Fail",
+        "failed_checks": [
+          "patch[0].volume",
+          "body[0].volume",
+          "patch[1].volume",
+          "body[1].volume",
+          "path_point[2].volume"
+        ],
+        "minimum_boundary_gap_m": -0.00038217742219372294,
+        "mirror_pair_aabb_gap_m": 0.003734489214349449,
+        "minimum_body_keepout_aabb_gap_m": 0.001126477638799849,
+        "max_full_clear_aperture_m": 0.0015023345282692364,
+        "finite_beam_clearance": "Uncomputed"
+      },
+      "guard_metrics": {
+        "max_3w_footprint_curvature": 0.1349999999865,
+        "max_post_mirror_divergence_rad": 0.0879451946930431,
+        "fixed_target_divergence_rad": 0.09970104685503062,
+        "aperture_tail_union_estimate": 8.999999999999977e-07
+      },
+      "mirror_prescriptions": [
+        {
+          "vertex_m": {
+            "value": [
+              0.003077954886673812,
+              0.0,
+              0.0
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M5A autonomous concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "illuminated_normal": {
+            "value": [
+              -0.9763437984113555,
+              0.0,
+              0.21622392861033313
+            ],
+            "unit": "1",
+            "provenance": "assumed",
+            "source": "M5A autonomous concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "principal_curvature_ts_per_m": {
+            "value": [
+              154.72265663922394,
+              164.0489228908882
+            ],
+            "unit": "m^-1",
+            "provenance": "assumed",
+            "source": "M5A autonomous concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "half_aperture_ts_m": {
+            "value": [
+              0.0007257471901721969,
+              0.0007101021336372445
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M7R7-NOMINAL-001 generated half-aperture scaled by 0.64717494543 and capped",
+            "uncertainty": null
+          }
+        },
+        {
+          "vertex_m": {
+            "value": [
+              -0.0012160112168184802,
+              0.0,
+              0.002
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M5A autonomous concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "illuminated_normal": {
+            "value": [
+              0.9763437984113555,
+              0.0,
+              -0.21622392861033313
+            ],
+            "unit": "1",
+            "provenance": "assumed",
+            "source": "M5A autonomous concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "principal_curvature_ts_per_m": {
+            "value": [
+              155.0385776066957,
+              160.99666226635634
+            ],
+            "unit": "m^-1",
+            "provenance": "assumed",
+            "source": "M5A autonomous concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "half_aperture_ts_m": {
+            "value": [
+              0.0007511672641346182,
+              0.0007235646287684244
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M7R7-NOMINAL-001 generated half-aperture scaled by 0.64717494543 and capped",
+            "uncertainty": null
+          }
+        }
+      ],
+      "additional_envelope_mm": [
+        [
+          0.43217742219372285,
+          0.0,
+          0.0
+        ],
+        [
+          0.2915473754667016,
+          0.0,
+          0.0
+        ]
+      ],
+      "expanded_volume_adapter_pass": {
+        "type": "aabb",
+        "min_m": [
+          -0.0015821774231937228,
+          -0.00135,
+          -0.00135
+        ],
+        "max_m": [
+          0.0034415473764667017,
+          0.00135,
+          0.00335
+        ],
+        "frame_id": "world"
+      }
+    }
+  },
+  "finite_beam_clearance": "Uncomputed",
+  "total_coupling": null
+}
