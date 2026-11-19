@@ -1,3 +1,9 @@
+# M7-R6 — 1310 nm 두 번째 Port와 Fixed-Port 설계 준비
+
+[M7-R5 단일 Guide의 결과](M7R5_SINGLE_PORT_FIELD.md)를 기준으로 1310 nm에서 같은 공기 매질을 사용하는 SMF Port의 출처와 독립적인 외부 Complex Field를 확인한다. Port의 진행 방향·Phase Convention·기준면을 등록하고 이 Port의 Fit 예산을 먼저 정한다. 측정 자료 또는 별도 시뮬레이션을 사용하면 Case ID와 입력 가정을 기록한다. 두 Port가 각각 통과하고 상대 위치·방향이 명시될 때 기존 Adapter와 전체 Guard로 설계를 평가한다. Nominal 모의 설계와 실제 Device 판정을 구분한다. Southampton 원본을 입수하면 M7-R3의 55 mW 사례에만 대조한다. Main 병합은 별도 승인한다.
+
+---
+
 # 1310 nm Single-Port Field Capture and Fit
 
 추천 모델 **Sol Work**로 비기밀 1310 nm 한 Port의 자료를 우선 확보한다. 복소장이 준비되면

@@ -1,0 +1,32 @@
+{
+  "case_id": "M7R5-SIM-GLASS-001",
+  "provenance": "Independent nominal simulation. No measured guide, Southampton inputs, or device tolerances.",
+  "vacuum_wavelength_um": 1.310,
+  "silica_temperature_C": 20,
+  "cladding_source": "Malitson (1965), https://doi.org/10.1364/JOSA.55.001205",
+  "guide": "Buried isotropic, lossless silica with a designed smooth positive index change delta_n * exp(-(x/rx)^2-(y/ry)^2), invariant for z<0. Ideal planar termination at z=0.",
+  "passive_eps_imag_regulator": 1e-10,
+  "delta_n": 0.007,
+  "index_1e_radii_um_xy": [4.0, 3.0],
+  "plane_z_um": 5.0,
+  "ambient": "Uniform air model, z>0",
+  "ambient_index": 1.0,
+  "source": "Forward x-polarized fundamental guided eigenmode, no incoming wave from air",
+  "frame": "World origin at guide center on facet. t=+X, s=+Y, d=+Z. Fixed center and zero tilt.",
+  "phasor": "exp(+i omega t), forward exp(-ikz); conjugate the exported FMMAX spatial phasors",
+  "budget_provenance": "Pre-fit concept design allocation for this nominal simulated Port only. No device requirement or measured uncertainty.",
+  "single_port_fit_limit_dB": 0.10,
+  "numerical_reserve_dB": 0.01,
+  "phase_rms_limit_rad": 0.10,
+  "phase_mask_min_relative_intensity": 0.01,
+  "convergence_max_delta_phase_rms_rad": 0.01,
+  "field_delta_l2_limit": 0.02,
+  "incident_min_x_transverse_fraction": 0.99,
+  "power_balance_abs_limit": 0.001,
+  "runs": {
+    "base": {"period_um": 32, "samples": 128, "approx_terms": 197},
+    "grid": {"period_um": 32, "samples": 256, "approx_terms": 197},
+    "basis": {"period_um": 32, "samples": 256, "approx_terms": 317},
+    "window": {"period_um": 40, "samples": 320, "approx_terms": 497}
+  }
+}
