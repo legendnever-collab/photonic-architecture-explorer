@@ -1,10 +1,51 @@
-# 1310 nm Glass Waveguide Port Readiness
+# M7-R9 — Envelope 결정과 조립 여유 검토
 
-추천 모델 **Sol Work**. 최신 Main과 [M7-F 통합 검토](M7F_INTEGRATED_WINDOWS_REVIEW.md)를 확인한다.
-비기밀 1310 nm Glass Waveguide 사례 하나에 대해 외부 Reference Plane, 파장·매질, 두 Mode Axis의
-Width 정의와 Phase/Curvature 또는 Complex Field, 출처와 불확도를 [입력 계약](EXTERNAL_PORT_CONTRACT.md)에 맞춰 확인한다.
-입력이 충분하면 기존 Adapter에서 Gaussian 적용성을 평가하고, 누락이 있으면 필요한 입력과 측정·시뮬레이션 경로를 기록한다.
-1550 nm Proxy는 독립 개념 사례로 유지한다. Complex Field가 확보되어 Gaussian Fit의 독립 검증이 필요하면 Astra Work 범위를 별도로 제안한다.
+[M7-R8](M7R8_LOCAL_PACKAGE_SEARCH.md)의 고정 Package η = 0.985044 처방과 X 폭
+5.023725 mm 확장 처방을 재현한다. 두 안의 Package·곡률 여유와 기존 M6-D 배치
+민감도를 비교하고, 합격에 필요한 공차 자료와 Finite-beam 검증을 명시한다.
+실제 고객 치수가 미제공이면 M7-R7 Nominal 입력과 확장 진단을 유지한다.
+Draft PR을 작성하고 Main 병합은 별도 승인한다.
+
+---
+
+# M7-R8 — Package 내부의 반사면 위치 탐색
+
+[M7-R7](M7R7_PACKAGE_AND_MARGIN.md)의 고정 Port와 Nominal Envelope, Aperture, Clearance 및
+Guard 목표를 사용한다. G029-NM 주변에서 두 반사면까지의 거리 a/c를 기존 고정 구간 내에서
+촘촘하게 탐색할 예산을 사전 기록한다. 기존 Adapter로 Package, Chief Ray와 Guard를 검사하고
+독립 ABCD/Quadrature로 유효 후보를 검증한다. η ≥ 0.99와 여유를 함께 만족하는지 판정한다.
+관측 범위에서 후보가 없으면 지배 제약과 필요한 치수를 기록한다. Draft PR을 작성하고 Main
+병합은 별도 승인한다.
+
+---
+
+# M7-R7 — 1310 nm Fixed-Port Package와 설계 여유
+
+[M7-R6](M7R6_SMF_GLASS_FIXED_PORT.md)의 고정 배치와 G036-NM·G029-NM을 재현한다.
+Package·Aperture·Clearance와 수치 Guard 여유의 목표를 명시하고, 입수한 실측 조건 또는
+명시적 Nominal Envelope를 기존 Adapter에 입력한다. M6-D 배치 민감도와 기존 Near-Match
+평가를 재사용해 Overlap·경로 길이·Guard 여유를 함께 비교한다. 두 Port 및 기존 Guard는
+고정하고, 허용 후보가 없으면 지배적인 제약을 보고한다. 실제 손실과 생산 수율은 근거를
+확보할 때까지 Uncomputed다. Main 병합은 별도 승인한다.
+
+---
+
+# M7-R6 — 1310 nm 두 번째 Port와 Fixed-Port 설계 준비
+
+[M7-R5 단일 Guide의 결과](M7R5_SINGLE_PORT_FIELD.md)를 기준으로 1310 nm에서 같은 공기 매질을 사용하는 SMF Port의 출처와 독립적인 외부 Complex Field를 확인한다. Port의 진행 방향·Phase Convention·기준면을 등록하고 이 Port의 Fit 예산을 먼저 정한다. 측정 자료 또는 별도 시뮬레이션을 사용하면 Case ID와 입력 가정을 기록한다. 두 Port가 각각 통과하고 상대 위치·방향이 명시될 때 기존 Adapter와 전체 Guard로 설계를 평가한다. Nominal 모의 설계와 실제 Device 판정을 구분한다. Southampton 원본을 입수하면 M7-R3의 55 mW 사례에만 대조한다. Main 병합은 별도 승인한다.
+
+---
+
+# 1310 nm Single-Port Field Capture and Fit
+
+추천 모델 **Sol Work**로 비기밀 1310 nm 한 Port의 자료를 우선 확보한다. 복소장이 준비되면
+독립 Gaussian Fit 검증에는 **Astra Work**를 권장한다. 최신 Main과
+[M7-R4 원본 확인·최소 취득 절차](M7R4_1310_EXTERNAL_FIELD_EVIDENCE.md)를 기준으로 한다.
+Southampton 파일을 받으면 Fig. 3.5(c–d)의 55 mW 사례와 측정 메타데이터를 대조한다.
+별도 Guide를 측정하거나 외부 Solver 자료를 쓰는 경우 독립 Case ID로 등록한다.
+[입력 계약](EXTERNAL_PORT_CONTRACT.md)에 맞춰 External Plane, 매질, 축, Polarization과
+복소장·Sampling·불확도를 기록한다. Fit 오차 예산을 먼저 정하고 한 Port를 평가한다.
+두 번째 Port가 확보되면 기존 Adapter와 Guard에 연결한다. 미확보 항목의 판정은 Uncomputed다.
 
 ---
 

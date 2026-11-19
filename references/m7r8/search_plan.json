@@ -1,0 +1,20 @@
+{
+  "id": "M7R8-G029-LOCAL-001",
+  "case": "M7R7-NOMINAL-001",
+  "anchor": "G029-NM",
+  "half_width_mm": 0.4,
+  "grid_step_mm": 0.025,
+  "grid_prescriptions_per_geometry_max": 8,
+  "continuous": {
+    "seeds": [8291, 8292],
+    "population": 64,
+    "maxiter": 160,
+    "maximum_prescription_trials": 20608,
+    "package_penalty_per_mm": 4.0
+  },
+  "maximum_prescription_trials": 29320,
+  "maximum_adapter_evaluations": 58642,
+  "aperture_allocation": "M7R7-EQUAL-TAIL-001",
+  "acceptance": "All original Adapter checks, R7 nominal envelope/clearance and extra guard targets, plus normalized Gaussian eta >= 0.99 in independent ABCD/Quadrature",
+  "clearance_diagnostic": "Among observed optically qualifying prescriptions that pass all non-enclosure package checks, record the least total outward movement of envelope faces with other inputs frozen. Recheck that prescription with the derived expanded envelope. This is a sampled design requirement, not a lower bound."
+}

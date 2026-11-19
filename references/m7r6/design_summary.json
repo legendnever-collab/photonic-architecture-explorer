@@ -1,0 +1,560 @@
+{
+  "case_id": "M7R6-NOMINAL-001",
+  "input_sha256": "20461fd9868b9450c0df7eff0464e6454a06811e5f09c244f4bc579d66efbcad",
+  "workflow_state": "Succeeded",
+  "nominal_design_status": "Computed",
+  "reason": "Guarded near-match trial completed",
+  "source_q_m": [
+    [
+      5.020992942588955e-06,
+      5.291474399575543e-05
+    ],
+    [
+      5.021023686199201e-06,
+      5.268782227693848e-05
+    ]
+  ],
+  "target_q_m": [
+    [
+      -5.024693136291287e-06,
+      5.0894817553789625e-05
+    ],
+    [
+      -5.028023695849517e-06,
+      4.194903610446528e-05
+    ]
+  ],
+  "exact_geometry_count": 36,
+  "exact_attempt_count": 144,
+  "exact_accepted": 0,
+  "exact_rejections": {
+    "model_domain: 3w projected footprint/curvature exceeds 0.15": 141,
+    "model_domain: Gaussian divergence exceeds 0.1 rad": 3
+  },
+  "near_match_state": "Succeeded",
+  "near_match_calls": 127968,
+  "near_match_counts": {
+    "valid_evaluations": 99382,
+    "model_domain: Gaussian divergence exceeds 0.1 rad": 25829,
+    "geometry: unintended reflector interception": 2757
+  },
+  "near_match_accepted_geometries": 33,
+  "selected": "G036-NM",
+  "candidates": [
+    {
+      "id": "G036-NM",
+      "overlap": 0.9990889546173051,
+      "mode_mismatch_dB": 0.003958423250207822,
+      "aperture_tail_union_estimate": 4.976768459417303e-15,
+      "segments_m": [
+        0.00565685424949238,
+        0.009526025719263042,
+        0.00565685424949238
+      ],
+      "incidence_cosines": [
+        0.9944123587145179,
+        0.9944123587145179
+      ],
+      "reflectors": [
+        {
+          "vertex_m": {
+            "value": [
+              0.00565685424949238,
+              0.0,
+              0.0
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "illuminated_normal": {
+            "value": [
+              -0.9944123587145177,
+              0.0,
+              0.10556543390631798
+            ],
+            "unit": "1",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "principal_curvature_ts_per_m": {
+            "value": [
+              86.80652557074923,
+              84.90654702244926
+            ],
+            "unit": "m^-1",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "half_aperture_ts_m": {
+            "value": [
+              0.0020218321644385547,
+              0.0020148590943082022
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          }
+        },
+        {
+          "vertex_m": {
+            "value": [
+              -0.00365685424949238,
+              0.0,
+              0.002
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "illuminated_normal": {
+            "value": [
+              0.9944123587145177,
+              0.0,
+              -0.10556543390631798
+            ],
+            "unit": "1",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "principal_curvature_ts_per_m": {
+            "value": [
+              88.8046274396279,
+              92.4361311430705
+            ],
+            "unit": "m^-1",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "half_aperture_ts_m": {
+            "value": [
+              0.0020609038915056182,
+              0.002163655075213602
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          }
+        }
+      ],
+      "ranking": {
+        "overlap_deficit_at_1e-12": 0.000911045383,
+        "max_3w_footprint_curvature": 0.14999992821061084,
+        "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+        "max_projected_radius_m": 0.0005409137688034001,
+        "total_path_m": 0.0208397342182478,
+        "package_evidence_missing_checks": 6,
+        "stable_id": "G036-NM"
+      },
+      "independent_validation": {
+        "status": "Pass",
+        "quadrature_overlap": [
+          0.9990889546173052,
+          0.9990889546173045
+        ],
+        "q_output_m": [
+          [
+            -5.047516104084197e-06,
+            5.0927539751966316e-05
+          ],
+          [
+            -4.982323150360832e-06,
+            4.568864607460988e-05
+          ]
+        ],
+        "surface_checks": [
+          {
+            "footprint_m": [
+              0.0005054580411096386,
+              0.0005037147735770506
+            ],
+            "max_3w_curvature": 0.13163116911157396,
+            "outgoing_divergence_rad": [
+              0.001309560132137912,
+              0.003985863627588815
+            ]
+          },
+          {
+            "footprint_m": [
+              0.0005152259728764043,
+              0.0005409137688034007
+            ],
+            "max_3w_curvature": 0.14999992821061098,
+            "outgoing_divergence_rad": [
+              0.09048661941704383,
+              0.09553369318898342
+            ]
+          }
+        ]
+      },
+      "states": {
+        "input_contract": "Pass",
+        "geometry": "Pass",
+        "model_domain": "Pass",
+        "design_constraints": "Uncomputed",
+        "gaussian_mode_matching": "Approximate",
+        "package_feasibility": "Uncomputed",
+        "fabrication": "Uncomputed",
+        "actual_applicability": "Uncomputed"
+      },
+      "physical_losses": {
+        "status": "Uncomputed",
+        "total_coupling": null,
+        "reason": "coating/device interfaces/polarization/scatter not supplied"
+      }
+    },
+    {
+      "id": "G029-NM",
+      "overlap": 0.9980603001813527,
+      "mode_mismatch_dB": 0.008432189882830482,
+      "aperture_tail_union_estimate": 4.976768459417341e-15,
+      "segments_m": [
+        0.00282842712474619,
+        0.004168043066239896,
+        0.00282842712474619
+      ],
+      "incidence_cosines": [
+        0.9688537552080192,
+        0.9688537552080193
+      ],
+      "reflectors": [
+        {
+          "vertex_m": {
+            "value": [
+              0.00282842712474619,
+              0.0,
+              0.0
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "illuminated_normal": {
+            "value": [
+              -0.968853755208019,
+              0.0,
+              0.24763360236308762
+            ],
+            "unit": "1",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "principal_curvature_ts_per_m": {
+            "value": [
+              168.66687021972282,
+              175.5632913527962
+            ],
+            "unit": "m^-1",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "half_aperture_ts_m": {
+            "value": [
+              0.001038640156403245,
+              0.0010084535952337892
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          }
+        },
+        {
+          "vertex_m": {
+            "value": [
+              -0.00082842712474619,
+              0.0,
+              0.002
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "illuminated_normal": {
+            "value": [
+              0.968853755208019,
+              0.0,
+              -0.24763360236308762
+            ],
+            "unit": "1",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "principal_curvature_ts_per_m": {
+            "value": [
+              173.19292790210386,
+              188.35328605680672
+            ],
+            "unit": "m^-1",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "half_aperture_ts_m": {
+            "value": [
+              0.0010590492183293024,
+              0.0010618342818928825
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          }
+        }
+      ],
+      "ranking": {
+        "overlap_deficit_at_1e-12": 0.001939699819,
+        "max_3w_footprint_curvature": 0.14999998218172048,
+        "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+        "max_projected_radius_m": 0.0002654585704732205,
+        "total_path_m": 0.009824897315732276,
+        "package_evidence_missing_checks": 6,
+        "stable_id": "G029-NM"
+      },
+      "independent_validation": {
+        "status": "Pass",
+        "quadrature_overlap": [
+          0.9980603001813526,
+          0.998060300181352
+        ],
+        "q_output_m": [
+          [
+            -5.026166934056201e-06,
+            5.089379909459732e-05
+          ],
+          [
+            -4.9586993557346875e-06,
+            4.751836479256276e-05
+          ]
+        ],
+        "surface_checks": [
+          {
+            "footprint_m": [
+              0.0002596600391008112,
+              0.00025211339880844736
+            ],
+            "max_3w_curvature": 0.13278557426685342,
+            "outgoing_divergence_rad": [
+              0.0020252239789448736,
+              0.0035846787752075613
+            ]
+          },
+          {
+            "footprint_m": [
+              0.00026476230458232544,
+              0.0002654585704732206
+            ],
+            "max_3w_curvature": 0.1499999821817205,
+            "outgoing_divergence_rad": [
+              0.09051660904471447,
+              0.0936763515731198
+            ]
+          }
+        ]
+      },
+      "states": {
+        "input_contract": "Pass",
+        "geometry": "Pass",
+        "model_domain": "Pass",
+        "design_constraints": "Uncomputed",
+        "gaussian_mode_matching": "Approximate",
+        "package_feasibility": "Uncomputed",
+        "fabrication": "Uncomputed",
+        "actual_applicability": "Uncomputed"
+      },
+      "physical_losses": {
+        "status": "Uncomputed",
+        "total_coupling": null,
+        "reason": "coating/device interfaces/polarization/scatter not supplied"
+      }
+    },
+    {
+      "id": "G030-NM",
+      "overlap": 0.9403682778867719,
+      "mode_mismatch_dB": 0.267020296652362,
+      "aperture_tail_union_estimate": 4.976768459417418e-15,
+      "segments_m": [
+        0.00282842712474619,
+        0.006786668881199797,
+        0.00565685424949238
+      ],
+      "incidence_cosines": [
+        0.9888354884091115,
+        0.9888354884091115
+      ],
+      "reflectors": [
+        {
+          "vertex_m": {
+            "value": [
+              0.00282842712474619,
+              0.0,
+              0.0
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "illuminated_normal": {
+            "value": [
+              -0.9888354884091115,
+              0.0,
+              0.1490113313232051
+            ],
+            "unit": "1",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "principal_curvature_ts_per_m": {
+            "value": [
+              124.81089820278171,
+              128.8708915625591
+            ],
+            "unit": "m^-1",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "half_aperture_ts_m": {
+            "value": [
+              0.0010176520034289008,
+              0.0010084535952337892
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          }
+        },
+        {
+          "vertex_m": {
+            "value": [
+              -0.00365685424949238,
+              0.0,
+              0.002
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "illuminated_normal": {
+            "value": [
+              0.9888354884091115,
+              0.0,
+              -0.1490113313232051
+            ],
+            "unit": "1",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "principal_curvature_ts_per_m": {
+            "value": [
+              116.8611633414649,
+              119.08268081501116
+            ],
+            "unit": "m^-1",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          },
+          "half_aperture_ts_m": {
+            "value": [
+              0.0017114154368412088,
+              0.0016793637965907542
+            ],
+            "unit": "m",
+            "provenance": "assumed",
+            "source": "M7D near-match concept prescription; not a measured device fact",
+            "uncertainty": null
+          }
+        }
+      ],
+      "ranking": {
+        "overlap_deficit_at_1e-12": 0.059631722113,
+        "max_3w_footprint_curvature": 0.14999849918235375,
+        "negative_min_aperture_radius_ratio_at_1e-12": -4.0,
+        "max_projected_radius_m": 0.0004278538592103022,
+        "total_path_m": 0.015271950255438368,
+        "package_evidence_missing_checks": 6,
+        "stable_id": "G030-NM"
+      },
+      "independent_validation": {
+        "status": "Pass",
+        "quadrature_overlap": [
+          0.9403682778867722,
+          0.9403682778867721
+        ],
+        "q_output_m": [
+          [
+            -4.697966060166403e-06,
+            7.468425070989808e-05
+          ],
+          [
+            -4.357333216623493e-06,
+            7.583130346813659e-05
+          ]
+        ],
+        "surface_checks": [
+          {
+            "footprint_m": [
+              0.0002544130008572252,
+              0.00025211339880844736
+            ],
+            "max_3w_curvature": 0.09747023543793491,
+            "outgoing_divergence_rad": [
+              0.025303096817817835,
+              0.024747485278867967
+            ]
+          },
+          {
+            "footprint_m": [
+              0.0004278538592103022,
+              0.00041984094914768844
+            ],
+            "max_3w_curvature": 0.14999849918235375,
+            "outgoing_divergence_rad": [
+              0.07472160595354853,
+              0.07415431900174436
+            ]
+          }
+        ]
+      },
+      "states": {
+        "input_contract": "Pass",
+        "geometry": "Pass",
+        "model_domain": "Pass",
+        "design_constraints": "Uncomputed",
+        "gaussian_mode_matching": "Approximate",
+        "package_feasibility": "Uncomputed",
+        "fabrication": "Uncomputed",
+        "actual_applicability": "Uncomputed"
+      },
+      "physical_losses": {
+        "status": "Uncomputed",
+        "total_coupling": null,
+        "reason": "coating/device interfaces/polarization/scatter not supplied"
+      }
+    }
+  ],
+  "actual_device_applicability": "Uncomputed",
+  "physical_losses": {
+    "status": "Uncomputed",
+    "total_coupling": null
+  }
+}

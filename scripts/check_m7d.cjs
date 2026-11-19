@@ -223,7 +223,8 @@ with make_server((),0,workspace=workspace) as server:
 
     await page.setViewportSize({width:393,height:852});
     const readinessPage=await openReference();
-    assert(await readinessPage.getByText('Glass Waveguide Mode · Uncomputed',{exact:true}).isVisible());
+    assert(await readinessPage.getByText('Glass Waveguide External Port · Uncomputed',{exact:true}).isVisible());
+    assert.match(await readinessPage.locator('#sun-fldw-55mw-1310').innerText(),/x 11 µm \/ y 18 µm/);
     assert.equal(await readinessPage.locator('#readiness-1310 svg').count(),0);
     await readinessPage.locator('#readiness-1310').scrollIntoViewIfNeeded();
     await readinessPage.screenshot({path:path.join(dir,'readiness-1310.png'),fullPage:true});

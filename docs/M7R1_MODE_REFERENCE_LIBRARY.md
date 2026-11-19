@@ -10,6 +10,7 @@ SMF, femtosecond LDW와 IOX의 공개 Mode Width, Mode Image, Loss를 설계 검
 | Source | Vacuum wavelength | Mode evidence 및 실무 적용 |
 |---|---:|---|
 | Corning SMF-28 Ultra | 1310 / 1550 nm | 공급사 MFD 각각 9.2 ± 0.4 / 10.4 ± 0.5 µm. WP7071과 ITU-T G.650.1은 Petermann II far-field 정의를 제공한다. PI1424는 제품별 MFD 산출 방법을 명시하지 않는다. ±는 Specification Tolerance다. [PI1424](https://www.corning.com/media/worldwide/coc/documents/Fiber/product-information-sheets/PI-1424-AEN.pdf) |
+| Sun, Fused Silica FLDW | 1310 nm | Fig. 3.5(c–d)의 55 mW 사례에서 Intensity Cut 기반 MFD 표기는 x 11 µm, y 18 µm다. Width Threshold, 불확도 및 외부 기준면의 Phase는 미확인이다. [M7-R3 판정](M7R3_1310_PORT_READINESS.md) |
 | Desmet et al., Fused silica FLDW | 1550 nm | 12.8 ± 0.4 µm lateral, 12.1 ± 1.3 µm vertical, 1/e² Intensity Diameter. Fig. 5(b)는 실측 Intensity Image다. [Fig. 5(b)](https://www.photonics.intec.ugent.be/download/pub_4648.pdf#page=8) |
 | Lee et al., Fused silica FLDW | 1550 nm | Fig. 5(a–c)의 x × y MFD는 Uncracked y-pol 10.2 × 10.0 µm, Microcrack x-pol 9.3 × 9.6 µm, Microcrack y-pol 9.4 × 10.0 µm. 세 패널 모두 Peak-normalized Intensity이며 폭은 1/e² 기준이다. Cracked Guide의 비대칭은 원문 그림으로 확인한다. 원저자는 요청 시 데이터를 제공한다고 명시한다. [Fig. 5](https://eprints.soton.ac.uk/452944/1/s41598_021_03116_y.pdf#page=5) |
 | Wang et al., EAGLE XG OCMS | 실험별 상이 | Fig. 2(c)와 Supplement Fig. S9의 Fundamental Guide Family는 MFD 8–18 µm, Circularity >97%·최고 99.5%다. Supplement S7의 정의는 minor/major axis다. Fig. 3은 LP₁₁(1500–1610 nm)와 LP₂₁(980–1160 nm)의 Mode-selective Directional Coupler다. [원문과 Supplement](https://link.springer.com/article/10.1038/s41377-024-01473-7) |
@@ -47,7 +48,7 @@ Mode Purity를 설명한다. Facet Coupling Loss는 표의 해당 Interface 측�
 - Actual External Port, Complex Overlap 및 새 설계의 Total Coupling은 **Uncomputed**다.
   실제 설계를 재개하려면 사용할 Facet의 비기밀 Intensity/Phase 또는 검증된 Gaussian
   Fit, 파장, External Plane과 매질, 두 Transverse Axis와 Polarization을 확보한다.
-  1310 nm Glass Mode는 해당 파장 자료로 확인한다.
+  1310 nm Sun 사례의 Intensity와 Width는 문헌 근거로 표시한다.
   [External Port Contract](EXTERNAL_PORT_CONTRACT.md)
 - M7-A/B 재현은 기존 Eaton AF45 Proxy 및 입력 SHA를 기준으로 한다. 이 Catalog는
   Workspace의 Fixed Port, Ranking, Frozen Guards와 Near-Match Worker에 연결되지 않는다.
