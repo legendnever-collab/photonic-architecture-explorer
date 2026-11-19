@@ -41,15 +41,14 @@ def fit(axis, electric, case):
 
     def objective(p):
         g = gaussian(p)
-        mixed = g.conj() * ex
-        c = mixed.sum()
-        gg = norm2(g)
-        eta = abs(c) ** 2 / (gg * total)
-        dc = np.array([-np.sum(mixed * xx), -np.sum(mixed * yy)])
-        dc = np.r_[dc, -1j * dc]
-        dg = -2 * np.array([np.sum(abs(g) ** 2 * xx), np.sum(abs(g) ** 2 * yy), 0, 0])
-        gradient = 2 * (c.conj() * dc).real / (gg * total) - eta * dg / gg
-        return -eta, -gradient
+        fitted = g * (np.sum(g.conj() * ex) / norm2(g))
+        residual = ex - fitted
+        # Optimize residual energy directly; subtracting overlaps near unity loses
+        # the line-search signal. The residual is orthogonal to the fitted field.
+        product = fitted.conj() * residual
+        moments = np.array([np.sum(product * xx), np.sum(product * yy)])
+        gradient = 2 * np.r_[moments.real, moments.imag] / total
+        return norm2(residual) / total, gradient
 
     opt = minimize(
         objective,
@@ -57,14 +56,14 @@ def fit(axis, electric, case):
         jac=True,
         method="L-BFGS-B",
         bounds=[(1e-4, None)] * 2 + [(None, None)] * 2,
-        options={"gtol": 1e-10, "ftol": 1e-15},
+        options={"gtol": 1e-9, "ftol": 1e-15, "maxls": 50},
     )
     if not opt.success or np.max(abs(opt.jac)) > 1e-6:
         raise RuntimeError(f"Fit did not converge: {opt.message}")
     g = gaussian(opt.x)
     projection = np.sum(g.conj() * ex) / norm2(g)
     residual = ex - projection * g
-    eta = -float(opt.fun)
+    eta = float(abs(np.sum(g.conj() * ex)) ** 2 / (norm2(g) * total))
     # Independent closure from the energy of the orthogonal residual, including Ey.
     if abs(eta - (1 - (norm2(residual) + norm2(ey)) / total)) > 1e-10:
         raise ValueError("Projection and field residual disagree")
