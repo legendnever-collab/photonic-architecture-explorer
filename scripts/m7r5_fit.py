@@ -121,20 +121,17 @@ def compare_fields(a, b):
     return float(np.sqrt(norm2(ea - eb * np.exp(-1j * piston))))
 
 
-def replay(directory):
-    case = json.loads((REFERENCE / "case.json").read_text())
+def replay(directory, case_path=REFERENCE / "case.json"):
+    case_text = case_path.read_text(encoding="utf-8")
+    case = json.loads(case_text)
+    case_hash = hashlib.sha256(case_text.encode("utf-8")).hexdigest()
     metrics, fields = {}, {}
     for name, spec in case["runs"].items():
         path = directory / (name + ".npz")
         with np.load(path, allow_pickle=False) as data:
             if (
                 str(data["case_id"]) != case["case_id"]
-                or str(data["case_sha256"])
-                != hashlib.sha256(
-                    (REFERENCE / "case.json")
-                    .read_text(encoding="utf-8")
-                    .encode("utf-8")
-                ).hexdigest()
+                or str(data["case_sha256"]) != case_hash
                 or int(data["samples"]) != spec["samples"]
                 or float(data["period_um"]) != spec["period_um"]
             ):
@@ -217,5 +214,7 @@ def replay(directory):
 if __name__ == "__main__":
     args = argparse.ArgumentParser(description=__doc__)
     args.add_argument("capture_dir", type=Path, nargs="?", default=REFERENCE)
-    report = replay(args.parse_args().capture_dir)
+    args.add_argument("--case", type=Path, default=REFERENCE / "case.json")
+    options = args.parse_args()
+    report = replay(options.capture_dir, options.case)
     print(json.dumps(report, indent=2, allow_nan=False))

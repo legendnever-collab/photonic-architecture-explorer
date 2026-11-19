@@ -1,0 +1,228 @@
+{
+  "contract_version": "M3A-1",
+  "coordinate_convention": "right-handed world XYZ; t=s cross d; target d is arriving direction",
+  "description": "M7R6-NOMINAL-001: 1310 nm simulated SMF and glass, scalar concept",
+  "wavelength_m": {
+    "value": 1.31e-06,
+    "unit": "m",
+    "provenance": "simulated",
+    "source": "Common simulated vacuum wavelength",
+    "uncertainty": null
+  },
+  "ambient_index": {
+    "value": 1.0,
+    "unit": "1",
+    "provenance": "assumed",
+    "source": "Homogeneous ideal air",
+    "uncertainty": null,
+    "quantity": "external_ambient_refractive_index"
+  },
+  "source": {
+    "position_m": {
+      "value": [
+        0,
+        0,
+        0
+      ],
+      "unit": "m",
+      "provenance": "synthetic",
+      "source": "M7-R6 frozen nominal layout, reuses M7-A reference-plane centers and axes",
+      "uncertainty": null
+    },
+    "propagation_direction": {
+      "value": [
+        1,
+        0,
+        0
+      ],
+      "unit": "1",
+      "provenance": "synthetic",
+      "source": "M7-R6 frozen nominal layout, reuses M7-A reference-plane centers and axes",
+      "uncertainty": null
+    },
+    "sagittal_axis": {
+      "value": [
+        0,
+        1,
+        0
+      ],
+      "unit": "1",
+      "provenance": "synthetic",
+      "source": "M7-R6 frozen nominal layout, reuses M7-A reference-plane centers and axes",
+      "uncertainty": null
+    },
+    "reference_plane": {
+      "value": {
+        "id": "M7R6-SIM-SMF-001-air-plus5um-source",
+        "frame_id": "world",
+        "side": "external",
+        "origin_m": [
+          0,
+          0,
+          0
+        ],
+        "normal": [
+          1,
+          0,
+          0
+        ]
+      },
+      "unit": "plane",
+      "provenance": "synthetic",
+      "source": "M7-R6 frozen nominal layout, reuses M7-A reference-plane centers and axes",
+      "uncertainty": null
+    },
+    "mfd_ts_m": {
+      "value": [
+        9.436815357680438e-06,
+        9.416922201186325e-06
+      ],
+      "unit": "m",
+      "provenance": "simulated",
+      "source": "M7R6-SIM-SMF-001, air-side +5 um fit, NPZ SHA256 c8a7c49f97fea111a28d83147b2e08f44df58dc6224d3948e7fc4139faf14a54",
+      "uncertainty": null
+    },
+    "wavefront_curvature_ts_per_m": {
+      "value": [
+        1777.2290791905143,
+        1792.4434833755927
+      ],
+      "unit": "m^-1",
+      "provenance": "simulated",
+      "source": "M7R6-SIM-SMF-001, air-side +5 um fit, NPZ SHA256 c8a7c49f97fea111a28d83147b2e08f44df58dc6224d3948e7fc4139faf14a54",
+      "uncertainty": null
+    },
+    "polarization": {
+      "value": {
+        "treatment": "scalar_ignored",
+        "jones_ts": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "unit": "1",
+      "provenance": "assumed",
+      "source": "Dominant linear t component; mirror Jones transport is outside scalar model",
+      "uncertainty": null
+    },
+    "mode_evidence": {
+      "value": {
+        "kind": "complex_field_fit"
+      },
+      "unit": "evidence",
+      "provenance": "simulated",
+      "source": "M7R6-SIM-SMF-001, air-side +5 um fit, NPZ SHA256 c8a7c49f97fea111a28d83147b2e08f44df58dc6224d3948e7fc4139faf14a54",
+      "uncertainty": null
+    }
+  },
+  "target": {
+    "position_m": {
+      "value": [
+        0.002,
+        0,
+        0.002
+      ],
+      "unit": "m",
+      "provenance": "synthetic",
+      "source": "M7-R6 frozen nominal layout, reuses M7-A reference-plane centers and axes",
+      "uncertainty": null
+    },
+    "propagation_direction": {
+      "value": [
+        1,
+        0,
+        0
+      ],
+      "unit": "1",
+      "provenance": "synthetic",
+      "source": "M7-R6 frozen nominal layout, reuses M7-A reference-plane centers and axes",
+      "uncertainty": null
+    },
+    "sagittal_axis": {
+      "value": [
+        0,
+        1,
+        0
+      ],
+      "unit": "1",
+      "provenance": "synthetic",
+      "source": "M7-R6 frozen nominal layout, reuses M7-A reference-plane centers and axes",
+      "uncertainty": null
+    },
+    "reference_plane": {
+      "value": {
+        "id": "M7R5-SIM-GLASS-001-air-plus5um-target",
+        "frame_id": "world",
+        "side": "external",
+        "origin_m": [
+          0.002,
+          0,
+          0.002
+        ],
+        "normal": [
+          1,
+          0,
+          0
+        ]
+      },
+      "unit": "plane",
+      "provenance": "synthetic",
+      "source": "M7-R6 frozen nominal layout, reuses M7-A reference-plane centers and axes",
+      "uncertainty": null
+    },
+    "mfd_ts_m": {
+      "value": [
+        9.25835392168093e-06,
+        8.424597230364793e-06
+      ],
+      "unit": "m",
+      "provenance": "simulated",
+      "source": "M7R5-SIM-GLASS-001, air-side +5 um fit, NPZ SHA256 b6ecb48919877a213f45581d9ec844164b60a1e0950d6a866fe82b9ee6f1b027; reciprocal acceptance, conjugated and t-reversed",
+      "uncertainty": null
+    },
+    "wavefront_curvature_ts_per_m": {
+      "value": [
+        -1921.0994123553485,
+        -2816.815812092035
+      ],
+      "unit": "m^-1",
+      "provenance": "simulated",
+      "source": "M7R5-SIM-GLASS-001, air-side +5 um fit, NPZ SHA256 b6ecb48919877a213f45581d9ec844164b60a1e0950d6a866fe82b9ee6f1b027; reciprocal acceptance, conjugated and t-reversed",
+      "uncertainty": null
+    },
+    "polarization": {
+      "value": {
+        "treatment": "scalar_ignored",
+        "jones_ts": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "unit": "1",
+      "provenance": "assumed",
+      "source": "Dominant linear t component; mirror Jones transport is outside scalar model",
+      "uncertainty": null
+    },
+    "mode_evidence": {
+      "value": {
+        "kind": "complex_field_fit"
+      },
+      "unit": "evidence",
+      "provenance": "simulated",
+      "source": "M7R5-SIM-GLASS-001, air-side +5 um fit, NPZ SHA256 b6ecb48919877a213f45581d9ec844164b60a1e0950d6a866fe82b9ee6f1b027; reciprocal acceptance, conjugated and t-reversed",
+      "uncertainty": null
+    }
+  }
+}

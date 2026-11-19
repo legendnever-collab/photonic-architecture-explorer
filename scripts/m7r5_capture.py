@@ -20,15 +20,20 @@ def silica_index(wavelength_um):
     return np.sqrt(1 + np.sum(b * wavelength_um**2 / (wavelength_um**2 - c**2)))
 
 
-def capture(case, run, output):
+def capture(case, run, output, case_path=CASE_PATH):
     length, n = run["period_um"], run["samples"]
     wl = case["vacuum_wavelength_um"]
     ncl = silica_index(wl)
     coord = (np.arange(n) + 0.5) * length / n - length / 2
-    rx, ry = case["index_1e_radii_um_xy"]
-    index = ncl + case["delta_n"] * np.exp(
-        -((coord[:, None] / rx) ** 2) - (coord[None, :] / ry) ** 2
-    )
+    circular = "core_radius_um" in case
+    if circular:
+        radius_sq = coord[:, None] ** 2 + coord[None, :] ** 2
+        index = ncl + case["delta_n"] * (radius_sq <= case["core_radius_um"] ** 2)
+    else:
+        rx, ry = case["index_1e_radii_um_xy"]
+        index = ncl + case["delta_n"] * np.exp(
+            -((coord[:, None] / rx) ** 2) - (coord[None, :] / ry) ** 2
+        )
     lattice = fm.LatticeVectors(
         jnp.asarray([float(length), 0.0]), jnp.asarray([0.0, float(length)])
     )
@@ -66,9 +71,24 @@ def capture(case, run, output):
         jnp.sum(abs(ex) ** 2, axis=0) / jnp.sum(abs(ex) ** 2 + abs(ey) ** 2, axis=0)
     )
     which = int(np.argmax(x_fraction))
-    if x_fraction[which] < case["incident_min_x_transverse_fraction"]:
-        raise ValueError("x-polarized incident mode unresolved")
+    effective_index = neff[fundamental_pair[which]].real
+    polarization_fraction = float(x_fraction[which])
     inc = excite[:, which : which + 1]
+    if circular:
+        # Resolve arbitrary eigenvectors of the degenerate HE11 doublet in the
+        # fixed x/y basis. Only this degenerate pair may be superposed.
+        if abs(neff[fundamental_pair[0]] - neff[fundamental_pair[1]]) > 1e-8:
+            raise ValueError("Circular SMF polarization doublet is not degenerate")
+        parity = (-1.0) ** np.asarray(expansion.basis_coefficients).sum(axis=1)
+        on_axis = np.stack((parity @ np.asarray(ex), parity @ np.asarray(ey)))
+        weights = np.linalg.solve(on_axis, np.array([1.0, 0.0]))
+        inc = excite @ jnp.asarray(weights[:, None])
+        x_field, y_field = np.asarray(ex) @ weights, np.asarray(ey) @ weights
+        x_power = np.sum(abs(x_field) ** 2)
+        polarization_fraction = float(x_power / (x_power + np.sum(abs(y_field) ** 2)))
+        effective_index = float(np.mean(neff[fundamental_pair].real))
+    if polarization_fraction < case["incident_min_x_transverse_fraction"]:
+        raise ValueError("x-polarized incident mode unresolved")
     stack = fm.stack_s_matrix((guide, air), (jnp.asarray(0.0), jnp.asarray(0.0)))
     reflected, outgoing = stack.s21 @ inc, stack.s11 @ inc
     at_plane = fm.propagate_amplitude(outgoing, jnp.asarray(case["plane_z_um"]), air)
@@ -111,7 +131,7 @@ def capture(case, run, output):
         coefficients=coeff,
         case_id=case["case_id"],
         case_sha256=hashlib.sha256(
-            CASE_PATH.read_text(encoding="utf-8").encode("utf-8")
+            case_path.read_text(encoding="utf-8").encode("utf-8")
         ).hexdigest(),
         wavelength_um=wl,
         plane_z_um=case["plane_z_um"],
@@ -120,8 +140,8 @@ def capture(case, run, output):
         period_um=length,
         samples=n,
         n_cladding=ncl,
-        n_eff=neff[fundamental_pair[which]].real,
-        incident_x_fraction=x_fraction[which],
+        n_eff=effective_index,
+        incident_x_fraction=polarization_fraction,
         power_balance_abs=balance,
         export_max_abs=export_error,
     )
@@ -130,7 +150,7 @@ def capture(case, run, output):
         "terms",
         len(orders),
         "neff",
-        neff[fundamental_pair[which]].real,
+        effective_index,
         flush=True,
     )
 
@@ -139,10 +159,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output_dir", type=Path)
     parser.add_argument("--run", choices=("base", "grid", "basis", "window"))
+    parser.add_argument("--case", type=Path, default=CASE_PATH)
     args = parser.parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    config = json.loads(CASE_PATH.read_text())
+    config = json.loads(args.case.read_text(encoding="utf-8"))
     for name, spec in config["runs"].items():
         if args.run is None or args.run == name:
-            capture(config, spec, args.output_dir / (name + ".npz"))
+            capture(config, spec, args.output_dir / (name + ".npz"), args.case)
             jax.clear_caches()
