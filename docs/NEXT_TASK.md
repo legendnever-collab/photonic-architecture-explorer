@@ -1,3 +1,14 @@
+# M7-R16 — 1310 nm 명목 Vector Relay 검증 경로
+
+추천 Astra Work. [R15 Port ledger](M7R15_PORT_POWER.md)의 Power와 동일한 SMF Source
+E/H를 사용한다. 고정 두 반사면의 공개 Ideal PEC 또는 명시 경계, 수치 예산과 중단 기준을
+설정한다. 자유공간 Vector 전파와 평면 반사의 편광·Flux control을 독립 해와 대조한다.
+통과하면 고정 Target에서 복소 E_t,E_s,H_t,H_s를 Export할 경로를 확인하고, 독립 Glass
+guided-mode monitor를 포함한 대조 계산 범위를 기록한다. 근거가 부족한 전달 비율과
+회전 광학 응답은 Uncomputed로 판정한다. 결과는 Draft PR에 남기고 병합은 별도 승인한다.
+
+---
+
 # M7-R15 — 1310 nm 두 Port의 Vector Power 정규화
 
 추천 Sol Work. [R14의 재개 입력](M7R14_GUIDED_POWER.md)에 따라 기존 FMMAX 캡처에서
