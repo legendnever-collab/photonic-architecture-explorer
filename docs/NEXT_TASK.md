@@ -1,3 +1,14 @@
+# M7-R15 — 1310 nm 두 Port의 Vector Power 정규화
+
+추천 Sol Work. [R14의 재개 입력](M7R14_GUIDED_POWER.md)에 따라 기존 FMMAX 캡처에서
+Glass 역여기와 SMF 순방향에 대해 내부 incident/reflected, 외부 outgoing flux 및 그 비율,
+E/H 단위와 amplitude scale을 함께 내보낸다. R5/R6 case와 기존 Field를 고정하고
+양의 방향, 상대장 복원, 단면 Power balance 및 Grid/Basis/Window 변화로 교차 검증한다.
+Port별 정규화를 판정하고, 남은 Target 입사 Vector E/H와 내부 독립 monitor 요구를 기록한다.
+명목 relay·회전·실물 성능은 각각 근거가 확보될 때 판정한다. Draft PR 및 별도 병합 승인.
+
+---
+
 # M7-R14 — 고정 Glass Mode로의 전달 Power 평가 가능성
 
 Astra Work. [R13 수광 판정](M7R13_TARGET_ACCEPTANCE.md)과 R5/R6/R12 저장장을 사용한다.
