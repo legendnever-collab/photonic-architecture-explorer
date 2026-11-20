@@ -1,3 +1,15 @@
+# M7-R11 — 독립 Curved-Surface Field Reference
+
+Astra Work 권장. [M7-R10](M7R10_FINITE_BEAM_SCOPE.md)의 1310 nm 확장 처방과
+검증 기준을 사용한다. 독립 Wave-Optics 경로에 Gaussian과 단일 Aperture 대조를 적용한
+뒤 명목 두 반사면의 복소장과 power ledger를 고정 Target 면에서 검증한다. Solver와
+오차·실행 예산은 첫 계산 전에 기록한다. 명목 적용성·수렴과 독립 대조가 확인되면
+M2 ±1 mrad를 진단한다. +1 mrad의 50 µm AABB Clearance 미달을 함께 보고한다.
+실제 차폐 형상이나 손실 근거가 없으면 해당 성능은 Uncomputed로 둔다. Draft PR을
+작성하고 Main 병합은 별도 승인한다.
+
+---
+
 # M7-R10 — 확장안 Finite-beam 검증 범위
 
 [M7-R9](M7R9_ENVELOPE_ASSEMBLY_REVIEW.md)의 확장 처방을 동결하고, 1310 nm에서
