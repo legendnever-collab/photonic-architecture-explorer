@@ -32,3 +32,12 @@ applicability or agreement fail. If qualified, evaluate ±1 mrad about M2
 vertex, world +Y, within the same budget per pose. Pass only if η−U ≥ 0.99;
 below if η+U < 0.99, otherwise unresolved. Preserve unqualified metrics
 and actual Total Coupling as Uncomputed.
+
+After the 6/8/10 Gauss sweep, reserve the last five relay runs for 14/14
+Gauss with the window/pitch sweep, 512 midpoint on M1 with the same Gauss M2
+mesh (isolate the M1 integral), 14/14 with edge splits 2 and 4, and uniform
+640 midpoint on both surfaces with a second window/pitch sweep. For 14/14
+the largest edge-refined axis has 756 points. Use independent panelwise
+linear-phase Filon at 81 common M2 points to assess source quadrature directly.
+These probe-only runs do not propagate a new relay. The Filon weights use
+analytic Legendre Fourier moments; check them on a constant plus linear wave.

@@ -1,0 +1,661 @@
+{
+  "base_sha": "e21c165d5dd06f2fe18402ae664bd58287d92e3f",
+  "inputs": {
+    "examples/m7r6_smf_glass_1310.json": "0b3ea2be8dc62b31c3bc64845443de8301d8efc0ce500911af4436d0b5e28bec",
+    "references/m7r8/summary.json": "42808a466c14f2b7ebf3c8c5bb35ba6e1aaeff51cb3fa94a7f64f8c569af00a4",
+    "references/m7r7/case.json": "bf3413d02c301736812888a34f75d154cce7fd849cad2331d57535ed28af1a47"
+  },
+  "replay": {
+    "controls": {
+      "gaussian_relative_L2": 2.265416255764184e-05,
+      "flat_relative_L2": 4.4838756984813185e-05,
+      "disk_absolute": 5.948258660265812e-13
+    },
+    "field_relative": {
+      "ts_m": 0.0,
+      "E": 0.0,
+      "dE_dx": 0.0
+    },
+    "max_ledger_relative": 0.0,
+    "row": {
+      "surface_nodes": 324,
+      "edge_subdivisions": 1,
+      "edge_rule": "midpoint",
+      "launch_flux": 0.9980217522725966,
+      "M1_over_launch": 0.9999992161906014,
+      "M2_over_M1": 1.0000055228690845,
+      "target": [
+        {
+          "pitch_um": 2,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.9898105616087786,
+          "target_flux_over_launch": 1.0000036506636074,
+          "residual_over_launch": 1.0883917494286631e-06
+        },
+        {
+          "pitch_um": 1,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.9898105568965655,
+          "target_flux_over_launch": 1.0000036547005702,
+          "residual_over_launch": 1.084354786608323e-06
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.9898105563369135,
+          "target_flux_over_launch": 1.000003655254073,
+          "residual_over_launch": 1.0838012838565815e-06
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 24,
+          "eta_diagnostic": 0.989812028344507,
+          "target_flux_over_launch": 1.000002200978737,
+          "residual_over_launch": 2.538076619740469e-06
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 12,
+          "eta_diagnostic": 0.9898147897855883,
+          "target_flux_over_launch": 0.9999989945353963,
+          "residual_over_launch": 5.74451996059834e-06
+        }
+      ]
+    }
+  },
+  "filon": {
+    "moment_control": 4.761791611128485e-15,
+    "runs": [
+      {
+        "order": 3,
+        "max_phase_step_324_rad": [
+          6.420296023592722,
+          6.3304271485220855
+        ]
+      },
+      {
+        "order": 4,
+        "max_phase_step_324_rad": [
+          6.420296023592722,
+          6.3304271485220855
+        ]
+      },
+      {
+        "order": 6,
+        "max_phase_step_324_rad": [
+          6.420296023592722,
+          6.3304271485220855
+        ]
+      },
+      {
+        "order": 8,
+        "max_phase_step_324_rad": [
+          6.420296023592722,
+          6.3304271485220855
+        ]
+      },
+      {
+        "order": 10,
+        "max_phase_step_324_rad": [
+          6.420296023592722,
+          6.3304271485220855
+        ]
+      },
+      {
+        "order": 12,
+        "max_phase_step_324_rad": [
+          6.420296023592722,
+          6.3304271485220855
+        ]
+      }
+    ]
+  },
+  "relative_to_filon12_at_probes": {
+    "filon-3": {
+      "E": 0.0015836239603216765,
+      "dE_dn": 0.0015831799175335028,
+      "local_incident_current": 0.0013633172346498494
+    },
+    "filon-4": {
+      "E": 0.0006151781616000741,
+      "dE_dn": 0.0006153122921598306,
+      "local_incident_current": 0.0004577839133344384
+    },
+    "filon-6": {
+      "E": 5.029014986359901e-06,
+      "dE_dn": 5.027571617997939e-06,
+      "local_incident_current": 1.4232965225777816e-06
+    },
+    "filon-8": {
+      "E": 3.1378030081411865e-08,
+      "dE_dn": 3.139066299700126e-08,
+      "local_incident_current": 5.905303370179202e-09
+    },
+    "filon-10": {
+      "E": 1.3563399755284782e-10,
+      "dE_dn": 1.3601879310026712e-10,
+      "local_incident_current": 1.2906421637953969e-11
+    },
+    "filon-12": {
+      "E": 0.0,
+      "dE_dn": 0.0,
+      "local_incident_current": 0.0
+    },
+    "midpoint-324-probes": {
+      "E": 0.0026826461997534034,
+      "dE_dn": 0.002741837714945154,
+      "local_incident_current": 6.515341724490598e-05
+    },
+    "probes-q6-6-edge1": {
+      "E": 0.6153897174203552,
+      "dE_dn": 0.6165336576641989,
+      "local_incident_current": 0.30566398178159343
+    },
+    "probes-q8-8-edge1": {
+      "E": 0.07940471780575693,
+      "dE_dn": 0.07955547998577193,
+      "local_incident_current": 0.006488693427650978
+    },
+    "probes-q10-10-edge1": {
+      "E": 0.0040659527070552315,
+      "dE_dn": 0.0040208670176034534,
+      "local_incident_current": 0.0001053404992175232
+    },
+    "probes-q14-14-edge1": {
+      "E": 8.451537513576865e-06,
+      "dE_dn": 8.489997981530344e-06,
+      "local_incident_current": 5.7133512888535885e-08
+    },
+    "probes-q-512-14-edge1": {
+      "E": 3.541612787761704e-05,
+      "dE_dn": 3.551886563740655e-05,
+      "local_incident_current": 1.6926141847900732e-05
+    },
+    "probes-q14-14-edge2": {
+      "E": 1.1451415633731733e-05,
+      "dE_dn": 1.1641299467033083e-05,
+      "local_incident_current": 6.493237967655956e-08
+    },
+    "probes-q14-14-edge4": {
+      "E": 1.1451415582666276e-05,
+      "dE_dn": 1.1641299413170333e-05,
+      "local_incident_current": 6.493237972316685e-08
+    },
+    "probes-q-640--640-edge1": {
+      "E": 1.920417934857188e-05,
+      "dE_dn": 1.9247429465015763e-05,
+      "local_incident_current": 1.0140424454693438e-05
+    }
+  },
+  "runs": {
+    "q6-6-edge1": {
+      "orders": [
+        6,
+        6
+      ],
+      "edge": 1,
+      "M1_over_launch": 0.9999992154209209,
+      "M2_over_M1": 1.2645102090129259,
+      "common_kernel_relative": [
+        1.825571819743077e-12,
+        1.8257390965399533e-12
+      ],
+      "target": [
+        {
+          "pitch_um": 1.0,
+          "half_window_um": 24,
+          "eta": 0.9497367743718291,
+          "target_over_launch": 1.033993357195659,
+          "residual_over_launch": 0.23051585970901148
+        },
+        {
+          "pitch_um": 1.0,
+          "half_window_um": 48,
+          "eta": 0.9313948915948247,
+          "target_over_launch": 1.0539220415835657,
+          "residual_over_launch": 0.21058717532110466
+        }
+      ]
+    },
+    "q8-8-edge1": {
+      "orders": [
+        8,
+        8
+      ],
+      "edge": 1,
+      "M1_over_launch": 0.999999215420926,
+      "M2_over_M1": 1.0070561727844018,
+      "common_kernel_relative": [
+        1.9340517809341384e-12,
+        1.9333857466472937e-12
+      ],
+      "target": [
+        {
+          "pitch_um": 1.0,
+          "half_window_um": 24,
+          "eta": 0.989691255068012,
+          "target_over_launch": 1.0005409764571762,
+          "residual_over_launch": 0.006514406212026094
+        },
+        {
+          "pitch_um": 1.0,
+          "half_window_um": 48,
+          "eta": 0.9895927471423492,
+          "target_over_launch": 1.0006382211096514,
+          "residual_over_launch": 0.00641716155955076
+        }
+      ]
+    },
+    "q10-10-edge1": {
+      "orders": [
+        10,
+        10
+      ],
+      "edge": 1,
+      "M1_over_launch": 0.9999992154209474,
+      "M2_over_M1": 1.0000541968776544,
+      "common_kernel_relative": [
+        1.4554385383659184e-12,
+        1.458265660371419e-12
+      ],
+      "target": [
+        {
+          "pitch_um": 1.0,
+          "half_window_um": 24,
+          "eta": 0.9898104714651303,
+          "target_over_launch": 0.9999999250134964,
+          "residual_over_launch": 5.348724258360905e-05
+        },
+        {
+          "pitch_um": 1.0,
+          "half_window_um": 48,
+          "eta": 0.9898102077415677,
+          "target_over_launch": 1.00000018526829,
+          "residual_over_launch": 5.32269877900475e-05
+        }
+      ]
+    },
+    "q14-14-edge1": {
+      "orders": [
+        14,
+        14
+      ],
+      "edge": 1,
+      "M1_over_launch": 0.9999992154209228,
+      "M2_over_M1": 0.9999994722267952,
+      "common_kernel_relative": [
+        9.833129198008492e-13,
+        9.77342795497405e-13
+      ],
+      "target": [
+        {
+          "pitch_um": 2.0,
+          "half_window_um": 24,
+          "eta": 0.9898110919347207,
+          "target_over_launch": 0.9999983756479144,
+          "residual_over_launch": 3.120002177697349e-07
+        },
+        {
+          "pitch_um": 2.0,
+          "half_window_um": 48,
+          "eta": 0.9898109426411573,
+          "target_over_launch": 0.9999985229484064,
+          "residual_over_launch": 1.6469972567553828e-07
+        },
+        {
+          "pitch_um": 2.0,
+          "half_window_um": 96,
+          "eta": 0.9898108541839723,
+          "target_over_launch": 0.9999986102636603,
+          "residual_over_launch": 7.738447183074935e-08
+        },
+        {
+          "pitch_um": 2.0,
+          "half_window_um": 192,
+          "eta": 0.9898108128160692,
+          "target_over_launch": 0.9999986511302588,
+          "residual_over_launch": 3.6517873356793954e-08
+        },
+        {
+          "pitch_um": 1.0,
+          "half_window_um": 24,
+          "eta": 0.9898110977363942,
+          "target_over_launch": 0.9999983692987489,
+          "residual_over_launch": 3.183493832324024e-07
+        },
+        {
+          "pitch_um": 1.0,
+          "half_window_um": 48,
+          "eta": 0.989810941856017,
+          "target_over_launch": 0.9999985231024651,
+          "residual_over_launch": 1.6454566701083303e-07
+        },
+        {
+          "pitch_um": 1.0,
+          "half_window_um": 96,
+          "eta": 0.9898108534096525,
+          "target_over_launch": 0.999998610408129,
+          "residual_over_launch": 7.72400031480549e-08
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 24,
+          "eta": 0.9898110986323317,
+          "target_over_launch": 0.9999983684143361,
+          "residual_over_launch": 3.192337959847004e-07
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 48,
+          "eta": 0.9898109418393795,
+          "target_over_launch": 0.9999985231188574,
+          "residual_over_launch": 1.6452927478053903e-07
+        }
+      ]
+    },
+    "q-512-14-edge1": {
+      "orders": [
+        -512,
+        14
+      ],
+      "edge": 1,
+      "M1_over_launch": 0.9999992157292554,
+      "M2_over_M1": 0.999999478629682,
+      "common_kernel_relative": [
+        1.1739517784159816e-12,
+        1.169809131118723e-12
+      ],
+      "target": [
+        {
+          "pitch_um": 1.0,
+          "half_window_um": 24,
+          "eta": 0.9898110994513473,
+          "target_over_launch": 0.9999983698523478,
+          "residual_over_launch": 3.2450699857148387e-07
+        },
+        {
+          "pitch_um": 1.0,
+          "half_window_um": 48,
+          "eta": 0.9898109435262258,
+          "target_over_launch": 0.9999985237001653,
+          "residual_over_launch": 1.7065918109204618e-07
+        }
+      ]
+    },
+    "q14-14-edge2": {
+      "orders": [
+        14,
+        14
+      ],
+      "edge": 2,
+      "M1_over_launch": 0.999999215420923,
+      "M2_over_M1": 0.9999994724656012,
+      "common_kernel_relative": [
+        9.81669814202258e-13,
+        9.778823025147763e-13
+      ],
+      "target": [
+        {
+          "pitch_um": 1.0,
+          "half_window_um": 24,
+          "eta": 0.9898110979926124,
+          "target_over_launch": 0.9999983694439997,
+          "residual_over_launch": 3.1844293828588993e-07
+        },
+        {
+          "pitch_um": 1.0,
+          "half_window_um": 48,
+          "eta": 0.989810942109002,
+          "target_over_launch": 0.9999985232508537,
+          "residual_over_launch": 1.6463608425086266e-07
+        }
+      ]
+    },
+    "q14-14-edge4": {
+      "orders": [
+        14,
+        14
+      ],
+      "edge": 4,
+      "M1_over_launch": 0.9999992154209232,
+      "M2_over_M1": 0.999999472465601,
+      "common_kernel_relative": [
+        9.8375510149037e-13,
+        9.761450070886367e-13
+      ],
+      "target": [
+        {
+          "pitch_um": 1.0,
+          "half_window_um": 24,
+          "eta": 0.9898110979926124,
+          "target_over_launch": 0.999998369444,
+          "residual_over_launch": 3.184429379521628e-07
+        },
+        {
+          "pitch_um": 1.0,
+          "half_window_um": 48,
+          "eta": 0.9898109421090023,
+          "target_over_launch": 0.9999985232508541,
+          "residual_over_launch": 1.6463608380589317e-07
+        }
+      ]
+    },
+    "q-640--640-edge1": {
+      "orders": [
+        -640,
+        -640
+      ],
+      "edge": 1,
+      "M1_over_launch": 0.9999992156182715,
+      "M2_over_M1": 0.9999994764827655,
+      "common_kernel_relative": [
+        9.359931533620668e-13,
+        9.31940961426876e-13
+      ],
+      "target": [
+        {
+          "pitch_um": 2.0,
+          "half_window_um": 24,
+          "eta": 0.9898110942173214,
+          "target_over_launch": 0.9999983768595884,
+          "residual_over_launch": 3.152418592912715e-07
+        },
+        {
+          "pitch_um": 2.0,
+          "half_window_um": 48,
+          "eta": 0.9898109448470745,
+          "target_over_launch": 0.9999985242356358,
+          "residual_over_launch": 1.6786581182609062e-07
+        },
+        {
+          "pitch_um": 2.0,
+          "half_window_um": 96,
+          "eta": 0.9898108560558376,
+          "target_over_launch": 0.9999986118805332,
+          "residual_over_launch": 8.022091447509823e-08
+        },
+        {
+          "pitch_um": 2.0,
+          "half_window_um": 192,
+          "eta": 0.9898108140756088,
+          "target_over_launch": 0.9999986533525118,
+          "residual_over_launch": 3.874893581632311e-08
+        },
+        {
+          "pitch_um": 1.0,
+          "half_window_um": 24,
+          "eta": 0.9898111000168922,
+          "target_over_launch": 0.9999983705124906,
+          "residual_over_launch": 3.2158895698081337e-07
+        },
+        {
+          "pitch_um": 1.0,
+          "half_window_um": 48,
+          "eta": 0.9898109440621142,
+          "target_over_launch": 0.9999985243895094,
+          "residual_over_launch": 1.6771193826868475e-07
+        },
+        {
+          "pitch_um": 1.0,
+          "half_window_um": 96,
+          "eta": 0.9898108552810515,
+          "target_over_launch": 0.9999986120254636,
+          "residual_over_launch": 8.00759840253366e-08
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 24,
+          "eta": 0.9898111009125696,
+          "target_over_launch": 0.9999983696283309,
+          "residual_over_launch": 3.2247311676796785e-07
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 48,
+          "eta": 0.9898109440455173,
+          "target_over_launch": 0.9999985244058568,
+          "residual_over_launch": 1.6769559086906482e-07
+        }
+      ]
+    }
+  },
+  "comparisons": {
+    "refined_current_on_R11_M2_receiver": {
+      "q14-14-edge1": {
+        "3": 1.0000002461952036,
+        "5": 0.9999997023855599
+      },
+      "q-640--640-edge1": {
+        "3": 0.999999415008586,
+        "5": 0.9999994102515706
+      }
+    },
+    "M1_rule_change_same_M2_weighted_relative": {
+      "E": 3.6217150629474025e-05,
+      "dE_dn": 3.643902097228166e-05
+    },
+    "M1_rule_change_same_M2_flux_ratio_delta": 6.4028867763354924e-09,
+    "target_192um_cross_rule_field_relative": {
+      "E": 2.196236657238959e-06,
+      "dE_dx": 2.148338172032285e-06
+    },
+    "target_192um_cross_rule_eta_delta": 1.259539583742253e-09,
+    "interior_at_fixed_48um": [
+      0.9313948915948247,
+      0.9895927471423492,
+      0.9898102077415677,
+      0.989810941856017
+    ],
+    "edge_at_fixed_48um": [
+      0.989810941856017,
+      0.989810942109002,
+      0.9898109421090023
+    ],
+    "pitch_at_fixed_48um": [
+      0.9898109426411573,
+      0.989810941856017,
+      0.9898109418393795
+    ],
+    "window_at_fixed_2um": [
+      0.9898110919347207,
+      0.9898109426411573,
+      0.9898108541839723,
+      0.9898108128160692
+    ]
+  },
+  "grazing_far_field": {
+    "q14-14-edge1": [
+      {
+        "world_Z": -1,
+        "real": 4.206812087500719e-05,
+        "imag": -2.090505751683666e-05,
+        "abs": 4.6976038825516836e-05
+      },
+      {
+        "world_Z": 1,
+        "real": -3.653126483646463e-05,
+        "imag": -0.00016778759207610947,
+        "abs": 0.00017171840135888415
+      }
+    ],
+    "q-512-14-edge1": [
+      {
+        "world_Z": -1,
+        "real": 3.682873102301559e-05,
+        "imag": -2.022667960064478e-05,
+        "abs": 4.201754391242747e-05
+      },
+      {
+        "world_Z": 1,
+        "real": -2.1468790398944393e-05,
+        "imag": -0.00017345865125532184,
+        "abs": 0.00017478218632489172
+      }
+    ],
+    "q14-14-edge2": [
+      {
+        "world_Z": -1,
+        "real": 4.019760994569341e-05,
+        "imag": -2.1782097593632532e-05,
+        "abs": 4.571988211844647e-05
+      },
+      {
+        "world_Z": 1,
+        "real": -2.8205712553207307e-05,
+        "imag": -0.00016833100393898182,
+        "abs": 0.00017067773465727647
+      }
+    ],
+    "q14-14-edge4": [
+      {
+        "world_Z": -1,
+        "real": 4.0451197098025776e-05,
+        "imag": -2.2059069559026562e-05,
+        "abs": 4.6074959538487945e-05
+      },
+      {
+        "world_Z": 1,
+        "real": -2.941592580362612e-05,
+        "imag": -0.00016898300247563877,
+        "abs": 0.00017152420183917538
+      }
+    ],
+    "q-640--640-edge1": [
+      {
+        "world_Z": -1,
+        "real": 0.00015093519436590666,
+        "imag": 2.636011657356288e-05,
+        "abs": 0.0001532197397336448
+      },
+      {
+        "world_Z": 1,
+        "real": -0.00132393023449668,
+        "imag": -0.0009381976613385967,
+        "abs": 0.0016226540350782253
+      }
+    ]
+  },
+  "sha256": {
+    "common-M2-probes.npz": "9ff7ea9451b719e38c5dcacbbfafebaa49c12d80f6bed6346e65aa0389d96312",
+    "M2-q14-14-edge1.npz": "e0ee1a6bb85e9fe1919c53ea562f2e93768f0cd66e8f551a2c8fa1720e2208f5",
+    "target-q14-14-edge1-2um.npz": "1449dc55e206b871e9b10093b56407b90f5915e3ff42535df337f9ce94e7b986",
+    "target-q14-14-edge1-0.5um.npz": "78f10545f1ca8cd1aef68526862566cf6c1562d106bb92822357aacb68b2c652"
+  },
+  "runtime": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "compiler": "g++ (Debian 14.2.0-19) 14.2.0"
+  },
+  "decision": {
+    "numerical_U": null,
+    "nominal_threshold": "Uncomputed",
+    "finite_beam_clearance": null,
+    "aperture_throughput": null,
+    "perturbed_mode_overlap": null,
+    "actual_total_coupling": null,
+    "limiting_evidence": "No supported bound on the outside-window squared-field norm or full numerical remainder.",
+    "positive_mrad_mechanical_gap_um": 49.289713,
+    "required_gap_um": 50
+  }
+}
