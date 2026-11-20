@@ -54,3 +54,81 @@ Solver 결과의 오차를 보기 전에 고정한 목표이며, 단위는 모�
 `η_est + U < 0.99`이면 미달이고, 오차가 경계에 걸치거나 상한을 뒷받침할 수 없으면
 판정을 보류한다. 이 예산은 고정 Gaussian Ports와 명시한 반사 경계 모델의 **수치** 기준이다.
 Port Fit·모델 오차나 실제 제작 변동은 별도의 근거를 요구한다.
+
+## 재현 결과와 기구 여유
+
+M7-R9 재실행의 JSON은 [동결 결과](../references/m7r9/summary.json)와 일치했다.
+확장안 명목 η는 `0.9900109725310262`이며 독립 Quadrature 두 결과와의 최대 차이는
+`3.4e-16` 이하다. 이는 Gaussian 계산의 수치 일치다. 명목 Aperture-tail union
+추정치 `9.0e-7`은 기존 `1e-6` Guard를 통과한다. 추정치는 평면 투영 Gaussian의
+Screening 값이며 두 reflector의 Clipping·Diffraction을 정량화하려면 별도 계산이 필요하다.
+
+| 고정 pose | Target Δt [µm] | Target θt [mrad] | 최소 기구 AABB 경계 간격 [µm] | 제한 위치 · 50 µm 기준 |
+|---|---:|---:|---:|---|
+| Nominal | 0 | 0 | 50.000001 | M2 X− · Pass |
+| M2 −1 mrad | −6.432031 | −2.000000 | 50.000001 | M1 X+ · Pass |
+| M2 +1 mrad | +6.432031 | +2.000000 | **49.289713** | **M2 X− · Fail** |
+
+Δs와 θs는 0이다. 두 회전 상태의 Chief Ray는 M2 vertex에 도달한다. 유한 빔의
+Off-Vertex 부분은 다른 sag와 법선을 만나므로 이 광선 결과와 Field 판정을 분리한다.
+`+1 mrad`의 **0.710287 µm 부족**은 기존 Padded AABB와 고정 Envelope에서 발생했다.
+이 Nominal 프록시는 이미 지정한 세 pose 전체에서 기구 기준을 만족하지 못한다.
+실제 조립 판단에는 유효 Backing 형상과 Pivot의 확인이 필요하다. 양의 회전 조건은
+향후 광학 Reference의 진단 사례로 유지한다.
+
+## 기존 Reference 판정과 다음 검증
+
+| 근거 | 재사용 범위 | 확장안에 부족한 근거 |
+|---|---|---|
+| M1 Gaussian / 독립 Fresnel·ABCD·Quadrature | Paraxial free propagation, quadratic phase, 고정면 η 양성 대조 | 기울어진 finite curved patch의 입사장·반사장 전달, Aperture-edge 회절 |
+| M7-R9 Adapter / M6-D | 기구 AABB, Chief-Ray 교차·법선·Target 위치/각도. Nominal Gaussian tail Guard | Backing·Keepout의 빔 차폐, 편차 시 complex amplitude·phase 및 Target η |
+| [M4-C planar control](M4C_EXTERNAL_FIELD_REFERENCE.md) / [별도 M4-C.1 Draft](https://github.com/legendnever-collab/photonic-architecture-explorer/blob/e164f7aa3c255a03f9c54f11af699b49c86c78e6/docs/M4C1_ANGULAR_VERIFICATION.md) | 1310 nm y-invariant TE 평면 계면의 field·flux와 독립 Angular-tail 적분. 고정 Window에서 pitch만 줄이면 bin 오차가 남는다 | 유한 2D transverse beam, 곡면 반사·가림·회전과 m 단위 횡단면의 총 Power. M4-C의 원래 tail Gate는 Fail이었고 M4-C.1의 수렴 개선은 별도 평면 사례에 해당 |
+| [M6-E Draft #22](https://github.com/legendnever-collab/photonic-architecture-explorer/blob/e1434e7018b4288e0d952ed7e40d3b3e8c23dc2a/docs/M6E_OFF_VERTEX_REFERENCE_GATE.md) | Off-Vertex 비교의 phase·좌표·power·수렴 계약 | M6-E도 Reference Not Ready 판정이며 확장안에 적용할 새 curved-surface field 결과는 없음 |
+| [M7-R5](M7R5_SINGLE_PORT_FIELD.md) / [M7-R6](M7R6_SMF_GLASS_FIXED_PORT.md) | Simulated Port 및 고정 Gaussian 입력의 출처 | 개별 Field Fit η는 Glass 0.990982, SMF 0.995323이며 기준면에서의 Fit 지표다. 링크 η에 대한 오차 상한을 제공하려면 해당 Field를 전파하고 고정 Target 모드에 투영해야 한다 |
+
+**판정 — 독립 curved-surface Wave-Optics Reference 필요.** M7-R11에서는 Gaussian
+양성 대조와 알려진 단일 Aperture 대조를 통과하는 독립 경로를 먼저 확보한다.
+곡면 Benchmark는 명목 입사각 약 12.49°인 두 유한 Quadratic patch와 이상적인 scalar
+반사 경계에서 Nominal 한 건부터 검증한다. 모델·버전·입력 Hash, edge 및
+obliquity 처리, 국소 frame/parity·면적 Jacobian, 궤적 대조, 공통 Target plane의
+raw complex field 및 power ledger를 제출한다. 기구 AABB를 광학 차폐면으로 대입하려면
+별도의 합성 모델로 선언하고, 실물의 Backing·Keepout 차폐 판정에는 실제 광학 경계를
+사용한다. 수치·모델 적용 조건을 충족하면 고정 M2 양방향 회전으로 확장한다.
+
+이번 단계의 Wave-Optics 실행은 0건이다. Finite-beam Clearance, Aperture throughput,
+교란 후 Mode Overlap 및 실물 Total Coupling은 **Uncomputed**다.
+
+## 재현과 회귀
+
+Python 3.12.14, NumPy 2.3.5, SciPy 1.17.0에서 기존 검증 134개, M1 Benchmark,
+M3-A Adapter Gate, M7-R9 회귀를 통과했다.
+
+```bash
+PYTHONPATH=src python -m scripts.m7r9_envelope_review --output-dir results/runtime-m7r9
+PYTHONPATH=src python -m unittest discover -s tests -p 'test_m7r9_envelope_review.py' -v
+PYTHONPATH=src python scripts/validate.py
+```
+
+기구 경계 세 조건에도 기존 M7-R7/R9 Package 생성과 M6-D 회전을 사용한다.
+
+```bash
+PYTHONPATH=src python - <<'PY'
+from photonic_architecture_explorer.external import adapt_external, evaluate_external
+from photonic_architecture_explorer.placement import rotate_in_plane
+from scripts.m7r7_package import CASE_PATH, INPUT_PATH, apply_envelopes, load, record
+from scripts.m7r9_envelope_review import R8_SUMMARY, limiting_boundary, prescription
+
+fixed, case, r8 = map(load, (INPUT_PATH, CASE_PATH, R8_SUMMARY))
+for angle_rad in (0.0, -0.001, 0.001):
+    proposal = prescription(fixed, case, r8["candidates"]["expansion"])
+    model = adapt_external(proposal)
+    m2 = rotate_in_plane(model.reflectors[1], model.source.sagittal, angle_rad)
+    proposal["design"]["reflectors"][1]["illuminated_normal"] = record(
+        list(m2.normal), "1", "M6-D M2 pose"
+    )
+    apply_envelopes(proposal, case, aperture_scale=None)
+    boundary = limiting_boundary(proposal)
+    package = evaluate_external(proposal)["package_feasibility"]["envelope_geometry"]
+    print(angle_rad, boundary, package["status"])
+PY
+```
