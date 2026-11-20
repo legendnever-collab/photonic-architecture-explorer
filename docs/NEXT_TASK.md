@@ -1,3 +1,14 @@
+# M7-R14 — 고정 Glass Mode로의 전달 Power 평가 가능성
+
+Astra Work. [R13 수광 판정](M7R13_TARGET_ACCEPTANCE.md)과 R5/R6/R12 저장장을 사용한다.
+평가하려는 양을 launch 대비 고정 guided mode의 power로 정의하고, reciprocal E/H 투영의
+공통 기준면·좌표·power 정규화·오차 예산을 먼저 기록한다. R12 scalar 도착장과 R5
+vector mode 간 연결을 입증할 수 있는지 양성 대조로 확인한다. 입력이 부족하면 필요한
+최소 비기밀 Field export와 실행 절차를 기록한다. R10 전체면 η와 회전 검증 상태를 보존한다.
+Draft PR을 작성하고 Main 병합은 별도 승인한다.
+
+---
+
 # M7-R12 이후 — Target 수광 영역과 Overlap 정의
 
 추천 Astra Work. [R12](M7R12_CURVED_QUADRATURE.md)의 명목 M2 Power 초과는 곡면
