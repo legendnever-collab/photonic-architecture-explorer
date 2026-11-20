@@ -1,3 +1,13 @@
+# M7-R12 이후 — Target 수광 영역과 Overlap 정의
+
+추천 Astra Work. [R12](M7R12_CURVED_QUADRATURE.md)의 명목 M2 Power 초과는 곡면
+정련으로 해소됐다. 유한 Window의 η는 약 0.989811이고 전체면 U는 미확정이다.
+다음에는 고정 Target의 유효 수광면 또는 수집 NA가 입력 근거로 정의되는지 검토한다.
+그 정의로 달라지는 metric과 원래 R10 지표를 구분하고 외부장 norm이나 유한 경계
+적분의 오차 상한을 제시할 수 있을 때 판정한다. 회전 광학 성능은 명목 검증 이후다.
+
+---
+
 # M7-R12 — M1→M2 회절 적분 수렴
 
 Astra Work. [M7-R11](M7R11_CURVED_FIELD_REFERENCE.md)의 동결 처방과 명목 raw Field를
