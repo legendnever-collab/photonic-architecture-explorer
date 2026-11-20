@@ -1,0 +1,738 @@
+{
+  "package_case": "M7R7-NOMINAL-001",
+  "package_input_provenance": "Synthetic engineering screen to compare the existing 2 mm shifted 1310 nm Ports. No measured product/CAD geometry, optical keepout map, support drawing, or assembly tolerance supplied.",
+  "fixed_input_sha256": "20461fd9868b9450c0df7eff0464e6454a06811e5f09c244f4bc579d66efbcad",
+  "minimum_clearance_m": 5e-05,
+  "nominal_overlap_target": 0.99,
+  "translation_m": 5e-06,
+  "rotation_rad": 0.001,
+  "nominal_threshold_candidates": [
+    "expansion"
+  ],
+  "candidates": {
+    "nominal": {
+      "envelope": {
+        "type": "aabb",
+        "min_m": [
+          -0.00115,
+          -0.00135,
+          -0.00135
+        ],
+        "max_m": [
+          0.00315,
+          0.00135,
+          0.00335
+        ],
+        "frame_id": "world"
+      },
+      "envelope_width_m": [
+        0.0043,
+        0.0027,
+        0.0047
+      ],
+      "path_m": 0.009147336290341508,
+      "package": {
+        "envelope_geometry": "Pass",
+        "failed_checks": [],
+        "minimum_boundary_gap_m": 5.0000000000234536e-05,
+        "mirror_pair_aabb_gap_m": 0.0028022669461618224,
+        "minimum_body_keepout_aabb_gap_m": 0.0011625224408861627,
+        "max_full_clear_aperture_m": 0.0012859302452447132,
+        "finite_beam_clearance": "Uncomputed"
+      },
+      "limiting_envelope_boundary": {
+        "gap_m": 5.0000000000234536e-05,
+        "mirror": 2,
+        "face": "X-"
+      },
+      "minimum_aabb_gap_m": 5.0000000000234536e-05,
+      "aabb_clearance_margin_m": 2.345332586993487e-16,
+      "guard_metrics": {
+        "max_3w_footprint_curvature": 0.1349999999865,
+        "max_post_mirror_divergence_rad": 0.08622874402397104,
+        "fixed_target_divergence_rad": 0.09970104685503062,
+        "aperture_tail_union_estimate": 8.999999999999947e-07
+      },
+      "guard_target_margins": {
+        "max_3w_footprint_curvature": 1.3500006668110132e-11,
+        "max_post_mirror_divergence_rad": 0.008771255976028958
+      },
+      "footprint_model_guard_margin": 0.015000000013499992,
+      "normalized_gaussian_overlap": 0.9850444681668674,
+      "quadrature_overlap": [
+        0.9850444681668667,
+        0.9850444681668667
+      ],
+      "overlap_margin_to_target": -0.004955531833132576,
+      "meets_nominal_overlap_target": false,
+      "chief_ray_placement": {
+        "status": "Computed",
+        "nominal": {
+          "status": "Computed",
+          "target_offset_m": [
+            1.3010426069826053e-18,
+            0.0
+          ],
+          "target_angular_error_rad": [
+            1.1102230246251556e-16,
+            0.0
+          ],
+          "target_angle_rad": 1.1102230246251556e-16,
+          "target_miss_m": 1.3010426069826053e-18
+        },
+        "cases": [
+          {
+            "kind": "translation",
+            "mirror": 1,
+            "axis": "X",
+            "delta_m": -5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              -1.0866264997739031e-07,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              -0.0009765220104454431,
+              0.0
+            ],
+            "target_angle_rad": 0.0009765220104454431,
+            "target_miss_m": 1.0866264997739031e-07
+          },
+          {
+            "kind": "translation",
+            "mirror": 1,
+            "axis": "X",
+            "delta_m": 5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              1.0758428638712667e-07,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              0.0009763886090127842,
+              0.0
+            ],
+            "target_angle_rad": 0.0009763886090127842,
+            "target_miss_m": 1.0758428638712667e-07
+          },
+          {
+            "kind": "translation",
+            "mirror": 1,
+            "axis": "Y",
+            "delta_m": -5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              4.667538499800172e-10,
+              -5.140890864795226e-06
+            ],
+            "target_angular_error_rad": [
+              -2.7125507632482023e-07,
+              0.0008219430769895662
+            ],
+            "target_angle_rad": 0.0008219431217488994,
+            "target_miss_m": 5.140890885984079e-06
+          },
+          {
+            "kind": "translation",
+            "mirror": 1,
+            "axis": "Y",
+            "delta_m": 5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              4.667538499800172e-10,
+              5.140890864795226e-06
+            ],
+            "target_angular_error_rad": [
+              -2.7125507632482023e-07,
+              -0.0008219430769895662
+            ],
+            "target_angle_rad": 0.0008219431217488994,
+            "target_miss_m": 5.140890885984079e-06
+          },
+          {
+            "kind": "translation",
+            "mirror": 1,
+            "axis": "Z",
+            "delta_m": -5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              4.963321564840483e-06,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              -0.0005784320585472481,
+              0.0
+            ],
+            "target_angle_rad": 0.0005784320585472481,
+            "target_miss_m": 4.963321564840483e-06
+          },
+          {
+            "kind": "translation",
+            "mirror": 1,
+            "axis": "Z",
+            "delta_m": 5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              -4.964586461365678e-06,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              0.0005777203335707239,
+              0.0
+            ],
+            "target_angle_rad": 0.0005777203335707239,
+            "target_miss_m": 4.964586461365678e-06
+          },
+          {
+            "kind": "rotation",
+            "mirror": 1,
+            "axis": "s",
+            "delta_rad": -0.001,
+            "status": "Computed",
+            "target_offset_m": [
+              5.215338597949846e-06,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              -0.0008989195742840173,
+              0.0
+            ],
+            "target_angle_rad": 0.0008989195742840173,
+            "target_miss_m": 5.215338597949846e-06
+          },
+          {
+            "kind": "rotation",
+            "mirror": 1,
+            "axis": "s",
+            "delta_rad": 0.001,
+            "status": "Computed",
+            "target_offset_m": [
+              -5.215864154079278e-06,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              0.0009009888570243752,
+              0.0
+            ],
+            "target_angle_rad": 0.0009009888570243752,
+            "target_miss_m": 5.215864154079278e-06
+          },
+          {
+            "kind": "translation",
+            "mirror": 2,
+            "axis": "X",
+            "delta_m": -5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              1.1246623098527114e-07,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              0.0009763886090130055,
+              0.0
+            ],
+            "target_angle_rad": 0.0009763886090130055,
+            "target_miss_m": 1.1246623098527114e-07
+          },
+          {
+            "kind": "translation",
+            "mirror": 2,
+            "axis": "X",
+            "delta_m": 5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              -1.0378003837286515e-07,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              -0.0009765220104456659,
+              0.0
+            ],
+            "target_angle_rad": 0.0009765220104456659,
+            "target_miss_m": 1.0378003837286515e-07
+          },
+          {
+            "kind": "translation",
+            "mirror": 2,
+            "axis": "Y",
+            "delta_m": -5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              -7.073279904498686e-10,
+              -5.126078200030219e-06
+            ],
+            "target_angular_error_rad": [
+              -7.23422375411666e-07,
+              -0.0018516709960340585
+            ],
+            "target_angle_rad": 0.00185167113734899,
+            "target_miss_m": 5.126078248830965e-06
+          },
+          {
+            "kind": "translation",
+            "mirror": 2,
+            "axis": "Y",
+            "delta_m": 5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              -7.073279904498686e-10,
+              5.126078200030219e-06
+            ],
+            "target_angular_error_rad": [
+              -7.23422375411666e-07,
+              0.0018516709960340585
+            ],
+            "target_angle_rad": 0.00185167113734899,
+            "target_miss_m": 5.126078248830965e-06
+          },
+          {
+            "kind": "translation",
+            "mirror": 2,
+            "axis": "Z",
+            "delta_m": -5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              5.176608726829325e-06,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              0.0016079644361520118,
+              0.0
+            ],
+            "target_angle_rad": 0.0016079644361520118,
+            "target_miss_m": 5.176608726829325e-06
+          },
+          {
+            "kind": "translation",
+            "mirror": 2,
+            "axis": "Z",
+            "delta_m": 5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              -5.179533629604601e-06,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              -0.001608326267587516,
+              0.0
+            ],
+            "target_angle_rad": 0.001608326267587516,
+            "target_miss_m": 5.179533629604601e-06
+          },
+          {
+            "kind": "rotation",
+            "mirror": 2,
+            "axis": "s",
+            "delta_rad": -0.001,
+            "status": "Computed",
+            "target_offset_m": [
+              -5.536710503632053e-06,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              -0.00200000000000018,
+              0.0
+            ],
+            "target_angle_rad": 0.00200000000000018,
+            "target_miss_m": 5.536710503632053e-06
+          },
+          {
+            "kind": "rotation",
+            "mirror": 2,
+            "axis": "s",
+            "delta_rad": 0.001,
+            "status": "Computed",
+            "target_offset_m": [
+              5.53671050363292e-06,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              0.002000000000000068,
+              0.0
+            ],
+            "target_angle_rad": 0.002000000000000068,
+            "target_miss_m": 5.53671050363292e-06
+          }
+        ],
+        "summary": {
+          "translation": {
+            "computed": 12,
+            "failed": 0,
+            "max_target_miss_m": 5.179533629604601e-06,
+            "max_target_angle_rad": 0.00185167113734899
+          },
+          "rotation": {
+            "computed": 4,
+            "failed": 0,
+            "max_target_miss_m": 5.53671050363292e-06,
+            "max_target_angle_rad": 0.00200000000000018
+          }
+        }
+      }
+    },
+    "expansion": {
+      "envelope": {
+        "type": "aabb",
+        "min_m": [
+          -0.0015821774231937228,
+          -0.00135,
+          -0.00135
+        ],
+        "max_m": [
+          0.0034415473764667017,
+          0.00135,
+          0.00335
+        ],
+        "frame_id": "world"
+      },
+      "envelope_width_m": [
+        0.005023724799660425,
+        0.0027,
+        0.0047
+      ],
+      "path_m": 0.01103085800620031,
+      "package": {
+        "envelope_geometry": "Pass",
+        "failed_checks": [],
+        "minimum_boundary_gap_m": 5.000000099999991e-05,
+        "mirror_pair_aabb_gap_m": 0.003734489214349449,
+        "minimum_body_keepout_aabb_gap_m": 0.001126477638799849,
+        "max_full_clear_aperture_m": 0.0015023345282692364,
+        "finite_beam_clearance": "Uncomputed"
+      },
+      "limiting_envelope_boundary": {
+        "gap_m": 5.000000099999991e-05,
+        "mirror": 2,
+        "face": "X-"
+      },
+      "minimum_aabb_gap_m": 5.000000099999991e-05,
+      "aabb_clearance_margin_m": 9.999999079127707e-13,
+      "guard_metrics": {
+        "max_3w_footprint_curvature": 0.1349999999865,
+        "max_post_mirror_divergence_rad": 0.0879451946930431,
+        "fixed_target_divergence_rad": 0.09970104685503062,
+        "aperture_tail_union_estimate": 8.999999999999977e-07
+      },
+      "guard_target_margins": {
+        "max_3w_footprint_curvature": 1.3500006668110132e-11,
+        "max_post_mirror_divergence_rad": 0.007054805306956902
+      },
+      "footprint_model_guard_margin": 0.015000000013499992,
+      "normalized_gaussian_overlap": 0.9900109725310262,
+      "quadrature_overlap": [
+        0.9900109725310264,
+        0.9900109725310265
+      ],
+      "overlap_margin_to_target": 1.0972531026220977e-05,
+      "meets_nominal_overlap_target": true,
+      "chief_ray_placement": {
+        "status": "Computed",
+        "nominal": {
+          "status": "Computed",
+          "target_offset_m": [
+            0.0,
+            0.0
+          ],
+          "target_angular_error_rad": [
+            0.0,
+            0.0
+          ],
+          "target_angle_rad": 0.0,
+          "target_miss_m": 0.0
+        },
+        "cases": [
+          {
+            "kind": "translation",
+            "mirror": 1,
+            "axis": "X",
+            "delta_m": -5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              -4.5357992416693305e-08,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              -0.0006704858713430905,
+              0.0
+            ],
+            "target_angle_rad": 0.0006704858713430905,
+            "target_miss_m": 4.5357992416693305e-08
+          },
+          {
+            "kind": "translation",
+            "mirror": 1,
+            "axis": "X",
+            "delta_m": 5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              4.4884453681125897e-08,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              0.0006704360955727221,
+              0.0
+            ],
+            "target_angle_rad": 0.0006704360955727221,
+            "target_miss_m": 4.4884453681125897e-08
+          },
+          {
+            "kind": "translation",
+            "mirror": 1,
+            "axis": "Y",
+            "delta_m": -5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              3.339865901202943e-10,
+              -5.067291329809666e-06
+            ],
+            "target_angular_error_rad": [
+              -1.6957152635232294e-07,
+              0.0007834854621726078
+            ],
+            "target_angle_rad": 0.0007834854805229666,
+            "target_miss_m": 5.067291340816241e-06
+          },
+          {
+            "kind": "translation",
+            "mirror": 1,
+            "axis": "Y",
+            "delta_m": 5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              3.339865901202943e-10,
+              5.067291329809666e-06
+            ],
+            "target_angular_error_rad": [
+              -1.6957152635232294e-07,
+              -0.0007834854621726078
+            ],
+            "target_angle_rad": 0.0007834854805229666,
+            "target_miss_m": 5.067291340816241e-06
+          },
+          {
+            "kind": "translation",
+            "mirror": 1,
+            "axis": "Z",
+            "delta_m": -5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              4.945420409280428e-06,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              -0.0006510360840588183,
+              0.0
+            ],
+            "target_angle_rad": 0.0006510360840588183,
+            "target_miss_m": 4.945420409280428e-06
+          },
+          {
+            "kind": "translation",
+            "mirror": 1,
+            "axis": "Z",
+            "delta_m": 5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              -4.946610374405563e-06,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              0.000650624423613498,
+              0.0
+            ],
+            "target_angle_rad": 0.000650624423613498,
+            "target_miss_m": 4.946610374405563e-06
+          },
+          {
+            "kind": "rotation",
+            "mirror": 1,
+            "axis": "s",
+            "delta_rad": -0.001,
+            "status": "Computed",
+            "target_offset_m": [
+              6.229067708408281e-06,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              -0.0010079460990817754,
+              0.0
+            ],
+            "target_angle_rad": 0.0010079460990817754,
+            "target_miss_m": 6.229067708408281e-06
+          },
+          {
+            "kind": "rotation",
+            "mirror": 1,
+            "axis": "s",
+            "delta_rad": 0.001,
+            "status": "Computed",
+            "target_offset_m": [
+              -6.230032492932688e-06,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              0.0010096090014076805,
+              0.0
+            ],
+            "target_angle_rad": 0.0010096090014076805,
+            "target_miss_m": 6.230032492932688e-06
+          },
+          {
+            "kind": "translation",
+            "mirror": 2,
+            "axis": "X",
+            "delta_m": -5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              4.823663466097319e-08,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              0.0006704360955727221,
+              0.0
+            ],
+            "target_angle_rad": 0.0006704360955727221,
+            "target_miss_m": 4.823663466097319e-08
+          },
+          {
+            "kind": "translation",
+            "mirror": 2,
+            "axis": "X",
+            "delta_m": 5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              -4.200556255780363e-08,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              -0.0006704858713430905,
+              0.0
+            ],
+            "target_angle_rad": 0.0006704858713430905,
+            "target_miss_m": 4.200556255780363e-08
+          },
+          {
+            "kind": "translation",
+            "mirror": 2,
+            "axis": "Y",
+            "delta_m": -5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              -4.540477186940062e-10,
+              -5.055186650002879e-06
+            ],
+            "target_angular_error_rad": [
+              -4.117932668459105e-07,
+              -0.0015718805323602144
+            ],
+            "target_angle_rad": 0.0015718805862997888,
+            "target_miss_m": 5.055186670393751e-06
+          },
+          {
+            "kind": "translation",
+            "mirror": 2,
+            "axis": "Y",
+            "delta_m": 5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              -4.540477186940062e-10,
+              5.055186650002879e-06
+            ],
+            "target_angular_error_rad": [
+              -4.117932668459105e-07,
+              0.0015718805323602144
+            ],
+            "target_angle_rad": 0.0015718805862997888,
+            "target_miss_m": 5.055186670393751e-06
+          },
+          {
+            "kind": "translation",
+            "mirror": 2,
+            "axis": "Z",
+            "delta_m": -5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              5.095783279078416e-06,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              0.0014393534664613784,
+              0.0
+            ],
+            "target_angle_rad": 0.0014393534664613784,
+            "target_miss_m": 5.095783279078416e-06
+          },
+          {
+            "kind": "translation",
+            "mirror": 2,
+            "axis": "Z",
+            "delta_m": 5e-06,
+            "status": "Computed",
+            "target_offset_m": [
+              -5.0979660742808165e-06,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              -0.0014395829095904986,
+              0.0
+            ],
+            "target_angle_rad": 0.0014395829095904986,
+            "target_miss_m": 5.0979660742808165e-06
+          },
+          {
+            "kind": "rotation",
+            "mirror": 2,
+            "axis": "s",
+            "delta_rad": -0.001,
+            "status": "Computed",
+            "target_offset_m": [
+              -6.432031009680726e-06,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              -0.0020000000000000126,
+              0.0
+            ],
+            "target_angle_rad": 0.0020000000000000126,
+            "target_miss_m": 6.432031009680726e-06
+          },
+          {
+            "kind": "rotation",
+            "mirror": 2,
+            "axis": "s",
+            "delta_rad": 0.001,
+            "status": "Computed",
+            "target_offset_m": [
+              6.432031009680726e-06,
+              0.0
+            ],
+            "target_angular_error_rad": [
+              0.002000000000000013,
+              0.0
+            ],
+            "target_angle_rad": 0.002000000000000013,
+            "target_miss_m": 6.432031009680726e-06
+          }
+        ],
+        "summary": {
+          "translation": {
+            "computed": 12,
+            "failed": 0,
+            "max_target_miss_m": 5.0979660742808165e-06,
+            "max_target_angle_rad": 0.0015718805862997888
+          },
+          "rotation": {
+            "computed": 4,
+            "failed": 0,
+            "max_target_miss_m": 6.432031009680726e-06,
+            "max_target_angle_rad": 0.002000000000000013
+          }
+        }
+      }
+    }
+  },
+  "finite_beam_clearance": "Uncomputed",
+  "perturbed_gaussian_mode_overlap": "Uncomputed",
+  "actual_assembly_tolerance": "Uncomputed",
+  "total_coupling": null
+}

@@ -70,6 +70,7 @@ Fused-Silica Glass Waveguide 실측 Width와 추가 입력 요건을 확인할 �
 · [1310 nm SMF–Glass Fixed-Port 평가](docs/M7R6_SMF_GLASS_FIXED_PORT.md)
 · [1310 nm Package와 Guard 여유 평가](docs/M7R7_PACKAGE_AND_MARGIN.md)
 · [G029-NM 주변 반사면 위치 탐색](docs/M7R8_LOCAL_PACKAGE_SEARCH.md)
+· [1310 nm Envelope와 조립 여유 비교](docs/M7R9_ENVELOPE_ASSEMBLY_REVIEW.md)
 
 ## 실행
 
