@@ -1,0 +1,395 @@
+{
+  "inputs": {
+    "examples/m7r6_smf_glass_1310.json": "0b3ea2be8dc62b31c3bc64845443de8301d8efc0ce500911af4436d0b5e28bec",
+    "references/m7r8/summary.json": "42808a466c14f2b7ebf3c8c5bb35ba6e1aaeff51cb3fa94a7f64f8c569af00a4",
+    "references/m7r7/case.json": "bf3413d02c301736812888a34f75d154cce7fd849cad2331d57535ed28af1a47"
+  },
+  "controls": {
+    "gaussian_relative_L2": 2.265416255764184e-05,
+    "flat_relative_L2": 4.4838756984813185e-05,
+    "disk_absolute": 5.948258660265812e-13
+  },
+  "runs": [
+    {
+      "surface_nodes": 96,
+      "edge_rule": "midpoint",
+      "launch_flux": 0.9980217522725966,
+      "M1_over_launch": 0.9999992241330024,
+      "M2_over_M1": 13.16362301117166,
+      "target": [
+        {
+          "pitch_um": 2,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.23015512827583132,
+          "target_flux_over_launch": 12.952977326392354,
+          "residual_over_launch": 0.21063547155864232
+        },
+        {
+          "pitch_um": 1,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.23015753815733261,
+          "target_flux_over_launch": 12.952850834348313,
+          "residual_over_launch": 0.21076196360268282
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.2301580109733729,
+          "target_flux_over_launch": 12.952825648311634,
+          "residual_over_launch": 0.21078714963936165
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 24,
+          "eta_diagnostic": 0.27751171984892375,
+          "target_flux_over_launch": 10.767509644751827,
+          "residual_over_launch": 2.396103153199169
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 12,
+          "eta_diagnostic": 0.45041938673273696,
+          "target_flux_over_launch": 6.665117615907634,
+          "residual_over_launch": 6.498495182043362
+        }
+      ],
+      "edge_subdivisions": 1
+    },
+    {
+      "surface_nodes": 144,
+      "edge_rule": "midpoint",
+      "launch_flux": 0.9980217522725966,
+      "M1_over_launch": 0.9999992193078374,
+      "M2_over_M1": 6.037816461261979,
+      "target": [
+        {
+          "pitch_um": 2,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.17254879285132071,
+          "target_flux_over_launch": 5.752388867568646,
+          "residual_over_launch": 0.2854228800173425
+        },
+        {
+          "pitch_um": 1,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.17253551076701826,
+          "target_flux_over_launch": 5.75283548584489,
+          "residual_over_launch": 0.2849762617410989
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.17253455149124722,
+          "target_flux_over_launch": 5.752868462443133,
+          "residual_over_launch": 0.2849432851428559
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 24,
+          "eta_diagnostic": 0.25682350419136213,
+          "target_flux_over_launch": 3.8842216740121,
+          "residual_over_launch": 2.153590073573888
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 12,
+          "eta_diagnostic": 0.4028749669021542,
+          "target_flux_over_launch": 2.4873193410555445,
+          "residual_over_launch": 3.5504924065304437
+        }
+      ],
+      "edge_subdivisions": 1
+    },
+    {
+      "surface_nodes": 216,
+      "edge_rule": "midpoint",
+      "launch_flux": 0.9980217522725966,
+      "M1_over_launch": 0.9999992171513568,
+      "M2_over_M1": 1.2571473318412125,
+      "target": [
+        {
+          "pitch_um": 2,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.7852456889301318,
+          "target_flux_over_launch": 1.2349315275274213,
+          "residual_over_launch": 0.022214820157708086
+        },
+        {
+          "pitch_um": 1,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.7852615046813404,
+          "target_flux_over_launch": 1.234907389623458,
+          "residual_over_launch": 0.022238958061671334
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.7852633259996069,
+          "target_flux_over_launch": 1.2349046177369893,
+          "residual_over_launch": 0.0222417299481399
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 24,
+          "eta_diagnostic": 0.8312190925309121,
+          "target_flux_over_launch": 1.1679984769863858,
+          "residual_over_launch": 0.08914787069874355
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 12,
+          "eta_diagnostic": 0.90306297506848,
+          "target_flux_over_launch": 1.0767561418963625,
+          "residual_over_launch": 0.18039020578876697
+        }
+      ],
+      "edge_subdivisions": 1
+    },
+    {
+      "surface_nodes": 216,
+      "edge_rule": "gauss2",
+      "launch_flux": 0.9980217522725966,
+      "M1_over_launch": 0.9999992154280718,
+      "M2_over_M1": 1.3713655314130668,
+      "target": [
+        {
+          "pitch_um": 2,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.8180568130687489,
+          "target_flux_over_launch": 1.1037077067812544,
+          "residual_over_launch": 0.2676567486969132
+        },
+        {
+          "pitch_um": 1,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.818053405092059,
+          "target_flux_over_launch": 1.103712358606395,
+          "residual_over_launch": 0.2676520968717726
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.8180528416325933,
+          "target_flux_over_launch": 1.1037131242771894,
+          "residual_over_launch": 0.2676513312009781
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 24,
+          "eta_diagnostic": 0.8473780020135605,
+          "target_flux_over_launch": 1.0662925636282137,
+          "residual_over_launch": 0.3050718918499538
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 12,
+          "eta_diagnostic": 0.8984076078558553,
+          "target_flux_over_launch": 1.0067810405232984,
+          "residual_over_launch": 0.36458341495486923
+        }
+      ],
+      "edge_subdivisions": 1
+    },
+    {
+      "surface_nodes": 324,
+      "edge_rule": "midpoint",
+      "launch_flux": 0.9980217522725966,
+      "M1_over_launch": 0.9999992161906014,
+      "M2_over_M1": 1.0000055228690845,
+      "target": [
+        {
+          "pitch_um": 2,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.9898105616087786,
+          "target_flux_over_launch": 1.0000036506636074,
+          "residual_over_launch": 1.0883917494286631e-06
+        },
+        {
+          "pitch_um": 1,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.9898105568965655,
+          "target_flux_over_launch": 1.0000036547005702,
+          "residual_over_launch": 1.084354786608323e-06
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.9898105563369135,
+          "target_flux_over_launch": 1.000003655254073,
+          "residual_over_launch": 1.0838012838565815e-06
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 24,
+          "eta_diagnostic": 0.989812028344507,
+          "target_flux_over_launch": 1.000002200978737,
+          "residual_over_launch": 2.538076619740469e-06
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 12,
+          "eta_diagnostic": 0.9898147897855883,
+          "target_flux_over_launch": 0.9999989945353963,
+          "residual_over_launch": 5.74451996059834e-06
+        }
+      ],
+      "edge_subdivisions": 1
+    },
+    {
+      "surface_nodes": 216,
+      "edge_subdivisions": 2,
+      "edge_rule": "midpoint",
+      "launch_flux": 0.9980217522725966,
+      "M1_over_launch": 0.9999992174696146,
+      "M2_over_M1": 1.2572316780861044,
+      "target": [
+        {
+          "pitch_um": 2,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.8004113814334164,
+          "target_flux_over_launch": 1.2122254421724008,
+          "residual_over_launch": 0.04500525209171397
+        },
+        {
+          "pitch_um": 1,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.800381593512856,
+          "target_flux_over_launch": 1.2122698168664932,
+          "residual_over_launch": 0.04496087739762161
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.8003775223474778,
+          "target_flux_over_launch": 1.2122758831786047,
+          "residual_over_launch": 0.04495481108551017
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 24,
+          "eta_diagnostic": 0.8412576310193486,
+          "target_flux_over_launch": 1.1545409958375599,
+          "residual_over_launch": 0.10268969842655493
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 12,
+          "eta_diagnostic": 0.9078239820281448,
+          "target_flux_over_launch": 1.0713959294915139,
+          "residual_over_launch": 0.18583476477260105
+        }
+      ]
+    },
+    {
+      "surface_nodes": 216,
+      "edge_subdivisions": 4,
+      "edge_rule": "midpoint",
+      "launch_flux": 0.9980217522725966,
+      "M1_over_launch": 0.9999992175492726,
+      "M2_over_M1": 1.2572324616587904,
+      "target": [
+        {
+          "pitch_um": 2,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.8004147804395986,
+          "target_flux_over_launch": 1.2122190316514025,
+          "residual_over_launch": 0.045012446284933845
+        },
+        {
+          "pitch_um": 1,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.8003855078737978,
+          "target_flux_over_launch": 1.2122626396571827,
+          "residual_over_launch": 0.044968838279153635
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.8003815017271287,
+          "target_flux_over_launch": 1.2122686092257848,
+          "residual_over_launch": 0.04496286871055156
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 24,
+          "eta_diagnostic": 0.8412671485542479,
+          "target_flux_over_launch": 1.1545269658009125,
+          "residual_over_launch": 0.1027045121354237
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 12,
+          "eta_diagnostic": 0.907807504402818,
+          "target_flux_over_launch": 1.0714137231916976,
+          "residual_over_launch": 0.18581775474463869
+        }
+      ]
+    },
+    {
+      "surface_nodes": 324,
+      "edge_subdivisions": 4,
+      "edge_rule": "midpoint",
+      "launch_flux": 0.9980217522725966,
+      "M1_over_launch": 0.9999992163043844,
+      "M2_over_M1": 1.0000052460522333,
+      "target": [
+        {
+          "pitch_um": 2,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.9898111809340135,
+          "target_flux_over_launch": 1.0000024861572918,
+          "residual_over_launch": 1.9761952143613765e-06
+        },
+        {
+          "pitch_um": 1,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.9898111765014114,
+          "target_flux_over_launch": 1.0000024899173863,
+          "residual_over_launch": 1.9724351198882567e-06
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 48,
+          "eta_diagnostic": 0.9898111759758335,
+          "target_flux_over_launch": 1.000002490437089,
+          "residual_over_launch": 1.971915417239918e-06
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 24,
+          "eta_diagnostic": 0.9898124373751248,
+          "target_flux_over_launch": 1.0000012440921608,
+          "residual_over_launch": 3.218260345450392e-06
+        },
+        {
+          "pitch_um": 0.5,
+          "half_window_um": 12,
+          "eta_diagnostic": 0.9898148005650823,
+          "target_flux_over_launch": 0.9999984160521393,
+          "residual_over_launch": 6.046300366879966e-06
+        }
+      ]
+    }
+  ],
+  "diagnostics": {
+    "target_pitch_last_delta": 5.596519914163878e-10,
+    "target_window_last_delta": 1.4720075934837595e-06,
+    "surface_last_delta": 0.2045472303373066,
+    "finest_edge_cross_delta": 6.196389199519814e-07,
+    "archived_field_sha256": "6b17ff0779e08fa5ccd05f16bfacf952eb7e633e902315f886288ed14e005ede"
+  },
+  "fixed_case_decision": {
+    "numerical_U": null,
+    "nominal_threshold": "Uncomputed",
+    "qualified_aperture_throughput": null,
+    "perturbed_overlap": null,
+    "actual_total_coupling": null,
+    "reason": "An independent converged curved-surface field and a supported uncertainty bound are required."
+  },
+  "runtime": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "platform": "Linux",
+    "compiler": "g++ (Debian 14.2.0-19) 14.2.0"
+  }
+}

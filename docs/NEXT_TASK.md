@@ -1,3 +1,13 @@
+# M7-R12 — M1→M2 회절 적분 수렴
+
+Astra Work. [M7-R11](M7R11_CURVED_FIELD_REFERENCE.md)의 동결 처방과 명목 raw Field를
+사용해 M2/M1 flux 초과가 발생하는 전파 구간부터 조사한다. 위상 sampling과 aliasing을
+점검하고 기존의 검증 가능한 oscillatory quadrature 또는 독립 Physical Optics 경로를
+선정한다. 사전 계산 예산 안에서 고정 Target Window와 곡면 정련을 독립 대조한다.
+M7-R10의 U 기준을 만족할 때 M2 ±1 mrad로 진행한다. Draft PR, Main 병합 별도 승인.
+
+---
+
 # M7-R11 — 독립 Curved-Surface Field Reference
 
 Astra Work 권장. [M7-R10](M7R10_FINITE_BEAM_SCOPE.md)의 1310 nm 확장 처방과
