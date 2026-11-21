@@ -1,0 +1,510 @@
+{
+  "control_limit": 5e-05,
+  "guide_input_field_within_limit": {
+    "E": false,
+    "H": false
+  },
+  "nominal_guided_fraction": null,
+  "nominal_U": null,
+  "rotation_optics": null,
+  "plane_prediction_r19_power_difference": 0.04747328951396579,
+  "r19_H": 0.04468056813278969,
+  "r19_power": 0.04790868073441379,
+  "planes": {
+    "plane-air-8": {
+      "impedance_mag_error": 0.00011885341491923995,
+      "relative_H": 0.00012326832037357448,
+      "H_phase_rad": -3.264137625784911e-05,
+      "centered_H_relative": 0.047962707775407655,
+      "centered_E_over_native": 0.9108086896156535,
+      "centered_H_over_native": 0.9543800852000358,
+      "predicted_centered_E": 0.9108086949224856,
+      "predicted_centered_H": 0.9543629786001161,
+      "half_time_step_phase_rad": 0.14988514568653594,
+      "measured_k_per_um": 4.8525065097461235,
+      "yee_k_per_um": 4.852430017542198,
+      "continuum_k_per_um": 4.79632466196915,
+      "physical_flux_vs_analytic": 0.0001188670099392386,
+      "monitor_vs_physical": 0.045619992003653964,
+      "discrete_replay_vs_monitor": 1.1511673769781794e-07,
+      "corrected_monitor_vs_analytic": 0.0001367128619318425,
+      "interpolation_H_six_vs_eight": 0.00021161133290470698,
+      "E_z_origin_um": -4.75,
+      "H_z_origin_um": -4.8125,
+      "dx_um": 0.125,
+      "dt": 0.0625
+    },
+    "plane-air-12": {
+      "impedance_mag_error": 7.2484120624549675e-06,
+      "relative_H": 2.5001138825163977e-05,
+      "H_phase_rad": -2.3927234559271654e-05,
+      "centered_H_relative": 0.02052575724106298,
+      "centered_E_over_native": 0.9601940165019572,
+      "centered_H_over_native": 0.9798956094177655,
+      "predicted_centered_E": 0.9601939807770561,
+      "predicted_centered_H": 0.9798948825139644,
+      "half_time_step_phase_rad": 0.09992343045769062,
+      "measured_k_per_um": 4.820689514598685,
+      "yee_k_per_um": 4.8206974151543704,
+      "continuum_k_per_um": 4.79632466196915,
+      "physical_flux_vs_analytic": 7.248178343965961e-06,
+      "monitor_vs_physical": 0.020104337282409124,
+      "discrete_replay_vs_monitor": 9.83461176939926e-08,
+      "corrected_monitor_vs_analytic": 8.044395668482807e-06,
+      "interpolation_H_six_vs_eight": 1.931416631773058e-05,
+      "E_z_origin_um": -4.5,
+      "H_z_origin_um": -4.541666666666666,
+      "dx_um": 0.08333333333333333,
+      "dt": 0.041666666666666664
+    },
+    "plane-air-24": {
+      "impedance_mag_error": 4.558902610973803e-07,
+      "relative_H": 1.5060366909421818e-06,
+      "H_phase_rad": -1.4353785957219048e-06,
+      "centered_H_relative": 0.005025373540610395,
+      "centered_E_over_native": 0.9900236410999258,
+      "centered_H_over_native": 0.9949993331037484,
+      "predicted_centered_E": 0.9900236131204715,
+      "predicted_centered_H": 0.9949993030753698,
+      "half_time_step_phase_rad": 0.04996171522884531,
+      "measured_k_per_um": 4.802336572420098,
+      "yee_k_per_um": 4.802337184475469,
+      "continuum_k_per_um": 4.79632466196915,
+      "physical_flux_vs_analytic": 4.5589108343957463e-07,
+      "monitor_vs_physical": 0.005000672058656841,
+      "discrete_replay_vs_monitor": 2.2477492311878677e-08,
+      "corrected_monitor_vs_analytic": 4.309001493396636e-07,
+      "interpolation_H_six_vs_eight": 3.087426787040629e-07,
+      "E_z_origin_um": -4.25,
+      "H_z_origin_um": -4.270833333333333,
+      "dx_um": 0.041666666666666664,
+      "dt": 0.020833333333333332
+    },
+    "plane-clad-8": {
+      "impedance_mag_error": 0.0005619469711342084,
+      "relative_H": 0.0006412972094956237,
+      "H_phase_rad": -0.0003096549292778613,
+      "centered_H_relative": 0.10863122671944431,
+      "centered_E_over_native": 0.8133009280204541,
+      "centered_H_over_native": 0.9021570873337613,
+      "predicted_centered_E": 0.8133009487739117,
+      "predicted_centered_H": 0.9018319958694699,
+      "half_time_step_phase_rad": 0.14988514568653594,
+      "measured_k_per_um": 7.149017284866487,
+      "yee_k_per_um": 7.1488882617123926,
+      "continuum_k_per_um": 6.939343229321593,
+      "physical_flux_vs_analytic": 0.0005616792802514148,
+      "monitor_vs_physical": 0.0978429135827027,
+      "discrete_replay_vs_monitor": 2.826326994664896e-08,
+      "corrected_monitor_vs_analytic": 0.00020140380467426056,
+      "interpolation_H_six_vs_eight": 0.001834672412758476,
+      "E_z_origin_um": -4.75,
+      "H_z_origin_um": -4.8125,
+      "dx_um": 0.125,
+      "dt": 0.0625
+    },
+    "plane-clad-12": {
+      "impedance_mag_error": 4.225312482630805e-05,
+      "relative_H": 4.4891636445749205e-05,
+      "H_phase_rad": 1.5158227976345636e-05,
+      "centered_H_relative": 0.04451875872538482,
+      "centered_E_over_native": 0.9166762984993228,
+      "centered_H_over_native": 0.9574451302393507,
+      "predicted_centered_E": 0.9166763395204017,
+      "predicted_centered_H": 0.9574321592261259,
+      "half_time_step_phase_rad": 0.09992343045769062,
+      "measured_k_per_um": 7.027844408756941,
+      "yee_k_per_um": 7.027806537986532,
+      "continuum_k_per_um": 6.939343229321593,
+      "physical_flux_vs_analytic": 4.2254795338037e-05,
+      "monitor_vs_physical": 0.04255489522350442,
+      "discrete_replay_vs_monitor": 1.235060105297947e-07,
+      "corrected_monitor_vs_analytic": 5.577648171173344e-05,
+      "interpolation_H_six_vs_eight": 0.00017308879054434074,
+      "E_z_origin_um": -4.5,
+      "H_z_origin_um": -4.541666666666666,
+      "dx_um": 0.08333333333333333,
+      "dt": 0.041666666666666664
+    },
+    "plane-clad-24": {
+      "impedance_mag_error": 1.0153458165351736e-06,
+      "relative_H": 3.2055128659393697e-06,
+      "H_phase_rad": -3.0404600122935936e-06,
+      "centered_H_relative": 0.010606975895180141,
+      "centered_E_over_native": 0.9791170239042354,
+      "centered_H_over_native": 0.9895034988364633,
+      "predicted_centered_E": 0.979117000659945,
+      "predicted_centered_H": 0.9895034111411365,
+      "half_time_step_phase_rad": 0.04996171522884531,
+      "measured_k_per_um": 6.960829334136854,
+      "yee_k_per_um": 6.960828694086134,
+      "continuum_k_per_um": 6.939343229321593,
+      "physical_flux_vs_analytic": 1.0153494077735914e-06,
+      "monitor_vs_physical": 0.01049646732905829,
+      "discrete_replay_vs_monitor": 7.042754435193643e-08,
+      "corrected_monitor_vs_analytic": 8.925305469142941e-07,
+      "interpolation_H_six_vs_eight": 2.8160877440423445e-06,
+      "E_z_origin_um": -4.25,
+      "H_z_origin_um": -4.270833333333333,
+      "dx_um": 0.041666666666666664,
+      "dt": 0.020833333333333332
+    }
+  },
+  "guides": {
+    "guide-12": {
+      "planes": {
+        "input": {
+          "HE11": {
+            "E": 0.0011755190672243716,
+            "E_phase_rad": -9.36089550238941e-17,
+            "H": 0.001001435964693517,
+            "H_phase_rad": 3.347368004669791e-05
+          },
+          "analytic_interpolation": {
+            "E": 8.587012486667783e-06,
+            "E_phase_rad": 0.0,
+            "H": 1.5016047738204902e-05,
+            "H_phase_rad": 2.127683356988056e-17
+          },
+          "same_sampling_HE11": {
+            "E": 0.0011760412779691168,
+            "E_phase_rad": 0.0,
+            "H": 0.0010025850836132613,
+            "H_phase_rad": 3.347383171578976e-05
+          },
+          "physical_flux_vs_HE11_E_scale": 5.781641710722596e-05,
+          "centered_HE11": {
+            "E": 0.0007845318346098436,
+            "E_phase_rad": 1.9507582188197971e-16,
+            "H": 0.04468056813278971,
+            "H_phase_rad": 3.346099701608458e-05
+          },
+          "interpolation": {
+            "E": 0.0,
+            "E_phase_rad": 0.0,
+            "H": 0.00017464808044321845,
+            "H_phase_rad": 2.0405047960097613e-11
+          },
+          "physical_flux_vs_monitor": 0.045316447337308885,
+          "discrete_replay_vs_monitor": 6.467696372136622e-05,
+          "centered_to_native_H_change": 0.042740916770652324
+        },
+        "output": {
+          "HE11": {
+            "E": 0.0011010289626537362,
+            "E_phase_rad": -2.3402387858555142e-17,
+            "H": 0.0010393889655644195,
+            "H_phase_rad": -2.435283681663604e-05
+          },
+          "analytic_interpolation": {
+            "E": 8.587012486667783e-06,
+            "E_phase_rad": 0.0,
+            "H": 1.5016047738152219e-05,
+            "H_phase_rad": 5.9381248250097604e-18
+          },
+          "same_sampling_HE11": {
+            "E": 0.0011006932362010212,
+            "E_phase_rad": -4.680477568251334e-17,
+            "H": 0.0010399155097840325,
+            "H_phase_rad": -2.435284710704674e-05
+          },
+          "physical_flux_vs_HE11_E_scale": 6.33543524033442e-05,
+          "centered_HE11": {
+            "E": 0.0006588216808234398,
+            "E_phase_rad": -5.573625550355855e-17,
+            "H": 0.04468739695386156,
+            "H_phase_rad": -2.433195001428323e-05
+          },
+          "interpolation": {
+            "E": 0.0,
+            "E_phase_rad": 0.0,
+            "H": 0.0001746481231807069,
+            "H_phase_rad": 2.2385753126529557e-11
+          },
+          "physical_flux_vs_monitor": 0.045314472989363974,
+          "discrete_replay_vs_monitor": 6.464935291328189e-05,
+          "centered_to_native_H_change": 0.04274045773275618
+        }
+      },
+      "profile_change_between_planes": {
+        "E": 0.0009253537143881509,
+        "E_phase_rad": -4.680475905531928e-17,
+        "H": 0.0006343992785428356,
+        "H_phase_rad": -5.780613634126874e-05
+      },
+      "backward_over_forward_monitor": 0.9999198914814704,
+      "yee_r_z_offsets_in_cells": {
+        "Er": [
+          0.5,
+          0.0
+        ],
+        "Ep": [
+          0.0,
+          0.0
+        ],
+        "Ez": [
+          0.0,
+          0.5
+        ],
+        "Hr": [
+          0.0,
+          0.5
+        ],
+        "Hp": [
+          0.5,
+          0.5
+        ],
+        "Hz": [
+          0.5,
+          0.0
+        ]
+      }
+    },
+    "guide-24": {
+      "planes": {
+        "input": {
+          "HE11": {
+            "E": 0.00022661656839643044,
+            "E_phase_rad": 2.4939901008420163e-16,
+            "H": 0.00011227858987454566,
+            "H_phase_rad": -3.232588923820002e-06
+          },
+          "analytic_interpolation": {
+            "E": 8.689098648339954e-05,
+            "E_phase_rad": 0.0,
+            "H": 1.1982697241070906e-05,
+            "H_phase_rad": -9.394365965171527e-18
+          },
+          "same_sampling_HE11": {
+            "E": 0.00028311774675323005,
+            "E_phase_rad": 0.0,
+            "H": 0.00011461061448915569,
+            "H_phase_rad": -3.232432248898123e-06
+          },
+          "physical_flux_vs_HE11_E_scale": 1.624767998253951e-05,
+          "centered_HE11": {
+            "E": 0.0002579571902776023,
+            "E_phase_rad": -1.0407530608477926e-16,
+            "H": 0.010664992784819,
+            "H_phase_rad": -3.2140930619756375e-06
+          },
+          "interpolation": {
+            "E": 0.0,
+            "E_phase_rad": 0.0,
+            "H": 2.841797664626214e-06,
+            "H_phase_rad": -1.4794913327609897e-11
+          },
+          "physical_flux_vs_monitor": 0.011164337745820818,
+          "discrete_replay_vs_monitor": 1.6064743129096115e-05,
+          "centered_to_native_H_change": 0.010528268068723869
+        },
+        "output": {
+          "HE11": {
+            "E": 0.0001890893619924726,
+            "E_phase_rad": 4.987982752681202e-17,
+            "H": 0.0001297566908966221,
+            "H_phase_rad": -3.312951070908394e-06
+          },
+          "analytic_interpolation": {
+            "E": 8.689098648339954e-05,
+            "E_phase_rad": 0.0,
+            "H": 1.1982697241081797e-05,
+            "H_phase_rad": 1.2841696492123408e-19
+          },
+          "same_sampling_HE11": {
+            "E": 0.00024859441725827273,
+            "E_phase_rad": 4.987982882590202e-17,
+            "H": 0.00013184418492050506,
+            "H_phase_rad": -3.313574201522566e-06
+          },
+          "physical_flux_vs_HE11_E_scale": 1.676132463068747e-05,
+          "centered_HE11": {
+            "E": 0.00022592191203671703,
+            "E_phase_rad": -1.3009422319351828e-16,
+            "H": 0.010665783267480395,
+            "H_phase_rad": -3.3046657508555612e-06
+          },
+          "interpolation": {
+            "E": 0.0,
+            "E_phase_rad": 0.0,
+            "H": 2.841781707852187e-06,
+            "H_phase_rad": -3.4180555358654575e-11
+          },
+          "physical_flux_vs_monitor": 0.011164324271158765,
+          "discrete_replay_vs_monitor": 1.629156873850235e-05,
+          "centered_to_native_H_change": 0.01052836850302756
+        }
+      },
+      "profile_change_between_planes": {
+        "E": 0.00023627212420346827,
+        "E_phase_rad": 2.4939914263943316e-17,
+        "H": 0.00016059165828243404,
+        "H_phase_rad": -7.882821982094829e-08
+      },
+      "backward_over_forward_monitor": 1.0000008260212585,
+      "yee_r_z_offsets_in_cells": {
+        "Er": [
+          0.5,
+          0.0
+        ],
+        "Ep": [
+          0.0,
+          0.0
+        ],
+        "Ez": [
+          0.0,
+          0.5
+        ],
+        "Hr": [
+          0.0,
+          0.5
+        ],
+        "Hp": [
+          0.5,
+          0.5
+        ],
+        "Hz": [
+          0.5,
+          0.0
+        ]
+      }
+    },
+    "guide-dual-12": {
+      "planes": {
+        "input": {
+          "HE11": {
+            "E": 0.0010775354945275425,
+            "E_phase_rad": 4.8871200749973304e-17,
+            "H": 0.0010683333478510033,
+            "H_phase_rad": 3.350284687135538e-05
+          },
+          "analytic_interpolation": {
+            "E": 8.587012486667783e-06,
+            "E_phase_rad": 0.0,
+            "H": 1.5016047738204902e-05,
+            "H_phase_rad": 2.127683356988056e-17
+          },
+          "same_sampling_HE11": {
+            "E": 0.0010779863074572836,
+            "E_phase_rad": -4.887120079746321e-17,
+            "H": 0.001069349721864468,
+            "H_phase_rad": 3.350298023102713e-05
+          },
+          "physical_flux_vs_HE11_E_scale": 5.780403566335579e-05,
+          "centered_HE11": {
+            "E": 0.0006116570594509957,
+            "E_phase_rad": -5.819705387231645e-17,
+            "H": 0.04468236154747935,
+            "H_phase_rad": 3.349522304152935e-05
+          },
+          "interpolation": {
+            "E": 0.0,
+            "E_phase_rad": 0.0,
+            "H": 0.00017464806452981813,
+            "H_phase_rad": 1.821885515725412e-11
+          },
+          "physical_flux_vs_monitor": 0.04531645264675355,
+          "discrete_replay_vs_monitor": 6.466042129993355e-05,
+          "centered_to_native_H_change": 0.04274089582740615
+        },
+        "output": {
+          "HE11": {
+            "E": 0.0010668703762326136,
+            "E_phase_rad": 0.0,
+            "H": 0.0010587207284826193,
+            "H_phase_rad": -2.4346679109581606e-05
+          },
+          "analytic_interpolation": {
+            "E": 8.587012486667783e-06,
+            "E_phase_rad": 0.0,
+            "H": 1.5016047738152219e-05,
+            "H_phase_rad": 5.9381248250097604e-18
+          },
+          "same_sampling_HE11": {
+            "E": 0.0010665293884442267,
+            "E_phase_rad": -2.4435757578815117e-17,
+            "H": 0.00105924312046216,
+            "H_phase_rad": -2.434668966779926e-05
+          },
+          "physical_flux_vs_HE11_E_scale": 6.333458746365928e-05,
+          "centered_HE11": {
+            "E": 0.0005986619221318363,
+            "E_phase_rad": -8.729606822711202e-17,
+            "H": 0.044687965091419826,
+            "H_phase_rad": -2.4334569379918933e-05
+          },
+          "interpolation": {
+            "E": 0.0,
+            "E_phase_rad": 0.0,
+            "H": 0.0001746481067090992,
+            "H_phase_rad": 1.1745307711258161e-11
+          },
+          "physical_flux_vs_monitor": 0.04531444251110783,
+          "discrete_replay_vs_monitor": 6.466282181172289e-05,
+          "centered_to_native_H_change": 0.042740460961724
+        }
+      },
+      "profile_change_between_planes": {
+        "E": 0.0007498208599376751,
+        "E_phase_rad": -2.4435743522073243e-17,
+        "H": 0.000758017916071901,
+        "H_phase_rad": -5.7844640701963655e-05
+      },
+      "backward_over_forward_monitor": 0.00047525573993560866,
+      "yee_r_z_offsets_in_cells": {
+        "Er": [
+          0.5,
+          0.0
+        ],
+        "Ep": [
+          0.0,
+          0.0
+        ],
+        "Ez": [
+          0.0,
+          0.5
+        ],
+        "Hr": [
+          0.0,
+          0.5
+        ],
+        "Hp": [
+          0.5,
+          0.5
+        ],
+        "Hz": [
+          0.5,
+          0.0
+        ]
+      }
+    }
+  },
+  "source_change": {
+    "input": {
+      "E": 0.00024372604058356574,
+      "E_phase_rad": 1.9548458763837529e-16,
+      "H": 0.0002815028542101677,
+      "H_phase_rad": 2.370994327088276e-08
+    },
+    "output": {
+      "E": 0.0001286201954558387,
+      "E_phase_rad": 2.4435730187784642e-17,
+      "H": 0.0001335230708071595,
+      "H_phase_rad": 4.955184853745112e-09
+    }
+  },
+  "grid_change": {
+    "input": {
+      "E": 0.0010987591135961576,
+      "E_phase_rad": -9.975971934744915e-17,
+      "H": 0.0009611202565757451,
+      "H_phase_rad": -3.6654582279481405e-05
+    },
+    "output": {
+      "E": 0.0010270518904666817,
+      "E_phase_rad": 0.0,
+      "H": 0.0009862918340008658,
+      "H_phase_rad": 2.1051846221383692e-05
+    }
+  }
+}
