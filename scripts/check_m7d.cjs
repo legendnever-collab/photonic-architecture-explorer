@@ -81,8 +81,17 @@ with make_server((),0,workspace=workspace) as server:
     assert.equal(await page.locator('#workflow-job').count(),0);
     const exactHTML=await page.locator('#design-review').getAttribute('srcdoc');
 
+    const openR6 = async () => {
+      await page.goto(address);
+      await page.getByRole('tab', {name:'Tutorial / How It Works'}).click();
+      await page.frameLocator('#guide-frame').getByRole('link', {name:'이 두 Port로 설계'}).click();
+      await page.waitForURL(url => url.searchParams.get('entry') === 'smf-glass-1310');
+      assert.equal(await page.locator('[name="wavelength_m_0"]').inputValue(), '1310');
+      assert.equal(await page.locator('#workflow-job, #design-review').count(), 0);
+    };
+
     // Start an actual eligible job and cancel it from the Desktop UI.
-    await page.goto(address+'/?entry=smf-glass');
+    await openR6();
     await design();
     const cancelled=await identity();
     await hidden();
@@ -97,7 +106,7 @@ with make_server((),0,workspace=workspace) as server:
 
     // Deliberately hold a status reply, edit on Mobile, then deliver an old-result control.
     await page.setViewportSize({width:393,height:852});
-    await page.goto(address+'/?entry=smf-glass');
+    await openR6();
     let release,heldResolve;
     const held=new Promise(r=>heldResolve=r);
     const gate=new Promise(r=>release=r);
@@ -139,7 +148,7 @@ with make_server((),0,workspace=workspace) as server:
     const completed=await identity();
     assert.notEqual(completed.job_id,cancelled.job_id);
     assert.notEqual(completed.revision,edited.revision);
-    assert.equal(completed.input_sha256,cancelled.input_sha256);
+    assert.notEqual(completed.input_sha256,cancelled.input_sha256);
     await hidden();
     let terminalObserved=false;
     const monitor=async()=>{
@@ -187,11 +196,11 @@ with make_server((),0,workspace=workspace) as server:
     await page.screenshot({path:path.join(dir,'mobile-completed.png'),fullPage:true});
     await page.setViewportSize({width:1440,height:1050});
     await page.screenshot({path:path.join(dir,'desktop-completed.png'),fullPage:true});
-    const exportFile=async format=>{
+    const exportFile=async (format, stem='design')=>{
       const downloadPromise=page.waitForEvent('download');
       await page.locator('[data-export="'+format+'"]').click();
       const download=await downloadPromise;
-      const target=path.join(dir,'design.'+format);
+      const target=path.join(dir,stem+'.'+format);
       await download.saveAs(target);
       return target;
     };
@@ -250,6 +259,95 @@ with make_server((),0,workspace=workspace) as server:
     assert.equal(incomplete.selected_candidate_id,null);
     assert.equal(await page.locator('#workflow-job').count(),0);
     assert.equal(await frame().locator('[data-overlap-value]').count(),0);
+    // Run both the original 1310 nm case and a single-coordinate edit through
+    // the same installed Workspace and Worker that generated the 1550 nm result.
+    await openR6();
+    await design();
+    const r6Job = await identity();
+    await frame().locator('#design-result').waitFor({state:'attached', timeout:650000});
+    const r6 = await result();
+    assert.equal(r6.input_sha256, '20461fd9868b9450c0df7eff0464e6454a06811e5f09c244f4bc579d66efbcad');
+    assert.equal(r6.input_sha256, cancelled.input_sha256);
+    assert.equal(r6.input_sha256, r6Job.input_sha256);
+    assert.equal(r6.reference_context.scope, 'Original');
+    assert.equal(r6.selected_candidate_id, 'G036-NM');
+    const originalSearch = r6.workflow.exact_search;
+    assert.deepEqual([originalSearch.geometry_count, originalSearch.attempts.length, originalSearch.accepted_count], [36, 144, 0]);
+    const eta = c => c.evaluation.gaussian_mode_matching.normalized_mode_overlap;
+    assert(Math.abs(eta(r6.candidates[0]) - 0.9990889546173051) <= 1e-8);
+
+    const z = page.locator('[name="target_position_m_2"]');
+    await z.fill('2.1');
+    await hidden();
+    await design();
+    const revisedJob = await identity();
+    assert.notEqual(revisedJob.input_sha256, r6Job.input_sha256);
+    await frame().locator('#design-result').waitFor({state:'attached', timeout:650000});
+    const revised = await result();
+    assert.equal(revised.workflow.state, 'Succeeded');
+    assert.equal(revised.input_sha256, revisedJob.input_sha256);
+    assert.deepEqual(revised.input_snapshot.source, r6.input_snapshot.source);
+    assert.deepEqual(revised.input_snapshot.target.position_m.value, [0.002, 0, 0.0021]);
+    assert.deepEqual(revised.input_snapshot.target.reference_plane.value.origin_m, [0.002, 0, 0.0021]);
+    assert.deepEqual(revised.input_snapshot.target.mfd_ts_m, r6.input_snapshot.target.mfd_ts_m);
+    assert.deepEqual(revised.input_snapshot.target.wavefront_curvature_ts_per_m,
+      r6.input_snapshot.target.wavefront_curvature_ts_per_m);
+    assert.equal(revised.input_snapshot.target.mode_evidence.value.kind, 'gaussian_assumption');
+    assert.equal(revised.reference_context.scope, 'Edited');
+    assert.deepEqual(revised.reference_context.changed_fields, ['Target Position']);
+    assert.equal(revised.reference_context.reference_input_sha256, r6.input_sha256);
+    const visibleCandidate = frame().locator('[data-candidate]:visible');
+    assert.equal(await visibleCandidate.getAttribute('data-candidate'), revised.selected_candidate_id);
+    assert.equal(await visibleCandidate.getAttribute('data-input-sha'), revised.input_sha256);
+    assert(await frame().locator('[data-reference-scope="Edited"]').isVisible());
+    const confidence = visibleCandidate.locator('[data-confidence]');
+    await confidence.locator('summary').click();
+    assert.match(await confidence.innerText(), new RegExp(revised.input_sha256));
+    assert.match(await confidence.locator('tr').filter({hasText:'Total Coupling'}).innerText(), /Uncomputed/);
+
+    for (const snapshot of [r6, revised]) {
+      const current = snapshot.candidates[0];
+      for (const name of ['source', 'target']) assert.deepEqual(current.prescription[name], snapshot.input_snapshot[name]);
+      assert.equal(current.independent_validation.status, 'Pass');
+      assert.equal(current.independent_validation.quadrature_overlap.length, 2);
+      for (const overlap of current.independent_validation.quadrature_overlap)
+        assert(Math.abs(eta(current) - overlap) <= 1e-8);
+      execFileSync(process.env.PAE_PYTHON || 'python', ['-c', `
+import json, sys
+from photonic_architecture_explorer.external import evaluate_external
+candidate = json.load(sys.stdin)
+replayed = json.loads(json.dumps(evaluate_external(candidate["prescription"])))
+published = candidate["evaluation"]
+for key in published.keys() - {"input_snapshot"}:
+    assert replayed[key] == published[key], key
+`], {input: JSON.stringify(current), encoding:'utf8'});
+    }
+    const revisedJson = JSON.parse(fs.readFileSync(await exportFile('json', 'r6-edited')));
+    assert.deepEqual(revisedJson, {...revised, viewed_candidate_id:revised.selected_candidate_id});
+    const revisedHtml = await exportFile('html', 'r6-edited');
+    const revisedOffline = await browser.newPage();
+    await revisedOffline.goto(pathToFileURL(revisedHtml).href);
+    assert.deepEqual(await revisedOffline.locator('#design-result').evaluate(e=>JSON.parse(e.textContent)), revisedJson);
+    await revisedOffline.close();
+    await page.screenshot({path:path.join(dir,'reference-1310-edited.png'),fullPage:true});
+
+    await page.locator('[name="target_wavefront_curvature_ts_per_m_0"]').fill('');
+    await hidden();
+    await design();
+    assert.equal((await result()).status, 'Uncomputed');
+    assert.equal(await page.locator('#workflow-job').count(), 0);
+    assert.equal(await frame().locator('[data-overlap-value]').count(), 0);
+    const r6Evidence = snapshot => {
+      const current = snapshot.candidates[0];
+      return {input_sha256:snapshot.input_sha256, selected:snapshot.selected_candidate_id,
+        target_position_m:snapshot.input_snapshot.target.position_m.value,
+        exact_geometries:snapshot.workflow.exact_search.geometry_count,
+        exact_attempts:snapshot.workflow.exact_search.attempts.length,
+        adapter_calls:snapshot.workflow.near_match.adapter_calls, overlap:eta(current),
+        quadrature:current.independent_validation.quadrature_overlap,
+        path_m:current.ranking.total_path_m, elapsed_seconds:snapshot.workflow.elapsed_seconds};
+    };
+
     assert.deepEqual(errors,[]);
     const evidence={status:'Pass',head:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),
       cancelled,edited,completed,selected:near.selected_candidate_id,
@@ -258,7 +356,9 @@ with make_server((),0,workspace=workspace) as server:
       input_edit_and_late_reply_withheld:true,export_equal:true,a4_pages:1,browser_errors:errors,
       http_ping_ms:pingMs,identity_checks:'job ID + revision + SHA',
       reference_handoff:{concept_1550:'Reference → Proxy → Design → Background Near-Match',
-        incomplete_1310:incomplete.status,worker_started_for_incomplete_1310:false}};
+        incomplete_1310:incomplete.status,worker_started_for_incomplete_1310:false},
+      r6_redesign:{original:r6Evidence(r6),edited:r6Evidence(revised),adapter_replay_equal:true,
+        export_equal:true, confidence_scope:'Edited input SHA', missing_phase:'Uncomputed'}};
     fs.writeFileSync(path.join(dir,'acceptance.json'),JSON.stringify(evidence,null,2)+'\n');
     console.log(JSON.stringify(evidence));
 

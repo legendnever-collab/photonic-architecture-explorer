@@ -16,6 +16,10 @@ from .geometry import cross, dot, mul, norm, sub
 from .mode_reference import render_reference_handoff
 from .inspector import CSS, ROOT, make_server
 from .near_match import eligible
+from .reference_redesign import (
+    ENTRY as R6_ENTRY, PORTS_FILE as R6_PORTS_FILE, SUMMARY_FILE as R6_SUMMARY_FILE,
+    nominal_exact_matches, nominal_replay_matches, reference_context,
+)
 
 
 POSITION = ("position_m", "Position [mm]", ("X", "Y", "Z"), 3)
@@ -318,6 +322,33 @@ def render_port(port, raw, issue_path):
 
 
 WORKSPACE_JS = """
+const tabs = [...document.querySelectorAll('[role="tab"]')];
+const guide = document.querySelector('#guide-frame');
+guide.addEventListener('load', () => {
+  const content = guide.contentDocument.querySelector('#tutorial-guide');
+  if (content) new ResizeObserver(() => {
+    if (!guide.closest('[hidden]')) guide.style.height = Math.ceil(content.getBoundingClientRect().height) + 2 + 'px';
+  }).observe(content);
+});
+function selectTab(active) {
+  for (const tab of tabs) {
+    const selected = tab === active;
+    tab.setAttribute('aria-selected', String(selected));
+    tab.tabIndex = selected ? 0 : -1;
+    document.getElementById(tab.getAttribute('aria-controls')).hidden = !selected;
+  }
+  if (active.id === 'guide-tab' && !guide.hasAttribute('src')) guide.src = '/?entry=tutorial';
+}
+for (const tab of tabs) {
+  tab.addEventListener('click', () => selectTab(tab));
+  tab.addEventListener('keydown', event => {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+    event.preventDefault();
+    const next = event.key === 'Home' ? tabs[0] : event.key === 'End' ? tabs[1] : tabs[1 - tabs.indexOf(tab)];
+    selectTab(next);
+    next.focus();
+  });
+}
 const form = document.querySelector('#design-form');
 const output = document.querySelector('#design-output');
 const pending = document.querySelector('#pending');
@@ -376,7 +407,8 @@ if (job) {
         finished = true;
         cancelButton.hidden = true;
         const labels = {Cancelled:'취소됨', TimedOut:'실행 시간 초과', Failed:'실행 실패'};
-        jobStatus.textContent = labels[data.state] + ' · 추천은 보류됐습니다. Design으로 다시 실행하세요.';
+        jobStatus.textContent = data.reference_error ||
+          labels[data.state] + ' · 추천은 보류됐습니다. Design으로 다시 실행하세요.';
         return;
       }
       const p = data.progress || {};
@@ -465,7 +497,8 @@ if (frame) {
 def render_workspace(raw, result=None, error=None, job=None):
     entry = raw["entry"]
     description = {"example": "M5-A Synthetic Example · 입력값을 바꾸면 다음 실행의 고정 조건이 됩니다.",
-                   "smf-glass": "SMF–Glass Gaussian Proxy · 공개 Width와 가정 Flat Phase, 실제 장치 Field가 아닙니다."}.get(
+                   "smf-glass": "SMF–Glass Gaussian Proxy · 공개 Width와 가정 Flat Phase, 실제 장치 Field가 아닙니다.",
+                   R6_ENTRY: "1310 nm SMF–Glass Reference · 모의 Port의 외부 Scalar Gaussian Fit. 위치를 바꿔 새 배치에서 Design할 수 있습니다."}.get(
                        entry, "새 입력 · External Gaussian 가정, 편광은 scalar 모델에서 제외")
     fields = "".join(render_fields("", spec, raw) for spec in SHARED_FIELDS)
     issue_path = result.get("input_contract", {}).get("path") if result else None
@@ -500,10 +533,18 @@ def render_workspace(raw, result=None, error=None, job=None):
     .mode select{{max-width:100%}}.shared,.output,.form-actions{{margin-top:16px}}
     .output iframe{{display:block;width:100%;min-height:35rem;border:1px solid #d6e0e7;border-radius:8px;background:#fff}}
     .toolbar .example-links,.export-actions{{display:flex;gap:10px;flex-wrap:wrap}}
+    .workspace-tabs{{display:flex;gap:4px;border-bottom:1px solid #bcced7;margin:0 0 14px}}
+    .workspace-tabs button{{color:#486475;background:transparent;border:0;border-bottom:3px solid transparent;border-radius:0}}
+    .workspace-tabs [aria-selected="true"]{{color:#174d64;border-bottom-color:#176d92;font-weight:650}}
+    #guide-frame{{width:100%;min-height:45vh;border:0;display:block}}
     #design-form{{scroll-margin-top:12px}}
     @media(max-width:760px){{.ports{{grid-template-columns:minmax(0,1fr)}}}}
     </style></head><body><header><h1>Photonic Architecture Explorer</h1>
     <p>Two-Port Design Workspace</p></header><main class="wrap">
+    <nav class="workspace-tabs" role="tablist" aria-label="Workspace 보기">
+    <button id="design-tab" role="tab" aria-selected="true" aria-controls="design-pane">Two-Port Workspace</button>
+    <button id="guide-tab" role="tab" aria-selected="false" tabindex="-1" aria-controls="guide-pane">Tutorial / How It Works</button></nav>
+    <section id="design-pane" role="tabpanel" aria-labelledby="design-tab">
     {review}{job_view}
     <p class="notice" id="pending" role="status" hidden>지금 입력으로 결과를 확인하려면 Design을 실행하세요.</p>
     <p><a href="/?entry=mode-references" target="_blank" rel="noopener">SMF–Glass Mode Reference</a></p>
@@ -514,7 +555,8 @@ def render_workspace(raw, result=None, error=None, job=None):
       <div class="ports">{ports}</div>
       <section class="card shared" aria-label="공통 전파 조건">{fields}</section>
       <div class="form-actions"><button type="submit">Design</button></div>
-    </form></main><script>{WORKSPACE_JS}</script></body></html>'''
+    </form></section><section id="guide-pane" role="tabpanel" aria-labelledby="guide-tab" hidden>
+    <iframe id="guide-frame" title="계산 과정과 검증 근거"></iframe></section></main><script>{WORKSPACE_JS}</script></body></html>'''
 
 
 class Workspace:
@@ -522,6 +564,8 @@ class Workspace:
         example = json.loads((ROOT / "examples/m5a_two_ports.json").read_text(encoding="utf-8"))
         self.templates = {"example": example, "blank": new_input(example)}
         self.templates['smf-glass'] = json.loads((ROOT / 'examples/m7a_smf_glass_proxy.json').read_text())
+        self.templates[R6_ENTRY] = json.loads((ROOT / R6_PORTS_FILE).read_text(encoding="utf-8"))
+        self.r6_summary = json.loads((ROOT / R6_SUMMARY_FILE).read_text(encoding="utf-8"))
         self.fields = set(initial_values(example, "example"))
         self.jobs = None
         self.job_reports = {}
@@ -554,8 +598,15 @@ class Workspace:
             if result["status"] != "Computed":
                 result.update(status=exc.status, reason=str(exc),
                               input_contract={"status": exc.status, "path": exc.path, "reason": exc.reason})
+            if entry == R6_ENTRY:
+                result["reference_context"] = reference_context(self.templates[entry], document, self.r6_summary)
             return render_workspace(raw, result=result), 200
         result = design_two_ports(document)
+        if entry == R6_ENTRY:
+            context = reference_context(self.templates[entry], document, self.r6_summary)
+            result["reference_context"] = context
+            if context["scope"] == "Original" and not nominal_exact_matches(result, self.r6_summary):
+                return render_workspace(raw, error="원본 R6 입력 SHA 또는 Exact-q 결과가 기준과 달라 추천을 보류했습니다."), 200
         if eligible(result):
             from .workflow_jobs import JobManager
             with self.job_lock:
@@ -571,6 +622,10 @@ class Workspace:
             return None
         result = status.pop('result')
         if result is not None:
+            if (result.get("reference_context", {}).get("scope") == "Original"
+                    and not nominal_replay_matches(result, self.r6_summary)):
+                status.update(state="Failed", reference_error="원본 R6의 후보 또는 Overlap 검산이 기준과 달라 추천을 보류했습니다.")
+                return status
             key = identity['job_id']
             if key not in self.job_reports:
                 self.job_reports[key] = render_design_report(review_snapshot(result))

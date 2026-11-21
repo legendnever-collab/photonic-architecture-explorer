@@ -85,3 +85,14 @@ CAD는 이 로드맵의 Milestone 범위 밖이다.
 
 Milestone 범위와 변경 심사는 [Product Charter](PRODUCT_CHARTER.md) 및
 [Repository Controls](../AGENTS.md)를 따른다.
+
+## M7-R21 Addendum · 현재 Handoff
+
+위 M7-A Handoff는 역사적 기록이다. 현재 실행 순서는 [NEXT_TASK](NEXT_TASK.md)의 첫 지시문을 따른다.
+R6–R20의 1310 nm Reference는 고정 입력에 귀속된다. R21에서 계산 흐름·Reference와 현재 후보의 판정 근거를 Workspace에서 확인할 수 있다.
+다음 Track A/B 병목은 1310 nm의 두 Port를 사용자가 열고 한 조건을 바꾼 뒤 동일한 Design 경로로 후보와 근거를 다시 받는 과정이다. 해당 흐름을 검증한 뒤 실제 사용 결과로 다음 우선순위를 정한다.
+경계 일치형 HE11 독립 대조는 Facet 정확도가 설계 결정을 좌우할 때 재개할 수 있는 Physics Backlog로 유지한다.
+
+## M7-R22 Addendum · Package 비교 우선순위
+
+Tutorial에서 1310 nm 두 Port를 열어 Design하고 편집한 입력을 새 SHA로 재계산할 수 있다. 다음 Track A 과제는 같은 두 Port에서 Envelope 조건을 바꿔 후보의 광학 성능과 선언 Package 범위를 비교하는 것이다. R7–R9의 동결 조건에서 기존 기구 검사를 재현하고 사용자 입력으로 넓힐 수 있는 범위를 판단한다. [현재 Work Order](NEXT_TASK.md)

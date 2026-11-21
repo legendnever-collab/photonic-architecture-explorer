@@ -34,3 +34,7 @@ With two immutable, sufficiently characterized ports and clearly labeled supplem
 - This charter does not authorize disclosure of confidential company data.
 - Patent-oriented exploration means generating and comparing technical concepts, **not** assuring novelty, freedom to operate or grantability.
 - Preserve existing GitHub draft-PR and main-merge controls unless explicitly superseded.
+
+## M7-R21 Addendum · 사용자 승인 Product Vision
+
+두 Fixed Optical Port의 위치·방향·파장·Mode에서 출발해 Architecture를 자율 생성하고, Physics와 Evidence로 후보를 비교·선별하여 Patent-Oriented Engineering Exploration을 지원한다. 향후 Mirror·Lens·High-order Surface의 도입은 Agent가 적용 가능한 Physics와 실제 설계 판단에 따라 결정한다. 현재 계산 가능 범위와 장기 목표를 UI와 재현 가능한 Report에 구분해 표시한다. Package, Aperture 및 Assembly Tolerance는 각각의 입력과 근거를 요구한다. [지속 운영 정책](DEVELOPMENT_OPERATING_POLICY.md)을 모든 Milestone에 적용한다.

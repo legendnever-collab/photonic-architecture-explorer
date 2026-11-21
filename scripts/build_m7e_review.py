@@ -66,6 +66,11 @@ def main():
         shutil.copy2(ROOT / name, app / name)
     (app / MODE_REPORT.parent).mkdir()
     shutil.copy2(ROOT / MODE_REPORT, app / MODE_REPORT)
+    from photonic_architecture_explorer.tutorial import REFERENCE_FILES
+    for name in REFERENCE_FILES:
+        destination = app / name
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(ROOT / name, destination)
     shutil.copy2(ROOT / 'distribution/review_launcher.py', app / 'review_launcher.py')
     for name in ('README_REVIEW.md', 'Start-Photonic-Architecture-Explorer.cmd'):
         shutil.copy2(ROOT / 'distribution' / name, package / name)
