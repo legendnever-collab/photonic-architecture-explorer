@@ -86,6 +86,9 @@ print(json.dumps({name:design_two_ports(json.loads((ROOT/'examples'/name).read_t
         with opener.open(address,timeout=5) as response:
             html = response.read().decode('utf-8')
         assert 'SMF–Glass Proxy' in html and 'Design' in html and 'SMF–Glass Mode Reference' in html
+        with opener.open(address+'/?entry=tutorial',timeout=10) as response:
+            tutorial = response.read().decode('utf-8')
+        assert 'id="guide-tab"' in html and 'G036-NM' in tutorial and 'M4B-LIT-001' in tutorial
     finally:
         process.terminate();process.wait(timeout=10)
         reader.join(timeout=2)
@@ -94,7 +97,7 @@ print(json.dumps({name:design_two_ports(json.loads((ROOT/'examples'/name).read_t
     evidence = {'status':'Pass','source_head':head,'package':str(package),
                 'runtime':runtime,'file_inventory_verified':True,'poisoned_environment_ignored':True,
                 'frozen_results_equal':True,'cmd_launcher':True,'actual_launcher_http':True,
-                'packaged_application_import':True,'offline_mode_report_equal':True}
+                'packaged_tutorial':True,'packaged_application_import':True,'offline_mode_report_equal':True}
     (args.output_dir/'acceptance.json').write_text(json.dumps(evidence,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
     print(json.dumps(evidence))
 

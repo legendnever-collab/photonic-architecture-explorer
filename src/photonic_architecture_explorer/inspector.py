@@ -334,6 +334,10 @@ def make_server(cases, port=8765, *, workspace=None):
             if query.path != '/': self.send_error(404); return
             if workspace is not None:
                 entry = parse_qs(query.query).get('entry', ['example'])[0]
+                if entry == 'tutorial':
+                    from .tutorial import render_tutorial
+                    self.send_page(render_tutorial())
+                    return
                 if entry == 'mode-references':
                     self.send_page(workspace.mode_references())
                     return

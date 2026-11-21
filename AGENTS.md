@@ -27,3 +27,9 @@
 - No additional optical elements, topology synthesis, Maxwell solver or complex UI without separately justified engineering scope. The two-reflector candidate generator in the Product Charter is the next intended design-level extension, not an assertion of current support.
 - Keep PRs Draft; no Main merge without explicit user approval.
 - Explain key engineering choices and limitations in Korean; use English technical terms.
+
+## M7-R21 이후의 작업 절차
+
+- 시작할 때 이 파일, [Product Charter](docs/PRODUCT_CHARTER.md), [운영 정책](docs/DEVELOPMENT_OPERATING_POLICY.md), [현재 지시문](docs/NEXT_TASK.md)의 첫 Work Order를 읽고 원격 상태부터 복구한다.
+- 개발 Agent가 모델·탐색·검증·Milestone을 설계한다. UI, Tutorial, Report 및 인수인계는 한국어 문장과 표준 영어 Technical Terminology를 사용한다.
+- 완료 또는 Blocked 시 운영 정책의 종료 절차를 실행하고 다음 Work Order를 기록한다. 작성과 실행은 별개이며 다음 Milestone 실행과 Main 병합에는 사용자 승인이 필요하다.

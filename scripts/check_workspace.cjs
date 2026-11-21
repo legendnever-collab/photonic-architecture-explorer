@@ -197,6 +197,26 @@ async function main() {
     await page.goto(address);
     assert.equal(await page.locator('#design-review').count(), 0);
     const originalMfd = await byName('source_mfd_ts_m_0').inputValue();
+    const guideTab = page.getByRole('tab', {name: 'Tutorial / How It Works'});
+    await guideTab.click();
+    const guide = page.frameLocator('#guide-frame');
+    await guide.getByRole('heading', {name: '계산 흐름'}).waitFor();
+    assert.equal(await guide.locator('.route > li').count(), 8);
+    assert.equal(await guide.locator('.eq').first().isVisible(), false);
+    await guide.locator('.route summary').first().click();
+    assert(await guide.locator('.eq').first().isVisible());
+    await guide.getByText('Show Equations · FDTD / Yee Grid', {exact: true}).click();
+    await guide.locator('.case > summary').last().click();
+    assert(await guide.getByText(/0.3055\/0.2200 rad/).isVisible());
+    for (const width of [393, 1440]) {
+      await page.setViewportSize({width, height: width === 393 ? 852 : 1050});
+      assert(await guide.locator('html').evaluate(el => el.scrollWidth <= el.clientWidth));
+      await page.evaluate(() => scrollTo(0, 0));
+      await page.screenshot({path: path.join(dir, 'tutorial-' + width + '.png')});
+    }
+    await guideTab.focus();
+    await guideTab.press('ArrowLeft');
+    assert.equal(await byName('source_mfd_ts_m_0').inputValue(), originalMfd);
     const [references] = await Promise.all([
       page.context().waitForEvent('page'),
       page.getByRole('link', {name: 'SMF–Glass Mode Reference'}).click(),
@@ -217,6 +237,14 @@ async function main() {
     await references.close();
     const nominal = await design('Computed');
     const defaultCandidate = frame.locator('[data-candidate]:visible');
+    const confidence = defaultCandidate.locator('[data-confidence]');
+    await confidence.locator('summary').click();
+    assert.equal(await confidence.getAttribute('data-confidence'), nominal.selected_candidate_id);
+    assert.equal(await confidence.locator('tbody tr').count(), 9);
+    assert.match(await confidence.locator('tr').filter({hasText:'Total Coupling'}).innerText(), /Uncomputed/);
+    assert.match(await confidence.innerText(), new RegExp(nominal.input_sha256));
+    await confidence.screenshot({path: path.join(dir, 'confidence.png')});
+    await confidence.locator('summary').click();
     assert.equal(await defaultCandidate.getAttribute('data-input-sha'), nominal.input_sha256);
     assert(await defaultCandidate.locator('[data-projection="Fold"] [data-kind="verified-chief"]').isVisible());
     assert(await defaultCandidate.getByRole('heading', {name: 'Nominal Mode Match'}).isVisible());
