@@ -1,3 +1,15 @@
+# M7-R19 — 개방 SMF 기준장과 M1 Source 오차 판정
+
+Astra Work. [R18](M7R18_SOURCE_EDGE_IMPACT.md)의 두 효과가 모두 예산을 넘었다.
+두 Port·Launch·M1을 고정하고 공통 영역의 장과 외곽 기여를 함께 검증할
+독립 개방경계 vector facet reference의 제공 가능성을 먼저 확인한다.
+계산 전에 자원 한도와 정련 기준을 정하고, 독립장이 있으면 동일 평면·위상·Power에서
+M1 E/H 및 Flux를 비교한다. 미확보 시 외부 실행에 필요한 최소 입력·출력 계약과
+중단 근거를 남긴다. 검증 전에는 곡면 전달 비율과 회전 응답을 Uncomputed로 둔다.
+결과는 Draft PR에 남기고 Main 병합은 별도 승인한다.
+
+---
+
 # M7-R18 — M1 Edge의 설계 영향과 Source 수렴 판정
 
 Astra Work. [R17](M7R17_ISOLATED_SOURCE_EDGE.md)의 Source와 Edge 결과를 재현한다.
