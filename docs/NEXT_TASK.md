@@ -1,3 +1,14 @@
+# M7-R18 — M1 Edge의 설계 영향과 Source 수렴 판정
+
+Astra Work. [R17](M7R17_ISOLATED_SOURCE_EDGE.md)의 Source와 Edge 결과를 재현한다.
+같은 Launch에서 Source 셀 경계의 truncation과 고유모드 정련 효과를 분리한다.
+실제 M1 둘레의 입사 E/H 및 Edge strip의 flux를 구하고, 국소 PO 불일치가
+수신 모드 투영 오차에 줄 수 있는 영향을 정량화할 방법을 검토한다. 가장자리의
+세기만으로 전달 오차를 한정하지 않는다. 사전 예산 안에서 근거가 확보될 때
+곡면 계산을 진행한다. Draft PR, Main 병합은 별도 승인한다.
+
+---
+
 # M7-R17 — 고립 SMF Source와 유한 PEC 단면 검증
 
 Astra Work. [R16](M7R16_VECTOR_RELAY.md)의 주기 셀 대조와 R15 Launch를 재현한다.

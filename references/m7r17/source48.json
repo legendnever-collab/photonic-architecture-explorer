@@ -1,0 +1,50 @@
+{
+  "case_id": "M7R6-SIM-SMF-001",
+  "provenance": "Idealized, independently simulated circular step-index SMF; public core size and width scale, assumed index profile. No measured sample, vendor profile, or real-device tolerance.",
+  "vacuum_wavelength_um": 1.31,
+  "silica_temperature_C": 20,
+  "cladding_source": "Malitson (1965), https://doi.org/10.1364/JOSA.55.001205",
+  "guide": "Circular step-index single-mode fiber in effectively infinite silica cladding; normal, uncoated facet at z=0.",
+  "passive_eps_imag_regulator": 1e-10,
+  "delta_n": 0.0045,
+  "plane_z_um": 5.0,
+  "ambient": "Uniform air model, z>0",
+  "ambient_index": 1.0,
+  "source": "Forward x-polarized HE11-like guided mode, no incoming wave from air.",
+  "frame": "World origin at guide center on facet. t=+X, s=+Y, d=+Z. Fixed center and zero tilt.",
+  "phasor": "exp(+i omega t), forward exp(-ikz); conjugate the exported FMMAX spatial phasors",
+  "budget_provenance": "0.10 dB nominal per-Port Gaussian representation allocation carried over from M7-R5, including 0.01 dB numerical reserve. No customer/real-device loss specification.",
+  "single_port_fit_limit_dB": 0.1,
+  "numerical_reserve_dB": 0.01,
+  "phase_rms_limit_rad": 0.1,
+  "phase_mask_min_relative_intensity": 0.01,
+  "convergence_max_delta_phase_rms_rad": 0.01,
+  "field_delta_l2_limit": 0.02,
+  "incident_min_x_transverse_fraction": 0.99,
+  "power_balance_abs_limit": 0.001,
+  "runs": {
+    "base": {
+      "period_um": 32,
+      "samples": 128,
+      "approx_terms": 197
+    },
+    "grid": {
+      "period_um": 32,
+      "samples": 256,
+      "approx_terms": 197
+    },
+    "basis": {
+      "period_um": 32,
+      "samples": 256,
+      "approx_terms": 317
+    },
+    "window": {
+      "period_um": 48,
+      "samples": 384,
+      "approx_terms": 715
+    }
+  },
+  "core_radius_um": 4.1,
+  "core_source": "Nominal 8.2 um core diameter from Corning PI1450 (2015), assumed positive step index 0.0045; independent engineering assumption.",
+  "width_context": "Corning PI1424, 1310 nm MFD 9.2 +/- 0.4 um; context only, not prescribed to solver."
+}
