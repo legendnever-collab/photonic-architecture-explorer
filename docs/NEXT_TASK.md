@@ -1,3 +1,14 @@
+# M7-R21 — 원형 core 경계에 맞춘 HE11 독립 대조
+
+Astra Work. [R20](M7R20_YEE_FIELD_EXTRACTION.md)의 24 px/µm E/H 잔차를
+재현한다. 동일한 1310 nm SMF의 경계 일치형 vector FEM eigenmode를 해석 HE11과
+비교한다. 계산 전 mesh·order·개방경계 예산과 중단 기준을 정한다.
+Er는 core 경계 양쪽에서 따로 비교하고 H와 Power에 E에서 정한 공통 계수를 쓴다.
+5e−5 정확도를 입증하면 독립 Facet 여기·monitor 경로를 확정한다.
+미달하면 원인과 최소 외부 입력을 기록한다. Draft PR, Main 병합은 별도 승인한다.
+
+---
+
 # M7-R20 — Vector Field Export의 H와 Power 검증
 
 Astra Work. [R19](M7R19_OPEN_FACET_REFERENCE.md)의 직선 guide H 오차와

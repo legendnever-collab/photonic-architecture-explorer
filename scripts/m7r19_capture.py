@@ -71,10 +71,10 @@ def guided_mode():
     return beta, fields
 
 
-def capture(out, resolution, radius, pml, straight):
+def guide_simulation(resolution, radius, pml, straight):
     import meep as mp
 
-    beta, mode = guided_mode()
+    _, mode = guided_mode()
     frequency = 1 / WL
 
     # Electric sheet only. The backward wave exits the bottom PML. A straight
@@ -99,7 +99,7 @@ def capture(out, resolution, radius, pml, straight):
     half_z = 12 + pml
     height = 2 * half_z if straight else half_z
     center = mp.Vector3(z=0 if straight else -half_z / 2)
-    sim = mp.Simulation(
+    return mp.Simulation(
         dimensions=mp.CYLINDRICAL,
         m=1,
         resolution=resolution,
@@ -117,6 +117,14 @@ def capture(out, resolution, radius, pml, straight):
             ),
         ],
     )
+
+
+def capture(out, resolution, radius, pml, straight):
+    import meep as mp
+
+    beta, _ = guided_mode()
+    frequency = 1 / WL
+    sim = guide_simulation(resolution, radius, pml, straight)
     components = [mp.Er, mp.Ep, mp.Ez, mp.Hr, mp.Hp, mp.Hz]
     extent = radius - 1
     r = (np.arange(round(extent * 4)) + 0.5) / 4
