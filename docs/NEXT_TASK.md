@@ -1,3 +1,14 @@
+# M7-R20 — Vector Field Export의 H와 Power 검증
+
+Astra Work. [R19](M7R19_OPEN_FACET_REFERENCE.md)의 직선 guide H 오차와
+복원 Power/native flux 차이를 재현한다. 균일 매질 평면파와 직선 HE11을
+사용해 Yee 성분의 공간·시간 위치, 파동 임피던스, 공통 진폭과 Flux 정규화를
+분리한다. 사전 예산 안에서 대조가 통과한 경우 Facet을 재계산한다.
+통과하지 않으면 잔여 원인과 대체 Reference를 기록하고 계산을 중단한다.
+Main 병합은 별도 승인한다.
+
+---
+
 # M7-R19 — 개방 SMF 기준장과 M1 Source 오차 판정
 
 Astra Work. [R18](M7R18_SOURCE_EDGE_IMPACT.md)의 두 효과가 모두 예산을 넘었다.

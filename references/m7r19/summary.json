@@ -1,0 +1,118 @@
+{
+  "meep_version": "1.35.1",
+  "normalized_launch_m2": 1.7426507346302212e-11,
+  "runs": {
+    "8": {
+      "controls": {
+        "straight_transverse_error": {
+          "E": 0.005245092700276199,
+          "H": 0.10935390929433275
+        },
+        "ref_input_native_flux": 1433037.2284591822,
+        "guide_to_native_flux_factor": 0.2032287457767576,
+        "input_net_over_incident": 0.9553550363016077,
+        "reflection_subtracted_over_incident": 0.04457267747704608,
+        "output_over_incident": 0.9553570141502281,
+        "side_over_incident": 1.4467049874521563e-07,
+        "closed_monitor_balance_abs": 2.1225191191832543e-06,
+        "reflected_transmitted_side_balance_abs": 7.016370222706836e-05,
+        "air_export_vs_native_rel": 0.12110455380898855,
+        "dft_extension_relative": {
+          "E": 1.8907431250571207e-06,
+          "H": 1.9072918347618421e-06
+        }
+      },
+      "gauge": {
+        "center_phase_meep_rad": -0.9401951981330804,
+        "launch_scale_abs": 0.007474428044552777,
+        "raw_linear_flux_um2": 311928.04479553405
+      },
+      "full_flux_over_launch": 0.9998943206173544,
+      "common40": {
+        "E": 0.02499335018597501,
+        "H": 0.024993350191919086,
+        "signed_flux_delta": 0.0002929371425317573
+      },
+      "common48": {
+        "E": 0.024992976764980097,
+        "H": 0.02499297676761481,
+        "signed_flux_delta": 0.00029272522489065533
+      },
+      "common48_source_plane": {
+        "E": 0.034573940865257696,
+        "H": 0.03525302038229512
+      },
+      "added_outside48": {
+        "E": 8.343615488996559e-05,
+        "H": 8.343634171013558e-05,
+        "signed_flux_delta": 2.705526438440131e-07
+      },
+      "full_vs_r17_48": {
+        "E": 0.024993141407055514,
+        "H": 0.02499314140710389,
+        "signed_flux_delta": 0.00029299577753449935
+      }
+    },
+    "12": {
+      "controls": {
+        "straight_transverse_error": {
+          "E": 0.0007845318346098415,
+          "H": 0.04468056813278969
+        },
+        "ref_input_native_flux": 1355270.550493022,
+        "guide_to_native_flux_factor": 0.22924367449204827,
+        "input_net_over_incident": 0.9619328292101113,
+        "reflection_subtracted_over_incident": 0.03807653013020214,
+        "output_over_incident": 0.9619336238198644,
+        "side_over_incident": 3.540212983673439e-08,
+        "closed_monitor_balance_abs": 8.300118829442569e-07,
+        "reflected_transmitted_side_balance_abs": 1.018935219637492e-05,
+        "air_export_vs_native_rel": 0.04790868073441379,
+        "dft_extension_relative": {
+          "E": 1.3143548938931516e-06,
+          "H": 1.3237914206635187e-06
+        }
+      },
+      "gauge": {
+        "center_phase_meep_rad": -1.9410241214417465,
+        "launch_scale_abs": 0.007459491508064761,
+        "raw_linear_flux_um2": 313178.4756658332
+      },
+      "full_flux_over_launch": 0.9992096176730518,
+      "common40": {
+        "E": 0.014425938599192303,
+        "H": 0.014425938601717703,
+        "signed_flux_delta": -0.00039164756805709633
+      },
+      "common48": {
+        "E": 0.014425620664025644,
+        "H": 0.014425620662851848,
+        "signed_flux_delta": -0.00039185621525839043
+      },
+      "common48_source_plane": {
+        "E": 0.01881919052321875,
+        "H": 0.01874545451827851
+      },
+      "added_outside48": {
+        "E": 8.34260487131915e-05,
+        "H": 8.342625821941472e-05,
+        "signed_flux_delta": 1.4904849032770784e-07
+      },
+      "full_vs_r17_48": {
+        "E": 0.014425859870484909,
+        "H": 0.014425859870029561,
+        "signed_flux_delta": -0.0003917071667680627
+      }
+    }
+  },
+  "grid12_vs8_using_r17_norm": {
+    "E": 0.010599311762791708,
+    "H": 0.010599311763066659,
+    "signed_flux_delta": -0.0006847029443025621
+  },
+  "status": "Unqualified pilot",
+  "independent_accuracy_bound": null,
+  "nominal_guided_fraction": null,
+  "nominal_U": null,
+  "rotation_optics": null
+}
