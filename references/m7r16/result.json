@@ -1,0 +1,25 @@
+{
+  "free": {
+    "E_relative": 2.959202767391117e-15,
+    "H_relative": 2.928821189182387e-15,
+    "flux_relative": 8.904123496304037e-16
+  },
+  "PEC": {
+    "max_polarization_boundary_flux_error": 0.0
+  },
+  "R15_source": {
+    "H_vs_k_cross_E": 1.9190240281287578e-16,
+    "longitudinal_residual": 1.1560718566004372e-17,
+    "cell_flux_relative_at_0m": 1.354472090042691e-14,
+    "cell_flux_relative_at_2.5e-05m": 1.3211653993039363e-14
+  },
+  "double_plane_image": {
+    "E_relative": 2.1473766529389353e-12,
+    "H_relative": 2.1461331785278297e-12
+  },
+  "control_export": "infinite-plane-control.npz",
+  "launch_power_m2": 1.7426507346302212e-11,
+  "nominal_target_field": null,
+  "nominal_guided_fraction": null,
+  "rotation_response": null
+}

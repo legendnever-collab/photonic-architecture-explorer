@@ -1,3 +1,13 @@
+# M7-R17 — 고립 SMF Source와 유한 PEC 단면 검증
+
+Astra Work. [R16](M7R16_VECTOR_RELAY.md)의 주기 셀 대조와 R15 Launch를 재현한다.
+고립 Source 구성 후 M1 입사장·Flux의 셀/창 수렴을 확인한다. 고정 처방의 M1과 같은
+입사각·Aperture에서 유한 평면 PEC의 Vector Physical Optics와 독립 edge diffraction
+Reference를 대조한다. 편광별 E/H 및 오차가 예산 안에 있을 때 곡면으로 확장한다.
+명목 전달 비율·회전 판정은 별도 검증 후 진행한다. Draft PR, Main 병합은 별도 승인한다.
+
+---
+
 # M7-R16 — 1310 nm 명목 Vector Relay 검증 경로
 
 추천 Astra Work. [R15 Port ledger](M7R15_PORT_POWER.md)의 Power와 동일한 SMF Source
