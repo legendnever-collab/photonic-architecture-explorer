@@ -26,3 +26,6 @@ Package Yield, Total Coupling과 Patentability는 Uncomputed입니다. Guard Mar
 SHA-256이 기록됩니다. CPython License는 `runtime/LICENSE*`, NumPy/SciPy 및 포함된
 Binary Library License는 `runtime/Lib/site-packages`의 관련 `.dist-info/licenses`와
 패키지 License 파일에 보존됩니다. 이 ZIP은 Draft의 사용자 검토용 배포물입니다.
+
+첫 화면의 **Tutorial / How It Works**에서 1310 nm SMF와 PIC SSC 예제, 수식과 저장된 Field를 볼 수 있습니다. Workspace 탭으로 돌아가면 편집값이 유지됩니다.
+설계 결과의 **Engineering Confidence**를 열면 선택 후보와 입력 SHA에 해당하는 아홉 가지 판정을 확인할 수 있습니다. 예제 그림은 오프라인에서도 열리며 원본 Repository 링크는 인터넷 연결을 사용합니다.

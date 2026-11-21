@@ -318,6 +318,33 @@ def render_port(port, raw, issue_path):
 
 
 WORKSPACE_JS = """
+const tabs = [...document.querySelectorAll('[role="tab"]')];
+const guide = document.querySelector('#guide-frame');
+guide.addEventListener('load', () => {
+  const content = guide.contentDocument.querySelector('#tutorial-guide');
+  if (content) new ResizeObserver(() => {
+    if (!guide.closest('[hidden]')) guide.style.height = Math.ceil(content.getBoundingClientRect().height) + 2 + 'px';
+  }).observe(content);
+});
+function selectTab(active) {
+  for (const tab of tabs) {
+    const selected = tab === active;
+    tab.setAttribute('aria-selected', String(selected));
+    tab.tabIndex = selected ? 0 : -1;
+    document.getElementById(tab.getAttribute('aria-controls')).hidden = !selected;
+  }
+  if (active.id === 'guide-tab' && !guide.hasAttribute('src')) guide.src = '/?entry=tutorial';
+}
+for (const tab of tabs) {
+  tab.addEventListener('click', () => selectTab(tab));
+  tab.addEventListener('keydown', event => {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+    event.preventDefault();
+    const next = event.key === 'Home' ? tabs[0] : event.key === 'End' ? tabs[1] : tabs[1 - tabs.indexOf(tab)];
+    selectTab(next);
+    next.focus();
+  });
+}
 const form = document.querySelector('#design-form');
 const output = document.querySelector('#design-output');
 const pending = document.querySelector('#pending');
@@ -500,10 +527,18 @@ def render_workspace(raw, result=None, error=None, job=None):
     .mode select{{max-width:100%}}.shared,.output,.form-actions{{margin-top:16px}}
     .output iframe{{display:block;width:100%;min-height:35rem;border:1px solid #d6e0e7;border-radius:8px;background:#fff}}
     .toolbar .example-links,.export-actions{{display:flex;gap:10px;flex-wrap:wrap}}
+    .workspace-tabs{{display:flex;gap:4px;border-bottom:1px solid #bcced7;margin:0 0 14px}}
+    .workspace-tabs button{{color:#486475;background:transparent;border:0;border-bottom:3px solid transparent;border-radius:0}}
+    .workspace-tabs [aria-selected="true"]{{color:#174d64;border-bottom-color:#176d92;font-weight:650}}
+    #guide-frame{{width:100%;min-height:45vh;border:0;display:block}}
     #design-form{{scroll-margin-top:12px}}
     @media(max-width:760px){{.ports{{grid-template-columns:minmax(0,1fr)}}}}
     </style></head><body><header><h1>Photonic Architecture Explorer</h1>
     <p>Two-Port Design Workspace</p></header><main class="wrap">
+    <nav class="workspace-tabs" role="tablist" aria-label="Workspace 보기">
+    <button id="design-tab" role="tab" aria-selected="true" aria-controls="design-pane">Two-Port Workspace</button>
+    <button id="guide-tab" role="tab" aria-selected="false" tabindex="-1" aria-controls="guide-pane">Tutorial / How It Works</button></nav>
+    <section id="design-pane" role="tabpanel" aria-labelledby="design-tab">
     {review}{job_view}
     <p class="notice" id="pending" role="status" hidden>지금 입력으로 결과를 확인하려면 Design을 실행하세요.</p>
     <p><a href="/?entry=mode-references" target="_blank" rel="noopener">SMF–Glass Mode Reference</a></p>
@@ -514,7 +549,8 @@ def render_workspace(raw, result=None, error=None, job=None):
       <div class="ports">{ports}</div>
       <section class="card shared" aria-label="공통 전파 조건">{fields}</section>
       <div class="form-actions"><button type="submit">Design</button></div>
-    </form></main><script>{WORKSPACE_JS}</script></body></html>'''
+    </form></section><section id="guide-pane" role="tabpanel" aria-labelledby="guide-tab" hidden>
+    <iframe id="guide-frame" title="계산 과정과 검증 근거"></iframe></section></main><script>{WORKSPACE_JS}</script></body></html>'''
 
 
 class Workspace:

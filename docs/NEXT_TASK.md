@@ -1,4 +1,23 @@
-# M7-R21 — 원형 core 경계에 맞춘 HE11 독립 대조
+# M7-R22 · 1310 nm SMF–Glass Reference에서 사용자 입력 재설계
+
+**Mission / Objective.** Tutorial에서 확인한 두 Port를 Workspace에서 열어 Design을 실행하고, 한 조건을 바꾼 뒤 새 후보와 Confidence를 검토한다. R21의 설명과 실제 후보 생성 사이의 단절을 해결한다. **Sol Work**를 권장한다. 기존 입력·Worker·Gaussian 평가·Export를 재사용하는 통합 작업이다.
+
+**Repository / Verified Base SHA.** [photonic-architecture-explorer](https://github.com/legendnever-collab/photonic-architecture-explorer) · [R21 Draft #52](https://github.com/legendnever-collab/photonic-architecture-explorer/pull/52) 구현 SHA `1b64a7f5672f9e4feb622094b754ccb14a2e482a`. [Physics·Browser CI](https://github.com/legendnever-collab/photonic-architecture-explorer/actions/runs/44895226164)와 [Windows Package CI](https://github.com/legendnever-collab/photonic-architecture-explorer/actions/runs/44895226263)에서 이 구현에 귀속되는 Evidence를 확인한다. 인수인계 문서가 추가된 최신 HEAD는 Recovery에서 대조한다.
+
+**관련 Physics Evidence.** R20 Draft #51의 검증 SHA는 `ddf8ce0bca3a887f24fae45671a93e11ce7760ec`이다. Physics CI 44893958127, Windows CI 44893958128 및 R6 design_summary.json, R20 summary.json을 참조한다. R21의 구현·검증 범위는 [R21 Design Notes](M7R21_ENGINEERING_TRUST.md)를 따른다.
+
+1. **Recovery.** AGENTS.md, docs/PRODUCT_CHARTER.md, docs/DEVELOPMENT_OPERATING_POLICY.md, 이 첫 지시문을 읽는다. R21 Draft가 열려 있으면 해당 최신 HEAD·Base·Diff와 Physics/Windows CI를 확인한 후 시작한다. 병합됐다면 최신 검증 Main에서 R21 포함을 확인한다. R6 Port JSON·Hash·단위와 현재 1550 nm Proxy를 구분한다.
+2. **Scope.** Example A에 명시적 ‘이 두 Port로 설계’ 진입점을 추가한다. 기존 inputs/Workspace/Job/Export를 재사용하고 저장된 R6 Port의 위치·축·q·기준면·출처를 손실 없이 전달한다. 사용자가 Position 하나를 바꾸면 이전 결과를 즉시 숨기고 새 Snapshot으로 기존 Design을 재실행한다. 미편집 Port의 근거를 유지하고 변경된 조건 및 적용되지 않는 Reference를 표시한다.
+3. **Acceptance / Budget.** 원본 1310 nm에서 Exact-q 36배치/144처방/유효 0, Guarded Near-Match G036-NM 및 R6 η=0.9990889546173051을 재현한다. 동일 Snapshot의 독립 Quadrature와 η 절대차 ≤1e−8을 적용한다. 편집 입력은 동일 입력의 독립 Adapter 재평가와 대조하고 성공·유효 후보 없음·중단을 구분한다. 기존 Worker 시간·호출 예산과 취소 동작을 계승한다. 재현 차이 또는 입력 출처 손실 시 해당 추천을 보류하고 원인을 기록한다.
+4. **Regression.** 원본·편집 1건·미제공 Phase·취소·오래된 응답·HTML/JSON의 Candidate ID와 Input SHA를 검사한다. Synthetic와 1550 nm 흐름, Geometry/Domain Guard, R21 Tutorial·Confidence, Physics CI와 압축 해제한 Windows Review Package를 확인한다.
+5. **Non-Goals / Remaining Uncomputed.** 새 Topology·Solver·실시간 Meep, Guard 완화, 실제 SSC 성능 산출은 범위 밖이다. 실제 Total Coupling, 명목 Guided Power 비율·U, M2 회전 광학 응답과 Assembly Tolerance는 Uncomputed다.
+6. **Deliverables / 승인.** 검토 가능한 UI, 재현 결과·오차·제한, Regression과 Draft PR, 후속 docs/NEXT_TASK.md를 제출한다. 운영 정책의 Engineering Ownership·언어·Evidence 규칙을 계승한다. Main 병합 및 다음 Milestone 실행은 각각 사용자 승인이 필요하다.
+
+---
+
+## 이전 Work Order 기록 · 아래 지시문은 역사적 기록이다
+
+### 보류된 R20 후속 Physics 제안 — 원형 core 경계에 맞춘 HE11 독립 대조
 
 Astra Work. [R20](M7R20_YEE_FIELD_EXTRACTION.md)의 24 px/µm E/H 잔차를
 재현한다. 동일한 1310 nm SMF의 경계 일치형 vector FEM eigenmode를 해석 HE11과
