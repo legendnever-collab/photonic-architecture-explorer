@@ -1,0 +1,482 @@
+{
+  "port_diagnostic_budget": 0.00025,
+  "glass_reverse": {
+    "runs": {
+      "base": {
+        "case_id": "M7R5-SIM-GLASS-001",
+        "case_sha256": "6080d4710d64e85dd4da66545dcda1c49cf8139cf63502ea74cc118cd97c2779",
+        "solver_versions": {
+          "fmmax": "1.7.1",
+          "jax": "0.12.1",
+          "jaxlib": "0.12.1",
+          "numpy": "2.3.5",
+          "scipy": "1.17.0"
+        },
+        "vacuum_wavelength_um": 1.31,
+        "air_plane_z_um": 5.0,
+        "guide_plane_z_um": 0.0,
+        "frame": "World origin at guide center on facet. t=+X, s=+Y, d=+Z. Fixed center and zero tilt.",
+        "phasor": "exp(+i omega t), forward exp(-ikz); conjugate the exported FMMAX spatial phasors",
+        "normal": "local +z in emitted frame",
+        "run": {
+          "period_um": 32,
+          "samples": 128,
+          "approx_terms": 197
+        },
+        "fourier_terms": 193,
+        "cell_area_m2": 1.024e-09,
+        "export_center_ex_conjugated_unnormalized": [
+          1.3523534550836214,
+          4.935064862443644
+        ],
+        "monitor_units": "mean over cell of 0.5 Re(E \u00d7 H*) dot +z in FMMAX units",
+        "export_field_units": "E/E_ref and Z0 H/E_ref, common center Ex=1",
+        "export_power_units": "m^2, multiply by E_ref^2/Z0 for W",
+        "vacuum_eh_probe_max_abs": 0.0,
+        "monitor_flux_signed": {
+          "incident": 0.3446766104161297,
+          "reflected": -0.011669717470455017,
+          "outgoing": 0.33300689294567465
+        },
+        "export_power_signed_m2": {
+          "incident": 1.347970344950468e-11,
+          "reflected": -4.563823772414475e-13,
+          "outgoing": 1.3023321072263232e-11
+        },
+        "T": 0.9661429957305019,
+        "R": 0.033857004269498045,
+        "balance_abs": 0.0,
+        "joint_guide_vs_separate_abs": 3.221057046153434e-16,
+        "frozen_npz_sha256": "cbb2e9c53be4551e96968301090a4adeb3a682cd2f5a2d80dda3d808e5f7e83e",
+        "replay_coefficients_relative_l2": 0.0,
+        "frozen_grid_outgoing_power_m2": 1.3023321072263232e-11,
+        "grid_vs_monitor_relative_error": 0.0
+      },
+      "grid": {
+        "case_id": "M7R5-SIM-GLASS-001",
+        "case_sha256": "6080d4710d64e85dd4da66545dcda1c49cf8139cf63502ea74cc118cd97c2779",
+        "solver_versions": {
+          "fmmax": "1.7.1",
+          "jax": "0.12.1",
+          "jaxlib": "0.12.1",
+          "numpy": "2.3.5",
+          "scipy": "1.17.0"
+        },
+        "vacuum_wavelength_um": 1.31,
+        "air_plane_z_um": 5.0,
+        "guide_plane_z_um": 0.0,
+        "frame": "World origin at guide center on facet. t=+X, s=+Y, d=+Z. Fixed center and zero tilt.",
+        "phasor": "exp(+i omega t), forward exp(-ikz); conjugate the exported FMMAX spatial phasors",
+        "normal": "local +z in emitted frame",
+        "run": {
+          "period_um": 32,
+          "samples": 256,
+          "approx_terms": 197
+        },
+        "fourier_terms": 193,
+        "cell_area_m2": 1.024e-09,
+        "export_center_ex_conjugated_unnormalized": [
+          1.3523534557388281,
+          4.935064860665587
+        ],
+        "monitor_units": "mean over cell of 0.5 Re(E \u00d7 H*) dot +z in FMMAX units",
+        "export_field_units": "E/E_ref and Z0 H/E_ref, common center Ex=1",
+        "export_power_units": "m^2, multiply by E_ref^2/Z0 for W",
+        "vacuum_eh_probe_max_abs": 0.0,
+        "monitor_flux_signed": {
+          "incident": 0.3446766104112767,
+          "reflected": -0.011669717471051725,
+          "outgoing": 0.33300689294022484
+        },
+        "export_power_signed_m2": {
+          "incident": 1.3479703457437342e-11,
+          "reflected": -4.563823775397857e-13,
+          "outgoing": 1.3023321079897553e-11
+        },
+        "T": 0.9661429957282938,
+        "R": 0.03385700427170596,
+        "balance_abs": 3.221057046198786e-16,
+        "joint_guide_vs_separate_abs": 0.0,
+        "frozen_npz_sha256": "81a987a61d930321c5fcd0f8cef9473a0925aa61d1a6cc5a071a058126709bd1",
+        "replay_coefficients_relative_l2": 0.0,
+        "frozen_grid_outgoing_power_m2": 1.3023321079897555e-11,
+        "grid_vs_monitor_relative_error": 2.220446049250313e-16
+      },
+      "basis": {
+        "case_id": "M7R5-SIM-GLASS-001",
+        "case_sha256": "6080d4710d64e85dd4da66545dcda1c49cf8139cf63502ea74cc118cd97c2779",
+        "solver_versions": {
+          "fmmax": "1.7.1",
+          "jax": "0.12.1",
+          "jaxlib": "0.12.1",
+          "numpy": "2.3.5",
+          "scipy": "1.17.0"
+        },
+        "vacuum_wavelength_um": 1.31,
+        "air_plane_z_um": 5.0,
+        "guide_plane_z_um": 0.0,
+        "frame": "World origin at guide center on facet. t=+X, s=+Y, d=+Z. Fixed center and zero tilt.",
+        "phasor": "exp(+i omega t), forward exp(-ikz); conjugate the exported FMMAX spatial phasors",
+        "normal": "local +z in emitted frame",
+        "run": {
+          "period_um": 32,
+          "samples": 256,
+          "approx_terms": 317
+        },
+        "fourier_terms": 317,
+        "cell_area_m2": 1.024e-09,
+        "export_center_ex_conjugated_unnormalized": [
+          1.3314954581519043,
+          4.947638663021952
+        ],
+        "monitor_units": "mean over cell of 0.5 Re(E \u00d7 H*) dot +z in FMMAX units",
+        "export_field_units": "E/E_ref and Z0 H/E_ref, common center Ex=1",
+        "export_power_units": "m^2, multiply by E_ref^2/Z0 for W",
+        "vacuum_eh_probe_max_abs": 0.0,
+        "monitor_flux_signed": {
+          "incident": 0.34467632559466493,
+          "reflected": -0.011669834649452744,
+          "outgoing": 0.3330064909452121
+        },
+        "export_power_signed_m2": {
+          "incident": 1.3444630626162799e-11,
+          "reflected": -4.55199863406913e-13,
+          "outgoing": 1.2989430762755882e-11
+        },
+        "T": 0.9661426277847223,
+        "R": 0.03385737221527748,
+        "balance_abs": 1.6105298539284724e-16,
+        "joint_guide_vs_separate_abs": 3.2210597078569447e-16,
+        "frozen_npz_sha256": "af5d77af5c4fcf4b2c4f21d1d28f6b247298c1c8b9a07d88cc11d31853b0dc55",
+        "replay_coefficients_relative_l2": 0.0,
+        "frozen_grid_outgoing_power_m2": 1.2989430762755887e-11,
+        "grid_vs_monitor_relative_error": 4.440892098500626e-16
+      },
+      "window": {
+        "case_id": "M7R5-SIM-GLASS-001",
+        "case_sha256": "6080d4710d64e85dd4da66545dcda1c49cf8139cf63502ea74cc118cd97c2779",
+        "solver_versions": {
+          "fmmax": "1.7.1",
+          "jax": "0.12.1",
+          "jaxlib": "0.12.1",
+          "numpy": "2.3.5",
+          "scipy": "1.17.0"
+        },
+        "vacuum_wavelength_um": 1.31,
+        "air_plane_z_um": 5.0,
+        "guide_plane_z_um": 0.0,
+        "frame": "World origin at guide center on facet. t=+X, s=+Y, d=+Z. Fixed center and zero tilt.",
+        "phasor": "exp(+i omega t), forward exp(-ikz); conjugate the exported FMMAX spatial phasors",
+        "normal": "local +z in emitted frame",
+        "run": {
+          "period_um": 40,
+          "samples": 320,
+          "approx_terms": 497
+        },
+        "fourier_terms": 497,
+        "cell_area_m2": 1.5999999999999996e-09,
+        "export_center_ex_conjugated_unnormalized": [
+          1.6641850273886127,
+          6.185040087246546
+        ],
+        "monitor_units": "mean over cell of 0.5 Re(E \u00d7 H*) dot +z in FMMAX units",
+        "export_field_units": "E/E_ref and Z0 H/E_ref, common center Ex=1",
+        "export_power_units": "m^2, multiply by E_ref^2/Z0 for W",
+        "vacuum_eh_probe_max_abs": 0.0,
+        "monitor_flux_signed": {
+          "incident": 0.3446761907152815,
+          "reflected": -0.011669852251716155,
+          "outgoing": 0.3330063384635661
+        },
+        "export_power_signed_m2": {
+          "incident": 1.3442832907135447e-11,
+          "reflected": -4.551398619824174e-13,
+          "outgoing": 1.2987693045153059e-11
+        },
+        "T": 0.9661425634666038,
+        "R": 0.033857436533398365,
+        "balance_abs": 2.0936896294135497e-15,
+        "joint_guide_vs_separate_abs": 3.221060968328538e-16,
+        "frozen_npz_sha256": "b6ecb48919877a213f45581d9ec844164b60a1e0950d6a866fe82b9ee6f1b027",
+        "replay_coefficients_relative_l2": 0.0,
+        "frozen_grid_outgoing_power_m2": 1.2987693045153051e-11,
+        "grid_vs_monitor_relative_error": 6.661338147750939e-16
+      }
+    },
+    "refinement_changes": {
+      "grid": {
+        "delta_T": 2.208122573676974e-12,
+        "delta_R": 2.2079144068598566e-12,
+        "relative_changes_in_center_normalized_power": {
+          "incident": 5.88489257324909e-10,
+          "reflected": 6.537022034791562e-10,
+          "outgoing": 5.862039742510206e-10
+        }
+      },
+      "basis": {
+        "delta_T": 3.6794357149982915e-07,
+        "delta_R": 3.6794357152064583e-07,
+        "relative_changes_in_center_normalized_power": {
+          "incident": 0.0026018993211005537,
+          "reflected": 0.0025910600213076007,
+          "outgoing": 0.0026022791677909884
+        }
+      },
+      "window": {
+        "delta_T": 6.431811849783031e-08,
+        "delta_R": 6.431812088480982e-08,
+        "relative_changes_in_center_normalized_power": {
+          "incident": 0.0001337127867130361,
+          "reflected": 0.00013181336225920326,
+          "outgoing": 0.00013377934988545448
+        }
+      }
+    },
+    "max_balance_abs": 2.0936896294135497e-15,
+    "max_joint_guide_vs_separate_abs": 3.221060968328538e-16,
+    "facet_ratio_screen": 4.3226390262171895e-07,
+    "facet_ratio_screen_within_budget": true,
+    "center_normalized_power_screen": 0.00273605917138074,
+    "center_normalized_power_screen_within_budget": false
+  },
+  "smf_forward": {
+    "runs": {
+      "base": {
+        "case_id": "M7R6-SIM-SMF-001",
+        "case_sha256": "ecefe229159ad2ef86ab0313249f372660db178ebe7508e42a0ebcb300a99142",
+        "solver_versions": {
+          "fmmax": "1.7.1",
+          "jax": "0.12.1",
+          "jaxlib": "0.12.1",
+          "numpy": "2.3.5",
+          "scipy": "1.17.0"
+        },
+        "vacuum_wavelength_um": 1.31,
+        "air_plane_z_um": 5.0,
+        "guide_plane_z_um": 0.0,
+        "frame": "World origin at guide center on facet. t=+X, s=+Y, d=+Z. Fixed center and zero tilt.",
+        "phasor": "exp(+i omega t), forward exp(-ikz); conjugate the exported FMMAX spatial phasors",
+        "normal": "local +z in emitted frame",
+        "run": {
+          "period_um": 32,
+          "samples": 128,
+          "approx_terms": 197
+        },
+        "fourier_terms": 193,
+        "cell_area_m2": 1.024e-09,
+        "export_center_ex_conjugated_unnormalized": [
+          0.4028717695164819,
+          1.123467297099849
+        ],
+        "monitor_units": "mean over cell of 0.5 Re(E \u00d7 H*) dot +z in FMMAX units",
+        "export_field_units": "E/E_ref and Z0 H/E_ref, common center Ex=1",
+        "export_power_units": "m^2, multiply by E_ref^2/Z0 for W",
+        "vacuum_eh_probe_max_abs": 0.0,
+        "monitor_flux_signed": {
+          "incident": 0.024847636887845095,
+          "reflected": -0.00083944940591191,
+          "outgoing": 0.024008187481933188
+        },
+        "export_power_signed_m2": {
+          "incident": 1.7861887172278293e-11,
+          "reflected": -6.034437255709166e-13,
+          "outgoing": 1.7258443446707377e-11
+        },
+        "T": 0.9662161271230365,
+        "R": 0.03378387287696359,
+        "balance_abs": 1.3962884952052681e-16,
+        "joint_guide_vs_separate_abs": 1.3962884952052681e-16,
+        "frozen_npz_sha256": "d19203d7a27aad28e19b7eed4fbc0e05d025cbc0e1cfe62fcfafe4fab4be61b9",
+        "replay_coefficients_relative_l2": 4.5460261333381416e-13,
+        "frozen_grid_outgoing_power_m2": 1.7258443446707238e-11,
+        "grid_vs_monitor_relative_error": 8.104628079763643e-15
+      },
+      "grid": {
+        "case_id": "M7R6-SIM-SMF-001",
+        "case_sha256": "ecefe229159ad2ef86ab0313249f372660db178ebe7508e42a0ebcb300a99142",
+        "solver_versions": {
+          "fmmax": "1.7.1",
+          "jax": "0.12.1",
+          "jaxlib": "0.12.1",
+          "numpy": "2.3.5",
+          "scipy": "1.17.0"
+        },
+        "vacuum_wavelength_um": 1.31,
+        "air_plane_z_um": 5.0,
+        "guide_plane_z_um": 0.0,
+        "frame": "World origin at guide center on facet. t=+X, s=+Y, d=+Z. Fixed center and zero tilt.",
+        "phasor": "exp(+i omega t), forward exp(-ikz); conjugate the exported FMMAX spatial phasors",
+        "normal": "local +z in emitted frame",
+        "run": {
+          "period_um": 32,
+          "samples": 256,
+          "approx_terms": 197
+        },
+        "fourier_terms": 193,
+        "cell_area_m2": 1.024e-09,
+        "export_center_ex_conjugated_unnormalized": [
+          0.40379614966742283,
+          1.1234167417963303
+        ],
+        "monitor_units": "mean over cell of 0.5 Re(E \u00d7 H*) dot +z in FMMAX units",
+        "export_field_units": "E/E_ref and Z0 H/E_ref, common center Ex=1",
+        "export_power_units": "m^2, multiply by E_ref^2/Z0 for W",
+        "vacuum_eh_probe_max_abs": 0.0,
+        "monitor_flux_signed": {
+          "incident": 0.02494118766440861,
+          "reflected": -0.0008426290616743947,
+          "outgoing": 0.02409855860273425
+        },
+        "export_power_signed_m2": {
+          "incident": 1.7921184728844596e-11,
+          "reflected": -6.054607854023329e-13,
+          "outgoing": 1.7315723943442286e-11
+        },
+        "T": 0.9662153593881656,
+        "R": 0.0337846406118357,
+        "balance_abs": 1.3910512196275876e-15,
+        "joint_guide_vs_separate_abs": 0.0,
+        "frozen_npz_sha256": "25d5e112372fcc1a325beb323ae04aaecdcb16c6a9597163533ab85503cc9de8",
+        "replay_coefficients_relative_l2": 8.394875074922091e-13,
+        "frozen_grid_outgoing_power_m2": 1.7315723943442878e-11,
+        "grid_vs_monitor_relative_error": 3.419486915845482e-14
+      },
+      "basis": {
+        "case_id": "M7R6-SIM-SMF-001",
+        "case_sha256": "ecefe229159ad2ef86ab0313249f372660db178ebe7508e42a0ebcb300a99142",
+        "solver_versions": {
+          "fmmax": "1.7.1",
+          "jax": "0.12.1",
+          "jaxlib": "0.12.1",
+          "numpy": "2.3.5",
+          "scipy": "1.17.0"
+        },
+        "vacuum_wavelength_um": 1.31,
+        "air_plane_z_um": 5.0,
+        "guide_plane_z_um": 0.0,
+        "frame": "World origin at guide center on facet. t=+X, s=+Y, d=+Z. Fixed center and zero tilt.",
+        "phasor": "exp(+i omega t), forward exp(-ikz); conjugate the exported FMMAX spatial phasors",
+        "normal": "local +z in emitted frame",
+        "run": {
+          "period_um": 32,
+          "samples": 256,
+          "approx_terms": 317
+        },
+        "fourier_terms": 317,
+        "cell_area_m2": 1.024e-09,
+        "export_center_ex_conjugated_unnormalized": [
+          0.41036294565359177,
+          1.123702517822361
+        ],
+        "monitor_units": "mean over cell of 0.5 Re(E \u00d7 H*) dot +z in FMMAX units",
+        "export_field_units": "E/E_ref and Z0 H/E_ref, common center Ex=1",
+        "export_power_units": "m^2, multiply by E_ref^2/Z0 for W",
+        "vacuum_eh_probe_max_abs": 0.0,
+        "monitor_flux_signed": {
+          "incident": 0.025213367294246575,
+          "reflected": -0.0008518366239917422,
+          "outgoing": 0.024361530670254823
+        },
+        "export_power_signed_m2": {
+          "incident": 1.8040944851932253e-11,
+          "reflected": -6.095154755389604e-13,
+          "outgoing": 1.7431429376393286e-11
+        },
+        "T": 0.9662148806206408,
+        "R": 0.03378511937935883,
+        "balance_abs": 4.128104245019235e-16,
+        "joint_guide_vs_separate_abs": 2.7520694966794897e-16,
+        "frozen_npz_sha256": "aeef7780ae073b1c2e98e9ae82289298dc5c0e84914a823f46bf0beccdcae18f",
+        "replay_coefficients_relative_l2": 6.623313510541409e-13,
+        "frozen_grid_outgoing_power_m2": 1.7431429376392927e-11,
+        "grid_vs_monitor_relative_error": 2.0539125955565396e-14
+      },
+      "window": {
+        "case_id": "M7R6-SIM-SMF-001",
+        "case_sha256": "ecefe229159ad2ef86ab0313249f372660db178ebe7508e42a0ebcb300a99142",
+        "solver_versions": {
+          "fmmax": "1.7.1",
+          "jax": "0.12.1",
+          "jaxlib": "0.12.1",
+          "numpy": "2.3.5",
+          "scipy": "1.17.0"
+        },
+        "vacuum_wavelength_um": 1.31,
+        "air_plane_z_um": 5.0,
+        "guide_plane_z_um": 0.0,
+        "frame": "World origin at guide center on facet. t=+X, s=+Y, d=+Z. Fixed center and zero tilt.",
+        "phasor": "exp(+i omega t), forward exp(-ikz); conjugate the exported FMMAX spatial phasors",
+        "normal": "local +z in emitted frame",
+        "run": {
+          "period_um": 40,
+          "samples": 320,
+          "approx_terms": 497
+        },
+        "fourier_terms": 497,
+        "cell_area_m2": 1.5999999999999996e-09,
+        "export_center_ex_conjugated_unnormalized": [
+          0.41028510898059073,
+          1.1237193986493224
+        ],
+        "monitor_units": "mean over cell of 0.5 Re(E \u00d7 H*) dot +z in FMMAX units",
+        "export_field_units": "E/E_ref and Z0 H/E_ref, common center Ex=1",
+        "export_power_units": "m^2, multiply by E_ref^2/Z0 for W",
+        "vacuum_eh_probe_max_abs": 0.0,
+        "monitor_flux_signed": {
+          "incident": 0.016131707633164672,
+          "reflected": -0.0005450129755271072,
+          "outgoing": 0.015586694657637559
+        },
+        "export_power_signed_m2": {
+          "incident": 1.8035852228618194e-11,
+          "reflected": -6.09344882315973e-13,
+          "outgoing": 1.7426507346302212e-11
+        },
+        "T": 0.9662147995785246,
+        "R": 0.033785200421475044,
+        "balance_abs": 3.2260505498074675e-16,
+        "joint_guide_vs_separate_abs": 0.0,
+        "frozen_npz_sha256": "c8a7c49f97fea111a28d83147b2e08f44df58dc6224d3948e7fc4139faf14a54",
+        "replay_coefficients_relative_l2": 9.552636546180799e-13,
+        "frozen_grid_outgoing_power_m2": 1.7426507346301973e-11,
+        "grid_vs_monitor_relative_error": 1.3766765505351941e-14
+      }
+    },
+    "refinement_changes": {
+      "grid": {
+        "delta_T": 7.67734870898984e-07,
+        "delta_R": 7.677348721063515e-07,
+        "relative_changes_in_center_normalized_power": {
+          "incident": 0.0033197811627840856,
+          "reflected": 0.003342581496738495,
+          "outgoing": 0.003318983946135612
+        }
+      },
+      "basis": {
+        "delta_T": 4.787675248474343e-07,
+        "delta_R": 4.787675231335276e-07,
+        "relative_changes_in_center_normalized_power": {
+          "incident": 0.0066826007822407,
+          "reflected": 0.0066968666417150935,
+          "outgoing": 0.006682101962870446
+        }
+      },
+      "window": {
+        "delta_T": 8.104211612902645e-08,
+        "delta_R": 8.104211621229318e-08,
+        "relative_changes_in_center_normalized_power": {
+          "incident": 0.0002822814079781466,
+          "reflected": 0.00027988333329287407,
+          "outgoing": 0.00028236526017422214
+        }
+      }
+    },
+    "max_balance_abs": 1.3910512196275876e-15,
+    "max_joint_guide_vs_separate_abs": 2.7520694966794897e-16,
+    "facet_ratio_screen": 1.3275445145571303e-06,
+    "facet_ratio_screen_within_budget": true,
+    "center_normalized_power_screen": 0.010321813398629202,
+    "center_normalized_power_screen_within_budget": false
+  },
+  "nominal_relay_guided_fraction": null
+}

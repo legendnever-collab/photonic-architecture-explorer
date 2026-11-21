@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+from importlib.metadata import version
 from pathlib import Path
 
 import fmmax as fm
@@ -20,7 +21,7 @@ def silica_index(wavelength_um):
     return np.sqrt(1 + np.sum(b * wavelength_um**2 / (wavelength_um**2 - c**2)))
 
 
-def capture(case, run, output, case_path=CASE_PATH):
+def capture(case, run, output, case_path=CASE_PATH, *, power_ledger=False):
     length, n = run["period_um"], run["samples"]
     wl = case["vacuum_wavelength_um"]
     ncl = silica_index(wl)
@@ -145,6 +146,64 @@ def capture(case, run, output, case_path=CASE_PATH):
         power_balance_abs=balance,
         export_max_abs=export_error,
     )
+    if power_ledger:
+        # Isolate the two guide excitations so the directional powers have no
+        # forward/backward cross terms. Compare their sum with the joint monitor.
+        _, backward = fm.amplitude_poynting_flux(zero, reflected, guide)
+        forward, _ = fm.amplitude_poynting_flux(inc, zero, guide)
+        incident = float(forward.sum())
+        reflected_signed = float(backward.sum())
+        outgoing = float(pout.sum())
+        if not (incident > 0 and reflected_signed <= 0 < outgoing):
+            raise ValueError("Unexpected signed facet flux")
+        area = (length * 1e-6)**2
+        power_scale = area / abs(center)**2
+
+        # Uniform air, k_parallel=0. Excite the two zero-order wave columns.
+        zero_order = np.flatnonzero(np.all(orders == 0, axis=1)).item()
+        wave = jnp.asarray(np.eye(2 * len(orders))[:, [zero_order, len(orders) + zero_order]])
+        (air_ex, air_ey, _), (air_hx, air_hy, _) = fm.fields_from_wave_amplitudes(
+            wave, jnp.zeros_like(wave), air
+        )
+        impedance_error = float(max(np.max(abs(air_ex - air_hy)),
+                                    np.max(abs(air_ey + air_hx))))
+        if impedance_error > 1e-12:
+            raise ValueError("Unexpected vacuum plane-wave E/H convention")
+
+        ledger = {
+            "case_id": case["case_id"],
+            "case_sha256": hashlib.sha256(case_path.read_bytes()).hexdigest(),
+            "solver_versions": {pkg: version(pkg) for pkg in ("fmmax", "jax", "jaxlib", "numpy", "scipy")},
+            "vacuum_wavelength_um": wl,
+            "air_plane_z_um": case["plane_z_um"],
+            "guide_plane_z_um": 0.0,
+            "frame": case["frame"],
+            "phasor": case["phasor"],
+            "normal": "local +z in emitted frame",
+            "run": run,
+            "fourier_terms": len(orders),
+            "cell_area_m2": area,
+            "export_center_ex_conjugated_unnormalized": [float(center.real), float(center.imag)],
+            "monitor_units": "mean over cell of 0.5 Re(E × H*) dot +z in FMMAX units",
+            "export_field_units": "E/E_ref and Z0 H/E_ref, common center Ex=1",
+            "export_power_units": "m^2, multiply by E_ref^2/Z0 for W",
+            "vacuum_eh_probe_max_abs": impedance_error,
+            "monitor_flux_signed": {
+                "incident": incident, "reflected": reflected_signed, "outgoing": outgoing
+            },
+            "export_power_signed_m2": {
+                "incident": incident * power_scale, "reflected": reflected_signed * power_scale,
+                "outgoing": outgoing * power_scale
+            },
+            "T": outgoing / incident,
+            "R": -reflected_signed / incident,
+            "balance_abs": abs(incident + reflected_signed - outgoing) / incident,
+            "joint_guide_vs_separate_abs": abs(float(pin.sum() + pref.sum()) -
+                                               (incident + reflected_signed)) / incident,
+        }
+        output.with_suffix(".power.json").write_text(
+            json.dumps(ledger, indent=2, allow_nan=False) + "\n", encoding="utf-8"
+        )
     print(
         output,
         "terms",
@@ -160,10 +219,12 @@ if __name__ == "__main__":
     parser.add_argument("output_dir", type=Path)
     parser.add_argument("--run", choices=("base", "grid", "basis", "window"))
     parser.add_argument("--case", type=Path, default=CASE_PATH)
+    parser.add_argument("--power-ledger", action="store_true", help="Write a signed Power JSON beside each NPZ")
     args = parser.parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=True)
     config = json.loads(args.case.read_text(encoding="utf-8"))
     for name, spec in config["runs"].items():
         if args.run is None or args.run == name:
-            capture(config, spec, args.output_dir / (name + ".npz"), args.case)
+            capture(config, spec, args.output_dir / (name + ".npz"), args.case,
+                    power_ledger=args.power_ledger)
             jax.clear_caches()
