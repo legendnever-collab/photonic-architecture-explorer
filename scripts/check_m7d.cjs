@@ -349,7 +349,7 @@ for key in published.keys() - {"input_snapshot"}:
       assert.equal(comparison.selected, key);
       assert.equal(report.input_sha256, active.input_sha256);
       assert.notEqual(report.input_sha256, r6.input_sha256);
-      assert.equal(await frame().locator('#envelope-comparison tbody tr').count(), 2);
+      assert.equal(await frame().locator('#envelope-comparison > .table-scroll tbody tr').count(), 2);
       assert.equal(await frame().locator('.confidence code').textContent(), active.input_sha256);
       assert.equal(await frame().locator('.confidence').getAttribute('data-confidence'), active.selected);
       assert.equal(active.r9_replay.absolute_error <= 1e-8, true);
@@ -361,7 +361,7 @@ for key in published.keys() - {"input_snapshot"}:
       assert.deepEqual(await offline.locator('#design-result').evaluate(e=>JSON.parse(e.textContent)),saved);
       await offline.close();
       envelopeEvidence[key] = {input_sha256:active.input_sha256, candidate:active.selected,
-        passed:active.accepted_ids.length, evaluated:active.evaluations, eta:active.overlap,
+        passed:active.passing_trials.length, evaluated:active.evaluations, eta:active.overlap,
         quadrature:active.quadrature, gap_m:active.minimum_gap_m, radius_m:active.max_projected_radius_m};
     }
     assert.notEqual(envelopeEvidence.nominal.input_sha256,envelopeEvidence.expansion.input_sha256);

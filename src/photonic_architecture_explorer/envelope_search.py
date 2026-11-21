@@ -105,24 +105,31 @@ def compare_envelopes(document, selected):
         anchor = next((row for row in accepted if row["id"] == anchor_id), None)
         if anchor is None or abs(anchor["overlap"] - baseline["normalized_gaussian_overlap"]) > OVERLAP_TOL:
             raise ValueError("R9의 Envelope 또는 기준 Overlap 재현에 실패해 추천을 보류했습니다.")
-        best = min(accepted, key=recommendation_key)
+        accepted.sort(key=recommendation_key)
+        best = accepted[0]
         for row in (anchor, best):
             if "independent_validation" not in row:
                 try:
                     row["independent_validation"] = independent_check(row, ports)
                 except AssertionError as exc:
                     raise ValueError("독립 ABCD·Quadrature 검산에 실패해 추천을 보류했습니다.") from exc
-        boundary = limiting_boundary(best["prescription"])
+        passing_trials = []
+        for row in accepted:
+            boundary = limiting_boundary(row["prescription"])
+            passing_trials.append({"id": row["id"], "overlap": row["overlap"],
+                                   "max_projected_radius_m": row["ranking"]["max_projected_radius_m"],
+                                   "nearest_envelope_face": boundary,
+                                   "footprint_curvature": row["guard_metrics"]["max_3w_footprint_curvature"]})
         evidence = package_evidence(best["prescription"], best["evaluation"])
         min_gap = min(evidence[name] for name in ("minimum_boundary_gap_m", "mirror_pair_aabb_gap_m",
                                                   "minimum_body_keepout_aabb_gap_m"))
         counted = Counter(reason for reasons in rejected.values() for reason in reasons)
         summaries[key] = {
             "input_sha256": input_sha, "envelope": package["available_volume"]["value"],
-            "accepted_ids": [row["id"] for row in accepted], "rejected": rejected,
+            "passing_trials": passing_trials, "rejected": rejected,
             "rejection_counts": dict(counted), "evaluations": len(trials),
             "selected": best["id"], "overlap": best["overlap"], "minimum_gap_m": min_gap,
-            "limiting_boundary": boundary, "max_projected_radius_m": best["ranking"]["max_projected_radius_m"],
+            "limiting_boundary": passing_trials[0]["nearest_envelope_face"], "max_projected_radius_m": best["ranking"]["max_projected_radius_m"],
             "guard_metrics": best["guard_metrics"], "quadrature": best["independent_validation"]["quadrature_overlap"],
             "threshold_met": min(best["overlap"], *best["independent_validation"]["quadrature_overlap"])
                              >= case["min_normalized_gaussian_overlap"],

@@ -87,15 +87,24 @@ def render_envelope_comparison(comparison):
         choice = " · 선택됨" if key == comparison["selected"] else ""
         boundary = case["limiting_boundary"]
         label = f'{width:.6f}'.rstrip('0').rstrip('.') + ' mm'
-        rows.append(f'<tr><th scope="row">{label}{choice}</th><td>{len(case["accepted_ids"])}/{case["evaluations"]}</td>'
+        rows.append(f'<tr><th scope="row">{label}{choice}</th><td>{len(case["passing_trials"])}/{case["evaluations"]}</td>'
                     f'<td>{case["selected"]}</td><td>{case["overlap"]:.9f}</td>'
                     f'<td>{"충족" if case["threshold_met"] else "미달"}</td>'
                     f'<td>{case["max_projected_radius_m"]*1e6:.2f}</td>'
                     f'<td>{case["minimum_gap_m"]*1e6:.3f} · M{boundary["mirror"]} {boundary["face"]}</td></tr>')
         failures = "".join(f'<li>{escape(reason)} · {count}건</li>' for reason, count in case["rejection_counts"].items())
+        candidates = []
+        for trial in case["passing_trials"]:
+            face = trial["nearest_envelope_face"]
+            candidates.append(f'<tr><th scope="row">{trial["id"]}</th><td>{trial["overlap"]:.9f}</td>'
+                              f'<td>{trial["max_projected_radius_m"]*1e6:.2f}</td><td>{trial["footprint_curvature"]:.6f}</td>'
+                              f'<td>M{face["mirror"]} {face["face"]} · {face["gap_m"]*1e6:.3f}</td></tr>')
         details.append(f'<details><summary>{label} · 통과 처방과 탈락 사유</summary>'
                        f'<p>Input SHA256 <code>{case["input_sha256"]}</code></p>'
-                       f'<p>통과한 처방 · {", ".join(case["accepted_ids"])}</p><ul>{failures}</ul></details>')
+                       '<div class="table-scroll"><table><caption>통과 처방 · Normalized η 순위</caption>'
+                       '<thead><tr><th>처방</th><th>η</th><th>최대 투영 반경 [µm]</th><th>최대 3w·|κ|</th>'
+                       '<th>가장 가까운 Envelope 면 · Gap [µm]</th></tr></thead>'
+                       f'<tbody>{"".join(candidates)}</tbody></table></div><p>탈락 사유별 건수</p><ul>{failures}</ul></details>')
     return (f'<section class="card" id="envelope-comparison"><h2>Package Envelope 비교</h2>'
             '<p>같은 두 Port에서 R8 기준 처방 두 개와 주변 Guarded Near-Match 처방을 두 Envelope로 다시 평가했습니다. '
             '통과 수는 Geometry·Gaussian Guard·기구 조건을 충족한 처방 수입니다. η 목표는 별도로 표시합니다.</p>'

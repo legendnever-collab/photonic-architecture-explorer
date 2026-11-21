@@ -21,7 +21,7 @@ Tutorial → Example A → **이 두 Port로 설계**에서 원본 두 Port를 �
 | 최소 AABB Gap / 제한 위치 | 50.000 µm · M2 X− | 50.000 µm · M2 X− |
 | η ≥ 0.99 | 미달 | 충족 |
 
-Nominal SHA는 `34c3f41194cbf5738347c721db737ecdbd220de0f6ab5a9b101c1d715751b55b`, 확장 SHA는 `8ad9bb3c193736bb0b6ac133a206effd735663576234c3a86b45574b06e30a6b`다. 둘 다 R6 원본 Optical Port를 포함하고 Package가 다르다. 각 조건의 통과 ID·탈락 사유·R9 재현 오차·독립 Quadrature는 Export의 `envelope_comparison.cases`에 있다. 기준 처방 재현 또는 독립 검산 실패 시 추천을 보류한다.
+Nominal SHA는 `34c3f41194cbf5738347c721db737ecdbd220de0f6ab5a9b101c1d715751b55b`, 확장 SHA는 `8ad9bb3c193736bb0b6ac133a206effd735663576234c3a86b45574b06e30a6b`다. 둘 다 R6 원본 Optical Port를 포함하고 Package가 다르다. 각 조건의 통과 처방별 η·Beam Footprint·최인접 Envelope 면과 탈락 사유·R9 재현 오차·독립 Quadrature는 Export의 `envelope_comparison.cases`에 있다. 기준 처방 재현 또는 독립 검산 실패 시 추천을 보류한다.
 
 확장안의 η 여유는 약 1.10×10⁻⁵다. 기구 AABB의 명목 판정만으로는 전체 Finite-beam Clearance, 실물 Assembly Tolerance와 Total Coupling을 결정할 수 없어 모두 Uncomputed로 표시한다. 탐색 범위 밖에서 0.99를 만족할 최소 폭도 Uncomputed다.
 

@@ -35,9 +35,12 @@ class EnvelopeSearchTests(TestCase):
             self.assertGreaterEqual(case["minimum_gap_m"], 50e-6)
             self.assertEqual(case["limiting_boundary"]["face"], "X-")
             self.assertEqual(case["limiting_boundary"]["mirror"], 2)
-            self.assertEqual(case["evaluations"], len(case["accepted_ids"]) + len(case["rejected"]))
+            accepted_ids = [row["id"] for row in case["passing_trials"]]
+            self.assertEqual(accepted_ids[0], case["selected"])
+            self.assertEqual(case["passing_trials"][0]["max_projected_radius_m"], case["max_projected_radius_m"])
+            self.assertEqual(case["evaluations"], len(accepted_ids) + len(case["rejected"]))
             self.assertEqual(case["evaluations"], 74)
-            self.assertTrue(any("-G" in identifier for identifier in case["accepted_ids"]))
+            self.assertTrue(any("-G" in identifier for identifier in accepted_ids))
             eta = reference["candidates"][key]["normalized_gaussian_overlap"]
             self.assertAlmostEqual(case["r9_replay"]["overlap"], eta, delta=1e-8)
             self.assertAlmostEqual(replay["gaussian_mode_matching"]["normalized_mode_overlap"], case["overlap"], delta=1e-12)
@@ -47,7 +50,7 @@ class EnvelopeSearchTests(TestCase):
             if key == "nominal":
                 self.assertIn("R8-expansion", case["rejected"])
             else:
-                self.assertIn("R8-nominal", case["accepted_ids"])
+                self.assertIn("R8-nominal", accepted_ids)
 
     def test_edited_ports_or_failed_quadrature_withhold_results(self):
         edited = deepcopy(self.ports)
