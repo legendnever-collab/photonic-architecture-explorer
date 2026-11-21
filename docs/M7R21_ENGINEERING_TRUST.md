@@ -2,7 +2,7 @@
 
 ## 기준과 설계 판단
 
-Main의 R18 통합점은 f7970886f42e0915ac8c96a6564bc4ac79b5597a였다. 열린 R20 Draft [#51](https://github.com/legendnever-collab/photonic-architecture-explorer/pull/51)은 #50의 9a81ebf503ce12746e963e46b1b4c97c36329c30을 Base로 한다. R20에서 변경된 9개 파일에는 사전 예산, Yee 추출·여기 대조 스크립트, 원본 Profile 및 수치 Summary가 포함된다. R21은 #51의 ddf8ce0bca3a887f24fae45671a93e11ce7760ec에서 분기했다. 이 SHA의 [Physics CI](https://github.com/legendnever-collab/photonic-architecture-explorer/actions/runs/44893958127) 및 [Windows Package와 Evidence](https://github.com/legendnever-collab/photonic-architecture-explorer/actions/runs/44893958128)는 통과했다. Main SHA에 대해서는 PR용 조회에서 직접 대응하는 CI를 확인할 수 없었다.
+Main의 R18 통합점은 f7970886f42e0915ac8c96a6564bc4ac79b5597a였다. 열린 R20 Draft [#51](https://github.com/legendnever-collab/photonic-architecture-explorer/pull/51)은 #50의 9a81ebf503ce12746e963e46b1b4c97c36329c30을 Base로 한다. R20에서 변경된 9개 파일에는 사전 예산, Yee 추출·여기 대조 스크립트, 원본 Profile 및 수치 Summary가 포함된다. R21은 #51의 ddf8ce0bca3a887f24fae45671a93e11ce7760ec에서 분기했다. 이 SHA의 [Physics CI](https://github.com/legendnever-collab/photonic-architecture-explorer/actions/runs/44893958127) 및 [Windows Package와 Evidence](https://github.com/legendnever-collab/photonic-architecture-explorer/actions/runs/44893958128)는 통과했다. Main SHA에 대응하는 [Push Physics CI](https://github.com/legendnever-collab/photonic-architecture-explorer/actions/runs/44869389076)도 통과했다.
 
 ## 사용자 검토
 
@@ -34,6 +34,10 @@ node scripts/check_workspace.cjs results/runtime-m5e-r21 results/runtime-m5a-r21
 ```
 
 Browser 검사는 기존 CI 환경의 Playwright·Chromium·PDF 도구·한국어 글꼴을 사용한다. Desktop과 393 px의 Tutorial, 수식 열기, 예제 전환, 키보드 복귀, 후보별 Confidence와 기존 HTML/JSON/A4 흐름을 검사한다. Windows CI는 추출한 패키지의 실제 Launcher HTTP 경로에서 Tutorial을 읽고 기존 Background Near-Match와 Manifest 무결성을 검증한다. 이 Milestone의 수치 예산은 기존 Reference 표시 정밀도 및 Frozen Guard를 계승한다.
+
+## 구현 SHA의 원격 검증
+
+Draft [#52](https://github.com/legendnever-collab/photonic-architecture-explorer/pull/52)의 구현 SHA는 `1b64a7f5672f9e4feb622094b754ccb14a2e482a`다. [Physics·Browser CI 44895226164](https://github.com/legendnever-collab/photonic-architecture-explorer/actions/runs/44895226164)와 [Windows CI 44895226263](https://github.com/legendnever-collab/photonic-architecture-explorer/actions/runs/44895226263)가 통과했다. Browser Artifact의 393 px·1440 px Tutorial과 선택 후보 Confidence 화면을 직접 검토했다. Desktop과 Mobile에서 Runtime·Reference 상태를 구분할 수 있고 입력 탭 복귀와 펼침 동작이 통과했다. Windows에서는 압축 해제한 Launcher의 Tutorial 및 기존 Background Workflow가 통과했다. 로컬 Chromium은 환경의 Socket 제한으로 시작하지 못해 화면 검증은 CI의 Chromium에서 수행했다. 원본 Screenshot은 Physics CI의 m5e-candidate-review-evidence에 있다.
 
 ## 다음 설계 판단
 

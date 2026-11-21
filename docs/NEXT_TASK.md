@@ -2,7 +2,9 @@
 
 **Mission / Objective.** Tutorial에서 확인한 두 Port를 Workspace에서 열어 Design을 실행하고, 한 조건을 바꾼 뒤 새 후보와 Confidence를 검토한다. R21의 설명과 실제 후보 생성 사이의 단절을 해결한다. **Sol Work**를 권장한다. 기존 입력·Worker·Gaussian 평가·Export를 재사용하는 통합 작업이다.
 
-**Repository 및 검증 기준.** legendnever-collab/photonic-architecture-explorer. R20 Draft #51의 검증 SHA는 `ddf8ce0bca3a887f24fae45671a93e11ce7760ec`이다. Physics CI 44893958127, Windows CI 44893958128 및 R6 design_summary.json, R20 summary.json을 참조한다. R21의 구현·검증 범위는 [R21 Design Notes](M7R21_ENGINEERING_TRUST.md)를 따른다.
+**Repository / Verified Base SHA.** [photonic-architecture-explorer](https://github.com/legendnever-collab/photonic-architecture-explorer) · [R21 Draft #52](https://github.com/legendnever-collab/photonic-architecture-explorer/pull/52) 구현 SHA `1b64a7f5672f9e4feb622094b754ccb14a2e482a`. [Physics·Browser CI](https://github.com/legendnever-collab/photonic-architecture-explorer/actions/runs/44895226164)와 [Windows Package CI](https://github.com/legendnever-collab/photonic-architecture-explorer/actions/runs/44895226263)에서 이 구현에 귀속되는 Evidence를 확인한다. 인수인계 문서가 추가된 최신 HEAD는 Recovery에서 대조한다.
+
+**관련 Physics Evidence.** R20 Draft #51의 검증 SHA는 `ddf8ce0bca3a887f24fae45671a93e11ce7760ec`이다. Physics CI 44893958127, Windows CI 44893958128 및 R6 design_summary.json, R20 summary.json을 참조한다. R21의 구현·검증 범위는 [R21 Design Notes](M7R21_ENGINEERING_TRUST.md)를 따른다.
 
 1. **Recovery.** AGENTS.md, docs/PRODUCT_CHARTER.md, docs/DEVELOPMENT_OPERATING_POLICY.md, 이 첫 지시문을 읽는다. R21 Draft가 열려 있으면 해당 최신 HEAD·Base·Diff와 Physics/Windows CI를 확인한 후 시작한다. 병합됐다면 최신 검증 Main에서 R21 포함을 확인한다. R6 Port JSON·Hash·단위와 현재 1550 nm Proxy를 구분한다.
 2. **Scope.** Example A에 명시적 ‘이 두 Port로 설계’ 진입점을 추가한다. 기존 inputs/Workspace/Job/Export를 재사용하고 저장된 R6 Port의 위치·축·q·기준면·출처를 손실 없이 전달한다. 사용자가 Position 하나를 바꾸면 이전 결과를 즉시 숨기고 새 Snapshot으로 기존 Design을 재실행한다. 미편집 Port의 근거를 유지하고 변경된 조건 및 적용되지 않는 Reference를 표시한다.
