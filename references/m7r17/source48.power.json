@@ -1,0 +1,46 @@
+{
+  "case_id": "M7R6-SIM-SMF-001",
+  "case_sha256": "ba097ed014ff97c1f8701e654e9ade58d6fa8cd531b6903d2286234b8f38fec4",
+  "solver_versions": {
+    "fmmax": "1.7.1",
+    "jax": "0.12.1",
+    "jaxlib": "0.12.1",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0"
+  },
+  "vacuum_wavelength_um": 1.31,
+  "air_plane_z_um": 5.0,
+  "guide_plane_z_um": 0.0,
+  "frame": "World origin at guide center on facet. t=+X, s=+Y, d=+Z. Fixed center and zero tilt.",
+  "phasor": "exp(+i omega t), forward exp(-ikz); conjugate the exported FMMAX spatial phasors",
+  "normal": "local +z in emitted frame",
+  "run": {
+    "period_um": 48,
+    "samples": 384,
+    "approx_terms": 715
+  },
+  "fourier_terms": 717,
+  "cell_area_m2": 2.3040000000000003e-09,
+  "export_center_ex_conjugated_unnormalized": [
+    0.41015035367093067,
+    1.1235807711687111
+  ],
+  "monitor_units": "mean over cell of 0.5 Re(E \u00d7 H*) dot +z in FMMAX units",
+  "export_field_units": "E/E_ref and Z0 H/E_ref, common center Ex=1",
+  "export_power_units": "m^2, multiply by E_ref^2/Z0 for W",
+  "vacuum_eh_probe_max_abs": 0.0,
+  "monitor_flux_signed": {
+    "incident": 0.011200602846374162,
+    "reflected": -0.0003784147179397915,
+    "outgoing": 0.010822188128434362
+  },
+  "export_power_signed_m2": {
+    "incident": 1.8037997815322252e-11,
+    "reflected": -6.094175419935895e-13,
+    "outgoing": 1.742858027332865e-11
+  },
+  "T": 0.9662147901206675,
+  "R": 0.033785209879331736,
+  "balance_abs": 7.743884413053573e-16,
+  "joint_guide_vs_separate_abs": 3.097553765221429e-16
+}

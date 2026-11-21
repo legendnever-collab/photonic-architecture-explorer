@@ -1,0 +1,55 @@
+{
+  "32": {
+    "amplitude_factor": 0.9998588074022483,
+    "E_relative": 0.0,
+    "H_relative": 0.0,
+    "flux_over_launch": 0.9995952737508472,
+    "reference_flux_over_launch": 0.9995952737508472,
+    "flux_delta": 0.0
+  },
+  "40": {
+    "amplitude_factor": 1.0000000000000069,
+    "E_relative": 0.004666920489068216,
+    "H_relative": 0.004666916900649297,
+    "flux_over_launch": 0.999600773115383,
+    "reference_flux_over_launch": 0.9995952737508472,
+    "flux_delta": 5.499364535754836e-06
+  },
+  "48": {
+    "amplitude_factor": 0.9999405290438113,
+    "E_relative": 0.0009515401156986115,
+    "H_relative": 0.000951541015211963,
+    "flux_over_launch": 0.9996013248398199,
+    "reference_flux_over_launch": 0.999600773115383,
+    "flux_delta": 5.517244369146468e-07
+  },
+  "pitch_1_vs_half_um": {
+    "E_relative": 1.4691829906923525e-05,
+    "H_relative": 1.4691825686916218e-05,
+    "flux_over_launch": 0.9996013271088672,
+    "reference_flux_over_launch": 0.9996013248398199,
+    "flux_delta": 2.2690472833986064e-09
+  },
+  "receiver40_flux_over_launch": 0.9996013396093995,
+  "window_768um_vs_isolated48": {
+    "E_relative": 2.7966133396888933,
+    "H_relative": 2.7968150987445948,
+    "flux_over_launch": 2.715399145210024,
+    "reference_flux_over_launch": 0.9996013248398199,
+    "flux_delta": 1.7157978203702042
+  },
+  "window_1152um_vs_isolated48": {
+    "E_relative": 0.1651398974138825,
+    "H_relative": 0.16516538683118878,
+    "flux_over_launch": 1.0076807895206628,
+    "reference_flux_over_launch": 0.9996013248398199,
+    "flux_delta": 0.008079464680842863
+  },
+  "window_1536um_vs_isolated48": {
+    "E_relative": 0.02702918253931921,
+    "H_relative": 0.027021275095399363,
+    "flux_over_launch": 0.9997900604828375,
+    "reference_flux_over_launch": 0.9996013248398199,
+    "flux_delta": 0.00018873564301757906
+  }
+}
