@@ -16,6 +16,10 @@ from .geometry import cross, dot, mul, norm, sub
 from .mode_reference import render_reference_handoff
 from .inspector import CSS, ROOT, make_server
 from .near_match import eligible
+from .reference_redesign import (
+    ENTRY as R6_ENTRY, PORTS_FILE as R6_PORTS_FILE, SUMMARY_FILE as R6_SUMMARY_FILE,
+    nominal_exact_matches, nominal_replay_matches, reference_context,
+)
 
 
 POSITION = ("position_m", "Position [mm]", ("X", "Y", "Z"), 3)
@@ -403,7 +407,8 @@ if (job) {
         finished = true;
         cancelButton.hidden = true;
         const labels = {Cancelled:'취소됨', TimedOut:'실행 시간 초과', Failed:'실행 실패'};
-        jobStatus.textContent = labels[data.state] + ' · 추천은 보류됐습니다. Design으로 다시 실행하세요.';
+        jobStatus.textContent = data.reference_error ||
+          labels[data.state] + ' · 추천은 보류됐습니다. Design으로 다시 실행하세요.';
         return;
       }
       const p = data.progress || {};
@@ -492,7 +497,8 @@ if (frame) {
 def render_workspace(raw, result=None, error=None, job=None):
     entry = raw["entry"]
     description = {"example": "M5-A Synthetic Example · 입력값을 바꾸면 다음 실행의 고정 조건이 됩니다.",
-                   "smf-glass": "SMF–Glass Gaussian Proxy · 공개 Width와 가정 Flat Phase, 실제 장치 Field가 아닙니다."}.get(
+                   "smf-glass": "SMF–Glass Gaussian Proxy · 공개 Width와 가정 Flat Phase, 실제 장치 Field가 아닙니다.",
+                   R6_ENTRY: "1310 nm SMF–Glass Reference · 모의 Port의 외부 Scalar Gaussian Fit. 위치를 바꿔 새 배치에서 Design할 수 있습니다."}.get(
                        entry, "새 입력 · External Gaussian 가정, 편광은 scalar 모델에서 제외")
     fields = "".join(render_fields("", spec, raw) for spec in SHARED_FIELDS)
     issue_path = result.get("input_contract", {}).get("path") if result else None
@@ -558,6 +564,8 @@ class Workspace:
         example = json.loads((ROOT / "examples/m5a_two_ports.json").read_text(encoding="utf-8"))
         self.templates = {"example": example, "blank": new_input(example)}
         self.templates['smf-glass'] = json.loads((ROOT / 'examples/m7a_smf_glass_proxy.json').read_text())
+        self.templates[R6_ENTRY] = json.loads((ROOT / R6_PORTS_FILE).read_text(encoding="utf-8"))
+        self.r6_summary = json.loads((ROOT / R6_SUMMARY_FILE).read_text(encoding="utf-8"))
         self.fields = set(initial_values(example, "example"))
         self.jobs = None
         self.job_reports = {}
@@ -590,8 +598,15 @@ class Workspace:
             if result["status"] != "Computed":
                 result.update(status=exc.status, reason=str(exc),
                               input_contract={"status": exc.status, "path": exc.path, "reason": exc.reason})
+            if entry == R6_ENTRY:
+                result["reference_context"] = reference_context(self.templates[entry], document, self.r6_summary)
             return render_workspace(raw, result=result), 200
         result = design_two_ports(document)
+        if entry == R6_ENTRY:
+            context = reference_context(self.templates[entry], document, self.r6_summary)
+            result["reference_context"] = context
+            if context["scope"] == "Original" and not nominal_exact_matches(result, self.r6_summary):
+                return render_workspace(raw, error="원본 R6 입력 SHA 또는 Exact-q 결과가 기준과 달라 추천을 보류했습니다."), 200
         if eligible(result):
             from .workflow_jobs import JobManager
             with self.job_lock:
@@ -607,6 +622,10 @@ class Workspace:
             return None
         result = status.pop('result')
         if result is not None:
+            if (result.get("reference_context", {}).get("scope") == "Original"
+                    and not nominal_replay_matches(result, self.r6_summary)):
+                status.update(state="Failed", reference_error="원본 R6의 후보 또는 Overlap 검산이 기준과 달라 추천을 보류했습니다.")
+                return status
             key = identity['job_id']
             if key not in self.job_reports:
                 self.job_reports[key] = render_design_report(review_snapshot(result))

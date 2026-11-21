@@ -11,10 +11,11 @@ from .external import adapt_external
 from .gaussian import Gaussian
 from .inspector import CSS, ROOT, plot_svg
 from .mode_match import MODE_MATCH_CSS, axis_profiles, plot_series
+from .reference_redesign import PORTS_FILE, SUMMARY_FILE
 
 # The Windows build copies these small, original records alongside the app.
 REFERENCE_FILES = (
-    "references/m7r6/design_summary.json",
+    SUMMARY_FILE,
     "references/m7r20/profiles.npz",
     "results/m4b_literature_001.json",
 )
@@ -49,7 +50,7 @@ def profile_chart(title, x, curves, x_label, y_label):
 def render_tutorial():
     summary = read_json(REFERENCE_FILES[0])
     candidate = next(c for c in summary["candidates"] if c["id"] == summary["selected"])
-    fixed = read_json("examples/m7r6_smf_glass_1310.json")
+    fixed = read_json(PORTS_FILE)
     prescription = {**fixed, "design": {"reflectors": candidate["reflectors"]},
                     "reflectors": [{"surface_prescription": record("quadratic_patch", "model")}
                                    for _ in candidate["reflectors"]]}

@@ -1,3 +1,20 @@
+# M7-R23 · 1310 nm의 Package 제약과 후보 비교
+
+**Mission / Objective.** 두 Port에서 생성된 후보가 지정 Envelope에 들어가는지 비교하고, 작은 Envelope에서 명목 Overlap과 Beam Footprint가 어떻게 바뀌는지 확인한다. **Astra Work**를 권장한다. 제한된 Search에서 Package와 광학 Guard를 동시에 적용할 때 제약과 오차를 검증해야 한다.
+
+**Repository / Verified Base.** [photonic-architecture-explorer](https://github.com/legendnever-collab/photonic-architecture-explorer). [R21 #52](https://github.com/legendnever-collab/photonic-architecture-explorer/pull/52)의 검증 SHA는 `d0cd44ae677f3b6c070be04c9e56808827b5a017`이다. R22의 시작점과 검증 방법은 [R22 Design Notes](M7R22_REFERENCE_REDESIGN.md)를 따른다.
+
+1. **Recovery.** AGENTS.md, Product Charter, DEVELOPMENT_OPERATING_POLICY.md 및 이 지시문을 읽는다. 열린 R22 Draft의 최신 HEAD·Base·CI를 확인한다. 병합됐다면 최신 검증 Main에서 R22 포함을 확인한다. R22의 원본·편집 SHA, Browser와 Windows Evidence, R7–R9의 각 Envelope·Overlap 근거를 대조한다.
+2. **Scope.** R22 Workspace에 선택형 Package 입력의 최소 방식을 정한다. 먼저 R7–R9의 저장된 Nominal Envelope 두 조건과 기존 Clearance/Footprint Guard를 재사용해 같은 1310 nm Port에서 후보가 어디서 탈락하는지 보여준다. 기구 근사가 허용하는 최소 범위를 먼저 확인하고, 기존 Package Geometry와 Bounded Search로 비교한다. 기본 Two-Port 동작과 Source/Target를 보존한다.
+3. **Acceptance / Budget.** 동결 처방 재평가에서 R9의 4.30 mm Envelope와 5.023725 mm Envelope의 η를 해당 Artifact의 수치와 절대차 1e−8 이내로 재현한다. 기존 50 µm 최소 AABB Clearance 판정을 대조한다. 편집한 Envelope에서 결과 SHA가 바뀌고 옛 추천·검증 근거가 숨겨져야 한다. 자동 탐색은 기존 시간·호출 예산과 Guard를 계승한다. 통과 후보가 없거나 기준 재현에 실패하면 원인을 기록하고 해당 추천을 보류한다.
+4. **Regression.** 무제약 R6 Test, 변경된 입력의 새 SHA, Missing Phase·취소·Export, Synthetic와 1550 nm, Tutorial과 Confidence, Windows 패키지 회귀를 확인한다.
+5. **Non-Goals / Remaining Uncomputed.** 새 Solver·Topology, Guard 변경 및 실제 Manufacturing 판정은 범위 밖이다. 전체 Beam/Body Clearance, 실제 Package Yield와 조립 공차, Guided Power·U·Total Coupling은 Uncomputed로 남긴다.
+6. **Deliverables / 승인.** 제한된 Package 비교 UI 또는 그 구현 가능성 판정, 수치와 Evidence, Draft PR, 후속 Work Order를 제출한다. 운영 정책의 Engineering Ownership·언어·Evidence 규칙을 계승한다. Main 병합 및 다음 Milestone 실행에는 각각 사용자 승인이 필요하다.
+
+---
+
+## 이전 Work Order 기록
+
 # M7-R22 · 1310 nm SMF–Glass Reference에서 사용자 입력 재설계
 
 **Mission / Objective.** Tutorial에서 확인한 두 Port를 Workspace에서 열어 Design을 실행하고, 한 조건을 바꾼 뒤 새 후보와 Confidence를 검토한다. R21의 설명과 실제 후보 생성 사이의 단절을 해결한다. **Sol Work**를 권장한다. 기존 입력·Worker·Gaussian 평가·Export를 재사용하는 통합 작업이다.

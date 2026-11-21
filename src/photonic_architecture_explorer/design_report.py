@@ -7,6 +7,7 @@ from .external import adapt_external
 from .inspector import CSS, PROJECTIONS, plot_svg, result_panel, input_summary, visible_overlap
 from .mode_match import MODE_MATCH_CSS, loss_label, render_mode_match
 from .placement import compare_placement
+from .reference_redesign import render_reference_context
 from .sensitivity import compare_sensitivity, render_sensitivity
 from .solver import MAX_FOOTPRINT_SLOPE
 
@@ -183,7 +184,7 @@ def render_design_report(result):
     </style></head><body>
     <header><h1>Two-Port Design</h1></header>
     <main class="wrap">
-    {''.join(articles)}{toolbar}{alternative_section}{review_section}{comparison}
+    {render_reference_context(result.get('reference_context'))}{''.join(articles)}{toolbar}{alternative_section}{review_section}{comparison}
     <section class="card"><details><summary>Fixed Ports · 입력 SHA · 기준면</summary>
     <p>Input SHA256 <code>{escape(result.get('input_sha256', ''))}</code></p>{input_summary(result.get('input_snapshot'))}</details>
     <details><summary>탐색 범위·순위 근거·실패 진단</summary><p>{budget_caption}</p><p>대표 선정은 추천 정책과 후보별 선택 근거를 따릅니다.</p><pre>{escape(json.dumps({'policy':result['search_policy'],'ranking_order':result['ranking_order'],'recommendation_policy':result.get('recommendation_policy'),'search':search,'limitations':result['limitations']},ensure_ascii=False,indent=2))}</pre></details>
