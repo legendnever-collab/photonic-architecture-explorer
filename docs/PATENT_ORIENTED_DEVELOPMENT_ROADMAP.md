@@ -96,3 +96,7 @@ R6–R20의 1310 nm Reference는 고정 입력에 귀속된다. R21에서 계산
 ## M7-R22 Addendum · Package 비교 우선순위
 
 Tutorial에서 1310 nm 두 Port를 열어 Design하고 편집한 입력을 새 SHA로 재계산할 수 있다. 다음 Track A 과제는 같은 두 Port에서 Envelope 조건을 바꿔 후보의 광학 성능과 선언 Package 범위를 비교하는 것이다. R7–R9의 동결 조건에서 기존 기구 검사를 재현하고 사용자 입력으로 넓힐 수 있는 범위를 판단한다. [현재 Work Order](NEXT_TASK.md)
+
+## M7-R23 · Package 비교 범위
+
+원본 Example A에서 두 Synthetic Envelope를 비교하고 새 SHA에 귀속된 후보와 한계 여유를 확인할 수 있다. 같은 두 Port에서 사용자가 가진 Package 공간을 적용하는 것이 Track A의 남은 제약이다. Milestone 종료 시 다음 실행 지시문과 모델 추천을 대화에서 전달한다. [R23 설계 및 검증 기록](M7R23_ENVELOPE_COMPARISON.md)

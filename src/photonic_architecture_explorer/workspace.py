@@ -11,6 +11,7 @@ import threading
 
 from .design import design_two_ports
 from .design_report import render_design_report, review_snapshot
+from .envelope_search import WIDTHS, compare_envelopes
 from .external import InputIssue, unit_vector, vector
 from .geometry import cross, dot, mul, norm, sub
 from .mode_reference import render_reference_handoff
@@ -503,6 +504,13 @@ def render_workspace(raw, result=None, error=None, job=None):
     fields = "".join(render_fields("", spec, raw) for spec in SHARED_FIELDS)
     issue_path = result.get("input_contract", {}).get("path") if result else None
     ports = "".join(render_port(port, raw, issue_path) for port in PORTS)
+    envelope_control = ""
+    if entry == R6_ENTRY:
+        choices = {"": "적용 안 함", **WIDTHS}
+        options = "".join(f'<option value="{key}"{" selected" if key == raw.get("envelope", "") else ""}>{label}</option>'
+                          for key, label in choices.items())
+        envelope_control = (f'<label class="mode">Package Envelope · 선택 <select name="envelope">{options}</select></label>'
+                            '<p>원본 Example A에서 두 Synthetic Envelope를 비교합니다. 선택한 조건의 후보와 Confidence를 표시합니다.</p>')
     review = ""
     if result is not None or job is not None:
         report = escape(render_design_report(review_snapshot(result))) if result is not None else ''
@@ -554,7 +562,7 @@ def render_workspace(raw, result=None, error=None, job=None):
       <input type="hidden" name="entry" value="{entry}">
       <div class="ports">{ports}</div>
       <section class="card shared" aria-label="공통 전파 조건">{fields}</section>
-      <div class="form-actions"><button type="submit">Design</button></div>
+      {envelope_control}<div class="form-actions"><button type="submit">Design</button></div>
     </form></section><section id="guide-pane" role="tabpanel" aria-labelledby="guide-tab" hidden>
     <iframe id="guide-frame" title="계산 과정과 검증 근거"></iframe></section></main><script>{WORKSPACE_JS}</script></body></html>'''
 
@@ -581,12 +589,18 @@ class Workspace:
         if self.jobs:
             self.jobs.cancel_active()
         entry = raw.get("entry")
-        if entry not in self.templates or set(raw) != self.fields:
+        envelope = raw.get("envelope", "")
+        submitted_fields = set(raw)
+        if entry == R6_ENTRY:
+            submitted_fields.discard("envelope")
+        if entry not in self.templates or submitted_fields != self.fields or (envelope and envelope not in WIDTHS):
             return self.get("example"), 400
         if any(raw[port + "_mode"] not in ("mfd", "round", "q") for port in PORTS):
             return self.get(entry), 400
         try:
             document = build_document(self.templates[entry], raw)
+            if envelope:
+                return render_workspace(raw, result=compare_envelopes(document, envelope)), 200
         except ValueError as exc:
             return render_workspace(raw, error=str(exc)), 200
         try:
