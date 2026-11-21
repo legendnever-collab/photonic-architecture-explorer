@@ -50,6 +50,13 @@ def receivers(n):
     q, w = leggauss(n)
     a, b = M1["half_aperture_ts_m"]["value"]
     u, v = np.meshgrid(q * a, q * b, indexing="ij")
+    points, incident_area = surface(u, v)
+    weights = np.outer(w, w) * a * b
+    return points.reshape(-1, 3), (incident_area * weights[..., None]).reshape(-1, 3)
+
+
+def surface(u, v):
+    """Return M1 positions and incident-oriented area vectors per projected area."""
     normal = np.array(M1["illuminated_normal"]["value"])
     s = BASIS[1]
     t = np.cross(s, normal)
@@ -61,10 +68,7 @@ def receivers(n):
         + (kt * u * u + ks * v * v)[..., None] * normal / 2
     )
     oriented = normal - kt * u[..., None] * t - ks * v[..., None] * s
-    return (
-        points.reshape(-1, 3) @ BASIS.T,
-        (-oriented * (np.outer(w, w) * a * b)[..., None]).reshape(-1, 3) @ BASIS.T,
-    )
+    return points @ BASIS.T, -oriented @ BASIS.T
 
 
 def sheet_currents(e, h):
