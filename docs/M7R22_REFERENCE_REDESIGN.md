@@ -14,6 +14,22 @@
 
 원본에서 R6 Input SHA, Exact-q 배치 수·처방 수·유효 수가 일치해야 Worker를 시작한다. 원본 Worker 결과는 G036-NM과 저장 Overlap을 재현하고 독립 Quadrature가 η 절대차 1e−8 이내일 때 표시한다. 편집한 입력은 새 SHA로 계산한다. Worker의 Job ID, Revision, SHA 검사와 취소·시간 제한을 사용한다. Phase가 누락되면 Worker 실행 전에 Uncomputed를 표시한다. Edited 결과에서 Guard를 통과한 후보가 없으면 유한 탐색의 NoCandidate로 표시한다.
 
+## 실행 결과
+
+로컬 Workspace에서 실제 Worker를 실행했다. 원본과 편집 입력 모두 추천 처방을 별도 Adapter 호출로 평가했을 때 공개 Evaluation과 일치했다.
+
+| Target Z | 원본 2.000 mm | 편집 2.100 mm |
+|---|---:|---:|
+| 추천 Candidate | G036-NM | G049-NM |
+| Exact-q 배치 / 처방 / 유효 | 36 / 144 / 0 | 49 / 196 / 0 |
+| Near-Match Adapter 호출 | 127,968 | 185,920 |
+| Normalized Gaussian Overlap η | 0.9990889546173051 | 0.9990895739728913 |
+| 독립 Quadrature와 최대 η 절대차 | 5.55e−16 | 8.88e−16 |
+| 광로 | 20.839734 mm | 21.427004 mm |
+| 로컬 Worker 실행 시간 | 83.1 s | 122.8 s |
+
+원본 Input SHA는 `20461fd9868b9450c0df7eff0464e6454a06811e5f09c244f4bc579d66efbcad`다. 편집 Input SHA는 `a8301361c0938af20da3c10087781546fce2bea7ff4bf1f1de51c4b0ff5c0c84`다. 원본 R6 저장 Overlap과 차이는 0이다. 회귀 154개와 Benchmark, M3-A Adapter가 통과했다.
+
 ## 검증 재현
 
 ```bash

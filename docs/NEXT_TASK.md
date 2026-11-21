@@ -2,7 +2,7 @@
 
 **Mission / Objective.** 두 Port에서 생성된 후보가 지정 Envelope에 들어가는지 비교하고, 작은 Envelope에서 명목 Overlap과 Beam Footprint가 어떻게 바뀌는지 확인한다. **Astra Work**를 권장한다. 제한된 Search에서 Package와 광학 Guard를 동시에 적용할 때 제약과 오차를 검증해야 한다.
 
-**Repository / Verified Base.** [photonic-architecture-explorer](https://github.com/legendnever-collab/photonic-architecture-explorer). [R21 #52](https://github.com/legendnever-collab/photonic-architecture-explorer/pull/52)의 검증 SHA는 `d0cd44ae677f3b6c070be04c9e56808827b5a017`이다. R22의 시작점과 검증 방법은 [R22 Design Notes](M7R22_REFERENCE_REDESIGN.md)를 따른다.
+**Repository / Verified Base.** [photonic-architecture-explorer](https://github.com/legendnever-collab/photonic-architecture-explorer). [R21 #52](https://github.com/legendnever-collab/photonic-architecture-explorer/pull/52)의 검증 SHA는 `d0cd44ae677f3b6c070be04c9e56808827b5a017`이다. 로컬 검증한 [R22 Draft #53](https://github.com/legendnever-collab/photonic-architecture-explorer/pull/53)의 구현 SHA는 `4caf99ee4fd527ecf3f48a20c52391dcbe190795`다. 최신 HEAD에 대응하는 CI와 Artifact는 Draft 검증 기록과 Actions에서 확인한다. 원본·편집 수치는 [R22 Design Notes](M7R22_REFERENCE_REDESIGN.md)를 따른다.
 
 1. **Recovery.** AGENTS.md, Product Charter, DEVELOPMENT_OPERATING_POLICY.md 및 이 지시문을 읽는다. 열린 R22 Draft의 최신 HEAD·Base·CI를 확인한다. 병합됐다면 최신 검증 Main에서 R22 포함을 확인한다. R22의 원본·편집 SHA, Browser와 Windows Evidence, R7–R9의 각 Envelope·Overlap 근거를 대조한다.
 2. **Scope.** R22 Workspace에 선택형 Package 입력의 최소 방식을 정한다. 먼저 R7–R9의 저장된 Nominal Envelope 두 조건과 기존 Clearance/Footprint Guard를 재사용해 같은 1310 nm Port에서 후보가 어디서 탈락하는지 보여준다. 기구 근사가 허용하는 최소 범위를 먼저 확인하고, 기존 Package Geometry와 Bounded Search로 비교한다. 기본 Two-Port 동작과 Source/Target를 보존한다.
