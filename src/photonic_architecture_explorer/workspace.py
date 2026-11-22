@@ -11,7 +11,7 @@ import threading
 
 from .design import design_two_ports
 from .design_report import render_design_report, review_snapshot
-from .envelope_search import WIDTHS, compare_envelopes
+from .envelope_search import EnvelopeValidationError, WIDTHS, compare_envelopes
 from .external import InputIssue, unit_vector, vector
 from .geometry import cross, dot, mul, norm, sub
 from .mode_reference import render_reference_handoff
@@ -34,6 +34,7 @@ INDEX = ("ambient_index", "External Ambient Index", ("n",), 0)
 PORTS = ("source", "target")
 PORT_FIELDS = (POSITION, DIRECTION, SAGITTAL, MFD, PHASE, Q)
 SHARED_FIELDS = (WAVELENGTH, INDEX)
+X_FIELDS = {"envelope_x_min_mm": "World X min [mm]", "envelope_x_max_mm": "World X max [mm]"}
 INPUT_SOURCE = "User input in Two-Port Workspace"
 # Match the frozen external adapter and coplanarity guard.
 FRAME_TOL = 1e-10
@@ -377,6 +378,13 @@ function edit() {
 form.addEventListener('input', edit);
 form.addEventListener('change', edit);
 form.addEventListener('submit', edit);
+const envelopeSelect = form.elements.namedItem('envelope');
+if (envelopeSelect) {
+  const customBounds = document.querySelector('#envelope-x-bounds');
+  const showBounds = () => { customBounds.hidden = envelopeSelect.value !== 'custom'; };
+  envelopeSelect.addEventListener('change', showBounds);
+  window.addEventListener('pageshow', showBounds);
+}
 if (job) {
   cancelButton.addEventListener('click', () => {
     revision = null;
@@ -495,7 +503,7 @@ if (frame) {
 """
 
 
-def render_workspace(raw, result=None, error=None, job=None):
+def render_workspace(raw, result=None, error=None, job=None, *, error_label="입력 오류"):
     entry = raw["entry"]
     description = {"example": "M5-A Synthetic Example · 입력값을 바꾸면 다음 실행의 고정 조건이 됩니다.",
                    "smf-glass": "SMF–Glass Gaussian Proxy · 공개 Width와 가정 Flat Phase, 실제 장치 Field가 아닙니다.",
@@ -506,11 +514,19 @@ def render_workspace(raw, result=None, error=None, job=None):
     ports = "".join(render_port(port, raw, issue_path) for port in PORTS)
     envelope_control = ""
     if entry == R6_ENTRY:
-        choices = {"": "적용 안 함", **WIDTHS}
-        options = "".join(f'<option value="{key}"{" selected" if key == raw.get("envelope", "") else ""}>{label}</option>'
+        choices = {"": "적용 안 함", **WIDTHS, "custom": "World X 직접 입력"}
+        selected = raw.get("envelope", "")
+        options = "".join(f'<option value="{key}"{" selected" if key == selected else ""}>{label}</option>'
                           for key, label in choices.items())
-        envelope_control = (f'<label class="mode">Package Envelope · 선택 <select name="envelope">{options}</select></label>'
-                            '<p>원본 Example A에서 두 Synthetic Envelope를 비교합니다. 선택한 조건의 후보와 Confidence를 표시합니다.</p>')
+        x_fields = "".join(f'<label>{label}<input name="{key}" inputmode="decimal" '
+                           f'value="{escape(raw.get(key, ""))}"></label>' for key, label in X_FIELDS.items())
+        hidden = "" if selected == "custom" else " hidden"
+        envelope_control = f"""<label class="mode">Package Envelope · 선택
+            <select name="envelope" aria-controls="envelope-x-bounds">{options}</select></label>
+            <fieldset id="envelope-x-bounds"{hidden}><legend>World X 경계</legend>
+            <div class="values">{x_fields}</div>
+            <p>원본 Example A의 World 좌표로 두 경계를 각각 입력하세요. Y/Z, Keepout 및 Backing은 R7의 Synthetic 값입니다.</p>
+            </fieldset>"""
     review = ""
     if result is not None or job is not None:
         report = escape(render_design_report(review_snapshot(result))) if result is not None else ''
@@ -521,7 +537,7 @@ def render_workspace(raw, result=None, error=None, job=None):
           <button type="button" data-export="json">JSON 저장</button></div></div>
           <iframe id="design-review" title="Two-Port 설계 결과" srcdoc="{report}"></iframe></section>'''
     elif error:
-        review = f'<section id="design-output" class="card output" role="alert">입력 오류 · {escape(error)}</section>'
+        review = f'<section id="design-output" class="card output" role="alert">{error_label} · {escape(error)}</section>'
 
     job_view = '' if job is None else (f'<section class="card"><p id="job-status" role="status">Near-Match 준비 중</p>'
         '<button type="button" id="cancel-design">취소</button></section>'
@@ -592,15 +608,24 @@ class Workspace:
         envelope = raw.get("envelope", "")
         submitted_fields = set(raw)
         if entry == R6_ENTRY:
-            submitted_fields.discard("envelope")
-        if entry not in self.templates or submitted_fields != self.fields or (envelope and envelope not in WIDTHS):
+            submitted_fields -= {"envelope", *X_FIELDS}
+        if entry not in self.templates or submitted_fields != self.fields or envelope not in ("", "custom", *WIDTHS):
             return self.get("example"), 400
         if any(raw[port + "_mode"] not in ("mfd", "round", "q") for port in PORTS):
             return self.get(entry), 400
         try:
             document = build_document(self.templates[entry], raw)
             if envelope:
-                return render_workspace(raw, result=compare_envelopes(document, envelope)), 200
+                x_limits = None
+                if envelope == "custom":
+                    x_limits = tuple(parse_number(raw.get(key, ""), label, 3)
+                                     for key, label in X_FIELDS.items())
+                    if None in x_limits:
+                        raise ValueError("World X min과 max를 모두 입력하세요.")
+                result = compare_envelopes(document, envelope, x_limits_m=x_limits)
+                return render_workspace(raw, result=result), 200
+        except EnvelopeValidationError as exc:
+            return render_workspace(raw, error=str(exc), error_label="검증 보류"), 200
         except ValueError as exc:
             return render_workspace(raw, error=str(exc)), 200
         try:

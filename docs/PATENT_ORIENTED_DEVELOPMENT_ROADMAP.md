@@ -100,3 +100,7 @@ Tutorial에서 1310 nm 두 Port를 열어 Design하고 편집한 입력을 새 S
 ## M7-R23 · Package 비교 범위
 
 원본 Example A에서 두 Synthetic Envelope를 비교하고 새 SHA에 귀속된 후보와 한계 여유를 확인할 수 있다. 같은 두 Port에서 사용자가 가진 Package 공간을 적용하는 것이 Track A의 남은 제약이다. Milestone 종료 시 다음 실행 지시문과 모델 추천을 대화에서 전달한다. [R23 설계 및 검증 기록](M7R23_ENVELOPE_COMPARISON.md)
+
+## M7-R24 · 사용자 지정 World X 경계
+
+원본 Example A에서 X min/max를 지정하고 R7 Synthetic Y/Z 조건에서 후보와 제한 면을 검토할 수 있다. 실제 Assembly 판단에서 필요한 기구 여유와 Gaussian Mode Overlap의 관계는 추가 검증이 필요하다. [R24 설계 및 검증 기록](M7R24_PACKAGE_WORLD_X.md)
