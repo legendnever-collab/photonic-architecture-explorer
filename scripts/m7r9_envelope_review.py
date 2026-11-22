@@ -7,6 +7,7 @@ import math
 from copy import deepcopy
 from pathlib import Path
 
+from photonic_architecture_explorer.envelope_geometry import limiting_boundary
 from photonic_architecture_explorer.external import adapt_external, evaluate_external
 from photonic_architecture_explorer.near_match_reference import independent_check
 from photonic_architecture_explorer.placement import (
@@ -50,18 +51,6 @@ def prescription(fixed, case, archived):
             "M7-R8 envelope diagnostic",
         )
     return apply_envelopes(proposal, case, aperture_scale=None)
-
-
-def limiting_boundary(proposal):
-    low, high = box_bounds(proposal["package"]["available_volume"]["value"])
-    distances = []
-    for index, reflector in enumerate(proposal["reflectors"], start=1):
-        body_low, body_high = box_bounds(reflector["body_envelope"]["value"])
-        for axis, label in enumerate("XYZ"):
-            distances.append((body_low[axis] - low[axis], index, label + "-"))
-            distances.append((high[axis] - body_high[axis], index, label + "+"))
-    gap, mirror, face = min(distances)
-    return {"gap_m": gap, "mirror": mirror, "face": face}
 
 
 def review_candidate(fixed, case, archived):

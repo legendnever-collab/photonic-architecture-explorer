@@ -67,7 +67,8 @@ def main():
     (app / MODE_REPORT.parent).mkdir()
     shutil.copy2(ROOT / MODE_REPORT, app / MODE_REPORT)
     from photonic_architecture_explorer.tutorial import REFERENCE_FILES
-    for name in REFERENCE_FILES:
+    from photonic_architecture_explorer.envelope_search import FILES as ENVELOPE_FILES
+    for name in (*REFERENCE_FILES, *ENVELOPE_FILES):
         destination = app / name
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(ROOT / name, destination)

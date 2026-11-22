@@ -77,9 +77,51 @@ def render_placement(diagnostic, identifier):
         Perturbed Gaussian Mode Overlap과 실제 부품 배치 공차는 Uncomputed입니다.</p></details>"""
 
 
+def render_envelope_comparison(comparison):
+    if not comparison:
+        return ""
+    rows, details = [], []
+    for key, case in comparison["cases"].items():
+        volume = case["envelope"]
+        width = (volume["max_m"][0] - volume["min_m"][0]) * 1e3
+        choice = " · 선택됨" if key == comparison["selected"] else ""
+        boundary = case["limiting_boundary"]
+        label = f'{width:.6f}'.rstrip('0').rstrip('.') + ' mm'
+        rows.append(f'<tr><th scope="row">{label}{choice}</th><td>{len(case["passing_trials"])}/{case["evaluations"]}</td>'
+                    f'<td>{case["selected"]}</td><td>{case["overlap"]:.9f}</td>'
+                    f'<td>{"충족" if case["threshold_met"] else "미달"}</td>'
+                    f'<td>{case["max_projected_radius_m"]*1e6:.2f}</td>'
+                    f'<td>{case["minimum_gap_m"]*1e6:.3f} · M{boundary["mirror"]} {boundary["face"]}</td></tr>')
+        failures = "".join(f'<li>{escape(reason)} · {count}건</li>' for reason, count in case["rejection_counts"].items())
+        candidates = []
+        for trial in case["passing_trials"]:
+            face = trial["nearest_envelope_face"]
+            candidates.append(f'<tr><th scope="row">{trial["id"]}</th><td>{trial["overlap"]:.9f}</td>'
+                              f'<td>{trial["max_projected_radius_m"]*1e6:.2f}</td><td>{trial["footprint_curvature"]:.6f}</td>'
+                              f'<td>M{face["mirror"]} {face["face"]} · {face["gap_m"]*1e6:.3f}</td></tr>')
+        details.append(f'<details><summary>{label} · 통과 처방과 탈락 사유</summary>'
+                       f'<p>Input SHA256 <code>{case["input_sha256"]}</code></p>'
+                       '<div class="table-scroll"><table><caption>통과 처방 · Normalized η 순위</caption>'
+                       '<thead><tr><th>처방</th><th>η</th><th>최대 투영 반경 [µm]</th><th>최대 3w·|κ|</th>'
+                       '<th>가장 가까운 Envelope 면 · Gap [µm]</th></tr></thead>'
+                       f'<tbody>{"".join(candidates)}</tbody></table></div><p>탈락 사유별 건수</p><ul>{failures}</ul></details>')
+    return (f'<section class="card" id="envelope-comparison"><h2>Package Envelope 비교</h2>'
+            '<p>같은 두 Port에서 R8 기준 처방 두 개와 주변 Guarded Near-Match 처방을 두 Envelope로 다시 평가했습니다. '
+            '통과 수는 Geometry·Gaussian Guard·기구 조건을 충족한 처방 수입니다. η 목표는 별도로 표시합니다.</p>'
+            '<div class="table-scroll"><table><thead><tr><th>X 폭</th><th>통과/평가</th><th>최고 관측 후보</th>'
+            '<th>Normalized η</th><th>η ≥ 0.99</th><th>최대 투영 1/e² 반경 [µm]</th>'
+            '<th>최소 AABB Gap [µm] · 제한 경계</th></tr></thead>'
+            f'<tbody>{"".join(rows)}</tbody></table></div><p>Synthetic Package에서 50 µm Clearance를 적용합니다. '
+            '전체 Beam Clearance, 실제 Assembly Tolerance 및 Total Coupling은 Uncomputed입니다.</p>'
+            + "".join(details) + '</section>')
+
+
 def render_design_report(result):
     payload=json.dumps(result,sort_keys=True,ensure_ascii=False,allow_nan=False).replace('&','\\u0026').replace('<','\\u003c').replace('>','\\u003e')
     rows=[]; articles=[]; options=[]; sheets=[]; alternatives=[]
+    envelope = result.get("envelope_comparison")
+    aperture_note = ("R7 Equal-tail 배정과 축별 1.10 mm Half-aperture 상한을 적용했습니다." if envelope else
+                     "Half-aperture는 각 반사면의 투영 빔 반경에 4배 규칙을 적용했습니다.")
     review = result.get('candidate_review', {})
     lead = result['candidates'][0]['ranking'] if result['candidates'] else None
     for i,c in enumerate(result['candidates']):
@@ -112,7 +154,9 @@ def render_design_report(result):
             prescription_rows.append(f'<tr><td>M{j}</td><td>{fmt(v*1e3 for v in m.vertex)}</td><td>{fmt(m.normal)}</td><td>{fmt(m.curvatures)}</td><td>{fmt(v*1e3 for v in m.half_aperture)}</td></tr>')
         if i == 0:
             trade_off = "대안에서는 광경로를 늘려 Beam Footprint를 줄이거나 Gaussian 모델 여유를 늘릴 수 있습니다."
-            if len(result["candidates"]) == 1:
+            if envelope:
+                trade_off = "선택한 Envelope에서 통과한 처방의 최고 관측 η입니다. 위 표에서 다른 Envelope와 비교할 수 있습니다."
+            elif len(result["candidates"]) == 1:
                 trade_off = "현재 검증 범위에서 비교할 별도 대안이 없습니다."
             elif not any(item.get("recommendation_role") == "smaller_footprint" for item in result["candidates"]):
                 trade_off = "대안에서는 광경로를 늘려 Gaussian 모델 여유를 늘릴 수 있습니다."
@@ -136,7 +180,7 @@ def render_design_report(result):
         {render_mode_match(c, result.get('input_sha256', ''), adapted)}
         {render_sensitivity(result.get('candidate_sensitivity'), identifier)}
         {render_placement(result.get('reflector_placement'), identifier)}
-        <details><summary>Reflector 설계값 · 자동 생성</summary><p>Half-aperture는 각 반사면의 투영 빔 반경에 4배 규칙을 적용했습니다.</p><div class="table-scroll"><table><tr><th>면</th><th>Vertex [mm]</th><th>Normal</th><th>κt, κs [m⁻¹]</th><th>Half-aperture [mm]</th></tr>{''.join(prescription_rows)}</table></div>
+        <details><summary>Reflector 설계값 · 자동 생성</summary><p>{aperture_note}</p><div class="table-scroll"><table><tr><th>면</th><th>Vertex [mm]</th><th>Normal</th><th>κt, κs [m⁻¹]</th><th>Half-aperture [mm]</th></tr>{''.join(prescription_rows)}</table></div>
         <p>Segment Lengths [mm]: {', '.join(f'{v*1000:.6g}' for v in e['geometry']['lengths'])}</p></details>
         <details><summary>상세 Physics 판정 · 미계산 항목</summary>
         <p>Off-vertex Field 및 Perturbed Mode Overlap · Uncomputed. 실제 배치 공차, Package Yield, Total Coupling, Patentability · Uncomputed.</p>
@@ -168,7 +212,9 @@ def render_design_report(result):
         budget_caption = (f'Near-Match · {cost["geometry_count"]} Geometry / {cost["adapter_calls"]} Adapter 평가, '
                           f'상한 {cost["maximum_adapter_calls"]}회 / 600 s. '
                           '유한 탐색의 최고 관측값이며 전역 최적성은 보장하지 않습니다.')
-    rerun_entry = 'pae-workspace' if result.get('workflow') else 'pae-design ports.json'
+    if envelope:
+        budget_caption = "각 Envelope에서 R8 두 기준 처방과 25 µm 간격의 3×3 배치 두 곳을 평가합니다. 최대 74개 처방입니다."
+    rerun_entry = 'pae-workspace' if envelope or result.get('workflow') else 'pae-design ports.json'
     return f'''<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PAE · Two-Port Design</title><style>{CSS}{MODE_MATCH_CSS}{REVIEW_CSS}
     @media print{{body:has(#rejected-design)>header, main:has(#rejected-design)>:not(#rejected-design){{display:none !important}}
     main:has(#rejected-design){{padding:0;margin:0;max-width:none}}
@@ -184,7 +230,7 @@ def render_design_report(result):
     </style></head><body>
     <header><h1>Two-Port Design</h1></header>
     <main class="wrap">
-    {render_reference_context(result.get('reference_context'))}{''.join(articles)}{toolbar}{alternative_section}{review_section}{comparison}
+    {render_envelope_comparison(envelope)}{render_reference_context(result.get('reference_context'))}{''.join(articles)}{toolbar}{alternative_section}{review_section}{comparison}
     <section class="card"><details><summary>Fixed Ports · 입력 SHA · 기준면</summary>
     <p>Input SHA256 <code>{escape(result.get('input_sha256', ''))}</code></p>{input_summary(result.get('input_snapshot'))}</details>
     <details><summary>탐색 범위·순위 근거·실패 진단</summary><p>{budget_caption}</p><p>대표 선정은 추천 정책과 후보별 선택 근거를 따릅니다.</p><pre>{escape(json.dumps({'policy':result['search_policy'],'ranking_order':result['ranking_order'],'recommendation_policy':result.get('recommendation_policy'),'search':search,'limitations':result['limitations']},ensure_ascii=False,indent=2))}</pre></details>

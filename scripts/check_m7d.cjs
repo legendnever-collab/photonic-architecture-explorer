@@ -337,6 +337,39 @@ for key in published.keys() - {"input_snapshot"}:
     assert.equal((await result()).status, 'Uncomputed');
     assert.equal(await page.locator('#workflow-job').count(), 0);
     assert.equal(await frame().locator('[data-overlap-value]').count(), 0);
+    await page.goto(address+'/?entry=smf-glass-1310');
+    const envelopeEvidence = {};
+    for (const key of ['nominal','expansion']) {
+      await page.locator('[name="envelope"]').selectOption(key);
+      await hidden();
+      await design();
+      const report = await result();
+      const comparison = report.envelope_comparison;
+      const active = comparison.cases[key];
+      assert.equal(comparison.selected, key);
+      assert.equal(report.input_sha256, active.input_sha256);
+      assert.notEqual(report.input_sha256, r6.input_sha256);
+      assert.equal(await frame().locator('#envelope-comparison > .table-scroll tbody tr').count(), 2);
+      assert.equal(await frame().locator('.confidence code').textContent(), active.input_sha256);
+      assert.equal(await frame().locator('.confidence').getAttribute('data-confidence'), active.selected);
+      assert.equal(active.r9_replay.absolute_error <= 1e-8, true);
+      assert.equal(active.threshold_met, key === 'expansion');
+      const saved = JSON.parse(fs.readFileSync(await exportFile('json', 'envelope-'+key)));
+      assert.deepEqual(saved, {...report, viewed_candidate_id:active.selected});
+      const offline = await browser.newPage();
+      await offline.goto(pathToFileURL(await exportFile('html', 'envelope-'+key)).href);
+      assert.deepEqual(await offline.locator('#design-result').evaluate(e=>JSON.parse(e.textContent)),saved);
+      await offline.close();
+      envelopeEvidence[key] = {input_sha256:active.input_sha256, candidate:active.selected,
+        passed:active.passing_trials.length, evaluated:active.evaluations, eta:active.overlap,
+        quadrature:active.quadrature, gap_m:active.minimum_gap_m, radius_m:active.max_projected_radius_m};
+    }
+    assert.notEqual(envelopeEvidence.nominal.input_sha256,envelopeEvidence.expansion.input_sha256);
+    await page.locator('[name="target_position_m_2"]').fill('2.1');
+    await hidden();
+    await design();
+    assert.match(await page.locator('[role="alert"]').innerText(), /원본 Example A/);
+    assert.equal(await page.locator('[data-export]').count(),0);
     const r6Evidence = snapshot => {
       const current = snapshot.candidates[0];
       return {input_sha256:snapshot.input_sha256, selected:snapshot.selected_candidate_id,
@@ -357,6 +390,7 @@ for key in published.keys() - {"input_snapshot"}:
       http_ping_ms:pingMs,identity_checks:'job ID + revision + SHA',
       reference_handoff:{concept_1550:'Reference → Proxy → Design → Background Near-Match',
         incomplete_1310:incomplete.status,worker_started_for_incomplete_1310:false},
+      envelope_comparison:envelopeEvidence,
       r6_redesign:{original:r6Evidence(r6),edited:r6Evidence(revised),adapter_replay_equal:true,
         export_equal:true, confidence_scope:'Edited input SHA', missing_phase:'Uncomputed'}};
     fs.writeFileSync(path.join(dir,'acceptance.json'),JSON.stringify(evidence,null,2)+'\n');
