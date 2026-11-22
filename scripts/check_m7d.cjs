@@ -339,6 +339,28 @@ for key in published.keys() - {"input_snapshot"}:
     assert.equal(await frame().locator('[data-overlap-value]').count(), 0);
     await page.goto(address+'/?entry=smf-glass-1310');
     const envelopeEvidence = {};
+    const checkClearance = (report, active, label) => {
+      const selection = active.clearance_selection;
+      const qualifies = label === 'expansion';
+      assert.equal(selection.status, qualifies ? 'Verified' : 'NoTargetCandidate');
+      if (qualifies) {
+        assert.equal(selection.candidate.id, 'R8-expansion');
+        assert.equal(selection.eligible_count, 1);
+        assert(selection.quadrature.every(q => q >= 0.99 && Math.abs(q - active.overlap) <= 1e-8));
+      } else {
+        assert.equal(selection.candidate, null);
+      }
+      const winner = report.candidates[0];
+      if (!winner) return {target_status:selection.status, additional_clearance_m:null};
+      const {face, ...originalCheck} = winner.clearance.limiting_check;
+      const checks = winner.evaluation.package_feasibility.envelope_geometry.checks;
+      assert.deepEqual(checks.find(check => check.path === originalCheck.path), originalCheck);
+      assert.equal(face, 'X-');
+      const expected = label === 'midrange' ? 210e-6 : 0;
+      assert(Math.abs(winner.clearance.additional_clearance_m - expected) <= 2e-12);
+      return {target_status:selection.status, target_candidate:selection.candidate?.id ?? null,
+        additional_clearance_m:winner.clearance.additional_clearance_m, limiting_check:originalCheck.path};
+    };
     for (const key of ['nominal','expansion']) {
       await page.locator('[name="envelope"]').selectOption(key);
       await hidden();
@@ -354,6 +376,10 @@ for key in published.keys() - {"input_snapshot"}:
       assert.equal(await frame().locator('.confidence').getAttribute('data-confidence'), active.selected);
       assert.equal(active.r9_replay.absolute_error <= 1e-8, true);
       assert.equal(active.threshold_met, key === 'expansion');
+      const clearance = checkClearance(report, active, key);
+      const envelopeTable = frame().locator('#envelope-comparison > .table-scroll tbody');
+      assert.match(await envelopeTable.innerText(), /η 목표 충족 후보 없음/);
+      assert.match(await envelopeTable.innerText(), /body\[1\]\.volume/);
       const saved = JSON.parse(fs.readFileSync(await exportFile('json', 'envelope-'+key)));
       assert.deepEqual(saved, {...report, viewed_candidate_id:active.selected});
       const offline = await browser.newPage();
@@ -362,7 +388,8 @@ for key in published.keys() - {"input_snapshot"}:
       await offline.close();
       envelopeEvidence[key] = {input_sha256:active.input_sha256, candidate:active.selected,
         passed:active.passing_trials.length, evaluated:active.evaluations, eta:active.overlap,
-        quadrature:active.quadrature, gap_m:active.minimum_gap_m, radius_m:active.max_projected_radius_m};
+        quadrature:active.quadrature, gap_m:active.minimum_gap_m, radius_m:active.max_projected_radius_m,
+        clearance};
     }
     assert.notEqual(envelopeEvidence.nominal.input_sha256,envelopeEvidence.expansion.input_sha256);
     const customEvidence = {};
@@ -414,9 +441,10 @@ for key in published.keys() - {"input_snapshot"}:
         assert.deepEqual(await offline.locator('#design-result').evaluate(e=>JSON.parse(e.textContent)), saved);
         await offline.close();
       }
+      const clearance = checkClearance(report, active, label);
       customEvidence[label] = {bounds_m:[volume.value.min_m[0],volume.value.max_m[0]],
         input_sha256:active.input_sha256, passed, selected:winner, status:report.status,
-        eta:active.overlap, quadrature:active.quadrature, gap_m:active.minimum_gap_m};
+        eta:active.overlap, quadrature:active.quadrature, gap_m:active.minimum_gap_m, clearance};
     }
     assert.equal(new Set(Object.values(customEvidence).map(row => row.input_sha256)).size, 4);
     await setXBounds('2','2');

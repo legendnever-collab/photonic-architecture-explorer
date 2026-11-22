@@ -14,6 +14,7 @@ from .solver import MAX_FOOTPRINT_SLOPE
 
 
 CONCEPT_REASONS = {
+    "max_clearance": "η 목표를 검산했고, 통과한 처방 중 추가 AABB Clearance가 가장 큽니다.",
     'short_path': '유효 후보 중 가장 좋은 Overlap 구간에서 광경로가 가장 짧습니다.',
     'smaller_footprint': '같은 Overlap 구간에서 반사면 위 최대 투영 빔 반경이 더 작습니다.',
     'model_margin': '같은 Overlap 구간에서 Gaussian 모델의 곡률·Footprint 한계까지 여유가 더 큽니다.',
@@ -78,6 +79,13 @@ def render_placement(diagnostic, identifier):
         Perturbed Gaussian Mode Overlap과 실제 부품 배치 공차는 Uncomputed입니다.</p></details>"""
 
 
+def clearance_cell(trial):
+    check = trial["limiting_check"]
+    face = f' · {escape(check["face"])}' if check["face"] else ""
+    return (f'{trial["additional_clearance_m"] * 1e6:.3f} µm'
+            f'<br><code>{escape(check["path"])}</code>{face}')
+
+
 def render_envelope_comparison(comparison):
     if not comparison:
         return ""
@@ -92,40 +100,50 @@ def render_envelope_comparison(comparison):
         if key == "custom":
             label = f"직접 입력 · {width:.9g} mm"
         counts = f'{len(case["passing_trials"])}/{case["evaluations"]}'
+        selection = case["clearance_selection"]
+        maximum = selection["candidate"]
+        if maximum:
+            extra = (f'<b>{maximum["id"]}</b><br>η {maximum["overlap"]:.9f}<br>'
+                     f'{clearance_cell(maximum)}')
+        elif selection["status"] == "VerificationWithheld":
+            extra = f'검증 보류<br>{escape(selection["reason"])}'
+        else:
+            extra = "η 목표 충족 후보 없음"
         if case["selected"] is None:
             metrics = '<td>통과 후보 없음</td><td colspan="4">Uncomputed</td>'
         else:
-            boundary = case["limiting_boundary"]
+            lead = case["passing_trials"][0]
             metrics = (f'<td>{case["selected"]}</td><td>{case["overlap"]:.9f}</td>'
                        f'<td>{"충족" if case["threshold_met"] else "미달"}</td>'
                        f'<td>{case["max_projected_radius_m"]*1e6:.2f}</td>'
-                       f'<td>{case["minimum_gap_m"]*1e6:.3f} · M{boundary["mirror"]} {boundary["face"]}</td>')
+                       f'<td>{clearance_cell(lead)}</td>')
         rows.append(f'<tr><th scope="row">{label}{choice}<br><small>World X [{x_min}, {x_max}] mm</small></th>'
-                    f'<td>{counts}</td>{metrics}</tr>')
+                    f'<td>{counts}</td>{metrics}<td>{extra}</td></tr>')
         failures = "".join(f'<li>{escape(reason)} · {count}건</li>' for reason, count in case["rejection_counts"].items())
         candidates = []
         for trial in case["passing_trials"]:
-            face = trial["nearest_envelope_face"]
             candidates.append(f'<tr><th scope="row">{trial["id"]}</th><td>{trial["overlap"]:.9f}</td>'
                               f'<td>{trial["max_projected_radius_m"]*1e6:.2f}</td><td>{trial["footprint_curvature"]:.6f}</td>'
-                              f'<td>M{face["mirror"]} {face["face"]} · {face["gap_m"]*1e6:.3f}</td></tr>')
+                              f'<td>{clearance_cell(trial)}</td></tr>')
         candidate_table = (
             '<div class="table-scroll"><table><caption>통과 처방 · Normalized η 순위</caption>'
             '<thead><tr><th>처방</th><th>η</th><th>최대 투영 반경 [µm]</th><th>최대 3w·|κ|</th>'
-            '<th>가장 가까운 Envelope 면 · Gap [µm]</th></tr></thead>'
+            '<th>추가 Clearance · 제한 검사</th></tr></thead>'
             f'<tbody>{"".join(candidates)}</tbody></table></div>'
         ) if candidates else ""
         details.append(f'<details><summary>{label} · 처방 평가 상세</summary>'
                        f'<p>Input SHA256 <code>{case["input_sha256"]}</code></p>'
                        f'{candidate_table}<p>탈락 사유별 건수</p><ul>{failures}</ul></details>')
+    target = comparison["target_overlap"]
     return (f'<section class="card" id="envelope-comparison"><h2>Package Envelope 평가</h2>'
             '<p>같은 두 Port에서 R8 기준 처방 두 개와 주변 Guarded Near-Match 처방을 표에 표시된 World X 경계에서 평가했습니다. '
             '통과 수는 Geometry·Gaussian Guard·기구 조건을 충족한 처방 수입니다. η 목표는 별도로 표시합니다.</p>'
             '<div class="table-scroll"><table><thead><tr><th>X 폭</th><th>통과/평가</th><th>최고 관측 후보</th>'
-            '<th>Normalized η</th><th>η ≥ 0.99</th><th>최대 투영 1/e² 반경 [µm]</th>'
-            '<th>최소 AABB Gap [µm] · 제한 경계</th></tr></thead>'
-            f'<tbody>{"".join(rows)}</tbody></table></div><p>R7 Synthetic Y/Z·Keepout·Backing과 50 µm Clearance를 적용합니다. '
-            '전체 Beam Clearance, 실제 Assembly Tolerance 및 Total Coupling은 Uncomputed입니다.</p>'
+            f'<th>Normalized η</th><th>η ≥ {target:g}</th><th>최대 투영 1/e² 반경 [µm]</th>'
+            f'<th>추가 Clearance · 제한 검사</th><th>η ≥ {target:g}에서 최대 Clearance</th></tr></thead>'
+            f'<tbody>{"".join(rows)}</tbody></table></div><p>추가 Clearance는 Envelope 경계, Reflector 간 거리, Keepout 거리 중 최솟값에서 '
+            '기본 50 µm를 뺀 값입니다. R7 Synthetic Y/Z·Keepout·Backing을 적용합니다. '
+            'Finite-beam Clearance, 실제 Assembly Tolerance 및 Total Coupling은 Uncomputed입니다.</p>'
             + "".join(details) + '</section>')
 
 
