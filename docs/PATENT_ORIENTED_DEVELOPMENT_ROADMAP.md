@@ -112,3 +112,7 @@ Tutorial에서 1310 nm 두 Port를 열어 Design하고 편집한 입력을 새 S
 ## M7-R26 · 고정 처방의 World X 산출
 
 검산한 R8-expansion의 η를 유지하면서 50·100 µm의 추가 AABB Clearance에 필요한 X 경계를 산출한다. World X의 영향과 고정 Y/Z·Keepout·Reflector 간 거리의 한계를 Adapter 경로로 확인할 수 있다. [R26 설계 및 검증 기록](M7R26_ENVELOPE_SIZING.md)
+
+## M7-R27 · 단일 Reflector 오차와 고정 Target
+
+R8-expansion에서 M2 sagittal ±1 mrad가 비교한 오차 중 가장 큰 Chief Ray 변화를 만들었다. 고정면 광선 전달은 수렴했지만 오차별 η에 필요한 Field 근거는 부족하다. 같은 오차 조건을 견디는 Package Envelope를 비교하는 기구 판단과 Field 검증을 별도로 진행할 수 있다. [R27 검증 기록](M7R27_REFLECTOR_POSE.md)
