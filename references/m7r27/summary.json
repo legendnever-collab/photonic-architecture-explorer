@@ -1,0 +1,954 @@
+{
+  "candidate_id": "R8-expansion",
+  "fixed_input_sha256": "20461fd9868b9450c0df7eff0464e6454a06811e5f09c244f4bc579d66efbcad",
+  "target_radius_t_m": 4.629176960840465e-06,
+  "target_eta": 0.99,
+  "required_maximum_U": 2e-06,
+  "nominal_gaussian_eta": 0.9900109725310262,
+  "nominal_independent_quadrature": [
+    0.9900109725310264,
+    0.9900109725310265
+  ],
+  "nominal_physical_optics_fixed_window": [
+    {
+      "pitch_um": 2,
+      "half_window_um": 24,
+      "eta_window": 0.9898110919347209
+    },
+    {
+      "pitch_um": 2,
+      "half_window_um": 48,
+      "eta_window": 0.9898109426411577
+    },
+    {
+      "pitch_um": 2,
+      "half_window_um": 96,
+      "eta_window": 0.9898108541839725
+    },
+    {
+      "pitch_um": 2,
+      "half_window_um": 192,
+      "eta_window": 0.9898108128160694
+    },
+    {
+      "pitch_um": 0.5,
+      "half_window_um": 24,
+      "eta_window": 0.9898110986323314
+    },
+    {
+      "pitch_um": 0.5,
+      "half_window_um": 48,
+      "eta_window": 0.9898109418393791
+    }
+  ],
+  "field_evidence": {
+    "perturbed_complex_target_field": "Uncomputed",
+    "full_plane_output_norm_error_bound": null,
+    "scope": "Frozen nominal finite-window physical optics only"
+  },
+  "cases": [
+    {
+      "mirror": 1,
+      "kind": "translation",
+      "axis": "X",
+      "delta_m": -5e-06,
+      "chief_ray_status": "Computed",
+      "target_offset_ts_m": [
+        -4.5357992416693305e-08,
+        0.0
+      ],
+      "target_angle_ts_rad": [
+        -0.0006704858713430905,
+        0.0
+      ],
+      "target_offset_t_over_target_radius_t": -0.009798284403553712,
+      "tangential_ray_refinements": [
+        {
+          "height_step_m": 1e-06,
+          "direction_cosine_step": 0.001,
+          "matrix": [
+            [
+              -1.008647438811806,
+              1.475332763833763e-05
+            ],
+            [
+              -158.21874091992427,
+              -0.9891124239508609
+            ]
+          ],
+          "determinant": 0.9999999660382898
+        },
+        {
+          "height_step_m": 5e-07,
+          "direction_cosine_step": 0.0005,
+          "matrix": [
+            [
+              -1.0086474450192973,
+              1.4753427342219932e-05
+            ],
+            [
+              -158.21874631799517,
+              -0.9891124273974095
+            ]
+          ],
+          "determinant": 0.9999999915092124
+        },
+        {
+          "height_step_m": 2.5e-07,
+          "direction_cosine_step": 0.00025,
+          "matrix": [
+            [
+              -1.008647446571441,
+              1.4753452268027878e-05
+            ],
+            [
+              -158.21874766686062,
+              -0.9891124282593866
+            ]
+          ],
+          "determinant": 0.9999999978775183
+        }
+      ],
+      "hit_distance_from_vertex_m": [
+        0.0,
+        2.1623195859727308e-06
+      ],
+      "gaussian_geometry": {
+        "status": "Fail",
+        "reason": "specular reflection does not close fixed path"
+      },
+      "gaussian_model_domain": "Uncomputed",
+      "perturbed_gaussian_eta": null,
+      "numerical_U": null,
+      "threshold_status": "Evidence Insufficient"
+    },
+    {
+      "mirror": 1,
+      "kind": "translation",
+      "axis": "X",
+      "delta_m": 5e-06,
+      "chief_ray_status": "Computed",
+      "target_offset_ts_m": [
+        4.4884453681125897e-08,
+        0.0
+      ],
+      "target_angle_ts_rad": [
+        0.0006704360955727221,
+        0.0
+      ],
+      "target_offset_t_over_target_radius_t": 0.009695990034690044,
+      "tangential_ray_refinements": [
+        {
+          "height_step_m": 1e-06,
+          "direction_cosine_step": 0.001,
+          "matrix": [
+            [
+              -1.008508242028583,
+              6.07225985878139e-06
+            ],
+            [
+              -157.23580234253131,
+              -0.9906167834644874
+            ]
+          ],
+          "determinant": 0.9999999674667072
+        },
+        {
+          "height_step_m": 5e-07,
+          "direction_cosine_step": 0.0005,
+          "matrix": [
+            [
+              -1.0085082482310868,
+              6.072364177895501e-06
+            ],
+            [
+              -157.2358077229219,
+              -0.9906167852695713
+            ]
+          ],
+          "determinant": 0.999999991866825
+        },
+        {
+          "height_step_m": 2.5e-07,
+          "direction_cosine_step": 0.00025,
+          "matrix": [
+            [
+              -1.0085082497819295,
+              6.072390256427196e-06
+            ],
+            [
+              -157.23580906812364,
+              -0.9906167857206549
+            ]
+          ],
+          "determinant": 0.9999999979666852
+        }
+      ],
+      "hit_distance_from_vertex_m": [
+        0.0,
+        2.1621590588996906e-06
+      ],
+      "gaussian_geometry": {
+        "status": "Fail",
+        "reason": "specular reflection does not close fixed path"
+      },
+      "gaussian_model_domain": "Uncomputed",
+      "perturbed_gaussian_eta": null,
+      "numerical_U": null,
+      "threshold_status": "Evidence Insufficient"
+    },
+    {
+      "mirror": 1,
+      "kind": "translation",
+      "axis": "Z",
+      "delta_m": -5e-06,
+      "chief_ray_status": "Computed",
+      "target_offset_ts_m": [
+        4.945420409280428e-06,
+        0.0
+      ],
+      "target_angle_ts_rad": [
+        -0.0006510360840588183,
+        0.0
+      ],
+      "target_offset_t_over_target_radius_t": 1.0683152644876523,
+      "tangential_ray_refinements": [
+        {
+          "height_step_m": 1e-06,
+          "direction_cosine_step": 0.001,
+          "matrix": [
+            [
+              -1.0087066270863134,
+              8.636027892805487e-06
+            ],
+            [
+              -157.8279102545377,
+              -0.9900172495370396
+            ]
+          ],
+          "determinant": 0.9999999667729981
+        },
+        {
+          "height_step_m": 5e-07,
+          "direction_cosine_step": 0.0005,
+          "matrix": [
+            [
+              -1.0087066333141874,
+              8.636127998493115e-06
+            ],
+            [
+              -157.8279156447815,
+              -0.9900172524207052
+            ]
+          ],
+          "determinant": 0.9999999916934952
+        },
+        {
+          "height_step_m": 2.5e-07,
+          "direction_cosine_step": 0.00025,
+          "matrix": [
+            [
+              -1.0087066348715354,
+              8.636153025348703e-06
+            ],
+            [
+              -157.82791699148203,
+              -0.9900172531412954
+            ]
+          ],
+          "determinant": 0.9999999979237275
+        }
+      ],
+      "hit_distance_from_vertex_m": [
+        5.120698039915305e-06,
+        7.209860126886872e-06
+      ],
+      "gaussian_geometry": {
+        "status": "Fail",
+        "reason": "fixed Source direction does not reach M1 vertex"
+      },
+      "gaussian_model_domain": "Uncomputed",
+      "perturbed_gaussian_eta": null,
+      "numerical_U": null,
+      "threshold_status": "Evidence Insufficient"
+    },
+    {
+      "mirror": 1,
+      "kind": "translation",
+      "axis": "Z",
+      "delta_m": 5e-06,
+      "chief_ray_status": "Computed",
+      "target_offset_ts_m": [
+        -4.946610374405563e-06,
+        0.0
+      ],
+      "target_angle_ts_rad": [
+        0.000650624423613498,
+        0.0
+      ],
+      "target_offset_t_over_target_radius_t": -1.0685723220888632,
+      "tangential_ray_refinements": [
+        {
+          "height_step_m": 1e-06,
+          "direction_cosine_step": 0.001,
+          "matrix": [
+            [
+              -1.0084479096178576,
+              1.2214192438280563e-05
+            ],
+            [
+              -157.62712165803828,
+              -0.989713667121056
+            ]
+          ],
+          "determinant": 0.9999999667258767
+        },
+        {
+          "height_step_m": 5e-07,
+          "direction_cosine_step": 0.0005,
+          "matrix": [
+            [
+              -1.008447915800629,
+              1.2214296379008116e-05
+            ],
+            [
+              -157.62712704631144,
+              -0.9897136694882458
+            ]
+          ],
+          "determinant": 0.9999999916819293
+        },
+        {
+          "height_step_m": 2.5e-07,
+          "direction_cosine_step": 0.00025,
+          "matrix": [
+            [
+              -1.0084479173458338,
+              1.2214322362563701e-05
+            ],
+            [
+              -157.62712839251236,
+              -0.9897136700803832
+            ]
+          ],
+          "determinant": 0.9999999979205354
+        }
+      ],
+      "hit_distance_from_vertex_m": [
+        5.121596687640342e-06,
+        7.2094293354350964e-06
+      ],
+      "gaussian_geometry": {
+        "status": "Fail",
+        "reason": "fixed Source direction does not reach M1 vertex"
+      },
+      "gaussian_model_domain": "Uncomputed",
+      "perturbed_gaussian_eta": null,
+      "numerical_U": null,
+      "threshold_status": "Evidence Insufficient"
+    },
+    {
+      "mirror": 1,
+      "kind": "rotation",
+      "axis": "s",
+      "delta_rad": -0.001,
+      "chief_ray_status": "Computed",
+      "target_offset_ts_m": [
+        6.229067708408281e-06,
+        0.0
+      ],
+      "target_angle_ts_rad": [
+        -0.0010079460990817754,
+        0.0
+      ],
+      "target_offset_t_over_target_radius_t": 1.3456101940154266,
+      "tangential_ray_refinements": [
+        {
+          "height_step_m": 1e-06,
+          "direction_cosine_step": 0.001,
+          "matrix": [
+            [
+              -1.008762085112939,
+              9.383174576086187e-06
+            ],
+            [
+              -157.99127283289138,
+              -0.9898444057109268
+            ]
+          ],
+          "determinant": 0.9999999663368216
+        },
+        {
+          "height_step_m": 5e-07,
+          "direction_cosine_step": 0.0005,
+          "matrix": [
+            [
+              -1.008762091343849,
+              9.383274491604754e-06
+            ],
+            [
+              -157.99127821553017,
+              -0.9898444089261327
+            ]
+          ],
+          "determinant": 0.9999999915841178
+        },
+        {
+          "height_step_m": 2.5e-07,
+          "direction_cosine_step": 0.00025,
+          "matrix": [
+            [
+              -1.0087620929003296,
+              9.383299471622808e-06
+            ],
+            [
+              -157.99127956095396,
+              -0.9898444097307113
+            ]
+          ],
+          "determinant": 0.9999999978956691
+        }
+      ],
+      "hit_distance_from_vertex_m": [
+        0.0,
+        9.7006476191839e-06
+      ],
+      "gaussian_geometry": {
+        "status": "Fail",
+        "reason": "specular reflection does not close fixed path"
+      },
+      "gaussian_model_domain": "Uncomputed",
+      "perturbed_gaussian_eta": null,
+      "numerical_U": null,
+      "threshold_status": "Evidence Insufficient"
+    },
+    {
+      "mirror": 1,
+      "kind": "rotation",
+      "axis": "s",
+      "delta_rad": 0.001,
+      "chief_ray_status": "Computed",
+      "target_offset_ts_m": [
+        -6.230032492932688e-06,
+        0.0
+      ],
+      "target_angle_ts_rad": [
+        0.0010096090014076805,
+        0.0
+      ],
+      "target_offset_t_over_target_radius_t": -1.345818607850665,
+      "tangential_ray_refinements": [
+        {
+          "height_step_m": 1e-06,
+          "direction_cosine_step": 0.001,
+          "matrix": [
+            [
+              -1.0083966758727467,
+              1.147268458056086e-05
+            ],
+            [
+              -157.4631376253799,
+              -0.9898817262551929
+            ]
+          ],
+          "determinant": 0.9999999671739538
+        },
+        {
+          "height_step_m": 5e-07,
+          "direction_cosine_step": 0.0005,
+          "matrix": [
+            [
+              -1.0083966820520485,
+              1.1472788701699654e-05
+            ],
+            [
+              -157.4631430210638,
+              -0.98988172828407
+            ]
+          ],
+          "determinant": 0.9999999917937901
+        },
+        {
+          "height_step_m": 2.5e-07,
+          "direction_cosine_step": 0.00025,
+          "matrix": [
+            [
+              -1.0083966835968197,
+              1.147281473035805e-05
+            ],
+            [
+              -157.46314436926312,
+              -0.9898817287912198
+            ]
+          ],
+          "determinant": 0.9999999979483603
+        }
+      ],
+      "hit_distance_from_vertex_m": [
+        0.0,
+        9.70601050217212e-06
+      ],
+      "gaussian_geometry": {
+        "status": "Fail",
+        "reason": "specular reflection does not close fixed path"
+      },
+      "gaussian_model_domain": "Uncomputed",
+      "perturbed_gaussian_eta": null,
+      "numerical_U": null,
+      "threshold_status": "Evidence Insufficient"
+    },
+    {
+      "mirror": 2,
+      "kind": "translation",
+      "axis": "X",
+      "delta_m": -5e-06,
+      "chief_ray_status": "Computed",
+      "target_offset_ts_m": [
+        4.823663466097319e-08,
+        0.0
+      ],
+      "target_angle_ts_rad": [
+        0.0006704360955727221,
+        0.0
+      ],
+      "target_offset_t_over_target_radius_t": 0.010420131930367043,
+      "tangential_ray_refinements": [
+        {
+          "height_step_m": 1e-06,
+          "direction_cosine_step": 0.001,
+          "matrix": [
+            [
+              -1.0092944215799473,
+              6.165645237421469e-06
+            ],
+            [
+              -157.2358023426146,
+              -0.9898306034605842
+            ]
+          ],
+          "determinant": 0.9999999665577463
+        },
+        {
+          "height_step_m": 5e-07,
+          "direction_cosine_step": 0.0005,
+          "matrix": [
+            [
+              -1.0092944278017497,
+              6.16574918248583e-06
+            ],
+            [
+              -157.23580772297743,
+              -0.9898306059829554
+            ]
+          ],
+          "determinant": 0.999999991639152
+        },
+        {
+          "height_step_m": 2.5e-07,
+          "direction_cosine_step": 0.00025,
+          "matrix": [
+            [
+              -1.0092944293582304,
+              6.165775167342458e-06
+            ],
+            [
+              -157.23580906812364,
+              -0.9898306066133955
+            ]
+          ],
+          "determinant": 0.9999999979101473
+        }
+      ],
+      "hit_distance_from_vertex_m": [
+        0.0,
+        2.1621590588997376e-06
+      ],
+      "gaussian_geometry": {
+        "status": "Fail",
+        "reason": "specular reflection does not close fixed path"
+      },
+      "gaussian_model_domain": "Uncomputed",
+      "perturbed_gaussian_eta": null,
+      "numerical_U": null,
+      "threshold_status": "Evidence Insufficient"
+    },
+    {
+      "mirror": 2,
+      "kind": "translation",
+      "axis": "X",
+      "delta_m": 5e-06,
+      "chief_ray_status": "Computed",
+      "target_offset_ts_m": [
+        -4.200556255780363e-08,
+        0.0
+      ],
+      "target_angle_ts_rad": [
+        -0.0006704858713430905,
+        0.0
+      ],
+      "target_offset_t_over_target_radius_t": -0.009074088744746793,
+      "tangential_ray_refinements": [
+        {
+          "height_step_m": 1e-06,
+          "direction_cosine_step": 0.001,
+          "matrix": [
+            [
+              -1.0078563445639708,
+              1.4659610844030072e-05
+            ],
+            [
+              -158.21874091989653,
+              -0.9899035186424487
+            ]
+          ],
+          "determinant": 0.9999999669401088
+        },
+        {
+          "height_step_m": 5e-07,
+          "direction_cosine_step": 0.0005,
+          "matrix": [
+            [
+              -1.0078563507519462,
+              1.4659710928250497e-05
+            ],
+            [
+              -158.21874631793966,
+              -0.9899035213760676
+            ]
+          ],
+          "determinant": 0.9999999917350362
+        },
+        {
+          "height_step_m": 2.5e-07,
+          "direction_cosine_step": 0.00025,
+          "matrix": [
+            [
+              -1.007856352298886,
+              1.465973594773351e-05
+            ],
+            [
+              -158.21874766686062,
+              -0.9899035220590768
+            ]
+          ],
+          "determinant": 0.9999999979330587
+        }
+      ],
+      "hit_distance_from_vertex_m": [
+        0.0,
+        2.1623195859727778e-06
+      ],
+      "gaussian_geometry": {
+        "status": "Fail",
+        "reason": "specular reflection does not close fixed path"
+      },
+      "gaussian_model_domain": "Uncomputed",
+      "perturbed_gaussian_eta": null,
+      "numerical_U": null,
+      "threshold_status": "Evidence Insufficient"
+    },
+    {
+      "mirror": 2,
+      "kind": "translation",
+      "axis": "Z",
+      "delta_m": -5e-06,
+      "chief_ray_status": "Computed",
+      "target_offset_ts_m": [
+        5.095783279078416e-06,
+        0.0
+      ],
+      "target_angle_ts_rad": [
+        0.0014393534664613784,
+        0.0
+      ],
+      "target_offset_t_over_target_radius_t": 1.1007968202955098,
+      "tangential_ray_refinements": [
+        {
+          "height_step_m": 1e-06,
+          "direction_cosine_step": 0.001,
+          "matrix": [
+            [
+              -1.008509329805587,
+              1.1926278514024988e-05
+            ],
+            [
+              -157.8641211240628,
+              -0.9896955895877524
+            ]
+          ],
+          "determinant": 0.9999999672425869
+        },
+        {
+          "height_step_m": 5e-07,
+          "direction_cosine_step": 0.0005,
+          "matrix": [
+            [
+              -1.008509335954748,
+              1.1926380309116441e-05
+            ],
+            [
+              -157.86412650953264,
+              -0.9896955919164174
+            ]
+          ],
+          "determinant": 0.9999999918108866
+        },
+        {
+          "height_step_m": 2.5e-07,
+          "direction_cosine_step": 0.00025,
+          "matrix": [
+            [
+              -1.0085093374925802,
+              1.1926405757943515e-05
+            ],
+            [
+              -157.86412785545602,
+              -0.9896955924980633
+            ]
+          ],
+          "determinant": 0.999999997952977
+        }
+      ],
+      "hit_distance_from_vertex_m": [
+        0.0,
+        4.641921482910236e-06
+      ],
+      "gaussian_geometry": {
+        "status": "Fail",
+        "reason": "fixed Target direction does not match arrival"
+      },
+      "gaussian_model_domain": "Uncomputed",
+      "perturbed_gaussian_eta": null,
+      "numerical_U": null,
+      "threshold_status": "Evidence Insufficient"
+    },
+    {
+      "mirror": 2,
+      "kind": "translation",
+      "axis": "Z",
+      "delta_m": 5e-06,
+      "chief_ray_status": "Computed",
+      "target_offset_ts_m": [
+        -5.0979660742808165e-06,
+        0.0
+      ],
+      "target_angle_ts_rad": [
+        -0.0014395829095904986,
+        0.0
+      ],
+      "target_offset_t_over_target_radius_t": -1.101268350163749,
+      "tangential_ray_refinements": [
+        {
+          "height_step_m": 1e-06,
+          "direction_cosine_step": 0.001,
+          "matrix": [
+            [
+              -1.008647741532762,
+              8.897987223118256e-06
+            ],
+            [
+              -157.5904453600674,
+              -0.9900361517353184
+            ]
+          ],
+          "determinant": 0.9999999662529154
+        },
+        {
+          "height_step_m": 5e-07,
+          "direction_cosine_step": 0.0005,
+          "matrix": [
+            [
+              -1.0086477477940294,
+              8.89808945752843e-06
+            ],
+            [
+              -157.59045075319779,
+              -0.9900361546623104
+            ]
+          ],
+          "determinant": 0.9999999915632545
+        },
+        {
+          "height_step_m": 2.5e-07,
+          "direction_cosine_step": 0.00025,
+          "matrix": [
+            [
+              -1.0086477493604848,
+              8.898115013908359e-06
+            ],
+            [
+              -157.5904521012861,
+              -0.9900361553939474
+            ]
+          ],
+          "determinant": 0.9999999978915035
+        }
+      ],
+      "hit_distance_from_vertex_m": [
+        0.0,
+        4.6426614383981035e-06
+      ],
+      "gaussian_geometry": {
+        "status": "Fail",
+        "reason": "fixed Target direction does not match arrival"
+      },
+      "gaussian_model_domain": "Uncomputed",
+      "perturbed_gaussian_eta": null,
+      "numerical_U": null,
+      "threshold_status": "Evidence Insufficient"
+    },
+    {
+      "mirror": 2,
+      "kind": "rotation",
+      "axis": "s",
+      "delta_rad": -0.001,
+      "chief_ray_status": "Computed",
+      "target_offset_ts_m": [
+        -6.432031009680726e-06,
+        0.0
+      ],
+      "target_angle_ts_rad": [
+        -0.0020000000000000126,
+        0.0
+      ],
+      "target_offset_t_over_target_radius_t": -1.389454554036521,
+      "tangential_ray_refinements": [
+        {
+          "height_step_m": 1e-06,
+          "direction_cosine_step": 0.001,
+          "matrix": [
+            [
+              -1.0084664991551022,
+              9.681917856416838e-06
+            ],
+            [
+              -157.69155255829227,
+              -0.9900906083408212
+            ]
+          ],
+          "determinant": 0.9999999662983333
+        },
+        {
+          "height_step_m": 5e-07,
+          "direction_cosine_step": 0.0005,
+          "matrix": [
+            [
+              -1.0084665054113824,
+              9.682020664803642e-06
+            ],
+            [
+              -157.6915579495908,
+              -0.990090611135197
+            ]
+          ],
+          "determinant": 0.9999999915748647
+        },
+        {
+          "height_step_m": 2.5e-07,
+          "direction_cosine_step": 0.00025,
+          "matrix": [
+            [
+              -1.0084665069756693,
+              9.682046364298258e-06
+            ],
+            [
+              -157.69155929701296,
+              -0.9900906118335273
+            ]
+          ],
+          "determinant": 0.999999997893533
+        }
+      ],
+      "hit_distance_from_vertex_m": [
+        0.0,
+        4.336808689942018e-19
+      ],
+      "gaussian_geometry": {
+        "status": "Fail",
+        "reason": "specular reflection does not close fixed path"
+      },
+      "gaussian_model_domain": "Uncomputed",
+      "perturbed_gaussian_eta": null,
+      "numerical_U": null,
+      "threshold_status": "Evidence Insufficient"
+    },
+    {
+      "mirror": 2,
+      "kind": "rotation",
+      "axis": "s",
+      "delta_rad": 0.001,
+      "chief_ray_status": "Computed",
+      "target_offset_ts_m": [
+        6.432031009680726e-06,
+        0.0
+      ],
+      "target_angle_ts_rad": [
+        0.002000000000000013,
+        0.0
+      ],
+      "target_offset_t_over_target_radius_t": 1.389454554036521,
+      "tangential_ray_refinements": [
+        {
+          "height_step_m": 1e-06,
+          "direction_cosine_step": 0.001,
+          "matrix": [
+            [
+              -1.0086932959740575,
+              1.1126795485417312e-05
+            ],
+            [
+              -157.7620732519103,
+              -0.9896413358257972
+            ]
+          ],
+          "determinant": 0.9999999671907217
+        },
+        {
+          "height_step_m": 5e-07,
+          "direction_cosine_step": 0.0005,
+          "matrix": [
+            [
+              -1.0086933021286395,
+              1.1126896725180413e-05
+            ],
+            [
+              -157.76207863876792,
+              -0.989641338288938
+            ]
+          ],
+          "determinant": 0.9999999917978375
+        },
+        {
+          "height_step_m": 2.5e-07,
+          "direction_cosine_step": 0.00025,
+          "matrix": [
+            [
+              -1.0086933036673393,
+              1.1126922033928566e-05
+            ],
+            [
+              -157.7620799853019,
+              -0.9896413389045566
+            ]
+          ],
+          "determinant": 0.9999999979493133
+        }
+      ],
+      "hit_distance_from_vertex_m": [
+        0.0,
+        4.336808689942018e-19
+      ],
+      "gaussian_geometry": {
+        "status": "Fail",
+        "reason": "specular reflection does not close fixed path"
+      },
+      "gaussian_model_domain": "Uncomputed",
+      "perturbed_gaussian_eta": null,
+      "numerical_U": null,
+      "threshold_status": "Evidence Insufficient"
+    }
+  ],
+  "actual_assembly_tolerance": "Uncomputed",
+  "finite_beam_clearance": "Uncomputed",
+  "total_coupling": "Uncomputed"
+}
