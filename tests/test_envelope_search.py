@@ -60,3 +60,49 @@ class EnvelopeSearchTests(TestCase):
         with patch("photonic_architecture_explorer.envelope_search.independent_check", side_effect=AssertionError):
             with self.assertRaisesRegex(ValueError, "Quadrature"):
                 compare_envelopes(self.ports, "expansion")
+
+    def test_custom_exact_preset_boundaries_match_r23_and_preserve_input_provenance(self):
+        for preset, limits in (
+            ("nominal", (-0.00115, 0.00315)),
+            ("expansion", (-0.0015821774231937228, 0.0034415473764667017)),
+        ):
+            with self.subTest(preset=preset):
+                baseline = compare_envelopes(self.ports, preset)
+                result = compare_envelopes(self.ports, "custom", x_limits_m=limits)
+                expected = baseline["envelope_comparison"]["cases"][preset]
+                evaluated = result["envelope_comparison"]["cases"]["custom"]
+                self.assertEqual({k: v for k, v in evaluated.items() if k != "input_sha256"},
+                                 {k: v for k, v in expected.items() if k != "input_sha256"})
+                package = result["input_snapshot"]["package"]
+                self.assertEqual(package["available_volume"]["provenance"], "supplied")
+                for key in ("keepout_bodies", "frame_id", "required_clearance_m"):
+                    self.assertEqual(package[key], baseline["input_snapshot"]["package"][key])
+                for key in ("min_m", "max_m"):
+                    self.assertEqual(package["available_volume"]["value"][key][1:],
+                                     expected["envelope"][key][1:])
+                self.assertEqual(result["input_sha256"], digest(result["input_snapshot"]))
+
+    def test_custom_midrange_and_no_candidate_are_scoped_to_new_inputs(self):
+        mid = compare_envelopes(self.ports, "custom", x_limits_m=(-.00136, .00337))
+        narrow = compare_envelopes(self.ports, "custom", x_limits_m=(0.0, .002))
+        self.assertNotEqual(mid["input_sha256"], narrow["input_sha256"])
+        self.assertEqual(mid["selected_candidate_id"], "R8-nominal")
+        self.assertEqual(mid["search"]["accepted_count"], 37)
+        self.assertIsNone(mid["envelope_comparison"]["cases"]["custom"]["r9_replay"])
+        self.assertEqual(narrow["status"], "NoCandidate")
+        self.assertEqual(narrow["candidates"], [])
+        self.assertEqual(narrow["input_contract"]["status"], "Pass")
+        summary = narrow["envelope_comparison"]["cases"]["custom"]
+        self.assertEqual(len(summary["rejected"]), 74)
+        for field in ("overlap", "threshold_met", "max_projected_radius_m", "minimum_gap_m"):
+            self.assertIsNone(summary[field])
+
+    def test_custom_rejects_invalid_bounds_and_withholds_failed_replay(self):
+        for limits in [(1.0, 1.0), (2.0, 1.0), (0.0, float("inf"))]:
+            with self.assertRaisesRegex(ValueError, "World X"):
+                compare_envelopes(self.ports, "custom", x_limits_m=limits)
+        failing_quadrature = {"status": "Pass", "quadrature_overlap": [0.98, 0.98]}
+        with patch("photonic_architecture_explorer.envelope_search.independent_check",
+                   return_value=failing_quadrature):
+            with self.assertRaisesRegex(ValueError, "허용 오차"):
+                compare_envelopes(self.ports, "custom", x_limits_m=(-0.00115, 0.00315))

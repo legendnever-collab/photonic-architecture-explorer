@@ -1,4 +1,4 @@
-"""Two bounded R8 seed neighborhoods, re-screened under both R9 envelopes."""
+"""Re-screen the bounded R8 seed neighborhoods under declared World AABBs."""
 from collections import Counter
 from copy import deepcopy
 from hashlib import sha256
@@ -24,6 +24,14 @@ WIDTHS = {"nominal": "4.30 mm", "expansion": "5.023725 mm"}
 FILES = ("references/m7r7/case.json", "references/m7r7/aperture_diagnostic.json",
          "references/m7r8/summary.json", "references/m7r8/search_plan.json",
          "references/m7r9/summary.json")
+
+
+R23_ACCEPTED_COUNTS = {"nominal": 19, "expansion": 48}
+MAX_TRIALS = 74
+
+
+class EnvelopeValidationError(ValueError):
+    """A numerical or reference gate withheld the result."""
 
 
 def digest(document):
@@ -70,81 +78,136 @@ def screen(proposal, ports, case, identifier):
             "ranking": ranking(evaluation, proposal, identifier), "guard_metrics": guard}, []
 
 
-def compare_envelopes(document, selected):
+def validate_overlap(candidate, ports, expected=None):
+    try:
+        validation = independent_check(candidate, ports)
+    except AssertionError as exc:
+        raise EnvelopeValidationError("독립 ABCD·Quadrature 검산에 실패했습니다.") from exc
+    eta = candidate["overlap"]
+    quadrature = validation["quadrature_overlap"]
+    target = eta if expected is None else expected
+    if (validation["status"] != "Pass" or len(quadrature) != 2
+            or not all(abs(value - target) <= OVERLAP_TOL for value in [eta, *quadrature])
+            or not all(abs(value - eta) <= OVERLAP_TOL for value in quadrature)):
+        raise EnvelopeValidationError("저장 η 또는 독립 Quadrature가 허용 오차를 벗어났습니다.")
+    candidate["independent_validation"] = validation
+
+
+def evaluate_envelope(snapshot, ports, case, trials, preset, reference):
+    package = snapshot["package"]
+    accepted, rejected = [], {}
+    for identifier, trial in trials:
+        candidate, failures = screen({**trial, "package": package}, ports, case, identifier)
+        if candidate:
+            accepted.append(candidate)
+        else:
+            rejected[identifier] = failures
+
+    accepted.sort(key=recommendation_key)
+    best = accepted[0] if accepted else None
+    replay = None
+    if preset:
+        expected = reference["candidates"][preset]["normalized_gaussian_overlap"]
+        if (len(accepted) != R23_ACCEPTED_COUNTS[preset]
+                or best["id"] != "R8-" + preset):
+            raise EnvelopeValidationError("R23 기준의 통과 처방 수 또는 최고 후보를 재현하지 못했습니다.")
+        validate_overlap(best, ports, expected)
+        replay = {"id": best["id"], "overlap": best["overlap"],
+                  "absolute_error": abs(best["overlap"] - expected),
+                  "quadrature": best["independent_validation"]["quadrature_overlap"]}
+    elif best:
+        validate_overlap(best, ports)
+
+    passing_trials = []
+    for row in accepted:
+        passing_trials.append({
+            "id": row["id"], "overlap": row["overlap"],
+            "max_projected_radius_m": row["ranking"]["max_projected_radius_m"],
+            "nearest_envelope_face": limiting_boundary(row["prescription"]),
+            "footprint_curvature": row["guard_metrics"]["max_3w_footprint_curvature"],
+        })
+    summary = {
+        "input_sha256": digest(snapshot), "envelope": package["available_volume"]["value"],
+        "passing_trials": passing_trials, "rejected": rejected, "evaluations": len(trials),
+        "rejection_counts": dict(Counter(reason for reasons in rejected.values() for reason in reasons)),
+        "selected": None, "overlap": None, "minimum_gap_m": None, "limiting_boundary": None,
+        "max_projected_radius_m": None, "guard_metrics": None, "quadrature": None,
+        "threshold_met": None, "r9_replay": replay,
+    }
+    if best:
+        evidence = package_evidence(best["prescription"], best["evaluation"])
+        min_gap = min(evidence[name] for name in ("minimum_boundary_gap_m", "mirror_pair_aabb_gap_m",
+                                                  "minimum_body_keepout_aabb_gap_m"))
+        eta = best["overlap"]
+        quadrature = best["independent_validation"]["quadrature_overlap"]
+        summary.update(selected=best["id"], overlap=eta, minimum_gap_m=min_gap,
+                       limiting_boundary=passing_trials[0]["nearest_envelope_face"],
+                       max_projected_radius_m=best["ranking"]["max_projected_radius_m"],
+                       guard_metrics=best["guard_metrics"], quadrature=quadrature,
+                       threshold_met=min(eta, *quadrature) >= case["min_normalized_gaussian_overlap"])
+    return summary, best
+
+
+def compare_envelopes(document, selected, *, x_limits_m=None):
+    if selected not in (*WIDTHS, "custom"):
+        raise ValueError("지원되는 Package Envelope를 선택하세요.")
+    if selected == "custom" and (
+        x_limits_m is None or len(x_limits_m) != 2 or not all(math.isfinite(value) for value in x_limits_m)
+        or not x_limits_m[0] < x_limits_m[1]
+    ):
+        raise ValueError("World X min과 max에 유한한 값을 입력하세요. min은 max보다 작아야 합니다.")
+
     case, aperture, archive, plan, reference = [
         json.loads((ROOT / name).read_text(encoding="utf-8")) for name in FILES]
     if digest(document) != archive["fixed_input_sha256"] or digest(document) != reference["fixed_input_sha256"]:
         raise ValueError("R9 Package의 Keepout과 Seed는 원본 Example A의 두 Port에 귀속됩니다. "
                          "편집한 Port를 설계하려면 Package Envelope를 해제하세요.")
+    packages = {key: package_record(case) for key in WIDTHS}
+    packages["expansion"]["available_volume"] = record(
+        archive["candidates"]["expansion"]["expanded_volume_adapter_pass"], "m", "M7-R8 expanded envelope")
+    for key, package in packages.items():
+        if (package["available_volume"]["value"] != reference["candidates"][key]["envelope"]
+                or package["required_clearance_m"]["value"] != reference["minimum_clearance_m"]):
+            raise EnvelopeValidationError("R9 Envelope 또는 AABB Clearance 기준을 재현하지 못했습니다.")
+
+    matches = {key: key for key in WIDTHS}
+    if selected == "custom":
+        x_min, x_max = x_limits_m
+        package = package_record(case)
+        volume = package["available_volume"]["value"]
+        volume["min_m"][0], volume["max_m"][0] = x_min, x_max
+        matches = {"custom": next((key for key, package in packages.items()
+                                   if package["available_volume"]["value"] == volume), None)}
+        # The field mixes user-supplied X with synthetic R7 Y and Z.
+        package["available_volume"] = {
+            **record(volume, "m", "Workspace user-supplied World X min/max; Y/Z from M7-R7 synthetic preset"),
+            "provenance": "supplied",
+        }
+        packages = {"custom": package}
+
     ports = adapt_ports(document)
     factor = erfcinv(aperture["fraction_of_existing_tail_guard"] * MAX_APERTURE_TAIL / 4) / math.sqrt(2)
     trials = list(proposals(document, ports, case, archive, plan["grid_step_mm"],
                             factor / POLICY["aperture_projected_radius_factor"]))
-    if len(trials) > 74:
-        raise ValueError("Envelope 탐색 예산을 초과해 추천을 보류했습니다.")
+    if len(trials) != MAX_TRIALS:
+        raise EnvelopeValidationError("기준 탐색의 처방 수를 재현하지 못했습니다.")
     summaries = {}
-    for key in WIDTHS:
-        baseline = reference["candidates"][key]
-        package = package_record(case)
-        if key == "expansion":
-            package["available_volume"] = record(archive["candidates"][key]["expanded_volume_adapter_pass"],
-                                                 "m", "M7-R8 expanded envelope")
-        if (package["available_volume"]["value"] != baseline["envelope"]
-                or package["required_clearance_m"]["value"] != reference["minimum_clearance_m"]):
-            raise ValueError("R9 Envelope 또는 AABB Clearance 기준과 달라 추천을 보류했습니다.")
+    for key, package in packages.items():
         snapshot = {**document, "package": package}
-        input_sha = digest(snapshot)
-        accepted, rejected = [], {}
-        for identifier, trial in trials:
-            candidate, failures = screen({**trial, "package": package}, ports, case, identifier)
-            if candidate:
-                accepted.append(candidate)
-            else:
-                rejected[identifier] = failures
-        anchor_id = "R8-" + key
-        anchor = next((row for row in accepted if row["id"] == anchor_id), None)
-        if anchor is None or abs(anchor["overlap"] - baseline["normalized_gaussian_overlap"]) > OVERLAP_TOL:
-            raise ValueError("R9의 Envelope 또는 기준 Overlap 재현에 실패해 추천을 보류했습니다.")
-        accepted.sort(key=recommendation_key)
-        best = accepted[0]
-        for row in (anchor, best):
-            if "independent_validation" not in row:
-                try:
-                    row["independent_validation"] = independent_check(row, ports)
-                except AssertionError as exc:
-                    raise ValueError("독립 ABCD·Quadrature 검산에 실패해 추천을 보류했습니다.") from exc
-        passing_trials = []
-        for row in accepted:
-            boundary = limiting_boundary(row["prescription"])
-            passing_trials.append({"id": row["id"], "overlap": row["overlap"],
-                                   "max_projected_radius_m": row["ranking"]["max_projected_radius_m"],
-                                   "nearest_envelope_face": boundary,
-                                   "footprint_curvature": row["guard_metrics"]["max_3w_footprint_curvature"]})
-        evidence = package_evidence(best["prescription"], best["evaluation"])
-        min_gap = min(evidence[name] for name in ("minimum_boundary_gap_m", "mirror_pair_aabb_gap_m",
-                                                  "minimum_body_keepout_aabb_gap_m"))
-        counted = Counter(reason for reasons in rejected.values() for reason in reasons)
-        summaries[key] = {
-            "input_sha256": input_sha, "envelope": package["available_volume"]["value"],
-            "passing_trials": passing_trials, "rejected": rejected,
-            "rejection_counts": dict(counted), "evaluations": len(trials),
-            "selected": best["id"], "overlap": best["overlap"], "minimum_gap_m": min_gap,
-            "limiting_boundary": passing_trials[0]["nearest_envelope_face"], "max_projected_radius_m": best["ranking"]["max_projected_radius_m"],
-            "guard_metrics": best["guard_metrics"], "quadrature": best["independent_validation"]["quadrature_overlap"],
-            "threshold_met": min(best["overlap"], *best["independent_validation"]["quadrature_overlap"])
-                             >= case["min_normalized_gaussian_overlap"],
-            "r9_replay": {"id": anchor_id, "overlap": anchor["overlap"],
-                          "absolute_error": abs(anchor["overlap"] - baseline["normalized_gaussian_overlap"]),
-                          "quadrature": anchor["independent_validation"]["quadrature_overlap"]},
-        }
+        summary, best = evaluate_envelope(snapshot, ports, case, trials, matches[key], reference)
+        summaries[key] = summary
         if key == selected:
-            result = {"schema": "M7R23-envelope-design-1", "status": "Computed", "input_snapshot": snapshot,
-                      "input_sha256": input_sha, "input_contract": {"status": "Pass"},
-                      "selected_candidate_id": best["id"], "candidates": [best],
-                      "search": {"status": "Completed", "accepted_count": len(accepted)},
-                      "ranking_order": RANKING, "search_policy": {"id": "R8-local-seeds", "grid_step_mm": plan["grid_step_mm"],
-                                                                 "maximum_trials_per_envelope": 74},
-                      "limitations": ["Synthetic Package", "Finite-beam Clearance, Assembly Tolerance, Total Coupling: Uncomputed"]}
+            result = {
+                "schema": "M7R23-envelope-design-1", "status": "Computed" if best else "NoCandidate",
+                "reason": "" if best else "이 World X 구간에서 74개 처방 중 통과한 후보가 없습니다.",
+                "input_snapshot": snapshot, "input_sha256": summary["input_sha256"],
+                "input_contract": {"status": "Pass"}, "selected_candidate_id": summary["selected"],
+                "candidates": [best] if best else [],
+                "search": {"status": "Completed", "accepted_count": len(summary["passing_trials"])},
+                "ranking_order": RANKING, "search_policy": {"id": "R8-local-seeds",
+                    "grid_step_mm": plan["grid_step_mm"], "maximum_trials_per_envelope": MAX_TRIALS},
+                "limitations": ["Synthetic Package assumptions", "Finite-beam Clearance, Assembly Tolerance, Total Coupling: Uncomputed"],
+            }
     result["envelope_comparison"] = {"selected": selected, "cases": summaries, "reference_files": FILES,
                                      "minimum_clearance_m": reference["minimum_clearance_m"],
                                      "target_overlap": case["min_normalized_gaussian_overlap"]}

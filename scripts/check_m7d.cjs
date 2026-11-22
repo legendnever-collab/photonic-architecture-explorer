@@ -365,6 +365,64 @@ for key in published.keys() - {"input_snapshot"}:
         quadrature:active.quadrature, gap_m:active.minimum_gap_m, radius_m:active.max_projected_radius_m};
     }
     assert.notEqual(envelopeEvidence.nominal.input_sha256,envelopeEvidence.expansion.input_sha256);
+    const customEvidence = {};
+    const setXBounds = async (min, max) => {
+      await page.locator('[name="envelope_x_min_mm"]').fill(min);
+      await page.locator('[name="envelope_x_max_mm"]').fill(max);
+      await hidden();
+      await design();
+    };
+    await page.locator('[name="envelope"]').selectOption('custom');
+    for (const [label, min, max, passed, winner] of [
+      ['nominal', '-1.15', '3.15', 19, 'R8-nominal'],
+      ['expansion', '-1.5821774231937228', '3.4415473764667017', 48, 'R8-expansion'],
+      ['midrange', '-1.36', '3.37', 37, 'R8-nominal'],
+      ['narrow', '0', '2', 0, null],
+    ]) {
+      await setXBounds(min, max);
+      const report = await result();
+      const active = report.envelope_comparison.cases.custom;
+      const volume = report.input_snapshot.package.available_volume;
+      assert.equal(volume.provenance, 'supplied');
+      assert.equal(volume.value.min_m[0], Number(min + 'e-3'));
+      assert.equal(volume.value.max_m[0], Number(max + 'e-3'));
+      assert.equal(active.input_sha256, report.input_sha256);
+      assert.equal(active.passing_trials.length, passed);
+      assert.equal(active.evaluations, 74);
+      assert.equal(active.selected, winner);
+      assert.equal(report.status, winner ? 'Computed' : 'NoCandidate');
+      if (winner) {
+        assert.equal(await frame().locator('.confidence code').textContent(), report.input_sha256);
+        assert.equal(await frame().locator('.confidence').getAttribute('data-confidence'), winner);
+        assert(active.quadrature.every(q => Math.abs(q - active.overlap) <= 1e-8));
+      } else {
+        assert.equal(await frame().locator('.confidence').count(), 0);
+        assert.match(await frame().locator('#envelope-comparison').innerText(), /통과 후보 없음/);
+        assert.equal(active.overlap, null);
+      }
+      if (envelopeEvidence[label]) {
+        assert(active.r9_replay.absolute_error <= 1e-8);
+        assert.equal(active.overlap, envelopeEvidence[label].eta);
+      } else {
+        assert.equal(active.r9_replay, null);
+      }
+      if (label === 'midrange' || label === 'narrow') {
+        const saved = JSON.parse(fs.readFileSync(await exportFile('json', 'custom-'+label)));
+        assert.deepEqual(saved, winner ? {...report, viewed_candidate_id:winner} : report);
+        const offline = await browser.newPage();
+        await offline.goto(pathToFileURL(await exportFile('html', 'custom-'+label)).href);
+        assert.deepEqual(await offline.locator('#design-result').evaluate(e=>JSON.parse(e.textContent)), saved);
+        await offline.close();
+      }
+      customEvidence[label] = {bounds_m:[volume.value.min_m[0],volume.value.max_m[0]],
+        input_sha256:active.input_sha256, passed, selected:winner, status:report.status,
+        eta:active.overlap, quadrature:active.quadrature, gap_m:active.minimum_gap_m};
+    }
+    assert.equal(new Set(Object.values(customEvidence).map(row => row.input_sha256)).size, 4);
+    await setXBounds('2','2');
+    assert.match(await page.locator('[role="alert"]').innerText(), /입력 오류.*min은 max보다 작아야/);
+    assert.equal(await page.locator('[data-export]').count(),0);
+    await page.locator('[name="envelope"]').selectOption('expansion');
     await page.locator('[name="target_position_m_2"]').fill('2.1');
     await hidden();
     await design();
@@ -390,7 +448,7 @@ for key in published.keys() - {"input_snapshot"}:
       http_ping_ms:pingMs,identity_checks:'job ID + revision + SHA',
       reference_handoff:{concept_1550:'Reference → Proxy → Design → Background Near-Match',
         incomplete_1310:incomplete.status,worker_started_for_incomplete_1310:false},
-      envelope_comparison:envelopeEvidence,
+      envelope_comparison:envelopeEvidence, custom_x_bounds:customEvidence,
       r6_redesign:{original:r6Evidence(r6),edited:r6Evidence(revised),adapter_replay_equal:true,
         export_equal:true, confidence_scope:'Edited input SHA', missing_phase:'Uncomputed'}};
     fs.writeFileSync(path.join(dir,'acceptance.json'),JSON.stringify(evidence,null,2)+'\n');

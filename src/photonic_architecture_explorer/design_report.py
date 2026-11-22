@@ -1,4 +1,5 @@
 """Read-only design report; reuse Inspector drawing, never calculate physics in JS."""
+from decimal import Decimal
 from html import escape
 import json
 from .candidate_review import CONCEPT_LABELS, REVIEW_CSS, build_candidate_review, render_review_sheet, near_match_note
@@ -83,15 +84,24 @@ def render_envelope_comparison(comparison):
     rows, details = [], []
     for key, case in comparison["cases"].items():
         volume = case["envelope"]
-        width = (volume["max_m"][0] - volume["min_m"][0]) * 1e3
+        x_min = Decimal(str(volume["min_m"][0])).scaleb(3)
+        x_max = Decimal(str(volume["max_m"][0])).scaleb(3)
+        width = x_max - x_min
         choice = " · 선택됨" if key == comparison["selected"] else ""
-        boundary = case["limiting_boundary"]
         label = f'{width:.6f}'.rstrip('0').rstrip('.') + ' mm'
-        rows.append(f'<tr><th scope="row">{label}{choice}</th><td>{len(case["passing_trials"])}/{case["evaluations"]}</td>'
-                    f'<td>{case["selected"]}</td><td>{case["overlap"]:.9f}</td>'
-                    f'<td>{"충족" if case["threshold_met"] else "미달"}</td>'
-                    f'<td>{case["max_projected_radius_m"]*1e6:.2f}</td>'
-                    f'<td>{case["minimum_gap_m"]*1e6:.3f} · M{boundary["mirror"]} {boundary["face"]}</td></tr>')
+        if key == "custom":
+            label = f"직접 입력 · {width:.9g} mm"
+        counts = f'{len(case["passing_trials"])}/{case["evaluations"]}'
+        if case["selected"] is None:
+            metrics = '<td>통과 후보 없음</td><td colspan="4">Uncomputed</td>'
+        else:
+            boundary = case["limiting_boundary"]
+            metrics = (f'<td>{case["selected"]}</td><td>{case["overlap"]:.9f}</td>'
+                       f'<td>{"충족" if case["threshold_met"] else "미달"}</td>'
+                       f'<td>{case["max_projected_radius_m"]*1e6:.2f}</td>'
+                       f'<td>{case["minimum_gap_m"]*1e6:.3f} · M{boundary["mirror"]} {boundary["face"]}</td>')
+        rows.append(f'<tr><th scope="row">{label}{choice}<br><small>World X [{x_min}, {x_max}] mm</small></th>'
+                    f'<td>{counts}</td>{metrics}</tr>')
         failures = "".join(f'<li>{escape(reason)} · {count}건</li>' for reason, count in case["rejection_counts"].items())
         candidates = []
         for trial in case["passing_trials"]:
@@ -99,19 +109,22 @@ def render_envelope_comparison(comparison):
             candidates.append(f'<tr><th scope="row">{trial["id"]}</th><td>{trial["overlap"]:.9f}</td>'
                               f'<td>{trial["max_projected_radius_m"]*1e6:.2f}</td><td>{trial["footprint_curvature"]:.6f}</td>'
                               f'<td>M{face["mirror"]} {face["face"]} · {face["gap_m"]*1e6:.3f}</td></tr>')
-        details.append(f'<details><summary>{label} · 통과 처방과 탈락 사유</summary>'
+        candidate_table = (
+            '<div class="table-scroll"><table><caption>통과 처방 · Normalized η 순위</caption>'
+            '<thead><tr><th>처방</th><th>η</th><th>최대 투영 반경 [µm]</th><th>최대 3w·|κ|</th>'
+            '<th>가장 가까운 Envelope 면 · Gap [µm]</th></tr></thead>'
+            f'<tbody>{"".join(candidates)}</tbody></table></div>'
+        ) if candidates else ""
+        details.append(f'<details><summary>{label} · 처방 평가 상세</summary>'
                        f'<p>Input SHA256 <code>{case["input_sha256"]}</code></p>'
-                       '<div class="table-scroll"><table><caption>통과 처방 · Normalized η 순위</caption>'
-                       '<thead><tr><th>처방</th><th>η</th><th>최대 투영 반경 [µm]</th><th>최대 3w·|κ|</th>'
-                       '<th>가장 가까운 Envelope 면 · Gap [µm]</th></tr></thead>'
-                       f'<tbody>{"".join(candidates)}</tbody></table></div><p>탈락 사유별 건수</p><ul>{failures}</ul></details>')
-    return (f'<section class="card" id="envelope-comparison"><h2>Package Envelope 비교</h2>'
-            '<p>같은 두 Port에서 R8 기준 처방 두 개와 주변 Guarded Near-Match 처방을 두 Envelope로 다시 평가했습니다. '
+                       f'{candidate_table}<p>탈락 사유별 건수</p><ul>{failures}</ul></details>')
+    return (f'<section class="card" id="envelope-comparison"><h2>Package Envelope 평가</h2>'
+            '<p>같은 두 Port에서 R8 기준 처방 두 개와 주변 Guarded Near-Match 처방을 표에 표시된 World X 경계에서 평가했습니다. '
             '통과 수는 Geometry·Gaussian Guard·기구 조건을 충족한 처방 수입니다. η 목표는 별도로 표시합니다.</p>'
             '<div class="table-scroll"><table><thead><tr><th>X 폭</th><th>통과/평가</th><th>최고 관측 후보</th>'
             '<th>Normalized η</th><th>η ≥ 0.99</th><th>최대 투영 1/e² 반경 [µm]</th>'
             '<th>최소 AABB Gap [µm] · 제한 경계</th></tr></thead>'
-            f'<tbody>{"".join(rows)}</tbody></table></div><p>Synthetic Package에서 50 µm Clearance를 적용합니다. '
+            f'<tbody>{"".join(rows)}</tbody></table></div><p>R7 Synthetic Y/Z·Keepout·Backing과 50 µm Clearance를 적용합니다. '
             '전체 Beam Clearance, 실제 Assembly Tolerance 및 Total Coupling은 Uncomputed입니다.</p>'
             + "".join(details) + '</section>')
 
@@ -155,7 +168,7 @@ def render_design_report(result):
         if i == 0:
             trade_off = "대안에서는 광경로를 늘려 Beam Footprint를 줄이거나 Gaussian 모델 여유를 늘릴 수 있습니다."
             if envelope:
-                trade_off = "선택한 Envelope에서 통과한 처방의 최고 관측 η입니다. 위 표에서 다른 Envelope와 비교할 수 있습니다."
+                trade_off = "선택한 Envelope에서 통과한 처방의 최고 관측 η입니다."
             elif len(result["candidates"]) == 1:
                 trade_off = "현재 검증 범위에서 비교할 별도 대안이 없습니다."
             elif not any(item.get("recommendation_role") == "smaller_footprint" for item in result["candidates"]):
