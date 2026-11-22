@@ -104,3 +104,7 @@ Tutorial에서 1310 nm 두 Port를 열어 Design하고 편집한 입력을 새 S
 ## M7-R24 · 사용자 지정 World X 경계
 
 원본 Example A에서 X min/max를 지정하고 R7 Synthetic Y/Z 조건에서 후보와 제한 면을 검토할 수 있다. 실제 Assembly 판단에서 필요한 기구 여유와 Gaussian Mode Overlap의 관계는 추가 검증이 필요하다. [R24 설계 및 검증 기록](M7R24_PACKAGE_WORLD_X.md)
+
+## M7-R25 · 광학 목표와 추가 AABB Clearance
+
+원본 Example A의 74개 처방에서 최고 η 후보와 η ≥ 0.99 안에서 가장 큰 Clearance를 가진 후보를 비교한다. 검증된 5.023725 mm Preset에서는 한 처방만 광학 목표를 충족하고 M2 X− 경계 여유가 약 1 pm이다. 같은 폭의 비대칭 World X 배치에서 이 경계 여유를 확보할 수 있는지 살펴볼 수 있다. [R25 설계 및 검증 기록](M7R25_ADDITIONAL_CLEARANCE.md)

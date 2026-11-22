@@ -10,7 +10,7 @@ from scipy.special import erfcinv
 
 from .design import POLICY, RANKING, ranking, recommendation_key
 from .envelope_geometry import (
-    apply_envelopes, limiting_boundary, margin_metrics, package_evidence, package_record, record,
+    apply_envelopes, clearance_margin, margin_metrics, package_record, record,
 )
 from .external import adapt_ports, evaluate_external
 from .inspector import ROOT
@@ -120,32 +120,58 @@ def evaluate_envelope(snapshot, ports, case, trials, preset, reference):
 
     passing_trials = []
     for row in accepted:
+        try:
+            row["clearance"] = clearance_margin(row["prescription"], row["evaluation"])
+        except ValueError as exc:
+            raise EnvelopeValidationError(str(exc)) from exc
         passing_trials.append({
             "id": row["id"], "overlap": row["overlap"],
             "max_projected_radius_m": row["ranking"]["max_projected_radius_m"],
-            "nearest_envelope_face": limiting_boundary(row["prescription"]),
             "footprint_curvature": row["guard_metrics"]["max_3w_footprint_curvature"],
+            **row["clearance"],
         })
+
+    target = case["min_normalized_gaussian_overlap"]
+    clearance_selection = {"status": "NoTargetCandidate", "candidate": None}
+    eligible = [row for row in accepted if row["overlap"] >= target]
+    clearance_best = max(eligible, key=lambda row: row["clearance"]["additional_clearance_m"], default=None)
+    if clearance_best:
+        try:
+            if clearance_best is not best:
+                validate_overlap(clearance_best, ports)
+            quadrature = clearance_best["independent_validation"]["quadrature_overlap"]
+            if min(quadrature) < target:
+                raise EnvelopeValidationError("독립 Quadrature에서 η 목표 충족을 확인하지 못했습니다.")
+        except EnvelopeValidationError as exc:
+            clearance_selection = {"status": "VerificationWithheld", "candidate": None, "reason": str(exc)}
+            clearance_best = None
+        else:
+            clearance_selection = {
+                "status": "Verified", "eligible_count": len(eligible),
+                "candidate": next(row for row in passing_trials if row["id"] == clearance_best["id"]),
+                "quadrature": quadrature,
+            }
+    candidates = [best] if best else []
+    if clearance_best and clearance_best is not best:
+        candidates.append({**clearance_best, "recommendation_role": "max_clearance"})
+
     summary = {
         "input_sha256": digest(snapshot), "envelope": package["available_volume"]["value"],
         "passing_trials": passing_trials, "rejected": rejected, "evaluations": len(trials),
         "rejection_counts": dict(Counter(reason for reasons in rejected.values() for reason in reasons)),
         "selected": None, "overlap": None, "minimum_gap_m": None, "limiting_boundary": None,
         "max_projected_radius_m": None, "guard_metrics": None, "quadrature": None,
-        "threshold_met": None, "r9_replay": replay,
+        "threshold_met": None, "r9_replay": replay, "clearance_selection": clearance_selection,
     }
     if best:
-        evidence = package_evidence(best["prescription"], best["evaluation"])
-        min_gap = min(evidence[name] for name in ("minimum_boundary_gap_m", "mirror_pair_aabb_gap_m",
-                                                  "minimum_body_keepout_aabb_gap_m"))
         eta = best["overlap"]
         quadrature = best["independent_validation"]["quadrature_overlap"]
-        summary.update(selected=best["id"], overlap=eta, minimum_gap_m=min_gap,
+        summary.update(selected=best["id"], overlap=eta, minimum_gap_m=best["clearance"]["minimum_gap_m"],
                        limiting_boundary=passing_trials[0]["nearest_envelope_face"],
                        max_projected_radius_m=best["ranking"]["max_projected_radius_m"],
                        guard_metrics=best["guard_metrics"], quadrature=quadrature,
                        threshold_met=min(eta, *quadrature) >= case["min_normalized_gaussian_overlap"])
-    return summary, best
+    return summary, candidates
 
 
 def compare_envelopes(document, selected, *, x_limits_m=None):
@@ -194,15 +220,15 @@ def compare_envelopes(document, selected, *, x_limits_m=None):
     summaries = {}
     for key, package in packages.items():
         snapshot = {**document, "package": package}
-        summary, best = evaluate_envelope(snapshot, ports, case, trials, matches[key], reference)
+        summary, candidates = evaluate_envelope(snapshot, ports, case, trials, matches[key], reference)
         summaries[key] = summary
         if key == selected:
             result = {
-                "schema": "M7R23-envelope-design-1", "status": "Computed" if best else "NoCandidate",
-                "reason": "" if best else "이 World X 구간에서 74개 처방 중 통과한 후보가 없습니다.",
+                "schema": "M7R23-envelope-design-1", "status": "Computed" if candidates else "NoCandidate",
+                "reason": "" if candidates else "이 World X 구간에서 74개 처방 중 통과한 후보가 없습니다.",
                 "input_snapshot": snapshot, "input_sha256": summary["input_sha256"],
                 "input_contract": {"status": "Pass"}, "selected_candidate_id": summary["selected"],
-                "candidates": [best] if best else [],
+                "candidates": candidates,
                 "search": {"status": "Completed", "accepted_count": len(summary["passing_trials"])},
                 "ranking_order": RANKING, "search_policy": {"id": "R8-local-seeds",
                     "grid_step_mm": plan["grid_step_mm"], "maximum_trials_per_envelope": MAX_TRIALS},

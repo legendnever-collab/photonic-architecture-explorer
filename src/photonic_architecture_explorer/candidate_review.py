@@ -13,6 +13,7 @@ CONCEPT_LABELS = {
     "short_path": "최단 광경로",
     "smaller_footprint": "작은 Beam Footprint",
     "model_margin": "큰 Gaussian 모델 여유",
+    "max_clearance": "η 목표 내 최대 AABB Clearance",
 }
 
 REVIEW_CSS = """

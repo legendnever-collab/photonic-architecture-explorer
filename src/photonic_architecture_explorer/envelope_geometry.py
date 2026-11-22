@@ -149,3 +149,23 @@ def limiting_boundary(proposal):
             distances.append((high[axis] - body_high[axis], index, label + "+"))
     gap, mirror, face = min(distances)
     return {"gap_m": gap, "mirror": mirror, "face": face}
+
+
+def clearance_margin(proposal, evaluation):
+    """Measure the three AABB clearances and tie the minimum to its Adapter check."""
+    package = proposal["package"]
+    required = package["required_clearance_m"]["value"]
+    boundary = limiting_boundary(proposal)
+    bodies = [box_bounds(r["body_envelope"]["value"]) for r in proposal["reflectors"]]
+    keepouts = [box_bounds(k) for k in package["keepout_bodies"]["value"]]
+    distances = [(boundary["gap_m"], f'body[{boundary["mirror"] - 1}].volume', boundary["face"]),
+                 (box_distance(*bodies), "reflector_envelope_pair", None)]
+    distances.extend((box_distance(body, keepout), f"body[{i}].keepout[{j}]", None)
+                     for i, body in enumerate(bodies) for j, keepout in enumerate(keepouts))
+    gap, path, face = min(distances, key=lambda distance: distance[0])
+    checks = {check["path"]: check for check in evaluation["package_feasibility"]["envelope_geometry"]["checks"]}
+    if any(checks.get(path, {}).get("status") != "Pass" for _, path, _ in distances):
+        raise ValueError("AABB 거리의 Adapter 원본 판정을 확인하지 못했습니다.")
+    return {"minimum_gap_m": gap, "additional_clearance_m": gap - required,
+            "limiting_check": {**checks[path], "face": face},
+            "nearest_envelope_face": boundary}
