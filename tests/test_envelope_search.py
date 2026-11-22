@@ -207,3 +207,62 @@ class EnvelopeSearchTests(TestCase):
                 self.assertEqual(result["limiting_check"]["path"], expected)
                 self.assertIsNone(result["limiting_check"]["face"])
                 self.assertAlmostEqual(result["additional_clearance_m"], .00003, delta=1e-15)
+
+    def test_frozen_expansion_sizing_preserves_optics_and_archived_zero(self):
+        baseline = compare_envelopes(self.ports, "expansion")
+        frozen = baseline["candidates"][0]["prescription"]
+        archive = frozen["package"]["available_volume"]["value"]
+        shas = set()
+        for extra in (0.0, 50e-6, 100e-6):
+            with self.subTest(extra=extra):
+                result = compare_envelopes(self.ports, "expansion", target_additional_m=extra)
+                self.assertEqual(result["input_sha256"], baseline["input_sha256"])
+                self.assertEqual(result["envelope_comparison"], baseline["envelope_comparison"])
+                sizing = result["envelope_sizing"]
+                self.assertEqual(sizing["status"], "Verified")
+                suggestion = sizing["suggestion"]
+                proposal = suggestion["prescription"]
+                shas.add(suggestion["prescription_sha256"])
+                self.assertEqual(digest(proposal), suggestion["prescription_sha256"])
+                self.assertEqual({k: v for k, v in frozen.items() if k != "package"},
+                                 {k: v for k, v in proposal.items() if k != "package"})
+                self.assertEqual(proposal["package"]["keepout_bodies"], frozen["package"]["keepout_bodies"])
+                changed = proposal["package"]["available_volume"]["value"]
+                for side, shift in (("min_m", -extra), ("max_m", extra)):
+                    self.assertAlmostEqual(changed[side][0], archive[side][0] + shift, delta=2e-12)
+                    self.assertEqual(changed[side][1:], archive[side][1:])
+                self.assertAlmostEqual(suggestion["width_increase_m"], 2 * extra, delta=2e-12)
+                replay = evaluate_external(proposal)
+                self.assertEqual(replay["package_feasibility"]["envelope_geometry"]["status"], "Pass")
+                self.assertEqual(replay["package_feasibility"]["envelope_geometry"]["checks"], suggestion["adapter_checks"])
+                self.assertGreaterEqual(suggestion["achieved_additional_m"], extra)
+                self.assertEqual(suggestion["eta"], replay["gaussian_mode_matching"]["normalized_mode_overlap"])
+                for eta in suggestion["quadrature"]:
+                    self.assertGreaterEqual(eta, .99)
+                    self.assertAlmostEqual(eta, suggestion["eta"], delta=1e-8)
+        self.assertEqual(len(shas), 3)
+
+    def test_fixed_axis_limit_and_verification_withheld(self):
+        sizing = compare_envelopes(self.ports, "expansion", target_additional_m=500e-6)["envelope_sizing"]
+        self.assertEqual(sizing["status"], "Limited")
+        self.assertEqual(sizing["limiting_check"], {
+            "path": "body[1].volume", "status": "Fail",
+            "reason": "total envelope plus boundary clearance", "face": "Z+",
+        })
+        self.assertAlmostEqual(sizing["maximum_additional_m"], 493.626639236e-6, delta=1e-12)
+        self.assertIsNone(sizing["suggestion"])
+
+        from photonic_architecture_explorer import envelope_search
+
+        validate = envelope_search.validate_overlap
+
+        def fail_sizing(candidate, ports, expected=None):
+            if candidate["prescription"]["package"]["required_clearance_m"]["source"] == "M7-R26 total clearance":
+                raise envelope_search.EnvelopeValidationError("독립 검산 실패")
+            return validate(candidate, ports, expected)
+
+        with patch.object(envelope_search, "validate_overlap", side_effect=fail_sizing):
+            result = compare_envelopes(self.ports, "expansion", target_additional_m=100e-6)
+            self.assertEqual(result["selected_candidate_id"], "R8-expansion")
+            self.assertEqual(result["envelope_sizing"]["status"], "VerificationWithheld")
+            self.assertIsNone(result["envelope_sizing"]["suggestion"])

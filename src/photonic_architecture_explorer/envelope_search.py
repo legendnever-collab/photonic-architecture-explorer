@@ -10,7 +10,8 @@ from scipy.special import erfcinv
 
 from .design import POLICY, RANKING, ranking, recommendation_key
 from .envelope_geometry import (
-    apply_envelopes, clearance_margin, margin_metrics, package_record, record,
+    apply_envelopes, boundary_distances, clearance_margin, margin_metrics, package_record, record,
+    separation_distances,
 )
 from .external import adapt_ports, evaluate_external
 from .inspector import ROOT
@@ -174,7 +175,85 @@ def evaluate_envelope(snapshot, ports, case, trials, preset, reference):
     return summary, candidates
 
 
-def compare_envelopes(document, selected, *, x_limits_m=None):
+def size_expansion(anchor, ports, reference, case, extra_m):
+    """Size only World X for the frozen expansion prescription and replay the Adapter."""
+    package = anchor["package"]
+    baseline_volume = package["available_volume"]["value"]
+    base_clearance = package["required_clearance_m"]["value"]
+    bodies = [r["body_envelope"]["value"] for r in anchor["reflectors"]]
+    chief_x = [ports.source.position[0], ports.target.position[0],
+               *(mirror["vertex_m"]["value"][0] for mirror in anchor["design"]["reflectors"])]
+    fixed_distances = [(gap, f"body[{mirror - 1}].volume", face)
+                       for gap, mirror, face in boundary_distances(anchor) if face[0] != "X"]
+    fixed_distances.extend(separation_distances(anchor))
+    ceiling, path, face = min(fixed_distances, key=lambda row: row[0])
+    maximum_extra = ceiling - base_clearance
+    blocked = extra_m > maximum_extra
+
+    # Replay a finite probe above the fixed limit to obtain the original Adapter
+    # failure path. Larger requests have the same failure with World X unrestricted.
+    pad_m = 1e-12  # Same outward rounding allowance as the R9 preset.
+    required = ceiling + 2 * pad_m if blocked else base_clearance + extra_m
+    x_min = min(min(chief_x), min(body["min_m"][0] for body in bodies) - required) - pad_m
+    x_max = max(max(chief_x), max(body["max_m"][0] for body in bodies) + required) + pad_m
+    proposal = deepcopy(anchor)
+    volume = proposal["package"]["available_volume"]["value"]
+    volume["min_m"][0], volume["max_m"][0] = x_min, x_max
+    proposal["package"]["available_volume"] = record(volume, "m", "M7-R26 sized World X")
+    proposal["package"]["required_clearance_m"] = record(required, "m", "M7-R26 total clearance")
+    evaluation = evaluate_external(proposal)
+    envelope = evaluation["package_feasibility"]["envelope_geometry"]
+    result = {"candidate_id": "R8-expansion", "target_additional_m": extra_m,
+              "baseline_clearance_m": base_clearance, "maximum_additional_m": maximum_extra,
+              "limiting_check": None, "suggestion": None}
+    if blocked:
+        original = next((check for check in envelope["checks"] if check["path"] == path), None)
+        if original and original["status"] == "Fail":
+            return {**result, "status": "Limited", "limiting_check": {**original, "face": face},
+                    "adapter_probe_clearance_m": required}
+        return {**result, "status": "VerificationWithheld", "reason": "고정 검사 한계를 Adapter에서 재현하지 못했습니다."}
+
+    eta = evaluation["gaussian_mode_matching"]["normalized_mode_overlap"]
+    if (envelope["status"] != "Pass" or eta is None
+            or any(evaluation[key]["status"] != "Pass" for key in ("input_contract", "geometry", "model_domain"))
+            or evaluation["design_constraints"]["status"] == "Fail"):
+        return {**result, "status": "VerificationWithheld", "reason": "제안 경계의 Adapter 검증을 통과하지 못했습니다.",
+                "adapter_checks": [check for check in envelope["checks"] if check["status"] != "Pass"]}
+    if extra_m == 0 and max(abs(actual - archived) for actual, archived in (
+        (x_min, baseline_volume["min_m"][0]), (x_max, baseline_volume["max_m"][0])
+    )) > 2e-12:
+        return {**result, "status": "VerificationWithheld", "reason": "0 µm의 World X 경계가 R9 기준과 일치하지 않습니다."}
+
+    try:
+        measured = clearance_margin(proposal, evaluation)
+    except ValueError as exc:
+        return {**result, "status": "VerificationWithheld", "reason": str(exc)}
+    guard = margin_metrics(evaluation, ports.target)
+    if measured["minimum_gap_m"] < required or any(
+        guard[key] > limit for key, limit in case["guard_margin_targets"].items()
+    ):
+        return {**result, "status": "VerificationWithheld", "reason": "Clearance 또는 Gaussian Guard 기준을 재현하지 못했습니다."}
+
+    candidate = {"prescription": proposal, "evaluation": evaluation, "overlap": eta}
+    try:
+        validate_overlap(candidate, ports, reference["normalized_gaussian_overlap"])
+    except EnvelopeValidationError as exc:
+        return {**result, "status": "VerificationWithheld", "reason": str(exc)}
+    quadrature = candidate["independent_validation"]["quadrature_overlap"]
+    if min(eta, *quadrature) < case["min_normalized_gaussian_overlap"]:
+        return {**result, "status": "VerificationWithheld", "reason": "독립 Quadrature에서 η 목표 충족을 확인하지 못했습니다."}
+    width = x_max - x_min
+    baseline_width = baseline_volume["max_m"][0] - baseline_volume["min_m"][0]
+    return {**result, "status": "Verified", "suggestion": {
+        "x_min_m": x_min, "x_max_m": x_max, "width_m": width, "r9_width_m": baseline_width,
+        "width_increase_m": width - baseline_width, "required_clearance_m": required,
+        "eta": eta, "quadrature": quadrature, "prescription": proposal,
+        "achieved_additional_m": measured["minimum_gap_m"] - base_clearance,
+        "prescription_sha256": digest(proposal), "adapter_checks": envelope["checks"],
+    }}
+
+
+def compare_envelopes(document, selected, *, x_limits_m=None, target_additional_m=None):
     if selected not in (*WIDTHS, "custom"):
         raise ValueError("지원되는 Package Envelope를 선택하세요.")
     if selected == "custom" and (
@@ -182,6 +261,9 @@ def compare_envelopes(document, selected, *, x_limits_m=None):
         or not x_limits_m[0] < x_limits_m[1]
     ):
         raise ValueError("World X min과 max에 유한한 값을 입력하세요. min은 max보다 작아야 합니다.")
+
+    if target_additional_m is not None and (not math.isfinite(target_additional_m) or target_additional_m < 0):
+        raise ValueError("추가 Clearance 목표는 0 이상의 유한한 값이어야 합니다.")
 
     case, aperture, archive, plan, reference = [
         json.loads((ROOT / name).read_text(encoding="utf-8")) for name in FILES]
@@ -196,6 +278,7 @@ def compare_envelopes(document, selected, *, x_limits_m=None):
                 or package["required_clearance_m"]["value"] != reference["minimum_clearance_m"]):
             raise EnvelopeValidationError("R9 Envelope 또는 AABB Clearance 기준을 재현하지 못했습니다.")
 
+    expansion_package = packages["expansion"]
     matches = {key: key for key in WIDTHS}
     if selected == "custom":
         x_min, x_max = x_limits_m
@@ -237,4 +320,9 @@ def compare_envelopes(document, selected, *, x_limits_m=None):
     result["envelope_comparison"] = {"selected": selected, "cases": summaries, "reference_files": FILES,
                                      "minimum_clearance_m": reference["minimum_clearance_m"],
                                      "target_overlap": case["min_normalized_gaussian_overlap"]}
+    if target_additional_m is not None:
+        frozen = next(trial for identifier, trial in trials if identifier == "R8-expansion")
+        result["envelope_sizing"] = size_expansion(
+            {**frozen, "package": expansion_package}, ports, reference["candidates"]["expansion"],
+            case, target_additional_m)
     return result
