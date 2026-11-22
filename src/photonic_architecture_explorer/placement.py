@@ -39,6 +39,24 @@ def trace_placement(source, target, mirrors):
     return ray
 
 
+def reflector_poses(mirrors, sagittal):
+    """Generate the frozen one-reflector-at-a-time placement cases."""
+    for index, mirror in enumerate(mirrors):
+        for axis, label in enumerate('XYZ'):
+            for delta in (-TRANSLATION_M, TRANSLATION_M):
+                vertex = list(mirror.vertex)
+                vertex[axis] += delta
+                changed = list(mirrors)
+                changed[index] = replace(mirror, vertex=vertex)
+                yield {'kind': 'translation', 'mirror': index + 1, 'axis': label,
+                       'delta_m': delta}, changed
+        for angle in (-ROTATION_RAD, ROTATION_RAD):
+            changed = list(mirrors)
+            changed[index] = rotate_in_plane(mirror, sagittal, angle)
+            yield {'kind': 'rotation', 'mirror': index + 1, 'axis': 's',
+                   'delta_rad': angle}, changed
+
+
 def placement_cases(source, target, mirrors):
     nominal = trace_placement(source, target, mirrors)
     if nominal['status'] == 'Computed' and (
@@ -52,21 +70,8 @@ def placement_cases(source, target, mirrors):
     if nominal['status'] == 'Fail':
         return {'status': 'Fail', 'nominal': nominal, 'cases': [], 'summary': {}}
 
-    cases = []
-    for index, mirror in enumerate(mirrors):
-        for axis, label in enumerate('XYZ'):
-            for delta in (-TRANSLATION_M, TRANSLATION_M):
-                vertex = list(mirror.vertex)
-                vertex[axis] += delta
-                changed = list(mirrors)
-                changed[index] = replace(mirror, vertex=vertex)
-                cases.append({'kind': 'translation', 'mirror': index + 1, 'axis': label,
-                              'delta_m': delta, **trace_placement(source, target, changed)})
-        for angle in (-ROTATION_RAD, ROTATION_RAD):
-            changed = list(mirrors)
-            changed[index] = rotate_in_plane(mirror, source.sagittal, angle)
-            cases.append({'kind': 'rotation', 'mirror': index + 1, 'axis': 's',
-                          'delta_rad': angle, **trace_placement(source, target, changed)})
+    cases = [{**pose, **trace_placement(source, target, changed)}
+             for pose, changed in reflector_poses(mirrors, source.sagittal)]
 
     summaries = {}
     for kind in ('translation', 'rotation'):

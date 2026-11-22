@@ -266,3 +266,63 @@ class EnvelopeSearchTests(TestCase):
             self.assertEqual(result["selected_candidate_id"], "R8-expansion")
             self.assertEqual(result["envelope_sizing"]["status"], "VerificationWithheld")
             self.assertIsNone(result["envelope_sizing"]["suggestion"])
+
+    def test_common_pose_envelope_matches_r26_r10_and_r27(self):
+        result = compare_envelopes(self.ports, "expansion", target_additional_m=0)
+        study = result["pose_envelope"]
+        self.assertEqual(study["input_sha256"], digest(result["input_snapshot"]))
+        self.assertEqual(study["status"], "Verified")
+        self.assertEqual(study["pose_count"], 13)
+        sized = result["envelope_sizing"]["suggestion"]
+        for x, key in zip(study["nominal_x_m"], ("x_min_m", "x_max_m"), strict=True):
+            self.assertAlmostEqual(x, sized[key], delta=2e-12)
+        suggestion = study["suggestion"]
+        for key, shift in (("x_min_change_m", -5e-6), ("x_max_change_m", 5e-6),
+                           ("width_increase_m", 10e-6)):
+            self.assertAlmostEqual(suggestion[key], shift, delta=2e-12)
+        self.assertEqual(study["limiting_sides"], [
+            {"pose": "M2 X -5 µm", "limiting_element": "M2", "face": "X-"},
+            {"pose": "M1 X +5 µm", "limiting_element": "M1", "face": "X+"},
+        ])
+        r10 = next(row for row in study["cases"] if row["pose"] == "M2 sagittal +1 mrad")
+        self.assertAlmostEqual(r10["baseline_minimum_gap_m"], 49.289713e-6, delta=1e-9)
+        self.assertEqual(r10["baseline_status"], "Fail")
+        self.assertEqual(r10["baseline_limiting_check"], {"path": "body[1].volume", "face": "X-"})
+        reference = json.loads((ROOT / "references/m7r27/summary.json").read_text(encoding="utf-8"))
+        for row, archived in zip(study["cases"][1:], reference["cases"], strict=True):
+            with self.subTest(pose=row["pose"]):
+                self.assertEqual(row["status"], "Pass")
+                self.assertGreaterEqual(row["minimum_gap_m"], 50e-6)
+                self.assertEqual({key: archived[key] for key in row["perturbation"]}, row["perturbation"])
+                hit_target = row["chief_path_m"][-1]
+                self.assertAlmostEqual(hit_target[0], 0.002, delta=1e-13)
+                self.assertAlmostEqual(0.002 - hit_target[2], archived["target_offset_ts_m"][0], delta=1e-13)
+                self.assertTrue(all(check["status"] == "Pass" for check in row["adapter_checks"]))
+        self.assertEqual(study["cases"][0]["status"], "Pass")
+
+    def test_fixed_yz_or_chief_keepout_withholds_common_x_proposal(self):
+        from photonic_architecture_explorer.pose_envelope import size_pose_envelope
+
+        result = compare_envelopes(self.ports, "expansion")
+        anchor = result["candidates"][0]["prescription"]
+        case = json.loads((ROOT / "references/m7r7/case.json").read_text(encoding="utf-8"))
+        for blocker in ("Z+", "chief_segment[0].keepout[0]"):
+            with self.subTest(blocker=blocker):
+                blocked = deepcopy(anchor)
+                package = blocked["package"]
+                if blocker == "Z+":
+                    package["available_volume"]["value"]["max_m"][2] = 0.0028
+                else:
+                    package["keepout_bodies"]["value"] = [{
+                        "type": "aabb", "frame_id": "world",
+                        "min_m": [0.00049, -1e-6, -1e-6],
+                        "max_m": [0.00051, 1e-6, 1e-6],
+                    }]
+                study = size_pose_envelope(blocked, case, result["input_sha256"])
+                self.assertEqual(study["status"], "VerificationWithheld")
+                self.assertIsNone(study["suggestion"])
+                if blocker == "Z+":
+                    self.assertEqual(study["limiting_check"]["face"], blocker)
+                    self.assertIn("body[1].volume", study["failed_checks"])
+                else:
+                    self.assertIn(blocker, study["failed_checks"])

@@ -116,3 +116,7 @@ Tutorial에서 1310 nm 두 Port를 열어 Design하고 편집한 입력을 새 S
 ## M7-R27 · 단일 Reflector 오차와 고정 Target
 
 R8-expansion에서 M2 sagittal ±1 mrad가 비교한 오차 중 가장 큰 Chief Ray 변화를 만들었다. 고정면 광선 전달은 수렴했지만 오차별 η에 필요한 Field 근거는 부족하다. 같은 오차 조건을 견디는 Package Envelope를 비교하는 기구 판단과 Field 검증을 별도로 진행할 수 있다. [R27 검증 기록](M7R27_REFLECTOR_POSE.md)
+
+## M7-R28 · 단일 Pose에서의 공통 Package Envelope
+
+R8-expansion의 명목과 12개 단일 오차에서 50 µm 기구 AABB Clearance를 확보하려면 명목 대비 World X 양쪽을 각각 5 µm 넓혀야 한다. Workspace·Export에서 제한 Pose와 경계를 확인할 수 있다. 다음 기구 판단에는 검증 가능한 후보별 Pose 비교 또는 명시된 복합 오차 모델이 필요하다. [R28 검증 기록](M7R28_POSE_ENVELOPE.md)

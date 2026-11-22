@@ -174,6 +174,39 @@ def render_envelope_sizing(sizing):
             f'{content}</section>')
 
 
+def render_pose_envelope(study):
+    if not study:
+        return ""
+    suggestion = study["suggestion"]
+    if suggestion:
+        rows = []
+        for bound, side in zip(("min", "max"), study["limiting_sides"], strict=True):
+            edge = Decimal(str(suggestion[f"x_{bound}_m"])).scaleb(3)
+            change = suggestion[f"x_{bound}_change_m"] * 1e6
+            limiting = " · ".join(escape(side[key]) for key in ("pose", "limiting_element", "face"))
+            rows.append(f'<tr><th scope="row">X {bound}</th><td>{edge}</td><td>{change:+.3f}</td><td>{limiting}</td></tr>')
+        width = suggestion["width_m"] * 1e3
+        increase = suggestion["width_increase_m"] * 1e6
+        clearance = study["required_clearance_m"] * 1e6
+        count = study["pose_count"]
+        content = (f'<p>{count}/{count}개 Pose에서 기구 AABB Clearance {clearance:g} µm 기준을 충족했습니다. '
+                   f'필요 폭 {width:.9f} mm · 명목 대비 +{increase:.3f} µm.</p>'
+                   '<div class="table-scroll"><table><thead><tr><th>World X</th><th>공통 경계 [mm]</th>'
+                   '<th>명목 대비 [µm]</th><th>제한 Pose · Reflector · 면</th></tr></thead>'
+                   f'<tbody>{"".join(rows)}</tbody></table></div>')
+    else:
+        limit = escape(study.get("limiting_pose", ""))
+        paths = ", ".join(escape(path) for path in study.get("failed_checks", []))
+        content = f'<p>검증 보류 · {limit} {escape(study["reason"])} {paths}</p>'
+    return (f'<section class="card" id="pose-envelope" data-status="{escape(study["status"])}">'
+            '<h2>Reflector 오차를 포함한 World X 경계</h2>'
+            '<p>R8-expansion의 명목과 단일 이동·회전 12개를 평가합니다. R9의 Synthetic Y/Z, '
+            'Keepout과 Backing을 사용합니다.</p>'
+            f'{content}<p>Input SHA256 <code>{escape(study["input_sha256"])}</code></p>'
+            '<p>교란 후 η, 실제 Assembly Tolerance, Finite-beam Clearance 및 Total Coupling은 '
+            'Uncomputed입니다.</p></section>')
+
+
 def render_design_report(result):
     payload=json.dumps(result,sort_keys=True,ensure_ascii=False,allow_nan=False).replace('&','\\u0026').replace('<','\\u003c').replace('>','\\u003e')
     rows=[]; articles=[]; options=[]; sheets=[]; alternatives=[]
@@ -288,7 +321,7 @@ def render_design_report(result):
     </style></head><body>
     <header><h1>Two-Port Design</h1></header>
     <main class="wrap">
-    {render_envelope_comparison(envelope)}{render_envelope_sizing(result.get('envelope_sizing'))}{render_reference_context(result.get('reference_context'))}{''.join(articles)}{toolbar}{alternative_section}{review_section}{comparison}
+    {render_envelope_comparison(envelope)}{render_pose_envelope(result.get('pose_envelope'))}{render_envelope_sizing(result.get('envelope_sizing'))}{render_reference_context(result.get('reference_context'))}{''.join(articles)}{toolbar}{alternative_section}{review_section}{comparison}
     <section class="card"><details><summary>Fixed Ports · 입력 SHA · 기준면</summary>
     <p>Input SHA256 <code>{escape(result.get('input_sha256', ''))}</code></p>{input_summary(result.get('input_snapshot'))}</details>
     <details><summary>탐색 범위·순위 근거·실패 진단</summary><p>{budget_caption}</p><p>대표 선정은 추천 정책과 후보별 선택 근거를 따릅니다.</p><pre>{escape(json.dumps({'policy':result['search_policy'],'ranking_order':result['ranking_order'],'recommendation_policy':result.get('recommendation_policy'),'search':search,'limitations':result['limitations']},ensure_ascii=False,indent=2))}</pre></details>
