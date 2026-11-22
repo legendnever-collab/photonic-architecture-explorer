@@ -385,11 +385,26 @@ for key in published.keys() - {"input_snapshot"}:
       const offline = await browser.newPage();
       await offline.goto(pathToFileURL(await exportFile('html', 'envelope-'+key)).href);
       assert.deepEqual(await offline.locator('#design-result').evaluate(e=>JSON.parse(e.textContent)),saved);
+      assert.equal(await offline.locator('#pose-envelope code').textContent(), report.input_sha256);
       await offline.close();
+      const pose = report.pose_envelope;
+      assert.equal(pose.status, 'Verified');
+      assert.equal(pose.input_sha256, report.input_sha256);
+      assert.equal(pose.pose_count, 13);
+      assert.equal(pose.cases.length, 13);
+      assert(pose.cases.every(row => row.status === 'Pass' && row.minimum_gap_m >= 50e-6));
+      assert(Math.abs(pose.suggestion.x_min_change_m + 5e-6) <= 2e-12);
+      assert(Math.abs(pose.suggestion.x_max_change_m - 5e-6) <= 2e-12);
+      assert(Math.abs(pose.suggestion.width_increase_m - 10e-6) <= 2e-12);
+      assert.deepEqual(pose.limiting_sides.map(side => [side.pose, side.face]),
+        [['M2 X -5 µm', 'X-'], ['M1 X +5 µm', 'X+']]);
+      assert.equal(await frame().locator('#pose-envelope code').textContent(), report.input_sha256);
+      assert.equal(await frame().locator('#pose-envelope').getAttribute('data-status'), 'Verified');
       envelopeEvidence[key] = {input_sha256:active.input_sha256, candidate:active.selected,
         passed:active.passing_trials.length, evaluated:active.evaluations, eta:active.overlap,
         quadrature:active.quadrature, gap_m:active.minimum_gap_m, radius_m:active.max_projected_radius_m,
-        clearance};
+        clearance, pose_envelope:{input_sha256:pose.input_sha256, pose_count:pose.pose_count,
+          suggestion:pose.suggestion, limiting_sides:pose.limiting_sides}};
     }
     assert.notEqual(envelopeEvidence.nominal.input_sha256,envelopeEvidence.expansion.input_sha256);
     const sizingEvidence = {};

@@ -18,6 +18,7 @@ from .inspector import ROOT
 from .local_search import bounded_coordinates, exact_curvatures, geometry
 from .near_match import make_prescription
 from .near_match_reference import independent_check
+from .pose_envelope import size_pose_envelope
 from .reference_redesign import OVERLAP_TOL
 from .solver import MAX_APERTURE_TAIL, MAX_FOOTPRINT_SLOPE
 
@@ -320,9 +321,10 @@ def compare_envelopes(document, selected, *, x_limits_m=None, target_additional_
     result["envelope_comparison"] = {"selected": selected, "cases": summaries, "reference_files": FILES,
                                      "minimum_clearance_m": reference["minimum_clearance_m"],
                                      "target_overlap": case["min_normalized_gaussian_overlap"]}
+    frozen = next(trial for identifier, trial in trials if identifier == "R8-expansion")
+    anchor = {**frozen, "package": expansion_package}
+    result["pose_envelope"] = size_pose_envelope(anchor, case, result["input_sha256"])
     if target_additional_m is not None:
-        frozen = next(trial for identifier, trial in trials if identifier == "R8-expansion")
         result["envelope_sizing"] = size_expansion(
-            {**frozen, "package": expansion_package}, ports, reference["candidates"]["expansion"],
-            case, target_additional_m)
+            anchor, ports, reference["candidates"]["expansion"], case, target_additional_m)
     return result

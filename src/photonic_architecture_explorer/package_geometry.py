@@ -42,7 +42,8 @@ def segment_hits_box(start, end, box):
     return True
 
 
-def assess_package(document, adapted, read, issue):
+def assess_package(document, adapted, read, issue, *, chief_path=None):
+    """Check the declared bounds using the nominal path or traced pose points."""
     checks = []
 
     def stop(status, label, reason):
@@ -127,7 +128,8 @@ def assess_package(document, adapted, read, issue):
                     gap = box_distance(body, keepout)
                     if clearance is not None:
                         condition(f'body[{j}].keepout[{k}]', gap > 0 and gap >= clearance, 'envelope Euclidean clearance; closed contact rejected')
-        points = [adapted.source.position, *(m.vertex for m in adapted.reflectors), adapted.target.position]
+        points = (chief_path if chief_path is not None else
+                  [adapted.source.position, *(m.vertex for m in adapted.reflectors), adapted.target.position])
         if volume is not None:
             for j, point in enumerate(points):
                 condition(f'path_point[{j}].volume', contains(volume, (point, point)), 'chief path points only')
