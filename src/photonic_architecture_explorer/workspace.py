@@ -35,6 +35,7 @@ PORTS = ("source", "target")
 PORT_FIELDS = (POSITION, DIRECTION, SAGITTAL, MFD, PHASE, Q)
 SHARED_FIELDS = (WAVELENGTH, INDEX)
 X_FIELDS = {"envelope_x_min_mm": "World X min [mm]", "envelope_x_max_mm": "World X max [mm]"}
+SIZING_FIELD = "target_additional_clearance_um"
 INPUT_SOURCE = "User input in Two-Port Workspace"
 # Match the frozen external adapter and coplanarity guard.
 FRAME_TOL = 1e-10
@@ -381,7 +382,11 @@ form.addEventListener('submit', edit);
 const envelopeSelect = form.elements.namedItem('envelope');
 if (envelopeSelect) {
   const customBounds = document.querySelector('#envelope-x-bounds');
-  const showBounds = () => { customBounds.hidden = envelopeSelect.value !== 'custom'; };
+  const sizing = document.querySelector('#envelope-sizing-input');
+  const showBounds = () => {
+    customBounds.hidden = envelopeSelect.value !== 'custom';
+    sizing.hidden = !envelopeSelect.value;
+  };
   envelopeSelect.addEventListener('change', showBounds);
   window.addEventListener('pageshow', showBounds);
 }
@@ -521,11 +526,18 @@ def render_workspace(raw, result=None, error=None, job=None, *, error_label="입
         x_fields = "".join(f'<label>{label}<input name="{key}" inputmode="decimal" '
                            f'value="{escape(raw.get(key, ""))}"></label>' for key, label in X_FIELDS.items())
         hidden = "" if selected == "custom" else " hidden"
+        sizing_hidden = "" if selected else " hidden"
+        sizing_value = escape(raw.get(SIZING_FIELD, ""))
         envelope_control = f"""<label class="mode">Package Envelope · 선택
             <select name="envelope" aria-controls="envelope-x-bounds">{options}</select></label>
             <fieldset id="envelope-x-bounds"{hidden}><legend>World X 경계</legend>
             <div class="values">{x_fields}</div>
             <p>원본 Example A의 World 좌표로 두 경계를 각각 입력하세요. Y/Z, Keepout 및 Backing은 R7의 Synthetic 값입니다.</p>
+            </fieldset>
+            <fieldset id="envelope-sizing-input"{sizing_hidden}><legend>고정 처방의 World X 산출</legend>
+            <div class="values"><label>추가 AABB Clearance 목표 [µm] · 선택
+            <input name="{SIZING_FIELD}" inputmode="decimal" value="{sizing_value}" placeholder="0, 50, 100"></label></div>
+            <p>R8-expansion의 Port와 처방을 고정하고 R9 Preset 기준으로 필요한 X 경계를 계산합니다.</p>
             </fieldset>"""
     review = ""
     if result is not None or job is not None:
@@ -608,7 +620,7 @@ class Workspace:
         envelope = raw.get("envelope", "")
         submitted_fields = set(raw)
         if entry == R6_ENTRY:
-            submitted_fields -= {"envelope", *X_FIELDS}
+            submitted_fields -= {"envelope", SIZING_FIELD, *X_FIELDS}
         if entry not in self.templates or submitted_fields != self.fields or envelope not in ("", "custom", *WIDTHS):
             return self.get("example"), 400
         if any(raw[port + "_mode"] not in ("mfd", "round", "q") for port in PORTS):
@@ -622,7 +634,9 @@ class Workspace:
                                      for key, label in X_FIELDS.items())
                     if None in x_limits:
                         raise ValueError("World X min과 max를 모두 입력하세요.")
-                result = compare_envelopes(document, envelope, x_limits_m=x_limits)
+                additional = parse_number(raw.get(SIZING_FIELD, ""), "추가 AABB Clearance 목표 [µm]", 6)
+                result = compare_envelopes(document, envelope, x_limits_m=x_limits,
+                                           target_additional_m=additional)
                 return render_workspace(raw, result=result), 200
         except EnvelopeValidationError as exc:
             return render_workspace(raw, error=str(exc), error_label="검증 보류"), 200

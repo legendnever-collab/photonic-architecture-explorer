@@ -139,7 +139,7 @@ def package_evidence(proposal, evaluation):
     }
 
 
-def limiting_boundary(proposal):
+def boundary_distances(proposal):
     low, high = box_bounds(proposal["package"]["available_volume"]["value"])
     distances = []
     for index, reflector in enumerate(proposal["reflectors"], start=1):
@@ -147,21 +147,30 @@ def limiting_boundary(proposal):
         for axis, label in enumerate("XYZ"):
             distances.append((body_low[axis] - low[axis], index, label + "-"))
             distances.append((high[axis] - body_high[axis], index, label + "+"))
-    gap, mirror, face = min(distances)
+    return distances
+
+
+def limiting_boundary(proposal):
+    gap, mirror, face = min(boundary_distances(proposal))
     return {"gap_m": gap, "mirror": mirror, "face": face}
+
+
+def separation_distances(proposal):
+    """Adapter paths for rigid Reflector-pair and Reflector-to-Keepout distances."""
+    bodies = [box_bounds(r["body_envelope"]["value"]) for r in proposal["reflectors"]]
+    keepouts = [box_bounds(k) for k in proposal["package"]["keepout_bodies"]["value"]]
+    return [(box_distance(*bodies), "reflector_envelope_pair", None), *(
+        (box_distance(body, keepout), f"body[{i}].keepout[{j}]", None)
+        for i, body in enumerate(bodies) for j, keepout in enumerate(keepouts)
+    )]
 
 
 def clearance_margin(proposal, evaluation):
     """Measure the three AABB clearances and tie the minimum to its Adapter check."""
-    package = proposal["package"]
-    required = package["required_clearance_m"]["value"]
+    required = proposal["package"]["required_clearance_m"]["value"]
     boundary = limiting_boundary(proposal)
-    bodies = [box_bounds(r["body_envelope"]["value"]) for r in proposal["reflectors"]]
-    keepouts = [box_bounds(k) for k in package["keepout_bodies"]["value"]]
     distances = [(boundary["gap_m"], f'body[{boundary["mirror"] - 1}].volume', boundary["face"]),
-                 (box_distance(*bodies), "reflector_envelope_pair", None)]
-    distances.extend((box_distance(body, keepout), f"body[{i}].keepout[{j}]", None)
-                     for i, body in enumerate(bodies) for j, keepout in enumerate(keepouts))
+                 *separation_distances(proposal)]
     gap, path, face = min(distances, key=lambda distance: distance[0])
     checks = {check["path"]: check for check in evaluation["package_feasibility"]["envelope_geometry"]["checks"]}
     if any(checks.get(path, {}).get("status") != "Pass" for _, path, _ in distances):

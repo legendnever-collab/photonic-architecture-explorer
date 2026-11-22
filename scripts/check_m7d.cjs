@@ -392,6 +392,48 @@ for key in published.keys() - {"input_snapshot"}:
         clearance};
     }
     assert.notEqual(envelopeEvidence.nominal.input_sha256,envelopeEvidence.expansion.input_sha256);
+    const sizingEvidence = {};
+    for (const [goal, expectedIncrease] of [[0,0], [50,.0001], [100,.0002], [500,null]]) {
+      await page.getByRole('textbox', {name:/추가 AABB Clearance 목표/}).fill(String(goal));
+      await hidden();
+      await design();
+      const report = await result();
+      const sizing = report.envelope_sizing;
+      const suggested = sizing.suggestion;
+      assert.equal(report.input_sha256, envelopeEvidence.expansion.input_sha256);
+      assert.equal(report.search_policy.maximum_trials_per_envelope, 74);
+      assert.equal(sizing.target_additional_m, Number(goal+'e-6'));
+      assert.equal(await frame().locator('.confidence code').textContent(), report.input_sha256);
+      assert.equal(await frame().locator('#envelope-sizing').getAttribute('data-status'), sizing.status);
+      if (expectedIncrease !== null) {
+        assert.equal(sizing.status, 'Verified');
+        assert(Math.abs(suggested.width_increase_m - expectedIncrease) <= 2e-12);
+        assert(suggested.quadrature.every(q => q >= 0.99 && Math.abs(q - suggested.eta) <= 1e-8));
+        assert.equal(suggested.adapter_checks.every(check => check.status === 'Pass'), true);
+        assert.equal(await frame().locator('#envelope-sizing code').textContent(), suggested.prescription_sha256);
+      } else {
+        assert.equal(sizing.status, 'Limited');
+        assert.equal(suggested, null);
+        assert.equal(sizing.limiting_check.path, 'body[1].volume');
+        assert.equal(sizing.limiting_check.face, 'Z+');
+        assert.equal(sizing.limiting_check.status, 'Fail');
+      }
+      if (goal === 100 || goal === 500) {
+        const saved = JSON.parse(fs.readFileSync(await exportFile('json', 'envelope-sizing-'+goal)));
+        assert.deepEqual(saved, {...report, viewed_candidate_id:report.selected_candidate_id});
+        const offline = await browser.newPage();
+        await offline.goto(pathToFileURL(await exportFile('html', 'envelope-sizing-'+goal)).href);
+        assert.deepEqual(await offline.locator('#design-result').evaluate(e=>JSON.parse(e.textContent)),saved);
+        await offline.close();
+      }
+      sizingEvidence[goal] = {status:sizing.status, maximum_additional_m:sizing.maximum_additional_m,
+        x_min_m:suggested?.x_min_m ?? null, x_max_m:suggested?.x_max_m ?? null,
+        width_increase_m:suggested?.width_increase_m ?? null, eta:suggested?.eta ?? null,
+        quadrature:suggested?.quadrature ?? null, proposal_sha:suggested?.prescription_sha256 ?? null,
+        limiting_check:sizing.limiting_check};
+    }
+    assert.equal(new Set([0,50,100].map(goal=>sizingEvidence[goal].proposal_sha)).size,3);
+    await page.getByRole('textbox', {name:/추가 AABB Clearance 목표/}).fill('');
     const customEvidence = {};
     const setXBounds = async (min, max) => {
       await page.locator('[name="envelope_x_min_mm"]').fill(min);
@@ -476,7 +518,7 @@ for key in published.keys() - {"input_snapshot"}:
       http_ping_ms:pingMs,identity_checks:'job ID + revision + SHA',
       reference_handoff:{concept_1550:'Reference → Proxy → Design → Background Near-Match',
         incomplete_1310:incomplete.status,worker_started_for_incomplete_1310:false},
-      envelope_comparison:envelopeEvidence, custom_x_bounds:customEvidence,
+      envelope_comparison:envelopeEvidence, custom_x_bounds:customEvidence, envelope_sizing:sizingEvidence,
       r6_redesign:{original:r6Evidence(r6),edited:r6Evidence(revised),adapter_replay_equal:true,
         export_equal:true, confidence_scope:'Edited input SHA', missing_phase:'Uncomputed'}};
     fs.writeFileSync(path.join(dir,'acceptance.json'),JSON.stringify(evidence,null,2)+'\n');

@@ -147,6 +147,33 @@ def render_envelope_comparison(comparison):
             + "".join(details) + '</section>')
 
 
+def render_envelope_sizing(sizing):
+    if not sizing:
+        return ""
+    goal = Decimal(str(sizing["target_additional_m"])).scaleb(6)
+    suggestion = sizing["suggestion"]
+    if suggestion:
+        x_min = Decimal(str(suggestion["x_min_m"])).scaleb(3)
+        x_max = Decimal(str(suggestion["x_max_m"])).scaleb(3)
+        width, increase = (suggestion[key] * 1e3 for key in ("width_m", "width_increase_m"))
+        content = (f'<div class="table-scroll"><table><thead><tr><th>World X min [mm]</th><th>World X max [mm]</th>'
+                   f'<th>필요 폭 [mm]</th><th>R9 대비 증가 [mm]</th><th>Normalized η</th></tr></thead>'
+                   f'<tbody><tr><td>{x_min}</td><td>{x_max}</td><td>{width:.9f}</td><td>{increase:.9f}</td>'
+                   f'<td>{suggestion["eta"]:.9f}</td></tr></tbody></table></div>'
+                   f'<p>제안 처방 SHA256 <code>{suggestion["prescription_sha256"]}</code></p>')
+    elif sizing["status"] == "Limited":
+        check = sizing["limiting_check"]
+        face = f' · {escape(check["face"])}' if check["face"] else ""
+        content = (f'<p>World X 조정으로 달성 가능한 추가 여유의 상한은 '
+                   f'{sizing["maximum_additional_m"] * 1e6:.6f} µm입니다. '
+                   f'제한 검사 <code>{escape(check["path"])}</code>{face} · Adapter {escape(check["status"])}.</p>')
+    else:
+        content = f'<p>검증 보류 · {escape(sizing["reason"])}</p>'
+    return (f'<section class="card" id="envelope-sizing" data-status="{sizing["status"]}">'
+            f'<h2>고정 처방의 World X 산출</h2><p>R8-expansion · 기본 50 µm + 목표 {goal:.9g} µm</p>'
+            f'{content}</section>')
+
+
 def render_design_report(result):
     payload=json.dumps(result,sort_keys=True,ensure_ascii=False,allow_nan=False).replace('&','\\u0026').replace('<','\\u003c').replace('>','\\u003e')
     rows=[]; articles=[]; options=[]; sheets=[]; alternatives=[]
@@ -261,7 +288,7 @@ def render_design_report(result):
     </style></head><body>
     <header><h1>Two-Port Design</h1></header>
     <main class="wrap">
-    {render_envelope_comparison(envelope)}{render_reference_context(result.get('reference_context'))}{''.join(articles)}{toolbar}{alternative_section}{review_section}{comparison}
+    {render_envelope_comparison(envelope)}{render_envelope_sizing(result.get('envelope_sizing'))}{render_reference_context(result.get('reference_context'))}{''.join(articles)}{toolbar}{alternative_section}{review_section}{comparison}
     <section class="card"><details><summary>Fixed Ports · 입력 SHA · 기준면</summary>
     <p>Input SHA256 <code>{escape(result.get('input_sha256', ''))}</code></p>{input_summary(result.get('input_snapshot'))}</details>
     <details><summary>탐색 범위·순위 근거·실패 진단</summary><p>{budget_caption}</p><p>대표 선정은 추천 정책과 후보별 선택 근거를 따릅니다.</p><pre>{escape(json.dumps({'policy':result['search_policy'],'ranking_order':result['ranking_order'],'recommendation_policy':result.get('recommendation_policy'),'search':search,'limitations':result['limitations']},ensure_ascii=False,indent=2))}</pre></details>

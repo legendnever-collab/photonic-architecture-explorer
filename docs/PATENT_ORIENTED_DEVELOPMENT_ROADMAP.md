@@ -108,3 +108,7 @@ Tutorial에서 1310 nm 두 Port를 열어 Design하고 편집한 입력을 새 S
 ## M7-R25 · 광학 목표와 추가 AABB Clearance
 
 원본 Example A의 74개 처방에서 최고 η 후보와 η ≥ 0.99 안에서 가장 큰 Clearance를 가진 후보를 비교한다. 검증된 5.023725 mm Preset에서는 한 처방만 광학 목표를 충족하고 M2 X− 경계 여유가 약 1 pm이다. 같은 폭의 비대칭 World X 배치에서 이 경계 여유를 확보할 수 있는지 살펴볼 수 있다. [R25 설계 및 검증 기록](M7R25_ADDITIONAL_CLEARANCE.md)
+
+## M7-R26 · 고정 처방의 World X 산출
+
+검산한 R8-expansion의 η를 유지하면서 50·100 µm의 추가 AABB Clearance에 필요한 X 경계를 산출한다. World X의 영향과 고정 Y/Z·Keepout·Reflector 간 거리의 한계를 Adapter 경로로 확인할 수 있다. [R26 설계 및 검증 기록](M7R26_ENVELOPE_SIZING.md)
