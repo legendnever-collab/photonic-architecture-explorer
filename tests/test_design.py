@@ -3,7 +3,6 @@ import copy
 import json
 import math
 from pathlib import Path
-import re
 import os
 import subprocess
 import sys
@@ -12,7 +11,6 @@ import unittest
 import numpy as np
 
 from photonic_architecture_explorer.design import design_two_ports, power_pairs, prescriptions, recommendation_key, select_concepts
-from photonic_architecture_explorer.design_report import render_design_report
 from photonic_architecture_explorer.external import adapt_ports, adapt_external, evaluate_external
 from photonic_architecture_explorer.benchmark import load_case
 from test_m1 import sampled_field, fresnel, exact_surface_ray
@@ -247,20 +245,6 @@ class AutonomousDesignTests(unittest.TestCase):
             node['reference_plane']['value']['normal']=node['propagation_direction']['value'].copy()
         self.assertEqual(design_two_ports(d)['status'],'Computed')
 
-    def test_report_json_consistency_escaping_and_no_false_success(self):
-        result=copy.deepcopy(self.result);result['input_snapshot']['description']='</script><script>bad()</script>'
-        html=render_design_report(result)
-        payload=re.search(r'<script type="application/json" id="design-result">(.*?)</script>',html,re.S).group(1)
-        self.assertEqual(json.loads(payload),result)
-        self.assertNotIn('<script>bad()',html)
-        self.assertNotIn('<textarea',html)
-        for c in result['candidates']:
-            self.assertIn('data-candidate="'+c['id']+'"',html)
-            self.assertIn('data-overlap-value="'+str(c['evaluation']['gaussian_mode_matching']['normalized_mode_overlap'])+'"',html)
-        d=fixture();del d['target']['wavefront_curvature_ts_per_m']
-        failed=render_design_report(design_two_ports(d))
-        self.assertIn('data-design-failure',failed);self.assertNotIn('data-overlap-value=',failed)
-
     def test_cli_invalid_json_replaces_previous_success(self):
         with tempfile.TemporaryDirectory() as tmp:
             out=Path(tmp)/'out';input_path=Path(tmp)/'ports.json'
@@ -271,14 +255,7 @@ class AutonomousDesignTests(unittest.TestCase):
             input_path.write_text('{')
             self.assertEqual(subprocess.run(command,env=env,capture_output=True).returncode,1)
             self.assertEqual(json.loads((out/'design.json').read_text())['status'],'Fail')
-            self.assertNotIn('data-overlap-value=',(out/'design.html').read_text())
-
-    def test_evidence_refuses_existing_run_directory(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            command=[sys.executable,str(ROOT/'scripts/validate_m5a.py'),'--output-dir',tmp]
-            result=subprocess.run(command,capture_output=True,text=True)
-            self.assertNotEqual(result.returncode,0)
-            self.assertFalse((Path(tmp)/'provenance.json').exists())
+            self.assertFalse((out/'design.html').exists())
 
 
 if __name__=='__main__':

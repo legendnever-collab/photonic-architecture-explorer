@@ -1,0 +1,92 @@
+{
+  "schema": "pae.design/1",
+  "title": "S1 · SMF-28 → SMF-28, 90° Fold",
+  "scenario": "S1",
+  "description": "Source travels +X, Target arrives travelling +Z; both SMF-28 Ultra 1310 nm.",
+  "wavelength_nm": 1310.0,
+  "ambient_index": 1.0,
+  "ports": {
+    "source": {
+      "label": "Corning SMF-28 Ultra · 1310 nm",
+      "preset": "smf28-ultra-1310",
+      "position_mm": [
+        0,
+        0,
+        0
+      ],
+      "direction": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "sagittal_axis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "mfd_um": [
+        9.2,
+        9.2
+      ],
+      "wavefront_curvature_per_m": [
+        0.0,
+        0.0
+      ],
+      "evidence": {
+        "placement": {
+          "provenance": "synthetic",
+          "source": "Synthetic scenario placement (not a package drawing)"
+        },
+        "mode": {
+          "provenance": "measured",
+          "source": "Corning Incorporated, Corning SMF-28 Ultra Optical Fiber, Product Information PI1424 · PI1424, Optical Specifications, p. 1 · t=vertical axis (Circular scalar MFD)"
+        },
+        "phase": {
+          "provenance": "assumed",
+          "source": "Flat phase (1/R = 0) at the external reference plane is an assumption; the source reports intensity only"
+        }
+      }
+    },
+    "target": {
+      "label": "Corning SMF-28 Ultra · 1310 nm",
+      "preset": "smf28-ultra-1310",
+      "position_mm": [
+        2.0,
+        0,
+        2.0
+      ],
+      "direction": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "sagittal_axis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "mfd_um": [
+        9.2,
+        9.2
+      ],
+      "wavefront_curvature_per_m": [
+        0.0,
+        0.0
+      ],
+      "evidence": {
+        "placement": {
+          "provenance": "synthetic",
+          "source": "Synthetic scenario placement (not a package drawing)"
+        },
+        "mode": {
+          "provenance": "measured",
+          "source": "Corning Incorporated, Corning SMF-28 Ultra Optical Fiber, Product Information PI1424 · PI1424, Optical Specifications, p. 1 · t=vertical axis (Circular scalar MFD)"
+        },
+        "phase": {
+          "provenance": "assumed",
+          "source": "Flat phase (1/R = 0) at the external reference plane is an assumption; the source reports intensity only"
+        }
+      }
+    }
+  }
+}

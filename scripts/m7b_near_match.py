@@ -51,7 +51,7 @@ def main():
         },
         "fixture_sha256": hashlib.sha256(FIXTURE.read_bytes()).hexdigest(),
         "script_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-        "contract_sha256": hashlib.sha256((ROOT / "docs/M7B_GUARDED_NEAR_MATCH.md").read_bytes()).hexdigest(),
+        "contract_sha256": hashlib.sha256((ROOT / "docs/history/M7B_GUARDED_NEAR_MATCH.md").read_bytes()).hexdigest(),
     }
     manifest_path = args.output_dir / "manifest.json"
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")

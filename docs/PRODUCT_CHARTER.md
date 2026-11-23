@@ -1,40 +1,32 @@
 # Photonic Architecture Explorer — Product Charter
 
-**Status:** Standing product directive, effective 2026-11-14. It remains in effect until the user explicitly changes it. This document records user intent and the engineering direction; it does not claim any unimplemented feature is available.
+**개정 2026-11-24** (사용자 승인 재설계 계획 반영). 이전 판은 [history/PRODUCT_CHARTER_2026-11-14.md](history/PRODUCT_CHARTER_2026-11-14.md)에 보존한다.
+이 Charter는 사용자의 명시적 지시로만 바뀐다.
 
-## End goal
+## 목표
 
-Given information describing two **fixed optical ports**, autonomously explore, synthesize, evaluate, and explain optical interconnect architectures useful for early engineering R&D and patent-oriented concept development. The output must be a short, evidence-backed set of buildable/plausible candidates, or a clear explanation of why such candidates cannot yet be determined. This is a **design explorer**, not merely an analyzer for a manually selected pair of mirrors and not a patentability opinion.
+고정 Optical Port 두 개를 도면 위에 놓으면, 만들 수 있는 광학 연결 구조 후보를 자동으로 생성하고,
+물리 근거로 평가·비교하여 보여 준다. 후보가 없으면 그 이유와 필요한 다음 단계를 수치로 설명한다.
+쓰임새는 초기 R&D 설계 판단과 특허용 개념 도출이며, 특허성·FTO 판단은 하지 않는다.
 
-The [Patent-Oriented Product Vision](PATENT_ORIENTED_PRODUCT_VISION.md) describes how architecture exploration, visualization, and traceable engineering evidence can support invention disclosure. The [Development Roadmap](PATENT_ORIENTED_DEVELOPMENT_ROADMAP.md) stages this direction within the existing requirements for physical validity, provenance, model domain, and integration.
+## 사용자 약속
 
-## User interaction contract
+1. **Two-Port-First** — 사용자는 Port의 기준면 위치, 전파 방향, 파장, Mode만 준다. 공개 문헌 Preset을 제공한다.
+2. **시각 우선** — Port, 반사면, Beam, Package를 3D 장면과 2D 정투상·Fold 도면에서 보며 입력하고 비교한다.
+   도면은 엔진이 계산한 Geometry를 그대로 그린다.
+3. **최소 부담** — Solver, Topology, 반사면 수, 최적화 설정을 묻지 않는다. 고급 정보는 펼쳐 볼 때만 보인다.
+4. **근거 있는 비교** — 추천과 대안을 투명한 기준(광경로, 공차 민감도, 제작성, Footprint, Package 여유)으로 비교한다.
+5. **꾸며 내지 않음** — 모르는 Field, Phase, 손실, 형상, 공차를 지어내지 않는다. 가정과 Synthetic 값은 표시한다.
+6. **정직한 실패** — 한 근사 모델의 Domain 실패는 구조 불가능의 증명이 아니다. 실패 원인, 임계값, 다음 단계를 보여 준다.
+7. **내보내기** — 결과는 치수 도면(SVG), 특허 Figure, 재현 가능한 JSON 설계 기록으로 내보낸다.
 
-1. **Two-port-first.** The primary workflow starts with Port A and Port B. Request only information intrinsically needed for a meaningful physical problem: reference-plane position, propagation direction, wavelength and field/mode characterization. Offer simple import/examples for complex fields.
-2. **Minimal user burden.** Never make the user choose solver, topology, number of mirrors, optimization scheme, Gaussian conventions, or other implementation decisions in the default journey. Reasonable technical strategies and parameterizations are the engineering agent's responsibility.
-3. **Progressive disclosure.** Show a clear recommendation, why it works, relevant limitations and alternatives first. Hide advanced controls and diagnostic metadata behind optional inspection; no sprawling forms or button-heavy UI.
-4. **Autonomous engineering ownership.** The engineering agent selects the staged roadmap, modeling and test strategy, algorithms and internal defaults. Do not repeatedly ask the user to arbitrate engineering design choices. User review should emphasize practical usability and conceptual relevance.
-5. **No invented device facts.** Do not fill unknown real E/H fields, phase, loss, index, geometry, clearances or fabrication constraints with fabricated measurements. For concept-only screening, transparent synthetic/default assumptions are allowed but must be prominently marked and never mistaken for verified product feasibility.
-6. **Graceful missing inputs.** When package, process, tolerances or actual field data are missing, still provide the most useful bounded conceptual design supported by evidence; separately classify unresolved engineering validation. Ask only when an essential user-owned fact blocks the next useful step.
-7. **Result-oriented criteria.** Favor automatic candidate generation, ranked comparison, clear physical reasons, compact visualization, and exportable design records. A growing set of reference solvers and tests does not alone qualify as product progress.
-8. **Guarded physics.** Fixed ports never move to improve the answer; preserve verified applicability checks, independent numerical validation, provenance, and separation between normalized overlap, interface losses, total coupling, package, process and patentability. A domain failure in one approximation does not prove an architecture impossible.
-9. **Scope discipline.** Ship a narrow, credible two-reflector Gaussian-domain design loop before considering broader topology classes or actual electromagnetic field integration. Expand physics only when supported by concrete use cases, independent reference evidence and error budgets. Avoid a monolithic Maxwell solver and generalized UI.
-10. **Change control.** This charter is a stable user directive. Do not change it based on inferred preferences, arbitrary assistant opinions, milestone convenience or intermediate engineering discussions. Only an explicit user instruction changes it. Maintain staged delivery and the existing repository safety/integration controls.
+## 진척의 기준
 
-## First meaningful release acceptance
+User Decision Benchmark 시나리오(S1~S6)에서 쓸모 있는 답이 나오는지로 판정한다. 최우선은
+SMF → Glass WG(LDW와 IOX 각각, S2a·S2b)다. 검증 문서나 Reference Solver가 늘어나는 것만으로는 진척이 아니다.
 
-With two immutable, sufficiently characterized ports and clearly labeled supplementary concept assumptions, the user can invoke **Design** once. The tool automatically generates one or more physically admissible two-reflector candidates if possible, visualizes the fixed optical path and surfaces, evaluates each only within the verified model domain, ranks them based on transparent criteria, and explains why candidates are accepted/rejected. Where no valid candidate exists, it explains what is unresolved or outside model scope without manufacturing performance numbers. The user need not manually specify reflector vertices, normals, curvatures or optimizer settings to start the exploration.
+## 경계
 
-## Development priority
-
-(1) two-port-first design workspace; (2) bounded two-reflector candidate generator; (3) transparent ranking and sensitivity; (4) actual-field integration when non-confidential evidence is available. Existing M1–M4 work remains a validation foundation, not the definition of product completion.
-
-## Boundaries
-
-- This charter does not authorize disclosure of confidential company data.
-- Patent-oriented exploration means generating and comparing technical concepts, **not** assuring novelty, freedom to operate or grantability.
-- Preserve existing GitHub draft-PR and main-merge controls unless explicitly superseded.
-
-## M7-R21 Addendum · 사용자 승인 Product Vision
-
-두 Fixed Optical Port의 위치·방향·파장·Mode에서 출발해 Architecture를 자율 생성하고, Physics와 Evidence로 후보를 비교·선별하여 Patent-Oriented Engineering Exploration을 지원한다. 향후 Mirror·Lens·High-order Surface의 도입은 Agent가 적용 가능한 Physics와 실제 설계 판단에 따라 결정한다. 현재 계산 가능 범위와 장기 목표를 UI와 재현 가능한 Report에 구분해 표시한다. Package, Aperture 및 Assembly Tolerance는 각각의 입력과 근거를 요구한다. [지속 운영 정책](DEVELOPMENT_OPERATING_POLICY.md)을 모든 Milestone에 적용한다.
+- 회사 기밀 데이터를 저장소에 두지 않는다(Public 저장소).
+- 단계와 Gate는 [Roadmap](ROADMAP.md), 결정 이력은 [Decision Log](DECISIONS.md)를 따른다.
+- main 병합은 Phase 단위 사용자 승인 후에만 한다.

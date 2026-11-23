@@ -5,7 +5,15 @@ import math
 
 from .gaussian import Gaussian
 from .geometry import cross
-from .inspector import visible_overlap
+
+
+def visible_overlap(result):
+    value = result['gaussian_mode_matching'].get('normalized_mode_overlap')
+    valid = (result['gaussian_mode_matching']['status'] == 'Approximate'
+             and result['geometry']['status'] == 'Pass' and result['model_domain']['status'] == 'Pass'
+             and all(result[key]['status'] != 'Fail' for key in ('input_contract', 'design_constraints', 'package_feasibility')))
+    return value if valid and isinstance(value, (int, float)) and math.isfinite(value) and 0 <= value <= 1 else None
+
 
 
 MODE_MATCH_CSS = """

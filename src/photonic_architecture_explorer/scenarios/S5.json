@@ -1,0 +1,92 @@
+{
+  "schema": "pae.design/1",
+  "title": "S5 · DFB laser class (1.5 × 3.5 µm) → SSC class (3 µm), 1310 nm",
+  "scenario": "S5",
+  "description": "Both modes are far outside the paraxial divergence guard.",
+  "wavelength_nm": 1310.0,
+  "ambient_index": 1.0,
+  "ports": {
+    "source": {
+      "label": "DFB laser class (Synthetic)",
+      "preset": null,
+      "position_mm": [
+        0,
+        0,
+        0
+      ],
+      "direction": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "sagittal_axis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "mfd_um": [
+        1.5,
+        3.5
+      ],
+      "wavefront_curvature_per_m": [
+        0.0,
+        0.0
+      ],
+      "evidence": {
+        "placement": {
+          "provenance": "synthetic",
+          "source": "Synthetic scenario placement (not a package drawing)"
+        },
+        "mode": {
+          "provenance": "synthetic",
+          "source": "Representative laser-class elliptical mode; not a specific device"
+        },
+        "phase": {
+          "provenance": "synthetic",
+          "source": "Flat phase, synthetic assumption"
+        }
+      }
+    },
+    "target": {
+      "label": "SiPh SSC class · 3 µm (Synthetic)",
+      "preset": "synthetic-siph-ssc-3um",
+      "position_mm": [
+        1.0,
+        0,
+        0.5
+      ],
+      "direction": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "sagittal_axis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "mfd_um": [
+        3.0,
+        3.0
+      ],
+      "wavefront_curvature_per_m": [
+        0.0,
+        0.0
+      ],
+      "evidence": {
+        "placement": {
+          "provenance": "synthetic",
+          "source": "Synthetic scenario placement (not a package drawing)"
+        },
+        "mode": {
+          "provenance": "synthetic",
+          "source": "Representative class value for scenario S3; not a specific device or measurement · t=vertical axis (Circular synthetic mode)"
+        },
+        "phase": {
+          "provenance": "synthetic",
+          "source": "Flat phase is a synthetic assumption"
+        }
+      }
+    }
+  }
+}

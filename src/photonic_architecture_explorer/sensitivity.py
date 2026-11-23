@@ -5,7 +5,7 @@ import math
 
 from .external import adapt_external
 from .gaussian import DomainError, mode_overlap
-from .inspector import visible_overlap
+from .mode_match import visible_overlap
 from .mode_match import arrived_mode
 
 

@@ -8,7 +8,7 @@ import unittest
 
 from photonic_architecture_explorer.external import evaluate_external
 from photonic_architecture_explorer.applicability import gaussian_port_domain
-from photonic_architecture_explorer.inspector import render_report
+from photonic_architecture_explorer.mode_match import visible_overlap
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -48,9 +48,7 @@ class LiteratureProxy(unittest.TestCase):
         for label in ('source', 'target'):
             self.assertEqual(result['evaluated_ports'][label]['position_m'], tuple(data[label]['position_m']['value']))
             self.assertEqual(result['evaluated_ports'][label]['direction'], tuple(data[label]['propagation_direction']['value']))
-        page = render_report([('literature', 'Literature proxy', data)])
-        self.assertNotIn('data-overlap-value=', page)
-        self.assertIn('data-overlap-withheld', page)
+        self.assertIsNone(visible_overlap(result))  # overlap is withheld outside the model domain
 
 
 if __name__ == '__main__': unittest.main()

@@ -18,4 +18,6 @@ results/runtime-m5f*/
 results/runtime-m7c*/
 results/runtime-m7d*/
 results/runtime-m7e*/
+# Per-run evidence from the P1 Workspace and Windows package checks.
+results/runtime-*/
 node_modules/

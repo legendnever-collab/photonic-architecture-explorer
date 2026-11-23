@@ -1,0 +1,92 @@
+{
+  "schema": "pae.design/1",
+  "title": "S2a · SMF-28 → LDW (Desmet 2021), 1550 nm",
+  "scenario": "S2a-1550",
+  "description": "Edge coupling in air: fiber at the origin, glass facet 3 mm ahead and 1 mm higher.",
+  "wavelength_nm": 1550.0,
+  "ambient_index": 1.0,
+  "ports": {
+    "source": {
+      "label": "Corning SMF-28 Ultra · 1550 nm",
+      "preset": "smf28-ultra-1550",
+      "position_mm": [
+        0,
+        0,
+        0
+      ],
+      "direction": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "sagittal_axis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "mfd_um": [
+        10.4,
+        10.4
+      ],
+      "wavefront_curvature_per_m": [
+        0.0,
+        0.0
+      ],
+      "evidence": {
+        "placement": {
+          "provenance": "synthetic",
+          "source": "Synthetic scenario placement (not a package drawing)"
+        },
+        "mode": {
+          "provenance": "measured",
+          "source": "Corning Incorporated, Corning SMF-28 Ultra Optical Fiber, Product Information PI1424 · PI1424, Optical Specifications, p. 1 · t=vertical axis (Circular scalar MFD)"
+        },
+        "phase": {
+          "provenance": "assumed",
+          "source": "Flat phase (1/R = 0) at the external reference plane is an assumption; the source reports intensity only"
+        }
+      }
+    },
+    "target": {
+      "label": "Desmet FLDW · fused silica",
+      "preset": "desmet-fldw-1550",
+      "position_mm": [
+        3.0,
+        0,
+        1.0
+      ],
+      "direction": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "sagittal_axis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "mfd_um": [
+        12.1,
+        12.8
+      ],
+      "wavefront_curvature_per_m": [
+        0.0,
+        0.0
+      ],
+      "evidence": {
+        "placement": {
+          "provenance": "synthetic",
+          "source": "Synthetic scenario placement (not a package drawing)"
+        },
+        "mode": {
+          "provenance": "measured",
+          "source": "Andres Desmet et al., Laser Written Glass Interposer for Fiber Coupling to Silicon Photonic Integrated Circuits, IEEE Photonics Journal 13(1), 2021, 2400112 · §3.1, Fig. 5(b) · t=vertical axis (Published lateral/vertical axes)"
+        },
+        "phase": {
+          "provenance": "assumed",
+          "source": "Flat phase (1/R = 0) at the external reference plane is an assumption; the source reports intensity only"
+        }
+      }
+    }
+  }
+}

@@ -3,13 +3,11 @@
 import json
 import math
 from pathlib import Path
-import re
 import unittest
 
 import numpy as np
 
 from photonic_architecture_explorer.design import design_two_ports
-from photonic_architecture_explorer.design_report import render_design_report
 from photonic_architecture_explorer.gaussian import Gaussian, mode_overlap
 from photonic_architecture_explorer.mode_match import axis_profiles, loss_label
 
@@ -47,19 +45,12 @@ class ModeMatchViewTests(unittest.TestCase):
     def test_report_uses_fixed_reference_planes_and_original_overlap(self):
         document = json.loads((ROOT / "examples/m5a_two_ports.json").read_text())
         result = design_two_ports(document)
-        html = render_design_report(result)
         self.assertEqual(result["status"], "Computed")
-        self.assertEqual(html.count('class="mode-match"'), len(result["candidates"]))
-        self.assertIn('data-source-plane="source-external" data-target-plane="target-external"', html)
-        self.assertIn(f'data-input-sha="{result["input_sha256"]}"', html)
         for candidate in result["candidates"]:
-            self.assertIn(f'data-mode-match="{candidate["id"]}"', html)
             self.assertAlmostEqual(candidate["evaluation"]["gaussian_mode_matching"]["normalized_mode_overlap"],
                                    1, places=12)
             for name in ("source", "target"):
                 self.assertEqual(candidate["prescription"][name], document[name])
-        embedded = re.search(r'<script type="application/json" id="design-result">(.*?)</script>', html).group(1)
-        self.assertEqual(json.loads(embedded), result)
 
         for change, expected in (("phase", "Uncomputed"), ("divergence", "Fail")):
             invalid = json.loads(json.dumps(document))
@@ -69,7 +60,7 @@ class ModeMatchViewTests(unittest.TestCase):
                 invalid["source"]["mfd_ts_m"]["value"] = [2e-6, 2e-6]
             rejected = design_two_ports(invalid)
             self.assertEqual(rejected["status"], expected)
-            self.assertNotIn("data-mode-match=", render_design_report(rejected))
+            self.assertEqual(rejected["candidates"], [])
 
     def test_loss_distinguishes_zero_and_missing_overlap(self):
         self.assertEqual(loss_label(0), "∞ dB")

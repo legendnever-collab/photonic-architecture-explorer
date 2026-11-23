@@ -1,0 +1,92 @@
+{
+  "schema": "pae.design/1",
+  "title": "S2a · SMF-28 → LDW (Sun 2021), 1310 nm",
+  "scenario": "S2a-1310",
+  "description": "Edge coupling in air: fiber at the origin, glass facet 3 mm ahead and 1 mm higher.",
+  "wavelength_nm": 1310.0,
+  "ambient_index": 1.0,
+  "ports": {
+    "source": {
+      "label": "Corning SMF-28 Ultra · 1310 nm",
+      "preset": "smf28-ultra-1310",
+      "position_mm": [
+        0,
+        0,
+        0
+      ],
+      "direction": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "sagittal_axis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "mfd_um": [
+        9.2,
+        9.2
+      ],
+      "wavefront_curvature_per_m": [
+        0.0,
+        0.0
+      ],
+      "evidence": {
+        "placement": {
+          "provenance": "synthetic",
+          "source": "Synthetic scenario placement (not a package drawing)"
+        },
+        "mode": {
+          "provenance": "measured",
+          "source": "Corning Incorporated, Corning SMF-28 Ultra Optical Fiber, Product Information PI1424 · PI1424, Optical Specifications, p. 1 · t=vertical axis (Circular scalar MFD)"
+        },
+        "phase": {
+          "provenance": "assumed",
+          "source": "Flat phase (1/R = 0) at the external reference plane is an assumption; the source reports intensity only"
+        }
+      }
+    },
+    "target": {
+      "label": "Sun · Fused Silica FLDW, 55 mW writing power",
+      "preset": "sun-fldw-55mw-1310",
+      "position_mm": [
+        3.0,
+        0,
+        1.0
+      ],
+      "direction": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "sagittal_axis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "mfd_um": [
+        18.0,
+        11.0
+      ],
+      "wavefront_curvature_per_m": [
+        0.0,
+        0.0
+      ],
+      "evidence": {
+        "placement": {
+          "provenance": "synthetic",
+          "source": "Synthetic scenario placement (not a package drawing)"
+        },
+        "mode": {
+          "provenance": "measured",
+          "source": "Qi Sun, Femtosecond Laser Written Diffractive Optical Devices, University of Southampton PhD thesis, October 2021 · Fig. 3.5(c–d), §3.1.3 (printed p. 36) · t=vertical axis (Published x/y read as lateral/vertical; the source gives no registered mapping)"
+        },
+        "phase": {
+          "provenance": "assumed",
+          "source": "Flat phase (1/R = 0) at the external reference plane is an assumption; the source reports intensity only"
+        }
+      }
+    }
+  }
+}

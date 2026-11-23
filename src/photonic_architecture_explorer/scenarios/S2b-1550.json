@@ -1,0 +1,92 @@
+{
+  "schema": "pae.design/1",
+  "title": "S2b · SMF-28 → IOX (Brusberg 2012), 1550 nm",
+  "scenario": "S2b-1550",
+  "description": "Edge coupling in air: fiber at the origin, glass facet 3 mm ahead and 1 mm higher.",
+  "wavelength_nm": 1550.0,
+  "ambient_index": 1.0,
+  "ports": {
+    "source": {
+      "label": "Corning SMF-28 Ultra · 1550 nm",
+      "preset": "smf28-ultra-1550",
+      "position_mm": [
+        0,
+        0,
+        0
+      ],
+      "direction": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "sagittal_axis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "mfd_um": [
+        10.4,
+        10.4
+      ],
+      "wavefront_curvature_per_m": [
+        0.0,
+        0.0
+      ],
+      "evidence": {
+        "placement": {
+          "provenance": "synthetic",
+          "source": "Synthetic scenario placement (not a package drawing)"
+        },
+        "mode": {
+          "provenance": "measured",
+          "source": "Corning Incorporated, Corning SMF-28 Ultra Optical Fiber, Product Information PI1424 · PI1424, Optical Specifications, p. 1 · t=vertical axis (Circular scalar MFD)"
+        },
+        "phase": {
+          "provenance": "assumed",
+          "source": "Flat phase (1/R = 0) at the external reference plane is an assumption; the source reports intensity only"
+        }
+      }
+    },
+    "target": {
+      "label": "Fraunhofer IZM IOX · D263Teco",
+      "preset": "brusberg-iox-1550",
+      "position_mm": [
+        3.0,
+        0,
+        1.0
+      ],
+      "direction": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "sagittal_axis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "mfd_um": [
+        12.0,
+        18.8
+      ],
+      "wavefront_curvature_per_m": [
+        0.0,
+        0.0
+      ],
+      "evidence": {
+        "placement": {
+          "provenance": "synthetic",
+          "source": "Synthetic scenario placement (not a package drawing)"
+        },
+        "mode": {
+          "provenance": "measured",
+          "source": "Lars Brusberg, Henning Schröder, Marco Queisser, Klaus-Dieter Lang, Single-mode Glass Waveguide Platform for DWDM Chip-to-Chip Interconnects, IEEE ECTC 2012, Fraunhofer IZM and TU Berlin · Figs. 4–5 and adjacent text · t=vertical axis (Published horizontal/vertical axes)"
+        },
+        "phase": {
+          "provenance": "assumed",
+          "source": "Flat phase (1/R = 0) at the external reference plane is an assumption; the source reports intensity only"
+        }
+      }
+    }
+  }
+}
