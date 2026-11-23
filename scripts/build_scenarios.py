@@ -118,11 +118,12 @@ SCENARIOS = [
                'Guide 20 µm below the surface (class value, assumed). The reflector on the guide axis would '
                'have to sit inside 20 µm of glass.'),
      {'status': 'Fail', 'reason_contains': 'No valid two-reflector', 'target': {'status': 'Computed', 'phase': 'P4'}}),
-    ('S2b-1550-glass-deep', 'S2b · 수직 SMF → Glass 상면 → 깊게 매립한 IOX 가정 (0.3 mm)', 'S2b-1550-glass-deep.json',
-     'What burial depth would let the in-glass two-reflector family reach an IOX guide?',
-     glass_doc('S2b-1550-glass-deep', 'S2b · vertical SMF-28 → D 263 top → IOX buried 0.3 mm (hypothetical)', 1550.0,
-               'd263-1550', 1.1, 'smf28-ultra-1550', 'brusberg-iox-1550', 0.3,
-               'Hypothetical 0.3 mm burial to show the depth the family needs; not a process claim.'),
+    ('S2b-1550-glass-deep', 'S2b · 수직 SMF → Glass 상면 → 깊게 매립한 IOX 가정 (0.3 mm, 2.0 mm)', 'S2b-1550-glass-deep.json',
+     'What burial depth and glass thickness would let the in-glass two-reflector family reach an IOX guide?',
+     glass_doc('S2b-1550-glass-deep', 'S2b · vertical SMF-28 → D 263-index glass top → IOX buried 0.3 mm (hypothetical)', 1550.0,
+               'd263-1550', 2.0, 'smf28-ultra-1550', 'brusberg-iox-1550', 0.3,
+               'Hypothetical 0.3 mm burial in 2.0 mm of glass with the D 263 index, to show what the family needs; '
+               'neither value is a process or product claim. With 1.1 mm the family has no candidate at any depth tried.'),
      {'status': 'Computed', 'min_candidates': 3, 'family': 'exact', 'target': {'status': 'Computed', 'phase': 'P3'}}),
     ('S3', 'S3 · SiPh SSC → SMF', 'S3.json', 'Which structure can relay a 3 µm SSC mode (needs P3/P4)',
      doc('S3', 'S3 · SiPh SSC class (3 µm) → SMF-28, 1310 nm', 1310.0,

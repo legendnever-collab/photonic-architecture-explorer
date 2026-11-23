@@ -1,8 +1,8 @@
 {
   "schema": "pae.design/1",
-  "title": "S2b · vertical SMF-28 → D 263 top → IOX buried 0.3 mm (hypothetical)",
+  "title": "S2b · vertical SMF-28 → D 263-index glass top → IOX buried 0.3 mm (hypothetical)",
   "scenario": "S2b-1550-glass-deep",
-  "description": "Hypothetical 0.3 mm burial to show the depth the family needs; not a process claim.",
+  "description": "Hypothetical 0.3 mm burial in 2.0 mm of glass with the D 263 index, to show what the family needs; neither value is a process or product claim. With 1.1 mm the family has no candidate at any depth tried.",
   "wavelength_nm": 1550.0,
   "ambient_index": 1.0,
   "ports": {
@@ -103,7 +103,7 @@
       0.0,
       1.0
     ],
-    "thickness_mm": 1.1,
+    "thickness_mm": 2.0,
     "index_source": {
       "provenance": "assumed",
       "source": "Two-term Cauchy extrapolation of SCHOTT D 263 T eco data-sheet nC = 1.5204, nF = 1.5300 to 1550 nm; uncertainty about ±0.01; ion-exchange index change ignored"

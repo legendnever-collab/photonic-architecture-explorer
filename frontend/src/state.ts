@@ -1,3 +1,4 @@
+import { syncMedia } from './media';
 import type { DesignDocument, PortName, Preset, Result, ScenarioEntry } from './types';
 
 export interface AppState {
@@ -24,6 +25,7 @@ export class Store {
   }
 
   set(patch: Partial<AppState>) {
+    if (patch.doc) patch = { ...patch, doc: syncMedia(patch.doc) };
     const changed = new Set(Object.keys(patch) as (keyof AppState)[]);
     this.state = { ...this.state, ...patch };
     for (const listener of this.listeners) listener(this.state, changed);

@@ -8,6 +8,9 @@ Starts the packaged server, drives Chromium with Playwright and checks:
     distance equals the engine scene within 1 nm (Gate of Roadmap P1)
   * editing an input marks the result stale and hides it from the drawings
   * failing scenarios show their reason, next step and rejection table
+  * P3 glass scenarios: block card, hatched surface band, crossing record, TIR column,
+    Fold surface marker at the air-gap distance, reflectors below the surface, 3D slab,
+    turning the block off, and the shallow-guide region guidance
   * Design Document export round-trips
   * without WebGL the 2D drawings still work
 Screenshots and a JSON summary go to the output directory.
@@ -199,6 +202,42 @@ def main():
         }""")
         check(status in ('Computed', 'Fail') and not hits, f'keep-out violated or bad status: {status} {hits}', failures)
         page.screenshot(path=str(out / 'p2_S2a_keepout.png'))
+
+        load_scenario(page, 'S2a-1550-glass')
+        check(page.is_checked('[data-key="glass.enabled"]'), 'glass card not enabled for glass scenario', failures)
+        check(page.locator('[data-kind="glass-surface"]').count() >= 1, 'glass surface not drawn in 2D', failures)
+        status = design(page)
+        summary['S2a-1550-glass_status'] = status
+        check(status == 'Computed' and page.locator('[data-crossing="source"]').count() == 1, f'glass design view: {status}', failures)
+        check(page.locator('[data-tir]').count() >= 2, 'TIR/coating column missing', failures)
+        glass = page.evaluate("""() => {
+          const c = window.__paeStore.selectedCandidate, out = {};
+          const surface = document.querySelector('[data-kind="fold-surface"]');
+          out.fold_surface_mm = surface ? Number(surface.getAttribute('data-distance-mm')) : null;
+          out.gap_mm = window.__paeStore.state.result.crossing.ambient_length_mm;
+          out.mirror_v = [...document.querySelectorAll('figure[data-view="xz"] [data-kind="mirror"]')].map(m => Number(m.getAttribute('data-v-mm')));
+          out.surface_mm = [...document.querySelectorAll('figure[data-view="xz"] [data-kind="glass-surface"]')].map(m => Number(m.getAttribute('data-mm')));
+          let slab = false;
+          const v = window.__paeViewer; if (v && v.world) v.world.traverse(o => { if (o.userData && o.userData.kind === 'glass') slab = true; });
+          out.slab = slab; out.webgl = Boolean(v && v.ok); out.candidate = c && c.id;
+          return out; }""")
+        summary['glass_view'] = glass
+        check(glass['fold_surface_mm'] is not None and abs(glass['fold_surface_mm'] - glass['gap_mm']) < NM,
+              f'Fold surface marker not at the air gap: {glass}', failures)
+        check(glass['mirror_v'] and all(v < 0 for v in glass['mirror_v']) and glass['surface_mm'] == [0],
+              f'reflectors not drawn below the glass surface: {glass}', failures)
+        check(glass['slab'] or not glass['webgl'], '3D glass slab missing', failures)
+        page.screenshot(path=str(out / 'p3_S2a-1550-glass.png'))
+        page.uncheck('[data-key="glass.enabled"]')
+        page.wait_for_function("!window.__paeStore.state.doc.medium_block && !window.__paeStore.state.doc.ports.target.medium", timeout=10000)
+        check(page.locator('[data-kind="glass-surface"]').count() == 0, 'glass still drawn after turning it off', failures)
+
+        load_scenario(page, 'S2b-1550-glass')
+        status = design(page)
+        summary['S2b-1550-glass_status'] = status
+        check(status == 'Fail' and page.locator('[data-guidance="block_region"]').count() == 1,
+              f'shallow IOX guidance missing: {status}', failures)
+        page.screenshot(path=str(out / 'p3_S2b-1550-glass.png'))
 
         load_scenario(page, 'S3')
         status = design(page)

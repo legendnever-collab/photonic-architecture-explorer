@@ -1,3 +1,4 @@
+import { glassCard } from './block';
 import { constraintsCard } from './constraints';
 import { clone, type Store } from './state';
 import type { DesignDocument, PortName, PortScene, PortSpec, Preset, Vec3 } from './types';
@@ -52,7 +53,7 @@ export class InputPanel {
       const scene = preview?.ports?.ports.find((p) => p.name === name) ?? null;
       this.root.append(this.port(name, doc.ports[name], scene));
     }
-    this.root.append(constraintsCard(this.store, () => {}));
+    this.root.append(glassCard(this.store), constraintsCard(this.store, () => {}));
     if (focusKey) (this.root.querySelector(`[data-key="${focusKey}"]`) as HTMLElement | null)?.focus();
   }
 

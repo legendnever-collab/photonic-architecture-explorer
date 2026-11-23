@@ -14,6 +14,19 @@ export interface PortSpec {
   mfd_um: [number, number];
   wavefront_curvature_per_m: [number, number];
   evidence: { placement?: Evidence; mode?: Evidence; phase?: Evidence };
+  medium?: Medium;
+}
+
+export type Medium = 'ambient' | 'block';
+
+/** One glass block bounded by a planar top surface (and an optional parallel bottom). */
+export interface MediumBlock {
+  label?: string;
+  index: number;
+  surface_point_mm: Vec3;
+  surface_normal: Vec3;   // points out of the block, into the ambient medium
+  thickness_mm?: number | null;
+  index_source?: Evidence;
 }
 
 export type PortName = 'source' | 'target';
@@ -39,6 +52,7 @@ export interface DesignDocument {
   ambient_index: number;
   ports: Record<PortName, PortSpec>;
   constraints?: Constraints;
+  medium_block?: MediumBlock | null;
 }
 
 export interface Preset {
@@ -96,14 +110,15 @@ export interface MirrorScene {
   incidence_deg: number;
   beam_footprint_radius_ts_um: [number, number];
   surface_grid_mm: Vec3[][];
+  tir_possible?: boolean;
 }
 
-export interface Segment { start_mm: Vec3; end_mm: Vec3; length_mm: number; direction: Vec3; t_axis: Vec3; s_axis: Vec3 }
-export interface BeamSample { segment: number; distance_mm: number; point_mm: Vec3; radius_t_um: number; radius_s_um: number }
+export interface Segment { start_mm: Vec3; end_mm: Vec3; length_mm: number; direction: Vec3; t_axis: Vec3; s_axis: Vec3; medium?: Medium }
+export interface BeamSample { segment: number; distance_mm: number; point_mm: Vec3; radius_t_um: number; radius_s_um: number; medium?: Medium }
 
 export interface CandidateScene {
   mirrors: MirrorScene[];
-  path: { points_mm: Vec3[]; segments: Segment[]; total_length_mm: number };
+  path: { points_mm: Vec3[]; segments: Segment[]; total_length_mm: number; surface_point_mm?: Vec3 };
   beam: { definition: string; samples: BeamSample[] };
 }
 
@@ -119,6 +134,7 @@ export interface Candidate {
     max_abs_curvature_per_m: number | null;
     worst_pose_mismatch_db: number | null;
     total_path_mm: number;
+    ambient_path_mm?: number;
     normalized_mode_overlap: number | null;
     mode_mismatch_db: number | null;
     max_projected_beam_radius_um: number;
@@ -143,6 +159,17 @@ export interface SearchMap {
   slope_limit: number;
 }
 
+export interface Crossing {
+  side: 'source' | 'target';
+  surface_point_mm: Vec3;
+  ambient_length_mm: number;
+  incidence_deg: number;
+  refraction_deg: number;
+  q_scale_ts: [number, number];
+  fresnel_transmission_uncoated: { s: number; p: number; mean: number };
+  meaning: string;
+}
+
 export interface Result {
   schema: 'pae.result/1';
   status: 'Computed' | 'Fail' | 'Uncomputed' | 'Invalid' | 'Preview';
@@ -154,6 +181,8 @@ export interface Result {
   ports: { frame_id: string; ports: PortScene[] } | null;
   candidates: Candidate[];
   family?: 'exact' | 'near_match' | null;
+  relay_medium?: Medium;
+  crossing?: Crossing | null;
   guidance?: Guidance[];
   search?: {
     status?: string; reason?: string; grid_points?: number; exact_feasible?: number; near_match_feasible?: number;

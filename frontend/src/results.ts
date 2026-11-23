@@ -29,6 +29,7 @@ export class ResultsPanel {
       return;
     }
     this.root.append(this.verdict(current));
+    if (current.crossing) this.root.append(this.crossing(current));
     if (current.candidates.length) {
       this.root.append(this.table(current.candidates));
       const selected = this.store.selectedCandidate;
@@ -58,6 +59,17 @@ export class ResultsPanel {
     return card;
   }
 
+  private crossing(result: Result) {
+    const x = result.crossing!;
+    const block = this.store.state.doc.medium_block;
+    const t = x.fresnel_transmission_uncoated;
+    return el('section', { class: 'card', 'data-crossing': x.side },
+      el('h3', {}, `Glass 상면 통과 (${x.side === 'source' ? 'Source 쪽' : 'Target 쪽'})`),
+      el('div', {}, `${block?.label || 'Glass'} n ${block?.index ?? '—'} · 외부 구간 ${fmt(x.ambient_length_mm, 4)} mm · 입사각 ${fmt(x.incidence_deg, 2)}° → 굴절각 ${fmt(x.refraction_deg, 2)}°`),
+      el('div', {}, `q 배율 t/s ${x.q_scale_ts.map((v) => fmt(v, 4)).join(' / ')} (Coddington) · 무코팅 Fresnel 투과 s ${fmt(t.s, 4)} / p ${fmt(t.p, 4)}`),
+      el('div', { class: 'muted' }, 'Relay는 상면 바로 안쪽의 등가 Port에서 Glass 굴절률로 풉니다. Fresnel 투과는 평면파 참고값이며 η나 Total Coupling에 넣지 않습니다(AR Coating 미반영).'));
+  }
+
   private table(candidates: Candidate[]) {
     const selected = this.store.selectedCandidate;
     const head = el('tr', {}, ...['#', '종류', '역할', '광경로 [mm]', 'η', '3w·|κ|', '정렬 민감도 [dB]', '최소 R [mm]'].map((h) => el('th', {}, h)));
@@ -84,17 +96,19 @@ export class ResultsPanel {
   }
 
   private detail(c: Candidate) {
-    const head = el('tr', {}, ...['반사면', 'Vertex [mm]', 'R t / s [mm]', '입사각 [°]', 'Aperture 반폭 t / s [mm]', 'Footprint w t / s [µm]'].map((h) => el('th', {}, h)));
+    const glass = c.scene.mirrors.some((m) => m.tir_possible !== undefined);
+    const head = el('tr', {}, ...['반사면', 'Vertex [mm]', 'R t / s [mm]', '입사각 [°]', 'Aperture 반폭 t / s [mm]', 'Footprint w t / s [µm]', ...(glass ? ['반사 방식'] : [])].map((h) => el('th', {}, h)));
     const rows = c.scene.mirrors.map((m) => el('tr', {},
       el('td', {}, m.id), el('td', { class: 'mono' }, m.vertex_mm.map((v) => fmt(v, 4)).join(', ')),
       el('td', {}, m.radius_of_curvature_ts_mm.map((r) => (r === null ? '∞' : fmt(r, 3))).join(' / ')),
       el('td', {}, fmt(m.incidence_deg, 2)), el('td', {}, m.half_aperture_ts_mm.map((a) => fmt(a, 4)).join(' / ')),
-      el('td', {}, m.beam_footprint_radius_ts_um.map((w) => fmt(w, 2)).join(' / '))));
+      el('td', {}, m.beam_footprint_radius_ts_um.map((w) => fmt(w, 2)).join(' / ')),
+      ...(glass ? [el('td', { 'data-tir': String(m.tir_possible) }, m.tir_possible ? 'TIR 가능(뒤가 외부 매질일 때)' : '반사 Coating 필요')] : [])));
     const chips = el('div', { class: 'chips' }, ...Object.entries(c.status).map(([key, value]) =>
       el('span', { class: `chip st-${value}` }, `${STATUS_LABEL[key] ?? key}: ${value}`)));
     return el('section', { class: 'card', 'data-detail': c.id }, el('h3', {}, `${c.id} 상세`),
       el('table', { class: 'grid-table' }, el('thead', {}, head), el('tbody', {}, ...rows)), chips,
-      el('div', { class: 'muted' }, `총 광경로 ${fmt(c.metrics.total_path_mm, 4)} mm · 최대 투영 Beam 반경 ${fmt(c.metrics.max_projected_beam_radius_um, 2)} µm · Mode mismatch ${fmt(c.metrics.mode_mismatch_db, 4)} dB`));
+      el('div', { class: 'muted' }, `총 광경로 ${fmt(c.metrics.total_path_mm, 4)} mm${c.metrics.ambient_path_mm ? ` (외부 ${fmt(c.metrics.ambient_path_mm, 4)} mm 포함)` : ''} · 최대 투영 Beam 반경 ${fmt(c.metrics.max_projected_beam_radius_um, 2)} µm · Mode mismatch ${fmt(c.metrics.mode_mismatch_db, 4)} dB`));
   }
 
   private rejections(counts: Record<string, number>, total?: number, elapsed?: number) {

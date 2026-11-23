@@ -42,6 +42,10 @@ POLICY = {
     'exact': 'closed-form two-power exact-q branches per axis, all four branch pairs',
     'refinement': 'Nelder-Mead on (ln a, ln c) per objective, branch pair fixed',
     'near_match': 'only if no exact candidate: per-axis bounded overlap maximisation inside the guards',
+    'incidence_margin_deg': 1.0,
+    'chief_ray_margin': 'prescribed patches grown by 10 µm + 2 % when screening chief-ray obstruction',
+    'beam_clearance': ('fold-plane beam edges at 2.63 w (1e-6 power tail), 16 samples per segment, must miss the '
+                       'illuminated 2.63 w region of the reflector the segment does not end on'),
     'near_match_geometries': ('the 64 grid points closest to the 3w|κ| guard plus up to 32 without a real exact branch; '
                               'if none of these is feasible, further guard-limited points up to 256 trials'),
     'acceptance': 'unchanged external Adapter evaluation (geometry, domain, interception, aperture tail)',
@@ -59,6 +63,10 @@ OBJECTIVES = {
     'robust_alignment': ('worst_pose_mismatch_db', 'min', '정렬 공차'),
     'pareto_alternative': (None, None, 'Pareto 대안'),
 }
+INCIDENCE_MARGIN_DEG = 1.0  # room for the ±5 µm / ±1 mrad pose study to stay inside the 70° guard
+CLEARANCE_TAIL_FACTOR = math.sqrt(math.log(1e6) / 2)  # radius outside which a Gaussian carries < 1e-6 of its power (per axis)
+CLEARANCE_SAMPLES = 16
+POSE_PATCH_MARGIN = (10e-6, 0.02)  # m, fraction: chief-ray obstruction margin around each prescribed patch
 NEAR_MATCH_FIRST_TRIALS = 96
 NEAR_MATCH_MAX_TRIALS = 256
 LIMITS = ['Conceptual Geometry; prescribed aperture is not fabrication capability',
@@ -83,7 +91,9 @@ class Constraints:
 
     @property
     def min_cosine(self):
-        return max(MIN_COSINE, math.cos(math.radians(min(self.max_incidence_deg, 70.0))))
+        """Search limit: the tighter of the user and frozen limits, less a margin for the pose study."""
+        limit = min(self.max_incidence_deg, 70.0) - INCIDENCE_MARGIN_DEG
+        return max(MIN_COSINE, math.cos(math.radians(limit)))
 
 
 @dataclass
@@ -229,15 +239,42 @@ def build(ports, geometry, kappas_t, kappas_s, chains):
     return mirrors
 
 
-def intercepted(ports, vertices, lengths, mirrors):
-    """Same chief-ray patch-obstruction rule as the engine (solver.evaluate), applied while screening."""
+def intercepted(ports, vertices, lengths, mirrors, chains, lam_n):
+    """Reflector obstruction while screening.
+
+    The chief-ray rule is the engine's (solver.evaluate), applied to patches grown by a pose margin so
+    the ±5 µm / ±1 mrad pose study does not run into the same obstruction. In addition the beam itself must clear the
+    reflector a segment does not end on: the fold-plane edges of the segment's t-axis beam, at the
+    1e-6 power-tail radius and sampled along the segment, must miss that reflector's illuminated
+    region (its own beam's 1e-6 tail radius, smaller than the prescribed 4w aperture).
+    """
     points = [ports.source.position, *vertices, ports.target.position]
+    sagittal = ports.source.sagittal
+    grown = [Reflector(m.vertex, m.normal, m.curvatures,
+                       tuple(a * (1 + POSE_PATCH_MARGIN[1]) + POSE_PATCH_MARGIN[0] for a in m.half_aperture)) for m in mirrors]
     for (start, end), length in zip(zip(points, points[1:]), lengths):
         direction = unit(sub(end, start))
-        for mirror in mirrors:
-            if any(1e-10 < x < length - 1e-10 for x in patch_intersections(start, direction, mirror, ports.source.sagittal)):
-                return True
-    return False
+        for mirror in grown:
+            if any(1e-10 < x < length - 1e-10 for x in patch_intersections(start, direction, mirror, sagittal)):
+                return 'unintended reflector interception'
+    shrink = CLEARANCE_TAIL_FACTOR / APERTURE_FACTOR
+    lit = [Reflector(m.vertex, m.normal, m.curvatures, tuple(a * shrink for a in m.half_aperture)) for m in mirrors]
+    q_start = (ports.source.mode.q[0], chains[0]['q'] - lengths[2])  # t-axis q at the start of segments 0 and 2
+    for j, other, q0 in ((0, lit[1], q_start[0]), (2, lit[0], q_start[1])):
+        start, end = points[j], points[j + 1]
+        direction = unit(sub(end, start))
+        t_axis = unit(cross(sagittal, direction))
+        n = CLEARANCE_SAMPLES
+        z = [lengths[j] * k / n for k in range(n + 1)]
+        r = [CLEARANCE_TAIL_FACTOR * math.sqrt(-lam_n / (1 / (q0 + zk)).imag) for zk in z]
+        for sign in (1, -1):
+            for k in range(n):
+                a = add(add(start, mul(direction, z[k])), mul(t_axis, sign * r[k]))
+                b = add(add(start, mul(direction, z[k + 1])), mul(t_axis, sign * r[k + 1]))
+                span = norm(sub(b, a))
+                if any(1e-10 < x < span for x in patch_intersections(a, unit(sub(b, a)), other, sagittal)):
+                    return 'beam clips another reflector'
+    return None
 
 
 def evaluate_point(ports, constraints, a, c, lam_n, *, branch=None, kappas=None):
@@ -301,8 +338,9 @@ def evaluate_point(ports, constraints, a, c, lam_n, *, branch=None, kappas=None)
             point.status, point.reason = 'domain', 'Gaussian divergence exceeds 0.1 rad'
         else:
             mirrors = build(ports, geometry, kt, ks, chains)
-            if intercepted(ports, vertices, lengths, mirrors):
-                point.status, point.reason = 'geometry', 'unintended reflector interception'
+            obstruction = intercepted(ports, vertices, lengths, mirrors, chains, lam_n)
+            if obstruction:
+                point.status, point.reason = 'geometry', obstruction
             else:
                 violation = constraint_violation(ports, constraints, vertices, mirrors)
                 if violation:

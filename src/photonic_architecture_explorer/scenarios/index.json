@@ -112,9 +112,9 @@
     },
     {
       "id": "S2b-1550-glass-deep",
-      "title": "S2b · 수직 SMF → Glass 상면 → 깊게 매립한 IOX 가정 (0.3 mm)",
+      "title": "S2b · 수직 SMF → Glass 상면 → 깊게 매립한 IOX 가정 (0.3 mm, 2.0 mm)",
       "file": "S2b-1550-glass-deep.json",
-      "decision": "What burial depth would let the in-glass two-reflector family reach an IOX guide?",
+      "decision": "What burial depth and glass thickness would let the in-glass two-reflector family reach an IOX guide?",
       "expect": {
         "status": "Computed",
         "min_candidates": 3,

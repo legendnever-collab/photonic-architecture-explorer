@@ -105,6 +105,13 @@ class GlassDesignTest(unittest.TestCase):
         reasons = [v['reason'] for v in self.forward['search']['verification'] if v['status'] != 'Accepted']
         self.assertNotIn('geometry: unintended reflector interception', reasons)
 
+    def test_pose_study_runs_for_every_candidate(self):
+        """Incidence margin and obstruction margins keep the ±5 µm / ±1 mrad study inside the guards."""
+        for result in (self.forward, self.backward):
+            for candidate in result['candidates']:
+                self.assertIsNotNone(candidate['metrics']['worst_pose_mismatch_db'], candidate['id'])
+                self.assertLessEqual(max(candidate['metrics']['incidence_deg']), 70.0 - search.INCIDENCE_MARGIN_DEG + 1e-9)
+
     def test_source_crossing_prepends_the_air_gap(self):
         doc = load('S2a-1550-glass')
         crossing = self.forward['crossing']

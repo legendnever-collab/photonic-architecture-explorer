@@ -156,9 +156,10 @@ def design_guidance(report, ports, ambient_index, medium='ambient'):
     if constrained:
         out.append({'kind': 'constraints', 'values': constrained,
                     'message': f'탐색한 {search.get("grid_points", 0)}개 배치 중 {sum(constrained.values())}개가 '
-                               'Port 뒤 공간·Envelope·Keep-out 등 공간 제약으로 제외됐습니다.'})
+                               + ('Port 뒤 공간·Glass 영역·Envelope·Keep-out 등' if medium == 'block' else 'Port 뒤 공간·Envelope·Keep-out 등')
+                               + ' 공간 제약으로 제외됐습니다.'})
     region = {k: v for k, v in constrained.items() if 'block' in k}
-    if medium == 'block' and region:
+    if medium == 'block' and region and report.get('status') == 'Fail':
         out.append({'kind': 'block_region', 'values': region,
                     'message': f'{sum(region.values())}개 배치에서 반사면 Patch(Beam 반경의 {APERTURE_FACTOR:g}배 투영 Aperture)가 '
                                'Glass 상면이나 하면을 벗어났습니다. 두 반사면은 모두 Glass 안에 있어야 합니다. '

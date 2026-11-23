@@ -1,5 +1,5 @@
 import type { Store } from './state';
-import type { Candidate, PortName, Vec3 } from './types';
+import type { Candidate, MediumBlock, PortName, Vec3 } from './types';
 import { download, el, fmt, norm } from './util';
 import { constraintBoxes, niceScale, sceneExtent } from './viewer3d';
 
@@ -105,8 +105,13 @@ export class Drawings {
     const project = (p: Vec3): P2 => [p[a], p[b]];
 
     const boxes = constraintBoxes(state);
+    const block = state.doc.medium_block ?? null;
     const points: P2[] = [project(state.doc.ports.source.position_mm), project(state.doc.ports.target.position_mm),
       ...boxes.flatMap((b) => [project(b.min), project(b.max)])];
+    if (block) {
+      points.push(project(block.surface_point_mm));
+      if (block.thickness_mm) points.push(project(block.surface_point_mm.map((v, i) => v - block.surface_normal[i] * block.thickness_mm!) as Vec3));
+    }
     for (const c of candidates) {
       points.push(...c.scene.path.points_mm.map(project));
       for (const m of c.scene.mirrors) points.push(...m.surface_grid_mm.flat().map(project));
@@ -135,6 +140,7 @@ export class Drawings {
       ticks.append(svg('text', { x: X(u0) - 4, y: Y(v) + 3, 'text-anchor': 'end' }, fmt(v, step < 0.1 ? 2 : step < 1 ? 1 : 0)));
     }
     root.append(grid, ticks);
+    if (block) root.append(this.glassBand(block, a, b, [u0, u1, v0, v1], X, Y));
     root.append(svg('text', { x: W - 14, y: Y(v0) + 12, 'text-anchor': 'end', 'font-weight': 700, fill: '#57606a' }, `${spec.names[0]} →`));
     root.append(svg('text', { x: X(u0) - 4, y: 54, 'text-anchor': 'end', 'font-weight': 700, fill: '#57606a' }, `${spec.names[1]} ↑`));
 
@@ -177,6 +183,47 @@ export class Drawings {
     root.append(svg('text', { x: bx + (bar * s) / 2, y: by - 5, 'text-anchor': 'middle', 'font-size': 11, fill: '#1b2733' }, `${fmt(bar, bar < 1 ? 2 : 0)} mm`));
     if (!result) root.append(svg('text', { x: W - 12, y: 20, 'text-anchor': 'end', 'font-size': 12, fill: '#57606a' }, 'Design 전: Port만 표시'));
     return el('figure', { class: 'figure', 'data-view': view }, root);
+  }
+
+  /** Glass block as a hatched band when its normal lies in the view plane; otherwise only a note. */
+  private glassBand(block: MediumBlock, a: number, b: number, [u0, u1, v0, v1]: number[], X: (u: number) => number, Y: (v: number) => number) {
+    const group = svg('g', { 'data-kind': 'glass' });
+    const nu = block.surface_normal[a], nv = block.surface_normal[b];
+    const label = `${block.label || 'Glass'} · n ${block.index}${block.thickness_mm ? ` · t ${block.thickness_mm} mm` : ''}`;
+    if (Math.abs(nu) < 1e-9 && Math.abs(nv) < 1e-9) {
+      group.append(svg('text', { x: W - 12, y: 37, 'text-anchor': 'end', 'font-size': 12, fill: '#0a7ea4' }, `${label} (이 View에 수직인 면)`));
+      return group;
+    }
+    if (Math.abs(nu) > 1e-9 && Math.abs(nv) > 1e-9) {
+      group.append(svg('text', { x: W - 12, y: 37, 'text-anchor': 'end', 'font-size': 12, fill: '#0a7ea4' }, `${label} (기울어진 면: 3D에서 확인)`));
+      return group;
+    }
+    const alongU = Math.abs(nu) > 0;
+    const sign = alongU ? Math.sign(nu) : Math.sign(nv);
+    const top = block.surface_point_mm[alongU ? a : b];
+    const far = alongU ? (sign > 0 ? u0 : u1) : (sign > 0 ? v0 : v1);
+    const bottom = block.thickness_mm ? top - sign * block.thickness_mm : far;
+    const [lo, hi] = [Math.min(top, bottom), Math.max(top, bottom)];
+    const id = `hatch-${Math.random().toString(36).slice(2, 8)}`;
+    const pattern = svg('pattern', { id, width: 8, height: 8, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' });
+    pattern.append(svg('line', { x1: 0, y1: 0, x2: 0, y2: 8, stroke: '#0a7ea4', 'stroke-width': 1, 'stroke-opacity': 0.35 }));
+    const defs = svg('defs');
+    defs.append(pattern);
+    group.append(defs);
+    const rect = alongU
+      ? { x: X(Math.max(lo, u0)), y: Y(v1), width: (Math.min(hi, u1) - Math.max(lo, u0)) * (X(1) - X(0)), height: Y(v0) - Y(v1) }
+      : { x: X(u0), y: Y(Math.min(hi, v1)), width: X(u1) - X(u0), height: (Math.min(hi, v1) - Math.max(lo, v0)) * (Y(0) - Y(1)) };
+    group.append(svg('rect', { ...rect, fill: '#0a7ea4', 'fill-opacity': 0.06 }), svg('rect', { ...rect, fill: `url(#${id})` }));
+    const line = alongU ? { x1: X(top), y1: Y(v0), x2: X(top), y2: Y(v1) } : { x1: X(u0), y1: Y(top), x2: X(u1), y2: Y(top) };
+    group.append(svg('line', { ...line, stroke: '#0a7ea4', 'stroke-width': 1.4, 'data-kind': 'glass-surface', 'data-mm': top }));
+    if (block.thickness_mm) {
+      const base = alongU ? { x1: X(bottom), y1: Y(v0), x2: X(bottom), y2: Y(v1) } : { x1: X(u0), y1: Y(bottom), x2: X(u1), y2: Y(bottom) };
+      group.append(svg('line', { ...base, stroke: '#0a7ea4', 'stroke-width': 1, 'stroke-dasharray': '5 3' }));
+    }
+    const tx = alongU ? X(top) + 4 : X(u1) - 4;
+    const ty = alongU ? Y(v0) - 6 : sign > 0 ? Y(Math.max(lo, v0)) - 6 : Y(Math.min(hi, v1)) + 14;
+    group.append(svg('text', { x: tx, y: ty, 'text-anchor': alongU ? 'start' : 'end', 'font-size': 12, fill: '#0a7ea4' }, label));
+    return group;
   }
 
   private path(c: Candidate, project: (p: Vec3) => P2, xy: (p: P2) => string, selected: boolean) {
@@ -305,6 +352,8 @@ export class Drawings {
     const x0 = 64, x1 = W - 24, yc = H / 2 + 14, half = (H - 120) / 2;
     const X = (d: number) => x0 + (d / total) * (x1 - x0);
     const Y = (r: number) => yc - (r / rmax) * half;
+    const bands = svg('g', { 'data-kind': 'fold-bands' });
+    root.append(bands);
     const step = niceStep(total);
     const ticks = svg('g', { 'font-size': 11, fill: '#8c959f' });
     for (let d = 0; d <= total + 1e-12; d += step) {
@@ -320,14 +369,23 @@ export class Drawings {
     for (const [key, dash] of [['radius_t_um', ''], ['radius_s_um', '5 3']] as const) for (const sign of [1, -1]) {
       root.append(svg('polyline', { points: samples.map((s) => `${X(s.distance_mm).toFixed(2)},${Y(sign * s[key]).toFixed(2)}`).join(' '), fill: 'none', stroke: '#b42318', 'stroke-width': 1.4, 'stroke-dasharray': dash }));
     }
-    let travelled = 0;
-    selected.scene.path.segments.forEach((segment, j) => {
+    let travelled = 0, labelled = 0;
+    const segments = selected.scene.path.segments;
+    segments.forEach((segment, j) => {
+      const start = travelled;
       travelled += segment.length_mm;
-      const mirror = selected.scene.mirrors[j];
+      if (segment.medium === 'ambient') {
+        bands.append(svg('rect', { x: X(start), y: yc - half, width: X(travelled) - X(start), height: 2 * half, fill: '#eef6fa', 'data-kind': 'fold-ambient' }));
+        const at = j === 0 ? travelled : start;
+        root.append(svg('line', { x1: X(at), y1: yc - half, x2: X(at), y2: yc + half, stroke: '#0a7ea4', 'stroke-width': 1.2, 'stroke-dasharray': '4 2', 'data-kind': 'fold-surface', 'data-distance-mm': at }));
+        root.append(svg('text', { x: X(at) + (j === 0 ? 4 : -4), y: yc + half - 6, 'text-anchor': j === 0 ? 'start' : 'end', 'font-size': 12, fill: '#0a7ea4' }, 'Glass 상면'));
+      }
+      const end = segment.end_mm;
+      const mirror = selected.scene.mirrors.find((m) => m.vertex_mm.every((v, i) => Math.abs(v - end[i]) < 1e-9));
       if (!mirror) return;
       const roc = mirror.radius_of_curvature_ts_mm.map((r) => (r === null ? '∞' : fmt(r, 2))).join(' / ');
       root.append(svg('line', { x1: X(travelled), y1: yc - half, x2: X(travelled), y2: yc + half, stroke: '#1b2733', 'stroke-width': 1.2, 'data-kind': 'fold-mirror', 'data-id': mirror.id, 'data-distance-mm': travelled }));
-      root.append(svg('text', { x: X(travelled) + 4, y: yc - half + 14 + 16 * j, 'font-size': 12, fill: '#1b2733' }, `${mirror.id} · R ${roc} mm`));
+      root.append(svg('text', { x: X(travelled) + 4, y: yc - half + 14 + 16 * labelled++, 'font-size': 12, fill: '#1b2733' }, `${mirror.id} · R ${roc} mm`));
     });
     const first = samples[0], last = samples[samples.length - 1];
     root.append(svg('text', { x: x0, y: yc + half + 30, 'font-size': 12, fill: PORT_COLOR.source }, `Source w ${fmt(first.radius_t_um, 2)} / ${fmt(first.radius_s_um, 2)} µm`));
@@ -341,8 +399,8 @@ const MAP_LEGEND: [string, string][] = [
   ['#fb8f44', 'Exact 해, 3w·|κ| 한계 근처 초과'],
   ['#fff1e5', 'Exact 해, 3w·|κ| 크게 초과'],
   ['#d8b9ff', '발산각 Guard 초과'],
-  ['#c9d1d9', 'Port 뒤 공간·Envelope·Keep-out 제약'],
-  ['#eaeef2', '입사각 한계·짧은 구간'],
+  ['#c9d1d9', 'Port 뒤 공간·Envelope·Keep-out·Glass 영역 제약'],
+  ['#eaeef2', '입사각 한계·짧은 구간·반사면 가림'],
   ['#f6f8fa', '실수 Exact-q 해 없음'],
 ];
 

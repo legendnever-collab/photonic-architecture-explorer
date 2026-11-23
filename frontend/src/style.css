@@ -96,3 +96,8 @@ details ul { margin: 6px 0 0; padding-left: 18px; color: var(--muted); font-size
 .scene-label.keepout-label { color: #d1242f; }
 .drawings.single .figure { max-width: 980px; }
 .grid-table td:nth-child(3) { min-width: 64px; }
+
+.scene-label.glass-label { color: #0a7ea4; }
+.field .pair { display: grid; grid-template-columns: 110px 1fr; gap: 4px; }
+.card .media { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0; }
+.card .media .chip { background: #eef6fa; color: #0a5a75; }

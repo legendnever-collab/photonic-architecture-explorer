@@ -3,10 +3,10 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js';
 import { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 import { clone, type AppState, type Store } from './state';
-import type { Candidate, PortName, PortScene, Vec3 } from './types';
+import type { Candidate, MediumBlock, PortName, PortScene, Vec3 } from './types';
 import { cross, el, fmt, unit } from './util';
 
-const COLOR = { source: 0x1f6feb, target: 0xd9480f, path: 0xb42318, beam: 0xe5484d, mirror: 0x8b95a1, faint: 0x9aa5b1 };
+const COLOR = { source: 0x1f6feb, target: 0xd9480f, path: 0xb42318, beam: 0xe5484d, mirror: 0x8b95a1, faint: 0x9aa5b1, glass: 0x0a7ea4 };
 const v3 = (p: Vec3) => new THREE.Vector3(p[0], p[1], p[2]);
 
 /** Choose a display magnification so beam radii are visible next to mm-scale geometry. */
@@ -182,6 +182,7 @@ export class Viewer3D {
         this.world.add(group);
       }
       for (const box of constraintBoxes(state)) this.world.add(this.box(box));
+      if (state.doc.medium_block) this.world.add(this.glass(state.doc.medium_block, extent));
       const selected = this.store.selectedCandidate;
       for (const c of candidates) this.world.add(this.candidate(c, c.id === selected?.id));
       if (activeName && this.ports[activeName]) this.gizmo!.attach(this.ports[activeName]!);
@@ -241,6 +242,27 @@ export class Viewer3D {
     edges.position.copy(center);
     if (!keepout) edges.computeLineDistances();
     group.add(edges, this.label(box.label, v3(box.max), keepout ? 'scene-label keepout-label' : 'axis-label'));
+    return group;
+  }
+
+  /** Glass block drawn as a translucent slab around the scene; a block without bottom is drawn one scene size deep. */
+  private glass(block: MediumBlock, extent: { center: Vec3; size: number }) {
+    const group = new THREE.Group();
+    const n = v3(block.surface_normal).normalize();
+    const thickness = block.thickness_mm ?? extent.size;
+    const width = extent.size * 1.3;
+    const geometry = new THREE.BoxGeometry(width, width, thickness);
+    const orient = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), n);
+    const surface = v3(block.surface_point_mm);
+    const center = v3(extent.center);
+    const onSurface = center.clone().addScaledVector(n, -center.clone().sub(surface).dot(n));
+    const position = onSurface.addScaledVector(n, -thickness / 2);
+    const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color: COLOR.glass, transparent: true, opacity: 0.1, depthWrite: false, side: THREE.DoubleSide }));
+    const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geometry), new THREE.LineBasicMaterial({ color: COLOR.glass, transparent: true, opacity: 0.6 }));
+    for (const object of [mesh, edges]) { object.quaternion.copy(orient); object.position.copy(position); }
+    mesh.userData.kind = 'glass';
+    const corner = position.clone().addScaledVector(n, thickness / 2);
+    group.add(mesh, edges, this.label(`${block.label || 'Glass'} · n ${block.index}${block.thickness_mm ? ` · t ${block.thickness_mm} mm` : ''}`, corner, 'scene-label glass-label'));
     return group;
   }
 
@@ -318,7 +340,7 @@ export class Viewer3D {
       group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(border.map(v3)), new THREE.LineBasicMaterial({ color: 0x57606a, transparent: !selected, opacity })));
       if (selected) {
         const roc = mirror.radius_of_curvature_ts_mm.map((r) => (r === null ? '∞' : fmt(r, 2))).join(' / ');
-        group.add(this.label(`${mirror.id} · R ${roc} mm · ${fmt(mirror.incidence_deg, 1)}°`, v3(mirror.vertex_mm).addScaledVector(v3(mirror.normal), mirror.half_aperture_ts_mm[0] * 1.6)));
+        group.add(this.label(`${mirror.id} · R ${roc} mm · ${fmt(mirror.incidence_deg, 1)}°${mirror.tir_possible === undefined ? '' : mirror.tir_possible ? ' · TIR 가능' : ' · 반사 Coating 필요'}`, v3(mirror.vertex_mm).addScaledVector(v3(mirror.normal), mirror.half_aperture_ts_mm[0] * 1.6)));
       }
     }
     if (selected) group.add(this.beamTube(c));
