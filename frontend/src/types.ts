@@ -18,6 +18,18 @@ export interface PortSpec {
 
 export type PortName = 'source' | 'target';
 
+export interface BoxMm { label?: string; min: Vec3; max: Vec3 }
+
+export interface Constraints {
+  port_body_halfspace?: boolean;
+  envelope_mm?: BoxMm | null;
+  keepouts_mm?: BoxMm[];
+  clearance_um?: number;
+  max_incidence_deg?: number;
+  min_radius_of_curvature_mm?: number | null;
+  source?: string;
+}
+
 export interface DesignDocument {
   schema: 'pae.design/1';
   title: string;
@@ -26,6 +38,7 @@ export interface DesignDocument {
   wavelength_nm: number;
   ambient_index: number;
   ports: Record<PortName, PortSpec>;
+  constraints?: Constraints;
 }
 
 export interface Preset {
@@ -98,7 +111,13 @@ export interface Candidate {
   id: string;
   rank: number;
   role: string | null;
+  roles: string[];
+  role_labels: string[];
+  family: 'exact' | 'near_match';
+  parameters_mm: { a?: number; b?: number; c?: number };
   metrics: {
+    max_abs_curvature_per_m: number | null;
+    worst_pose_mismatch_db: number | null;
     total_path_mm: number;
     normalized_mode_overlap: number | null;
     mode_mismatch_db: number | null;
@@ -114,6 +133,16 @@ export interface Candidate {
 
 export interface Issue { path: string; message: string }
 
+export interface Guidance { kind: string; phase?: string; port?: string; message: string; values?: Record<string, unknown> }
+
+export interface SearchMap {
+  a_mm: number[];
+  c_mm: number[];
+  cells: { status: string; reason: string; slope: number | null; path_m: number | null }[];
+  near_match: { a_mm: number; c_mm: number; eta: number }[];
+  slope_limit: number;
+}
+
 export interface Result {
   schema: 'pae.result/1';
   status: 'Computed' | 'Fail' | 'Uncomputed' | 'Invalid' | 'Preview';
@@ -124,7 +153,13 @@ export interface Result {
   selected_candidate_id?: string | null;
   ports: { frame_id: string; ports: PortScene[] } | null;
   candidates: Candidate[];
-  search?: { status?: string; reason?: string; accepted_count?: number; geometry_count?: number; rejection_counts?: Record<string, number> };
+  family?: 'exact' | 'near_match' | null;
+  guidance?: Guidance[];
+  search?: {
+    status?: string; reason?: string; grid_points?: number; exact_feasible?: number; near_match_feasible?: number;
+    screening_counts?: Record<string, number>; elapsed_seconds?: number; policy?: string; map?: SearchMap | null;
+    closest_exact?: { a_m: number; c_m: number; max_footprint_slope: number; limit: number } | null;
+  };
   limitations?: string[];
   uncomputed?: string[];
 }

@@ -3,6 +3,22 @@
 새 항목을 위에 추가한다. 항목당 10줄 이내: 새로 가능해진 설계 판단, 주요 기술 선택, 남은 한계.
 2026-11-24 이전의 Milestone 기록(M1~M7-R28)은 [history/](history/)에 있다.
 
+## 2026-11-24 · P2 후보 생성 v2 (`phase/p2-candidate-search`)
+
+- **가능해진 판단**: 최우선 시나리오 S2a·S2b(SMF → LDW/IOX)에서 서로 다른 후보 3개씩을 비교할 수 있다. S2a-1550은 Exact 3개,
+  S2a-1310·S2b는 Guard 안 Near-match 3개(η 0.981~0.995)다. "Exact 해가 Guard를 얼마나 넘는지"(3w·|κ| ≥ 0.166, 0.175)도
+  수치로 보여서, Glass 내부 배치(P3)가 왜 다음 과제인지 근거가 생겼다.
+- **원리**: 두 동일평면 반사면은 a(Source→M1), c(M2→Target) 두 길이만 자유롭다. 고정 8×8 대신 (a, c)를 64×64 로그 격자로
+  전부 훑고(닫힌 형식 q 계산, 축별 Exact 가지 4쌍), 목표별 Nelder–Mead로 다듬는다. Exact가 없을 때만 축별 L-BFGS-B로
+  Guard 안 Overlap을 최대화한다. 채택은 항상 기존 Adapter(`evaluate_external`)가 결정한다. 계산 시간은 시나리오당 0.2~1.1 s다.
+- **순위**: 최단 광경로, Guard 여유, 작은 Beam, 완만한 곡률(최대 |κ|), 정렬 공차(반사면 ±5 µm·±1 mrad 최악 손실), 최대 Overlap.
+  같은 후보가 여러 목표에서 최선이면 역할을 합쳐 표시하고, 3개가 안 되면 "Pareto 대안"으로 채운다.
+- **제약**: Port 본체 반공간(기본 켬), Package Envelope, Keep-out과 여유, 최대 입사각(≤ 70°), 최소 곡률반경. Envelope·Keep-out은
+  엔진 Package 검사에도 전달되어 독립적으로 다시 확인된다. Frozen Guard는 완화하지 않았다.
+- **화면**: 제약 입력 카드, 3D·2D의 Envelope·Keep-out 표시, (a, c) 탐색 지도, 후보 종류·역할·정렬 민감도 열, 해석과 다음 단계 안내.
+- **한계**: 정렬 민감도는 주광선 Pointing만 반영한다(q 변화 제외). Near-match는 Guard 경계(3w·|κ| = 0.15)에 붙는다.
+  `pae-design` CLI는 기존 M5-A 정책을 회귀 기준으로 유지한다.
+
 ## 2026-11-24 · P1 3D/2D 시각 Workspace (`phase/p1-visual-workspace`)
 
 - **가능해진 판단**: Port를 표나 3D Gizmo로 배치하면서 Guard를 바로 확인하고, 후보를 3D(반사면 Sag·Beam 튜브)와

@@ -23,6 +23,7 @@ export function niceScale(extentMm: number, maxRadiusUm: number): number {
 export function sceneExtent(state: AppState, candidates: Candidate[]): { center: Vec3; size: number; maxRadiusUm: number } {
   const points: Vec3[] = [state.doc.ports.source.position_mm, state.doc.ports.target.position_mm];
   let maxRadiusUm = Math.max(...state.doc.ports.source.mfd_um, ...state.doc.ports.target.mfd_um) / 2;
+  for (const box of constraintBoxes(state)) points.push(box.min, box.max);
   for (const c of candidates) {
     points.push(...c.scene.path.points_mm);
     for (const s of c.scene.beam.samples) maxRadiusUm = Math.max(maxRadiusUm, s.radius_t_um, s.radius_s_um);
@@ -31,6 +32,18 @@ export function sceneExtent(state: AppState, candidates: Candidate[]): { center:
   const hi = [0, 1, 2].map((i) => Math.max(...points.map((p) => p[i])));
   const size = Math.max(Math.hypot(hi[0] - lo[0], hi[1] - lo[1], hi[2] - lo[2]), 0.5);
   return { center: [0, 1, 2].map((i) => (lo[i] + hi[i]) / 2) as Vec3, size, maxRadiusUm };
+}
+
+export interface DrawBox { kind: 'envelope' | 'keepout'; label: string; min: Vec3; max: Vec3 }
+
+/** Envelope and keep-out boxes from the Design Document constraints (mm). */
+export function constraintBoxes(state: AppState): DrawBox[] {
+  const c = state.doc?.constraints;
+  if (!c) return [];
+  const out: DrawBox[] = [];
+  if (c.envelope_mm) out.push({ kind: 'envelope', label: 'Envelope', min: c.envelope_mm.min, max: c.envelope_mm.max });
+  (c.keepouts_mm ?? []).forEach((k, i) => out.push({ kind: 'keepout', label: k.label || `Keep-out ${i + 1}`, min: k.min, max: k.max }));
+  return out;
 }
 
 export class Viewer3D {
@@ -168,6 +181,7 @@ export class Viewer3D {
         this.ports[name] = group;
         this.world.add(group);
       }
+      for (const box of constraintBoxes(state)) this.world.add(this.box(box));
       const selected = this.store.selectedCandidate;
       for (const c of candidates) this.world.add(this.candidate(c, c.id === selected?.id));
       if (activeName && this.ports[activeName]) this.gizmo!.attach(this.ports[activeName]!);
@@ -208,6 +222,25 @@ export class Viewer3D {
     }
     const ruler = this.label(`격자 ${fmt(step, step < 1 ? 3 : 1)} mm`, v3([grid.position.x - (cells * step) / 2, grid.position.y - (cells * step) / 2, 0]), 'axis-label');
     group.add(ruler);
+    return group;
+  }
+
+  private box(box: DrawBox) {
+    const group = new THREE.Group();
+    const size = v3(box.max).sub(v3(box.min));
+    const center = v3(box.min).add(v3(box.max)).multiplyScalar(0.5);
+    const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
+    const keepout = box.kind === 'keepout';
+    if (keepout) {
+      const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color: 0xd1242f, transparent: true, opacity: 0.12, depthWrite: false }));
+      mesh.position.copy(center);
+      group.add(mesh);
+    }
+    const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geometry),
+      keepout ? new THREE.LineBasicMaterial({ color: 0xd1242f }) : new THREE.LineDashedMaterial({ color: 0x57606a, dashSize: size.length() / 60, gapSize: size.length() / 90 }));
+    edges.position.copy(center);
+    if (!keepout) edges.computeLineDistances();
+    group.add(edges, this.label(box.label, v3(box.max), keepout ? 'scene-label keepout-label' : 'axis-label'));
     return group;
   }
 

@@ -1,6 +1,6 @@
 import type { Store } from './state';
 import type { Candidate, Result } from './types';
-import { ROLE_LABEL, STATUS_LABEL, el, fmt, nextStep, reasonLabel } from './util';
+import { STATUS_LABEL, el, fmt, nextStep, reasonLabel } from './util';
 
 const STATUS_TEXT: Record<string, string> = {
   Computed: '후보 생성', Fail: '후보 없음', Uncomputed: '미계산', Invalid: '입력 오류', Preview: 'Preview',
@@ -33,8 +33,9 @@ export class ResultsPanel {
       this.root.append(this.table(current.candidates));
       const selected = this.store.selectedCandidate;
       if (selected) this.root.append(this.detail(selected));
-    } else if (current.search?.rejection_counts) {
-      this.root.append(this.rejections(current.search.rejection_counts, current.search.geometry_count));
+    }
+    if (current.search?.screening_counts) {
+      this.root.append(this.rejections(current.search.screening_counts, current.search.grid_points, current.search.elapsed_seconds));
     }
     this.root.append(this.limits(current));
   }
@@ -43,8 +44,15 @@ export class ResultsPanel {
     const card = el('section', { class: 'card', 'data-result-status': result.status },
       el('div', { class: 'card-head' }, el('h3', {}, '결과'), el('span', { class: `status ${result.status}` }, `${result.status} · ${STATUS_TEXT[result.status] ?? ''}`)),
       el('div', {}, reasonLabel(result.reason)));
-    const step = nextStep(result.reason);
-    if (step) card.append(el('div', { class: 'next' }, el('strong', {}, '다음 단계 '), step));
+    const guidance = result.guidance ?? [];
+    if (guidance.length) {
+      card.append(el('div', { class: 'next' }, el('strong', {}, '해석과 다음 단계'),
+        el('ul', { class: 'guidance' }, ...guidance.map((g) => el('li', { 'data-guidance': g.kind },
+          ...(g.phase ? [el('span', { class: 'phase' }, `[${g.phase}] `)] : []), g.message)))));
+    } else {
+      const step = nextStep(result.reason);
+      if (step) card.append(el('div', { class: 'next' }, el('strong', {}, '다음 단계 '), step));
+    }
     for (const issue of result.issues ?? []) card.append(el('div', { class: 'issue' }, `${issue.path}: ${issue.message}`));
     card.append(el('div', { class: 'muted mono' }, `입력 SHA-256 ${result.document_sha256?.slice(0, 16) ?? '—'}…`));
     return card;
@@ -52,19 +60,27 @@ export class ResultsPanel {
 
   private table(candidates: Candidate[]) {
     const selected = this.store.selectedCandidate;
-    const head = el('tr', {}, ...['#', '후보', '역할', '광경로 [mm]', 'η', '입사각 M1/M2 [°]', '3w·|κ| / 0.15'].map((h) => el('th', {}, h)));
+    const head = el('tr', {}, ...['#', '종류', '역할', '광경로 [mm]', 'η', '3w·|κ|', '정렬 민감도 [dB]', '최소 R [mm]'].map((h) => el('th', {}, h)));
     const rows = candidates.map((c) => {
-      const row = el('tr', { class: c.id === selected?.id ? 'selected' : '', 'data-candidate': c.id },
-        el('td', {}, String(c.rank)), el('td', { class: 'mono' }, c.id), el('td', {}, ROLE_LABEL[c.role ?? ''] ?? c.role ?? ''),
-        el('td', {}, fmt(c.metrics.total_path_mm, 3)), el('td', {}, fmt(c.metrics.normalized_mode_overlap, 6)),
-        el('td', {}, c.metrics.incidence_deg.map((a) => fmt(a, 1)).join(' / ')),
-        el('td', {}, fmt(c.metrics.max_3w_footprint_curvature, 3)));
+      const kmax = c.metrics.max_abs_curvature_per_m;
+      const row = el('tr', { class: c.id === selected?.id ? 'selected' : '', 'data-candidate': c.id, title: c.id },
+        el('td', {}, String(c.rank)),
+        el('td', {}, el('span', { class: `family ${c.family}` }, c.family === 'exact' ? 'Exact' : 'Near-match')),
+        el('td', {}, c.role_labels.join(' · ')),
+        el('td', {}, fmt(c.metrics.total_path_mm, 3)), el('td', {}, fmt(c.metrics.normalized_mode_overlap, 4)),
+        el('td', {}, fmt(c.metrics.max_3w_footprint_curvature, 3)),
+        el('td', {}, fmt(c.metrics.worst_pose_mismatch_db, 2)),
+        el('td', {}, kmax ? fmt(1000 / kmax, 2) : '∞'));
       row.addEventListener('click', () => this.store.set({ selected: c.id }));
       return row;
     });
+    const near = candidates.some((c) => c.family === 'near_match');
     return el('section', { class: 'card' }, el('h3', {}, `후보 비교 (${candidates.length})`),
       el('table', { class: 'grid-table' }, el('thead', {}, head), el('tbody', {}, ...rows)),
-      el('div', { class: 'muted' }, 'η는 Scalar Paraxial Normalized Mode Overlap입니다. 현재 후보는 Exact-q 해라 모두 1에 가깝고, 실제 구분은 광경로·Beam 크기·모델 여유로 합니다(P2에서 공차·제작성 기준 추가).'));
+      el('div', { class: 'muted' }, near
+        ? 'Near-match는 Frozen Guard 안에서 Overlap을 최대로 한 배치입니다(η < 1). '
+        : 'Exact는 두 축 모두 q가 정확히 맞는 배치입니다(η = 1). ',
+        'η는 Scalar Paraxial Normalized Mode Overlap이며 Total Coupling이 아닙니다. 정렬 민감도는 반사면 하나씩 ±5 µm·±1 mrad 오차를 줬을 때의 최악 Gaussian 손실이고, 3w·|κ| 한계는 0.15입니다.'));
   }
 
   private detail(c: Candidate) {
@@ -81,12 +97,15 @@ export class ResultsPanel {
       el('div', { class: 'muted' }, `총 광경로 ${fmt(c.metrics.total_path_mm, 4)} mm · 최대 투영 Beam 반경 ${fmt(c.metrics.max_projected_beam_radius_um, 2)} µm · Mode mismatch ${fmt(c.metrics.mode_mismatch_db, 4)} dB`));
   }
 
-  private rejections(counts: Record<string, number>, geometryCount?: number) {
-    const total = Object.values(counts).reduce((a, b) => a + b, 0);
-    const rows = Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([reason, n]) => el('tr', {},
-      el('td', {}, reasonLabel(reason.split(': ').slice(1).join(': ')) || reason), el('td', {}, String(n)), el('td', {}, `${fmt((100 * n) / total, 0)}%`)));
-    return el('section', { class: 'card', 'data-rejections': '' }, el('h3', {}, `거절 사유 분포 (시도 ${total}${geometryCount ? ` · Geometry ${geometryCount}` : ''})`),
-      el('table', { class: 'grid-table' }, el('thead', {}, el('tr', {}, el('th', {}, '사유'), el('th', {}, '개수'), el('th', {}, '비율'))), el('tbody', {}, ...rows)));
+  private rejections(counts: Record<string, number>, total?: number, elapsed?: number) {
+    const sum = total ?? Object.values(counts).reduce((a, b) => a + b, 0);
+    const rows = Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([key, n]) => el('tr', {},
+      el('td', {}, key === 'ok' ? 'Exact 해, 모든 Guard·제약 통과' : reasonLabel(key.split(': ').slice(1).join(': ')) || key),
+      el('td', {}, String(n)), el('td', {}, `${fmt((100 * n) / sum, 1)}%`)));
+    return el('details', { class: 'card', 'data-rejections': '' },
+      el('summary', {}, `탐색 결과 분포 (${sum}개 배치${elapsed !== undefined ? ` · ${fmt(elapsed, 1)} s` : ''})`),
+      el('table', { class: 'grid-table' }, el('thead', {}, el('tr', {}, el('th', {}, '판정'), el('th', {}, '개수'), el('th', {}, '비율'))), el('tbody', {}, ...rows)),
+      el('div', { class: 'muted' }, '두 반사면 배치는 a(Source→M1)와 c(M2→Target) 두 길이로 정해집니다. 아래 "탐색 지도"에서 위치별 판정을 볼 수 있습니다.'));
   }
 
   private limits(result: Result) {

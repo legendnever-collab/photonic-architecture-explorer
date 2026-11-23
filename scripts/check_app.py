@@ -155,13 +155,58 @@ def main():
         summary['stale_hidden'] = True
         page.screenshot(path=str(out / 'p1_stale.png'))
 
-        for scenario, reason in (('S2b-1550', '고정 Exact-q'), ('S3', '발산각')):
-            load_scenario(page, scenario)
-            status = design(page)
-            text = page.inner_text('[data-result-status]')
-            summary[f'{scenario}_status'] = status
-            check(status == 'Fail' and reason in text and '다음 단계' in text, f'{scenario} failure view: {status} {text[:80]}', failures)
-            page.screenshot(path=str(out / f'p1_{scenario}.png'))
+        load_scenario(page, 'S2b-1550')
+        status = design(page)
+        text = page.inner_text('[data-result-status]')
+        summary['S2b-1550_status'] = status
+        check(status == 'Computed' and 'Near-match' in text and page.locator('[data-guidance="exact_outside_guard"]').count() == 1,
+              f'S2b near-match view: {status} {text[:120]}', failures)
+        check(page.locator('.family.near_match').count() >= 3, 'S2b near-match candidates not labelled', failures)
+        page.screenshot(path=str(out / 'p2_S2b-1550.png'))
+        page.click('.tab[data-view="map"]')
+        page.wait_for_timeout(300)
+        gate = page.evaluate("""() => {
+          const res = window.__paeStore.state.result;
+          let worst = 0, count = 0;
+          for (const c of res.candidates) {
+            const mark = document.querySelector(`[data-kind="map-candidate"][data-id="${c.id}"]`);
+            worst = Math.max(worst, Math.abs(Number(mark.dataset.aMm) - c.parameters_mm.a), Math.abs(Number(mark.dataset.cMm) - c.parameters_mm.c));
+            count++;
+          }
+          return {worst, count, cells: document.querySelectorAll('[data-kind="map-cells"] rect').length};
+        }""")
+        summary['map_gate'] = gate
+        check(gate['count'] >= 3 and gate['worst'] <= NM and gate['cells'] == 64 * 64, f'map view: {gate}', failures)
+        page.screenshot(path=str(out / 'p2_S2b_map.png'))
+        page.click('.tab[data-view="auto"]')
+
+        load_scenario(page, 'S2a-1550')
+        page.click('[data-action="add-keepout"]')
+        page.wait_for_function("(window.__paeStore.state.doc.constraints?.keepouts_mm || []).length === 1", timeout=10000)
+        status = design(page)
+        summary['S2a-1550_keepout_status'] = status
+        check(page.locator('[data-kind="keepout"]').count() >= 1, 'keep-out box not drawn in 2D', failures)
+        hits = page.evaluate("""() => {
+          const doc = window.__paeStore.state.doc, k = doc.constraints.keepouts_mm[0];
+          const hit = (p, q) => { let lo = 0, hi = 1;
+            for (let i = 0; i < 3; i++) { const d = q[i] - p[i];
+              if (Math.abs(d) < 1e-15) { if (p[i] < k.min[i] || p[i] > k.max[i]) return false; continue; }
+              let t0 = (k.min[i] - p[i]) / d, t1 = (k.max[i] - p[i]) / d; if (t0 > t1) [t0, t1] = [t1, t0];
+              lo = Math.max(lo, t0); hi = Math.min(hi, t1); if (lo > hi) return false; }
+            return true; };
+          return window.__paeStore.state.result.candidates.map(c => c.scene.path.points_mm)
+            .some(pts => pts.slice(1).some((q, i) => hit(pts[i], q)));
+        }""")
+        check(status in ('Computed', 'Fail') and not hits, f'keep-out violated or bad status: {status} {hits}', failures)
+        page.screenshot(path=str(out / 'p2_S2a_keepout.png'))
+
+        load_scenario(page, 'S3')
+        status = design(page)
+        text = page.inner_text('[data-result-status]')
+        summary['S3_status'] = status
+        check(status == 'Fail' and '발산각' in text and page.locator('[data-guidance="port_divergence"]').count() >= 1,
+              f'S3 failure view: {status} {text[:80]}', failures)
+        page.screenshot(path=str(out / 'p1_S3.png'))
         check(page.locator('[data-guard="source"].fail').count() == 1, 'S3 source guard not shown as Fail', failures)
         check(not errors, f'page errors: {errors}', failures)
         summary['page_errors'] = errors

@@ -146,6 +146,8 @@ class ScenarioTest(unittest.TestCase):
                 self.assertEqual(result['status'], expect['status'])
                 self.assertGreaterEqual(len(result['candidates']), expect.get('min_candidates', 0))
                 self.assertIn(expect.get('reason_contains', ''), result['reason'] or '')
+                if 'family' in expect:
+                    self.assertEqual(result['family'], expect['family'])
                 self.assertIn('phase', expect['target'])
 
     def test_fixtures_match_their_generator(self):

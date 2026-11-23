@@ -92,7 +92,84 @@ def validate_document(document):
                     or not isinstance(record.get('source'), str) or not record['source'].strip()):
                 issues.append({'path': f'{path}.evidence.{key}',
                                'message': f'provenance({", ".join(sorted(PROVENANCE - {"unprovided"}))})와 source가 필요합니다'})
+    issues += validate_constraints(document.get('constraints'))
     return issues
+
+
+def _box(issues, node, path):
+    if not isinstance(node, dict):
+        issues.append({'path': path, 'message': 'min/max 3-벡터가 필요합니다'})
+        return
+    lo, hi = node.get('min'), node.get('max')
+    if not (isinstance(lo, list) and isinstance(hi, list) and len(lo) == 3 and len(hi) == 3
+            and all(_finite(v) for v in lo + hi)):
+        issues.append({'path': path, 'message': 'min/max 3-벡터가 필요합니다'})
+    elif any(a >= b for a, b in zip(lo, hi)):
+        issues.append({'path': path, 'message': '각 축에서 min < max 이어야 합니다'})
+
+
+def validate_constraints(constraints):
+    """Optional user constraints; they may only tighten the frozen guards."""
+    if constraints is None:
+        return []
+    issues = []
+    if not isinstance(constraints, dict):
+        return [{'path': 'constraints', 'message': 'object가 필요합니다'}]
+    unknown = set(constraints) - {'port_body_halfspace', 'envelope_mm', 'keepouts_mm', 'clearance_um',
+                                  'max_incidence_deg', 'min_radius_of_curvature_mm', 'source'}
+    if unknown:
+        issues.append({'path': 'constraints', 'message': f'알 수 없는 항목: {", ".join(sorted(unknown))}'})
+    if not isinstance(constraints.get('port_body_halfspace', True), bool):
+        issues.append({'path': 'constraints.port_body_halfspace', 'message': 'true/false가 필요합니다'})
+    if constraints.get('envelope_mm') is not None:
+        _box(issues, constraints['envelope_mm'], 'constraints.envelope_mm')
+    keepouts = constraints.get('keepouts_mm', [])
+    if not isinstance(keepouts, list):
+        issues.append({'path': 'constraints.keepouts_mm', 'message': '목록이 필요합니다'})
+    else:
+        for i, box in enumerate(keepouts):
+            _box(issues, box, f'constraints.keepouts_mm[{i}]')
+    clearance = constraints.get('clearance_um', 0)
+    if not _finite(clearance) or clearance < 0:
+        issues.append({'path': 'constraints.clearance_um', 'message': '0 이상의 숫자가 필요합니다'})
+    incidence = constraints.get('max_incidence_deg', 70)
+    if not _finite(incidence) or not 0 < incidence <= 70:
+        issues.append({'path': 'constraints.max_incidence_deg', 'message': '0 초과 70 이하(Frozen Guard)여야 합니다'})
+    roc = constraints.get('min_radius_of_curvature_mm')
+    if roc is not None and (not _finite(roc) or roc <= 0):
+        issues.append({'path': 'constraints.min_radius_of_curvature_mm', 'message': '양수 또는 null이 필요합니다'})
+    return issues
+
+
+def search_constraints(document):
+    """Design Document constraints (mm/µm) as the generator's SI Constraints."""
+    from .search import Constraints
+    c = document.get('constraints') or {}
+    box = lambda b: (tuple(v * 1e-3 for v in b['min']), tuple(v * 1e-3 for v in b['max']))  # noqa: E731
+    keepouts = c.get('keepouts_mm', [])
+    roc = c.get('min_radius_of_curvature_mm')
+    return Constraints(port_halfspace=c.get('port_body_halfspace', True),
+                       envelope=box(c['envelope_mm']) if c.get('envelope_mm') else None,
+                       keepouts=tuple(box(k) for k in keepouts),
+                       keepout_labels=tuple(k.get('label', f'keep-out {i + 1}') for i, k in enumerate(keepouts)),
+                       clearance=c.get('clearance_um', 0) * 1e-6,
+                       max_incidence_deg=c.get('max_incidence_deg', 70),
+                       min_radius_of_curvature=roc * 1e-3 if roc else None)
+
+
+def _package(document):
+    """Envelope/keep-outs also go to the engine's own package check, so it re-verifies them independently."""
+    c = document.get('constraints') or {}
+    if not c.get('envelope_mm') and not c.get('keepouts_mm'):
+        return None
+    ev = {'provenance': 'assumed', 'source': c.get('source') or 'User package constraints in the Design Document'}
+    aabb = lambda b: {'type': 'aabb', 'min_m': [v * 1e-3 for v in b['min']], 'max_m': [v * 1e-3 for v in b['max']]}  # noqa: E731
+    package = {'frame_id': _record('world', 'frame', ev),
+               'keepout_bodies': _record([aabb(k) for k in c.get('keepouts_mm', [])], 'm', ev),
+               'required_clearance_m': _record(c.get('clearance_um', 0) * 1e-6, 'm', ev)}
+    if c.get('envelope_mm'):
+        package['available_volume'] = _record(aabb(c['envelope_mm']), 'm', ev)
+    return package
 
 
 def canonical_json(document):
@@ -139,7 +216,7 @@ def to_engine_input(document):
     if issues:
         raise DocumentError(issues)
     common = {'provenance': 'assumed', 'source': f'Design Document: {document.get("title") or "untitled"}'}
-    return {
+    engine = {
         'contract_version': 'M3A-1',
         'coordinate_convention': CONVENTION,
         'description': document.get('description') or document.get('title') or 'Design Document',
@@ -148,3 +225,7 @@ def to_engine_input(document):
                                  quantity='external_ambient_refractive_index'),
         **{name: _engine_port(name, document['ports'][name]) for name in PORT_NAMES},
     }
+    package = _package(document)
+    if package:
+        engine['package'] = package
+    return engine

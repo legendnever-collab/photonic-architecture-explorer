@@ -97,6 +97,22 @@ test_invalid_document_is_not_designed (test_p0_foundation.SceneTest.test_invalid
 test_preview_reports_divergence_guard_threshold (test_p0_foundation.SceneTest.test_preview_reports_divergence_guard_threshold) ... ok
 test_scene_matches_engine_geometry (test_p0_foundation.SceneTest.test_scene_matches_engine_geometry) ... ok
 test_surface_grid_centre_is_vertex_and_lies_on_patch (test_p0_foundation.SceneTest.test_surface_grid_centre_is_vertex_and_lies_on_patch) ... ok
+test_package_and_constraints_convert_to_si_without_changing_ports (test_p2_api.ConstraintDocumentTest.test_package_and_constraints_convert_to_si_without_changing_ports) ... ok
+test_validation_reports_each_bad_constraint (test_p2_api.ConstraintDocumentTest.test_validation_reports_each_bad_constraint) ... ok
+test_divergence_guidance_gives_the_required_index (test_p2_api.GuidanceTest.test_divergence_guidance_gives_the_required_index) ... ok
+test_invalid_constraint_is_not_designed (test_p2_api.GuidanceTest.test_invalid_constraint_is_not_designed) ... ok
+test_keepout_from_the_document_is_respected (test_p2_api.GuidanceTest.test_keepout_from_the_document_is_respected) ... ok
+test_near_match_result_explains_the_closest_exact_point (test_p2_api.GuidanceTest.test_near_match_result_explains_the_closest_exact_point) ... ok
+test_axis_chain_and_overlap_match_the_engine_gaussian (test_p2_search.ClosedFormTest.test_axis_chain_and_overlap_match_the_engine_gaussian) ... ok
+test_budget (test_p2_search.ScenarioSearchTest.test_budget) ... ok
+test_domain_refusals_are_unchanged (test_p2_search.ScenarioSearchTest.test_domain_refusals_are_unchanged) ... ok
+test_envelope_and_keepout_are_enforced_and_rechecked_by_the_engine (test_p2_search.ScenarioSearchTest.test_envelope_and_keepout_are_enforced_and_rechecked_by_the_engine) ... ok
+test_iox_and_ldw_1310_fall_back_to_labelled_near_match (test_p2_search.ScenarioSearchTest.test_iox_and_ldw_1310_fall_back_to_labelled_near_match) ... ok
+test_ldw_1550_has_three_distinct_exact_candidates (test_p2_search.ScenarioSearchTest.test_ldw_1550_has_three_distinct_exact_candidates) ... ok
+test_minimum_radius_of_curvature_tightens_the_search (test_p2_search.ScenarioSearchTest.test_minimum_radius_of_curvature_tightens_the_search) ... ok
+test_port_halfspace_is_a_real_constraint (test_p2_search.ScenarioSearchTest.test_port_halfspace_is_a_real_constraint) ... ok
+test_pose_tolerance_is_finite_and_ordered (test_p2_search.ScenarioSearchTest.test_pose_tolerance_is_finite_and_ordered) ... ok
+test_search_is_deterministic (test_p2_search.ScenarioSearchTest.test_search_is_deterministic) ... ok
 test_all_80_perturbations_match_independent_quadratic_and_newton_reference (test_placement.ReflectorPlacementTests.test_all_80_perturbations_match_independent_quadratic_and_newton_reference) ... ok
 test_failed_traces_are_classified_and_withhold_target_errors (test_placement.ReflectorPlacementTests.test_failed_traces_are_classified_and_withhold_target_errors) ... ok
 test_flat_second_mirror_has_signed_double_angle_response (test_placement.ReflectorPlacementTests.test_flat_second_mirror_has_signed_double_angle_response) ... ok
@@ -108,6 +124,6 @@ test_matched_flat_gaussian_closed_form (test_sensitivity.CandidateSensitivityTes
 test_snapshot_preserves_ports_and_ranking (test_sensitivity.CandidateSensitivityTests.test_snapshot_preserves_ports_and_ranking) ... ok
 
 ----------------------------------------------------------------------
-Ran 108 tests in 3.580s
+Ran 124 tests in 14.076s
 
 OK

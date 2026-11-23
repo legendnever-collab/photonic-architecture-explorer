@@ -48,25 +48,25 @@ SCENARIOS = [
      doc('S1', 'S1 · SMF-28 → SMF-28, 90° Fold', 1310.0,
          port('smf28-ultra-1310', [0, 0, 0], X), port('smf28-ultra-1310', [2.0, 0, 2.0], Z),
          'Source travels +X, Target arrives travelling +Z; both SMF-28 Ultra 1310 nm.'),
-     {'status': 'Computed', 'min_candidates': 1, 'target': {'status': 'Computed', 'phase': 'P0'}}),
+     {'status': 'Computed', 'min_candidates': 3, 'family': 'exact', 'target': {'status': 'Computed', 'phase': 'P0'}}),
     ('S2a-1310', 'S2a · SMF → LDW Glass WG (1310 nm)', 'S2a-1310.json',
      'Mode size and ellipticity conversion into a laser-written glass guide',
      doc('S2a-1310', 'S2a · SMF-28 → LDW (Sun 2021), 1310 nm', 1310.0,
          port('smf28-ultra-1310', [0, 0, 0], X), port('sun-fldw-55mw-1310', [3.0, 0, 1.0], X),
          'Edge coupling in air: fiber at the origin, glass facet 3 mm ahead and 1 mm higher.'),
-     {'status': 'Fail', 'reason_contains': 'bounded exact-q family', 'target': {'status': 'Computed', 'phase': 'P2'}}),
+     {'status': 'Computed', 'min_candidates': 3, 'family': 'near_match', 'reason_contains': 'Near-match', 'target': {'status': 'Computed', 'family': 'exact', 'phase': 'P3'}}),
     ('S2a-1550', 'S2a · SMF → LDW Glass WG (1550 nm)', 'S2a-1550.json',
      'Mode size and ellipticity conversion into a laser-written glass guide',
      doc('S2a-1550', 'S2a · SMF-28 → LDW (Desmet 2021), 1550 nm', 1550.0,
          port('smf28-ultra-1550', [0, 0, 0], X), port('desmet-fldw-1550', [3.0, 0, 1.0], X),
          'Edge coupling in air: fiber at the origin, glass facet 3 mm ahead and 1 mm higher.'),
-     {'status': 'Fail', 'reason_contains': 'bounded exact-q family', 'target': {'status': 'Computed', 'phase': 'P2'}}),
+     {'status': 'Computed', 'min_candidates': 3, 'family': 'exact', 'target': {'status': 'Computed', 'phase': 'P2'}}),
     ('S2b-1550', 'S2b · SMF → IOX Glass WG (1550 nm)', 'S2b-1550.json',
      'Asymmetric elliptical mode conversion into an ion-exchanged glass guide',
      doc('S2b-1550', 'S2b · SMF-28 → IOX (Brusberg 2012), 1550 nm', 1550.0,
          port('smf28-ultra-1550', [0, 0, 0], X), port('brusberg-iox-1550', [3.0, 0, 1.0], X),
          'Edge coupling in air: fiber at the origin, glass facet 3 mm ahead and 1 mm higher.'),
-     {'status': 'Fail', 'reason_contains': 'bounded exact-q family', 'target': {'status': 'Computed', 'phase': 'P2'}}),
+     {'status': 'Computed', 'min_candidates': 3, 'family': 'near_match', 'reason_contains': 'Near-match', 'target': {'status': 'Computed', 'family': 'exact', 'phase': 'P3'}}),
     ('S3', 'S3 · SiPh SSC → SMF', 'S3.json', 'Which structure can relay a 3 µm SSC mode (needs P3/P4)',
      doc('S3', 'S3 · SiPh SSC class (3 µm) → SMF-28, 1310 nm', 1310.0,
          port('synthetic-siph-ssc-3um', [0, 0, 0], X), port('smf28-ultra-1310', [3.0, 0, 1.0], X),
@@ -102,11 +102,12 @@ def main():
         (OUT / filename).write_text(json.dumps(document, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
         result = design(document)
         observed = {'status': result['status'], 'candidates': len(result['candidates']),
-                    'reason': result.get('reason')}
+                    'reason': result.get('reason'), 'family': result.get('family')}
         ok = observed['status'] == expect['status'] and (
             observed['candidates'] >= expect.get('min_candidates', 0)) and (
-            expect.get('reason_contains', '') in (observed['reason'] or ''))
-        print(f'{sid:9s} {observed["status"]:9s} candidates={observed["candidates"]} '
+            expect.get('reason_contains', '') in (observed['reason'] or '')) and (
+            expect.get('family') in (None, observed['family']))
+        print(f'{sid:9s} {observed["status"]:9s} {observed["family"] or "-":10s} candidates={observed["candidates"]} '
               f'{"OK" if ok else "MISMATCH"}  {observed["reason"]}')
         index.append({'id': sid, 'title': title, 'file': filename, 'decision': decision, 'expect': expect})
     index += UNSUPPORTED
