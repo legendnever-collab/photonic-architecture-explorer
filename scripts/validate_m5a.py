@@ -53,7 +53,7 @@ def main():
             (args.output_dir/(name+'.html')).write_text(render_design_report(result),encoding='utf-8')
         paths=sorted(p for folder in ('src','tests','scripts','examples') for p in (ROOT/folder).rglob('*')
                      if p.suffix in ('.py','.cjs','.json'))
-        paths += [ROOT/'pyproject.toml',ROOT/'.github/workflows/validate.yml',ROOT/'docs/M5A_DESIGN_CONTRACT.md',ROOT/'docs/PRODUCT_CHARTER.md']
+        paths += [ROOT/'pyproject.toml',ROOT/'.github/workflows/validate.yml',ROOT/'docs/history/M5A_DESIGN_CONTRACT.md',ROOT/'docs/PRODUCT_CHARTER.md']
         provenance['source_sha256']={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
         provenance['artifact_sha256']={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(args.output_dir.iterdir()) if p!=manifest}
         provenance.update(case_statuses=statuses,search=counts,elapsed_seconds=time.monotonic()-start)

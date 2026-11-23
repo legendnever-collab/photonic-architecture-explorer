@@ -50,11 +50,11 @@ def main():
     (results/'unittest.txt').write_text(output)
     paths = sorted(p for folder in ('src', 'tests', 'examples', 'scripts')
                    for p in (ROOT/folder).rglob('*') if p.suffix in ('.py', '.json'))
-    paths += [ROOT/'pyproject.toml', ROOT/'docs/M1_BENCHMARK.md', ROOT/'docs/M2_CONTRACT.md',
-              ROOT/'docs/M25_CONTRACT.md', ROOT/'docs/EXTERNAL_PORT_CONTRACT.md',
-              ROOT/'docs/M25_ASSESSMENT.md', ROOT/'docs/M3A_CONTRACT.md',
-              ROOT/'docs/M3A_ADAPTER.md', ROOT/'docs/M3B_CONTRACT.md',
-              ROOT/'docs/M3C_REVIEW.md', ROOT/'docs/M3C_INTEGRATION_READINESS.md',
+    paths += [ROOT/'pyproject.toml', ROOT/'docs/history/M1_BENCHMARK.md', ROOT/'docs/history/M2_CONTRACT.md',
+              ROOT/'docs/history/M25_CONTRACT.md', ROOT/'docs/EXTERNAL_PORT_CONTRACT.md',
+              ROOT/'docs/history/M25_ASSESSMENT.md', ROOT/'docs/history/M3A_CONTRACT.md',
+              ROOT/'docs/history/M3A_ADAPTER.md', ROOT/'docs/history/M3B_CONTRACT.md',
+              ROOT/'docs/history/M3C_REVIEW.md', ROOT/'docs/history/M3C_INTEGRATION_READINESS.md',
               ROOT/'scripts/check_inspector.cjs', ROOT/'.github/workflows/validate.yml']
     import numpy
     evidence = {'python': platform.python_version(), 'numpy': numpy.__version__,

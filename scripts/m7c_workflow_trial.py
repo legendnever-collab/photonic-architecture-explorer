@@ -74,7 +74,7 @@ def provenance():
     paths = sorted([*(ROOT / "src").rglob("*.py"), Path(__file__),
                     ROOT / "scripts/m7b_near_match.py", ROOT / "scripts/validate_m7c.py",
                     ROOT / "requirements-m7c.txt"])
-    contract = (ROOT / "docs/M7C_NEAR_MATCH_WORKFLOW.md").read_text().split("## Reproduce and review")[0]
+    contract = (ROOT / "docs/history/M7C_NEAR_MATCH_WORKFLOW.md").read_text().split("## Reproduce and review")[0]
     return {
         "head": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
         "dirty": bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT, text=True).strip()),

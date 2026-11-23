@@ -85,7 +85,7 @@ $fields
 <div class="step"><h3>5 · Engineering Decision</h3>
 <p>이 입력에서 G036-NM의 Normalized Scalar Overlap은 $overlap, 광로는 20.840 mm입니다. G029-NM은 η=0.99806030, 9.825 mm이므로 짧은 경로가 중요한 경우 비교할 대안입니다. 별도 Package 가정을 추가한 R9에서는 4.30 mm와 5.023725 mm Envelope의 η가 각각 0.985044와 0.990011이었습니다.</p>
 <p>명목 Guided Power 비율, 수치 불확도 U, M2 회전 광학 응답, 실제 Total Coupling과 Assembly Tolerance는 Uncomputed입니다.</p></div>
-<p class="sources">R6 Input SHA256 <code>$snapshot</code><br><a target="_blank" rel="noopener" href="${base}references/m7r6/design_summary.json">두 처방과 독립 Quadrature</a> · <a target="_blank" rel="noopener" href="${base}references/m7r9/summary.json">Envelope 비교</a> · <a target="_blank" rel="noopener" href="${base}references/m7r20/summary.json">R20 Flux와 Field 오차</a> · <a target="_blank" rel="noopener" href="${base}docs/M7R20_YEE_FIELD_EXTRACTION.md">R20 검증 절차</a></p></details>
+<p class="sources">R6 Input SHA256 <code>$snapshot</code><br><a target="_blank" rel="noopener" href="${base}references/m7r6/design_summary.json">두 처방과 독립 Quadrature</a> · <a target="_blank" rel="noopener" href="${base}references/m7r9/summary.json">Envelope 비교</a> · <a target="_blank" rel="noopener" href="${base}references/m7r20/summary.json">R20 Flux와 Field 오차</a> · <a target="_blank" rel="noopener" href="${base}docs/history/M7R20_YEE_FIELD_EXTRACTION.md">R20 검증 절차</a></p></details>
 <details class="card case"><summary>B · PIC SSC ↔ Glass Waveguide, 1310 nm</summary>
 <p>M4B-LIT-001은 문헌의 Guided Width를 사용한 Gaussian Proxy입니다. 실제 SSC의 외부 Complex E/H는 Evidence Insufficient입니다.</p>
 <div class="step"><h3>1 · Fixed Ports</h3><p>Source (0,0,0) mm와 Target (2,0,2) mm의 각 기준면에서 +X, t=−Z, s=+Y를 가정했습니다. 공기 중 MFD 2.73/3.79 µm와 Flat Phase를 두 면에 가정했습니다. 원문 Width는 Glass의 Guided Mode 값입니다. 실제 SSC의 방출장, Phase, Polarization 및 외부 Reference Plane 측정이 필요합니다.</p></div>
@@ -94,5 +94,5 @@ $fields
 <div class="step"><h3>3 · Fast Optical Evaluation</h3><p>Geometry Closure는 Pass입니다. 두 축의 Gaussian Divergence 0.3055/0.2200 rad가 0.1 rad를 넘어 Model Domain은 Fail입니다. 이후 Beam Envelope, Footprint 및 Overlap 수치는 보류합니다.</p></div>
 <div class="step"><h3>4 · Wave-Level Evaluation</h3><p>같은 SSC의 기준면에 귀속되는 복소 E/H와 Flux 정규화가 필요합니다. 이 처방의 Diffraction, Vector Propagation 및 Poynting Flux는 Uncomputed입니다.</p></div>
 <div class="step"><h3>5 · Engineering Decision</h3><p>선언한 Envelope Geometry는 통과했습니다. 실제 Package Feasibility, Mode Overlap 및 Total Coupling은 Uncomputed입니다. 이 근거로 추천하거나 대안의 우열을 정할 수 없습니다.</p></div>
-<p class="sources"><a target="_blank" rel="noopener" href="${base}docs/M4B_LITERATURE_APPLICATION.md">문헌값과 가정의 출처</a> · <a target="_blank" rel="noopener" href="${base}results/m4b_literature_001.json">M4B Adapter 판정</a></p></details>
+<p class="sources"><a target="_blank" rel="noopener" href="${base}docs/history/M4B_LITERATURE_APPLICATION.md">문헌값과 가정의 출처</a> · <a target="_blank" rel="noopener" href="${base}results/m4b_literature_001.json">M4B Adapter 판정</a></p></details>
 </main></body></html>

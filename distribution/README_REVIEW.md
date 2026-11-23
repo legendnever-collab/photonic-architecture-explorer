@@ -20,7 +20,7 @@ Windows x64 검토용입니다. CPython과 NumPy/SciPy가 포함돼 있어 별�
 SMF–Glass 예제는 공개 Width와 명시한 Gaussian/Flat Phase 가정입니다. Normalized
 Mode Overlap은 Total Coupling이 아닙니다. Actual Applicability, 실제 Assembly Tolerance,
 Package Yield, Total Coupling과 Patentability는 Uncomputed입니다. Guard Margin도
-제조 공차가 아닙니다. `app/docs/M7D_BACKGROUND_WORKFLOW.md`에서 범위를 확인하세요.
+제조 공차가 아닙니다. `app/docs/history/M7D_BACKGROUND_WORKFLOW.md`에서 범위를 확인하세요.
 
 `PACKAGE_MANIFEST.json`에 Source HEAD, Runtime/Dependency 버전, 입력과 배포 파일의
 SHA-256이 기록됩니다. CPython License는 `runtime/LICENSE*`, NumPy/SciPy 및 포함된
