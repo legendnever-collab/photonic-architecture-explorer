@@ -127,6 +127,20 @@ test_replay_preserves_the_nominal_decision_and_all_signed_trace_cases (test_m7r9
 test_loss_distinguishes_zero_and_missing_overlap (test_mode_match.ModeMatchViewTests.test_loss_distinguishes_zero_and_missing_overlap) ... ok
 test_phase_changes_overlap_with_identical_intensity (test_mode_match.ModeMatchViewTests.test_phase_changes_overlap_with_identical_intensity) ... ok
 test_report_uses_fixed_reference_planes_and_original_overlap (test_mode_match.ModeMatchViewTests.test_report_uses_fixed_reference_planes_and_original_overlap) ... ok
+test_design_round_trip (test_p0_foundation.AppTest.test_design_round_trip) ... ok
+test_read_endpoints_and_static_page (test_p0_foundation.AppTest.test_read_endpoints_and_static_page) ... ok
+test_unknown_paths_and_traversal_are_refused (test_p0_foundation.AppTest.test_unknown_paths_and_traversal_are_refused) ... ok
+test_document_hash_ignores_key_order (test_p0_foundation.DesignDocumentTest.test_document_hash_ignores_key_order) ... ok
+test_every_problem_is_reported_without_silent_repair (test_p0_foundation.DesignDocumentTest.test_every_problem_is_reported_without_silent_repair) ... ok
+test_scenarios_are_valid_and_convert_with_si_units_and_provenance (test_p0_foundation.DesignDocumentTest.test_scenarios_are_valid_and_convert_with_si_units_and_provenance) ... ok
+test_published_widths_and_labels (test_p0_foundation.PresetTest.test_published_widths_and_labels) ... ok
+test_every_scenario_meets_its_recorded_expectation (test_p0_foundation.ScenarioTest.test_every_scenario_meets_its_recorded_expectation) ... ok
+test_fixtures_match_their_generator (test_p0_foundation.ScenarioTest.test_fixtures_match_their_generator) ... ok
+test_beam_samples_agree_with_engine_planes (test_p0_foundation.SceneTest.test_beam_samples_agree_with_engine_planes) ... ok
+test_invalid_document_is_not_designed (test_p0_foundation.SceneTest.test_invalid_document_is_not_designed) ... ok
+test_preview_reports_divergence_guard_threshold (test_p0_foundation.SceneTest.test_preview_reports_divergence_guard_threshold) ... ok
+test_scene_matches_engine_geometry (test_p0_foundation.SceneTest.test_scene_matches_engine_geometry) ... ok
+test_surface_grid_centre_is_vertex_and_lies_on_patch (test_p0_foundation.SceneTest.test_surface_grid_centre_is_vertex_and_lies_on_patch) ... ok
 test_all_80_perturbations_match_independent_quadratic_and_newton_reference (test_placement.ReflectorPlacementTests.test_all_80_perturbations_match_independent_quadratic_and_newton_reference) ... ok
 test_failed_traces_are_classified_and_withhold_target_errors (test_placement.ReflectorPlacementTests.test_failed_traces_are_classified_and_withhold_target_errors) ... ok
 test_flat_second_mirror_has_signed_double_angle_response (test_placement.ReflectorPlacementTests.test_flat_second_mirror_has_signed_double_angle_response) ... ok
@@ -152,6 +166,6 @@ test_round_modes_derive_unique_plane_and_reproduce_explicit_design (test_workspa
 test_workspace_engine_input_can_be_serialized_without_aliases (test_workspace.WorkspaceTests.test_workspace_engine_input_can_be_serialized_without_aliases) ... ok
 
 ----------------------------------------------------------------------
-Ran 152 tests in 13.215s
+Ran 166 tests in 13.631s
 
 OK

@@ -1,0 +1,92 @@
+{
+  "schema": "pae.design/1",
+  "title": "S3 · SiPh SSC class (3 µm) → SMF-28, 1310 nm",
+  "scenario": "S3",
+  "description": "SSC-class synthetic mode in air; expected to exceed the paraxial divergence guard.",
+  "wavelength_nm": 1310.0,
+  "ambient_index": 1.0,
+  "ports": {
+    "source": {
+      "label": "SiPh SSC class · 3 µm (Synthetic)",
+      "preset": "synthetic-siph-ssc-3um",
+      "position_mm": [
+        0,
+        0,
+        0
+      ],
+      "direction": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "sagittal_axis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "mfd_um": [
+        3.0,
+        3.0
+      ],
+      "wavefront_curvature_per_m": [
+        0.0,
+        0.0
+      ],
+      "evidence": {
+        "placement": {
+          "provenance": "synthetic",
+          "source": "Synthetic scenario placement (not a package drawing)"
+        },
+        "mode": {
+          "provenance": "synthetic",
+          "source": "Representative class value for scenario S3; not a specific device or measurement · t=vertical axis (Circular synthetic mode)"
+        },
+        "phase": {
+          "provenance": "synthetic",
+          "source": "Flat phase is a synthetic assumption"
+        }
+      }
+    },
+    "target": {
+      "label": "Corning SMF-28 Ultra · 1310 nm",
+      "preset": "smf28-ultra-1310",
+      "position_mm": [
+        3.0,
+        0,
+        1.0
+      ],
+      "direction": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "sagittal_axis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "mfd_um": [
+        9.2,
+        9.2
+      ],
+      "wavefront_curvature_per_m": [
+        0.0,
+        0.0
+      ],
+      "evidence": {
+        "placement": {
+          "provenance": "synthetic",
+          "source": "Synthetic scenario placement (not a package drawing)"
+        },
+        "mode": {
+          "provenance": "measured",
+          "source": "Corning Incorporated, Corning SMF-28 Ultra Optical Fiber, Product Information PI1424 · PI1424, Optical Specifications, p. 1 · t=vertical axis (Circular scalar MFD)"
+        },
+        "phase": {
+          "provenance": "assumed",
+          "source": "Flat phase (1/R = 0) at the external reference plane is an assumption; the source reports intensity only"
+        }
+      }
+    }
+  }
+}

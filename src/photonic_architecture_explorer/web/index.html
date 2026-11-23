@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Photonic Architecture Explorer · P0 API Console</title>
+<style>
+  body { font-family: "Malgun Gothic", "Arial Narrow", Arial, sans-serif; margin: 24px; color: #1b2733; background: #fff; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  p.note { color: #5a6876; margin: 0 0 16px; font-size: 13px; }
+  select, button { font: inherit; padding: 6px 10px; }
+  table { border-collapse: collapse; margin-top: 12px; font-size: 13px; }
+  th, td { border: 1px solid #cfd8e0; padding: 4px 8px; text-align: left; vertical-align: top; }
+  th { background: #f2f5f8; }
+  pre { background: #f6f8fa; padding: 8px; max-height: 360px; overflow: auto; font-size: 12px; }
+  .Fail, .Invalid { color: #b42318; font-weight: 600; } .Computed, .Pass { color: #1a7f37; font-weight: 600; }
+</style>
+</head>
+<body>
+<h1>Photonic Architecture Explorer · P0 API Console</h1>
+<p class="note">P1에서 3D/2D 시각 Workspace로 대체되는 임시 화면입니다. 시나리오를 골라 <code>/api/design</code> 결과를 확인합니다.
+기존 Workspace는 <code>pae-workspace</code>로 계속 실행할 수 있습니다.</p>
+<label>시나리오 <select id="scenario"></select></label>
+<button id="run">Design</button>
+<div id="out"></div>
+<script>
+const $ = (id) => document.getElementById(id);
+const fmt = (v, d = 3) => (v === null || v === undefined) ? '—' : (typeof v === 'number' ? v.toFixed(d) : String(v));
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+async function init() {
+  const index = await (await fetch('/api/scenarios')).json();
+  for (const s of index.scenarios.filter((s) => s.file)) {
+    const o = document.createElement('option'); o.value = s.id; o.textContent = s.title; $('scenario').append(o);
+  }
+}
+
+async function run() {
+  const id = $('scenario').value;
+  const doc = await (await fetch('/api/scenarios/' + id)).json();
+  const res = await (await fetch('/api/design', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(doc) })).json();
+  const ports = (res.ports?.ports || []).map((p) => `<tr><th>${p.name}</th><td>${p.position_mm.map((v) => fmt(v)).join(', ')}</td>
+    <td>${p.mode.map((m) => fmt(2 * m.radius_um, 2)).join(' × ')}</td><td class="${p.divergence_guard.status}">${p.divergence_guard.status}
+    (${fmt(p.divergence_guard.max_divergence_rad)} / ${p.divergence_guard.limit_rad} rad, 최소 MFD ${fmt(p.divergence_guard.min_waist_mfd_um, 2)} µm)</td></tr>`).join('');
+  const cands = res.candidates.map((c) => `<tr><th>${esc(c.id)}</th><td>${esc(c.role || '')}</td><td>${fmt(c.metrics.total_path_mm)}</td>
+    <td>${fmt(c.metrics.normalized_mode_overlap, 6)}</td><td>${c.metrics.incidence_deg.map((v) => fmt(v, 1)).join(', ')}</td>
+    <td>${c.metrics.radius_of_curvature_ts_mm.map((r) => r.map((v) => fmt(v, 2)).join('/')).join(' · ')}</td>
+    <td>${fmt(c.metrics.max_3w_footprint_curvature)} / ${c.metrics.footprint_curvature_limit}</td></tr>`).join('');
+  $('out').innerHTML = `<p>상태 <span class="${res.status}">${esc(res.status)}</span> · ${esc(res.reason || '')}</p>
+    <table><tr><th>Port</th><th>Position [mm]</th><th>MFD t × s [µm]</th><th>Divergence Guard</th></tr>${ports}</table>
+    ${res.candidates.length ? `<table><tr><th>후보</th><th>역할</th><th>광경로 [mm]</th><th>η (Normalized)</th><th>입사각 [°]</th><th>곡률반경 t/s [mm]</th><th>3w·|κ| / 한계</th></tr>${cands}</table>` : ''}
+    ${res.search?.rejection_counts ? `<pre>${esc(JSON.stringify(res.search.rejection_counts, null, 2))}</pre>` : ''}
+    <p class="note">η는 Scalar Paraxial Normalized Mode Overlap이며 Total Coupling이 아닙니다. Total Coupling, 조립 공차, Package는 Uncomputed입니다.</p>`;
+}
+
+$('run').addEventListener('click', run);
+init();
+</script>
+</body>
+</html>
