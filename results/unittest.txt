@@ -113,6 +113,21 @@ test_minimum_radius_of_curvature_tightens_the_search (test_p2_search.ScenarioSea
 test_port_halfspace_is_a_real_constraint (test_p2_search.ScenarioSearchTest.test_port_halfspace_is_a_real_constraint) ... ok
 test_pose_tolerance_is_finite_and_ordered (test_p2_search.ScenarioSearchTest.test_pose_tolerance_is_finite_and_ordered) ... ok
 test_search_is_deterministic (test_p2_search.ScenarioSearchTest.test_search_is_deterministic) ... ok
+test_ambient_documents_are_unchanged (test_p3_glass.BlockDocumentTest.test_ambient_documents_are_unchanged) ... ok
+test_block_and_media_are_validated (test_p3_glass.BlockDocumentTest.test_block_and_media_are_validated) ... ok
+test_port_on_the_surface_keeps_its_width_and_divides_its_curvature_by_n (test_p3_glass.BlockDocumentTest.test_port_on_the_surface_keeps_its_width_and_divides_its_curvature_by_n) ... ok
+test_pose_study_runs_for_every_candidate (test_p3_glass.GlassDesignTest.test_pose_study_runs_for_every_candidate)
+Incidence margin and obstruction margins keep the ±5 µm / ±1 mrad study inside the guards. ... ok
+test_reflectors_lie_inside_the_glass (test_p3_glass.GlassDesignTest.test_reflectors_lie_inside_the_glass) ... ok
+test_shallow_guide_reports_the_region_limit (test_p3_glass.GlassDesignTest.test_shallow_guide_reports_the_region_limit) ... ok
+test_source_crossing_prepends_the_air_gap (test_p3_glass.GlassDesignTest.test_source_crossing_prepends_the_air_gap) ... ok
+test_target_crossing_arrives_at_the_fiber_mode (test_p3_glass.GlassDesignTest.test_target_crossing_arrives_at_the_fiber_mode)
+Exact relay to the equivalent in-block Port, then the air gap, must recover the fiber waist. ... ok
+test_patch_must_stay_between_surface_and_bottom (test_p3_glass.RegionConstraintTest.test_patch_must_stay_between_surface_and_bottom) ... ok
+test_coddington_factors_match_an_exact_ray_trace (test_p3_media.InterfaceTest.test_coddington_factors_match_an_exact_ray_trace) ... ok
+test_cross_source_and_cross_target_are_reverse_paths (test_p3_media.InterfaceTest.test_cross_source_and_cross_target_are_reverse_paths) ... ok
+test_field_is_continuous_across_a_normal_surface (test_p3_media.InterfaceTest.test_field_is_continuous_across_a_normal_surface) ... ok
+test_refusals (test_p3_media.InterfaceTest.test_refusals) ... ok
 test_all_80_perturbations_match_independent_quadratic_and_newton_reference (test_placement.ReflectorPlacementTests.test_all_80_perturbations_match_independent_quadratic_and_newton_reference) ... ok
 test_failed_traces_are_classified_and_withhold_target_errors (test_placement.ReflectorPlacementTests.test_failed_traces_are_classified_and_withhold_target_errors) ... ok
 test_flat_second_mirror_has_signed_double_angle_response (test_placement.ReflectorPlacementTests.test_flat_second_mirror_has_signed_double_angle_response) ... ok
@@ -124,6 +139,6 @@ test_matched_flat_gaussian_closed_form (test_sensitivity.CandidateSensitivityTes
 test_snapshot_preserves_ports_and_ranking (test_sensitivity.CandidateSensitivityTests.test_snapshot_preserves_ports_and_ranking) ... ok
 
 ----------------------------------------------------------------------
-Ran 124 tests in 14.076s
+Ran 137 tests in 40.306s
 
 OK
