@@ -39,6 +39,16 @@ python scripts/build_scenarios.py                  # 시나리오 Fixture 재생
 | Frontend 빌드 | CI가 `npm ci && npm run build` 결과와 커밋된 `web/`가 같은지 확인 |
 | Windows 패키지 | 파일 SHA 매니페스트, 오염된 환경 변수 무시, `.cmd` 실행, HTTP로 모든 시나리오 결과가 Checkout 엔진과 동일, Edge·Chrome 브라우저 검사 |
 
+## P2에서 추가한 검사
+
+| 대상 | 검사 |
+|---|---|
+| 닫힌 형식 q 계산 | 무작위 40 사례에서 축별 q 전파·반사와 1D Overlap을 엔진 `Gaussian`·`mode_overlap`과 비교(q 상대오차 1e-11, log η 1e-10) |
+| 후보 채택 | 모든 후보를 기존 Adapter로 재평가. Geometry·Model Domain Pass, 3w·\|κ\| ≤ 0.15, Exact는 η = 1(1e-9), Near-match는 0.95 < η < 1 |
+| 제약 | Port 반공간, 최소 곡률반경, Envelope(반사면 Patch AABB), Keep-out(주광선 교차)과 엔진 Package 검사 Fail 없음 |
+| 재현성·시간 | 같은 입력에서 같은 후보, 시나리오당 15 s 예산(실측 0.2~1.1 s) |
+| 화면 | 탐색 지도의 후보 위치 = 결과 a, c(1 nm), Keep-out 추가 후 후보 주광선이 박스를 지나지 않음, Near-match 표시와 안내 |
+
 ## 근거의 한계
 
 - 모든 결과는 Scalar Paraxial, 동일평면, 축 정렬 분리형 Gaussian 범위다.

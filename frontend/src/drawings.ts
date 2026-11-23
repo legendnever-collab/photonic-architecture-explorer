@@ -1,14 +1,14 @@
 import type { Store } from './state';
 import type { Candidate, PortName, Vec3 } from './types';
 import { download, el, fmt, norm } from './util';
-import { niceScale, sceneExtent } from './viewer3d';
+import { constraintBoxes, niceScale, sceneExtent } from './viewer3d';
 
-export type ViewId = 'xy' | 'xz' | 'yz' | 'fold';
+export type ViewId = 'xy' | 'xz' | 'yz' | 'fold' | 'map';
 export type ViewMode = ViewId | 'all' | 'auto';
 const NS = 'http://www.w3.org/2000/svg';
 const W = 640, H = 420, PAD = 40;
 const FONT = '"Arial Narrow", "Malgun Gothic", Arial, sans-serif';
-const VIEWS: Record<Exclude<ViewId, 'fold'>, { title: string; axes: [number, number]; names: [string, string] }> = {
+const VIEWS: Record<Exclude<ViewId, 'fold' | 'map'>, { title: string; axes: [number, number]; names: [string, string] }> = {
   xy: { title: 'Top · XY', axes: [0, 1], names: ['X', 'Y'] },
   xz: { title: 'Front · XZ', axes: [0, 2], names: ['X', 'Z'] },
   yz: { title: 'Side · YZ', axes: [1, 2], names: ['Y', 'Z'] },
@@ -48,20 +48,20 @@ export class Drawings {
 
   render() {
     this.root.replaceChildren();
-    const views: ViewId[] = this.view === 'all' ? ['xy', 'xz', 'yz', 'fold'] : this.view === 'auto' ? [this.mainPlane(), 'fold'] : [this.view];
+    const views: ViewId[] = this.view === 'all' ? ['xy', 'xz', 'yz', 'fold'] : this.view === 'auto' ? [this.mainPlane(), this.store.selectedCandidate || !this.store.currentResult?.search?.map ? 'fold' : 'map'] : [this.view];
     this.root.className = views.length > 1 ? 'drawings grid' : 'drawings single';
-    for (const view of views) this.root.append(view === 'fold' ? this.fold() : this.ortho(view));
+    for (const view of views) this.root.append(view === 'fold' ? this.fold() : view === 'map' ? this.map() : this.ortho(view));
   }
 
   /** The orthographic view in which the design spreads widest (normally the fold plane). */
-  mainPlane(): Exclude<ViewId, 'fold'> {
+  mainPlane(): Exclude<ViewId, 'fold' | 'map'> {
     const doc = this.store.state.doc;
     const points: Vec3[] = [doc.ports.source.position_mm, doc.ports.target.position_mm,
       ...(this.store.selectedCandidate?.scene.path.points_mm ?? [])];
     const spread = (i: number) => Math.max(...points.map((p) => p[i])) - Math.min(...points.map((p) => p[i]));
     const [x, y, z] = [0, 1, 2].map(spread);
     const area = { xy: x * y + 1e-9 * (x + y), xz: x * z + 1e-9 * (x + z), yz: y * z + 1e-9 * (y + z) };
-    return (Object.entries(area).sort((a, b) => b[1] - a[1])[0][0]) as Exclude<ViewId, 'fold'>;
+    return (Object.entries(area).sort((a, b) => b[1] - a[1])[0][0]) as Exclude<ViewId, 'fold' | 'map'>;
   }
 
   exportSvg() {
@@ -93,7 +93,7 @@ export class Drawings {
     return root;
   }
 
-  private ortho(view: Exclude<ViewId, 'fold'>) {
+  private ortho(view: Exclude<ViewId, 'fold' | 'map'>) {
     const spec = VIEWS[view];
     const [a, b] = spec.axes;
     const state = this.store.state;
@@ -104,7 +104,9 @@ export class Drawings {
     const k = niceScale(extent.size, extent.maxRadiusUm) * 1e-3;
     const project = (p: Vec3): P2 => [p[a], p[b]];
 
-    const points: P2[] = [project(state.doc.ports.source.position_mm), project(state.doc.ports.target.position_mm)];
+    const boxes = constraintBoxes(state);
+    const points: P2[] = [project(state.doc.ports.source.position_mm), project(state.doc.ports.target.position_mm),
+      ...boxes.flatMap((b) => [project(b.min), project(b.max)])];
     for (const c of candidates) {
       points.push(...c.scene.path.points_mm.map(project));
       for (const m of c.scene.mirrors) points.push(...m.surface_grid_mm.flat().map(project));
@@ -136,6 +138,14 @@ export class Drawings {
     root.append(svg('text', { x: W - 14, y: Y(v0) + 12, 'text-anchor': 'end', 'font-weight': 700, fill: '#57606a' }, `${spec.names[0]} →`));
     root.append(svg('text', { x: X(u0) - 4, y: 54, 'text-anchor': 'end', 'font-weight': 700, fill: '#57606a' }, `${spec.names[1]} ↑`));
 
+    for (const box of boxes) {
+      const [p0, p1] = [project(box.min), project(box.max)];
+      const keepout = box.kind === 'keepout';
+      root.append(svg('rect', { x: X(p0[0]), y: Y(p1[1]), width: (p1[0] - p0[0]) * s, height: (p1[1] - p0[1]) * s,
+        fill: keepout ? '#d1242f' : 'none', 'fill-opacity': keepout ? 0.1 : 0, stroke: keepout ? '#d1242f' : '#57606a',
+        'stroke-dasharray': keepout ? '' : '6 4', 'data-kind': box.kind }));
+      root.append(svg('text', { x: X(p0[0]) + 3, y: Y(p1[1]) + 13, 'font-size': 11, fill: keepout ? '#d1242f' : '#57606a' }, box.label));
+    }
     for (const c of candidates) if (c.id !== selected?.id) root.append(this.path(c, project, xy, false));
     if (selected) {
       root.append(this.envelope(selected, project, xy, k));
@@ -225,6 +235,63 @@ export class Drawings {
     return group;
   }
 
+  private map() {
+    const result = this.store.currentResult;
+    const grid = result?.search?.map;
+    const root = this.frame('탐색 지도 · 두 반사면 배치 공간', '가로 a = Source→M1, 세로 c = M2→Target [mm, 로그 축] · 색 = 배치별 판정 · 번호 = 후보');
+    if (!grid) {
+      root.append(svg('text', { x: W / 2, y: H / 2, 'text-anchor': 'middle', fill: '#57606a' }, 'Design을 실행하면 탐색한 배치 공간이 표시됩니다'));
+      return el('figure', { class: 'figure', 'data-view': 'map' }, root);
+    }
+    const n = grid.a_mm.length, m = grid.c_mm.length;
+    const x0 = 64, x1 = W - 190, y0 = 52, y1 = H - 46;
+    const la = (v: number) => Math.log(v);
+    const [a0, aN, c0, cN] = [la(grid.a_mm[0]), la(grid.a_mm[n - 1]), la(grid.c_mm[0]), la(grid.c_mm[m - 1])];
+    const X = (a: number) => x0 + ((la(a) - a0) / (aN - a0)) * (x1 - x0);
+    const Y = (c: number) => y1 - ((la(c) - c0) / (cN - c0)) * (y1 - y0);
+    const dx = (x1 - x0) / (n - 1), dy = (y1 - y0) / (m - 1);
+    const cells = svg('g', { 'data-kind': 'map-cells' });
+    grid.cells.forEach((cell, k) => {
+      const i = Math.floor(k / m), j = k % m;
+      const rect = svg('rect', { x: (X(grid.a_mm[i]) - dx / 2).toFixed(2), y: (Y(grid.c_mm[j]) - dy / 2).toFixed(2), width: (dx + 0.3).toFixed(2), height: (dy + 0.3).toFixed(2), fill: cellColor(cell, grid.slope_limit) });
+      rect.append(svg('title', {}, `a ${fmt(grid.a_mm[i], 3)} mm, c ${fmt(grid.c_mm[j], 3)} mm · ${cell.status}${cell.reason ? ': ' + cell.reason : ''}${cell.slope !== null ? ` · 3w|κ| ${fmt(cell.slope, 3)}` : ''}`));
+      cells.append(rect);
+    });
+    root.append(cells, svg('rect', { x: x0 - dx / 2, y: y0 - dy / 2, width: x1 - x0 + dx, height: y1 - y0 + dy, fill: 'none', stroke: '#8c959f' }));
+    const ticks = svg('g', { 'font-size': 11, fill: '#57606a' });
+    for (let e = Math.floor(Math.log10(grid.a_mm[0])); e <= Math.ceil(Math.log10(grid.a_mm[n - 1])); e++) for (const k of [1, 2, 5]) {
+      const v = k * 10 ** e;
+      if (v >= grid.a_mm[0] && v <= grid.a_mm[n - 1]) ticks.append(svg('text', { x: X(v), y: y1 + dy / 2 + 14, 'text-anchor': 'middle' }, String(+v.toPrecision(2))));
+      if (v >= grid.c_mm[0] && v <= grid.c_mm[m - 1]) ticks.append(svg('text', { x: x0 - dx / 2 - 4, y: Y(v) + 4, 'text-anchor': 'end' }, String(+v.toPrecision(2))));
+    }
+    root.append(ticks, svg('text', { x: (x0 + x1) / 2, y: H - 10, 'text-anchor': 'middle', 'font-size': 12, fill: '#1b2733' }, 'a = |Source → M1| [mm]'));
+    const ylab = svg('text', { x: 14, y: (y0 + y1) / 2, 'text-anchor': 'middle', 'font-size': 12, fill: '#1b2733', transform: `rotate(-90 14 ${(y0 + y1) / 2})` }, 'c = |M2 → Target| [mm]');
+    root.append(ylab);
+    for (const p of grid.near_match) {
+      const dot = svg('circle', { cx: X(p.a_mm), cy: Y(p.c_mm), r: 2.6, fill: '#0969da', 'fill-opacity': 0.75 });
+      dot.append(svg('title', {}, `Near-match η ${fmt(p.eta, 4)} · a ${fmt(p.a_mm, 3)}, c ${fmt(p.c_mm, 3)} mm`));
+      root.append(dot);
+    }
+    for (const c of result!.candidates) {
+      const a = c.parameters_mm.a, cc = c.parameters_mm.c;
+      if (a === undefined || cc === undefined) continue;
+      const selected = c.id === this.store.selectedCandidate?.id;
+      root.append(svg('circle', { cx: X(a), cy: Y(cc), r: 8, fill: '#ffffff', stroke: selected ? '#b42318' : '#1b2733', 'stroke-width': selected ? 2.4 : 1.4,
+        'data-kind': 'map-candidate', 'data-id': c.id, 'data-a-mm': a, 'data-c-mm': cc }));
+      root.append(svg('text', { x: X(a), y: Y(cc) + 4, 'text-anchor': 'middle', 'font-size': 11, 'font-weight': 700, fill: '#1b2733' }, String(c.rank)));
+    }
+    const legend = svg('g', { 'font-size': 11, fill: '#1b2733' });
+    MAP_LEGEND.forEach(([color, text], k) => {
+      legend.append(svg('rect', { x: W - 178, y: y0 + k * 22, width: 14, height: 14, fill: color, stroke: '#8c959f', 'stroke-width': 0.5 }));
+      legend.append(svg('text', { x: W - 158, y: y0 + k * 22 + 11 }, text));
+    });
+    const ky = y0 + MAP_LEGEND.length * 22 + 8;
+    legend.append(svg('circle', { cx: W - 171, cy: ky + 7, r: 3, fill: '#0969da' }), svg('text', { x: W - 158, y: ky + 11 }, 'Near-match 가능 배치'));
+    legend.append(svg('circle', { cx: W - 171, cy: ky + 29, r: 7, fill: '#fff', stroke: '#1b2733' }), svg('text', { x: W - 158, y: ky + 33 }, '표시된 후보(번호)'));
+    root.append(legend);
+    return el('figure', { class: 'figure', 'data-view': 'map' }, root);
+  }
+
   private fold() {
     const selected = this.store.selectedCandidate;
     const root = this.frame('Fold · 광축 전개 Beam Envelope', '가로: 광경로 거리 [mm] · 세로: 1/e² 반경 [µm] · 실선 t, 점선 s');
@@ -267,6 +334,27 @@ export class Drawings {
     root.append(svg('text', { x: x1, y: yc + half + 30, 'text-anchor': 'end', 'font-size': 12, fill: PORT_COLOR.target }, `Target 도착 w ${fmt(last.radius_t_um, 2)} / ${fmt(last.radius_s_um, 2)} µm`));
     return el('figure', { class: 'figure', 'data-view': 'fold' }, root);
   }
+}
+
+const MAP_LEGEND: [string, string][] = [
+  ['#2da44e', 'Exact 해, Guard·제약 통과'],
+  ['#fb8f44', 'Exact 해, 3w·|κ| 한계 근처 초과'],
+  ['#fff1e5', 'Exact 해, 3w·|κ| 크게 초과'],
+  ['#d8b9ff', '발산각 Guard 초과'],
+  ['#c9d1d9', 'Port 뒤 공간·Envelope·Keep-out 제약'],
+  ['#eaeef2', '입사각 한계·짧은 구간'],
+  ['#f6f8fa', '실수 Exact-q 해 없음'],
+];
+
+function cellColor(cell: { status: string; reason: string; slope: number | null }, limit: number): string {
+  if (cell.status === 'ok') return MAP_LEGEND[0][0];
+  if (cell.status === 'constraint') return MAP_LEGEND[4][0];
+  if (cell.status === 'geometry') return MAP_LEGEND[5][0];
+  if (cell.status === 'power') return MAP_LEGEND[6][0];
+  if (/divergence/.test(cell.reason)) return MAP_LEGEND[3][0];
+  const t = Math.min(1, Math.max(0, ((cell.slope ?? 2 * limit) - limit) / limit));
+  const mix = (a: number, b: number) => Math.round(a + (b - a) * t);
+  return `rgb(${mix(0xfb, 0xff)},${mix(0x8f, 0xf1)},${mix(0x44, 0xe5)})`;
 }
 
 function inView(project: (p: Vec3) => P2, axis: number) {

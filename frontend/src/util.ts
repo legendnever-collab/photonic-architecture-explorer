@@ -42,10 +42,6 @@ export const PROVENANCE_LABEL: Record<string, string> = {
   measured: '측정·문헌', supplied: '제공', independently_validated: '독립 검증', simulated: '시뮬레이션', assumed: '가정', synthetic: 'Synthetic',
 };
 
-export const ROLE_LABEL: Record<string, string> = {
-  short_path: '추천 · 최단 광경로', smaller_footprint: '대안 · 작은 Beam', model_margin: '대안 · 모델 여유',
-};
-
 export const STATUS_LABEL: Record<string, string> = {
   input_contract: '입력 계약', geometry: 'Geometry', model_domain: 'Model Domain', gaussian_mode_matching: 'Mode Matching',
   package_feasibility: 'Package', physical_losses: '물리 손실', fabrication: '제조', actual_applicability: '실제 적용성',
@@ -59,7 +55,17 @@ const REASONS: [RegExp, string][] = [
   [/no real exact-q/i, '실수 Exact-q 곡률 해 없음'],
   [/noncoplanar/, '두 Port가 한 평면에 있지 않음 (비동일평면)'],
   [/No valid candidate in bounded exact-q family/, '고정 Exact-q 탐색 범위에 유효 후보 없음 (물리적 불가능의 증명 아님)'],
-  [/Valid conceptual candidates generated/, '유효한 개념 후보 생성'],
+  [/Valid conceptual candidates generated|Valid exact-q candidates generated/, 'Exact-q 후보 생성 (두 축 모두 q 일치)'],
+  [/Near-match candidates generated/, 'Guard 안에 Exact-q 해가 없어 Near-match 후보(η < 1)를 생성'],
+  [/No valid two-reflector candidate/, '두 반사면 Family 안에서 Guard·제약을 모두 만족하는 배치 없음 (물리적 불가능의 증명 아님)'],
+  [/Source body half-space/, 'Source 뒤 공간(Port 본체) 침범'],
+  [/Target body half-space/, 'Target 뒤 공간(Port 본체) 침범'],
+  [/outside the package envelope/, 'Package Envelope 밖'],
+  [/keep-out/, 'Keep-out 침범'],
+  [/radius of curvature below/, '최소 곡률반경 미달'],
+  [/incidence exceeds limit/, '입사각 한계 초과'],
+  [/zero\/short middle segment/, '가운데 구간이 너무 짧음'],
+  [/invalid paraxial transformation/, 'Paraxial 변환 불가'],
 ];
 
 export function reasonLabel(reason: string | null | undefined): string {

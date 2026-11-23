@@ -8,7 +8,8 @@
       "decision": "Tool sanity check against a known exact-q relay",
       "expect": {
         "status": "Computed",
-        "min_candidates": 1,
+        "min_candidates": 3,
+        "family": "exact",
         "target": {
           "status": "Computed",
           "phase": "P0"
@@ -21,11 +22,14 @@
       "file": "S2a-1310.json",
       "decision": "Mode size and ellipticity conversion into a laser-written glass guide",
       "expect": {
-        "status": "Fail",
-        "reason_contains": "bounded exact-q family",
+        "status": "Computed",
+        "min_candidates": 3,
+        "family": "near_match",
+        "reason_contains": "Near-match",
         "target": {
           "status": "Computed",
-          "phase": "P2"
+          "family": "exact",
+          "phase": "P3"
         }
       }
     },
@@ -35,8 +39,9 @@
       "file": "S2a-1550.json",
       "decision": "Mode size and ellipticity conversion into a laser-written glass guide",
       "expect": {
-        "status": "Fail",
-        "reason_contains": "bounded exact-q family",
+        "status": "Computed",
+        "min_candidates": 3,
+        "family": "exact",
         "target": {
           "status": "Computed",
           "phase": "P2"
@@ -49,11 +54,14 @@
       "file": "S2b-1550.json",
       "decision": "Asymmetric elliptical mode conversion into an ion-exchanged glass guide",
       "expect": {
-        "status": "Fail",
-        "reason_contains": "bounded exact-q family",
+        "status": "Computed",
+        "min_candidates": 3,
+        "family": "near_match",
+        "reason_contains": "Near-match",
         "target": {
           "status": "Computed",
-          "phase": "P2"
+          "family": "exact",
+          "phase": "P3"
         }
       }
     },

@@ -16,6 +16,13 @@ import urllib.request
 from build_windows_package import ROOT, verify
 
 
+def stable(report):
+    """Engine report without run-time measurements, which legitimately differ between runs."""
+    report = json.loads(json.dumps(report))
+    report.get('search', {}).pop('elapsed_seconds', None)
+    return report
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('package', type=Path)
@@ -82,7 +89,7 @@ def main():
             local = api.design(document)
             assert remote['status'] == local['status'] == entry['expect']['status'], entry['id']
             assert [c['id'] for c in remote['candidates']] == [c['id'] for c in local['candidates']], entry['id']
-            assert remote['engine_report'] == json.loads(json.dumps(local['engine_report'])), entry['id']
+            assert stable(remote['engine_report']) == stable(local['engine_report']), entry['id']
             packaged[entry['id']] = remote['status']
         evidence['packaged_http_scenarios'] = packaged
         for channel in args.browser_channel:

@@ -61,7 +61,7 @@ const viewer = new Viewer3D(viewerBox, store);
 const drawings = new Drawings(drawingsBox, store);
 new ResultsPanel(right, store);
 
-for (const [id, label] of [['auto', '주 평면 + Fold'], ['all', '2×2'], ['xy', 'Top XY'], ['xz', 'Front XZ'], ['yz', 'Side YZ'], ['fold', 'Fold']] as const) {
+for (const [id, label] of [['auto', '주 평면 + Fold'], ['all', '2×2'], ['xy', 'Top XY'], ['xz', 'Front XZ'], ['yz', 'Side YZ'], ['fold', 'Fold'], ['map', '탐색 지도']] as const) {
   const button = el('button', { class: id === 'auto' ? 'tab active' : 'tab', 'data-view': id }, label);
   button.addEventListener('click', () => {
     tabs.querySelectorAll('.tab').forEach((b) => b.classList.toggle('active', b === button));
