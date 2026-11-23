@@ -179,7 +179,10 @@ class AppTest(unittest.TestCase):
         self.assertEqual(json.loads(self.get('/api/scenarios/S1')[2])['scenario'], 'S1')
         status, kind, body = self.get('/')
         self.assertTrue(kind.startswith('text/html'))
-        self.assertIn(b'/api/design', body)
+        self.assertIn(b'assets/app.js', body)
+        status, kind, script = self.get('/assets/app.js')
+        self.assertTrue(kind.startswith(('text/javascript', 'application/javascript')))
+        self.assertIn(b'api/design', script)
 
     def test_design_round_trip(self):
         body = json.dumps(load('S1')).encode('utf-8')
