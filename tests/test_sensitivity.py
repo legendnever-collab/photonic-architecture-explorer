@@ -4,13 +4,12 @@ import copy
 import json
 import math
 from pathlib import Path
-import re
 import unittest
 
 import numpy as np
 
 from photonic_architecture_explorer.design import design_two_ports
-from photonic_architecture_explorer.design_report import render_design_report, review_snapshot
+from photonic_architecture_explorer.design import review_snapshot
 from photonic_architecture_explorer.gaussian import Gaussian
 from photonic_architecture_explorer.sensitivity import evaluate_perturbation, target_scenarios
 
@@ -72,7 +71,7 @@ class CandidateSensitivityTests(unittest.TestCase):
         self.assertEqual(zero["delta_status"], "Uncomputed")
         json.dumps(zero, allow_nan=False)
 
-    def test_snapshot_preserves_ports_and_ranking_and_matches_html(self):
+    def test_snapshot_preserves_ports_and_ranking(self):
         document = json.loads((ROOT / "examples/m5a_two_ports.json").read_text())
         result = design_two_ports(document)
         before = copy.deepcopy(result)
@@ -91,11 +90,7 @@ class CandidateSensitivityTests(unittest.TestCase):
             self.assertEqual(entry["samples"]["nominal"]["normalized_mode_overlap"],
                              candidate["evaluation"]["gaussian_mode_matching"]["normalized_mode_overlap"])
             self.assertEqual(entry["samples"]["nominal"]["delta_loss_db"], 0.)
-        html = render_design_report(report)
-        embedded = re.search(r'<script type="application/json" id="design-result">(.*?)</script>', html).group(1)
-        self.assertEqual(json.loads(embedded), report)
-        self.assertEqual(html.count("data-sensitivity="), len(before["candidates"]))
+        json.dumps(report, allow_nan=False)
 
         rejected = review_snapshot(design_two_ports({}))
         self.assertEqual(rejected["candidate_sensitivity"]["status"], "Uncomputed")
-        self.assertNotIn("data-sensitivity-cell", render_design_report(rejected))

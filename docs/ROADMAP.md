@@ -5,8 +5,8 @@
 
 | Phase | 상태 | 핵심 산출물 | Gate |
 |---|---|---|---|
-| P0 정리와 기반 | **진행 중** | 연구물 보관, 핵심 문서 통합, Design Document `pae.design/1`, JSON API(`pae-app`), 시나리오 Fixture S1~S6 | 기존 물리 테스트 통과, S1을 API로 재현, 모든 시나리오가 기록된 현재 상태를 재현 |
-| P1 3D/2D 시각 Workspace | 예정 | 3D Viewer(Port·Mode·반사면 Sag·Beam 튜브·Envelope), Gizmo↔표 동기화, XY/XZ/YZ/Fold 도면과 치수, Preset, 후보 오버레이, SVG/JSON Export, Windows ZIP(Chrome/Edge) | S1 전 과정을 새 화면에서 완료. S2a·S2b는 입력·Preview·실패 원인 표시까지. 도면 좌표가 엔진 값과 1 nm 이내 일치. 기존 Workspace와 R5~R9·R20 의존 자료 보관 |
+| P0 정리와 기반 | **완료** (PR #61) | 연구물 보관, 핵심 문서 통합, Design Document `pae.design/1`, JSON API(`pae-app`), 시나리오 Fixture S1~S6 | 기존 물리 테스트 통과, S1을 API로 재현, 모든 시나리오가 기록된 현재 상태를 재현 |
+| P1 3D/2D 시각 Workspace | **완료**, P0와 묶어 병합 승인 대기 | 3D Viewer(Port·Mode·반사면 Sag·Beam 튜브·Envelope), Gizmo↔표 동기화, XY/XZ/YZ/Fold 도면과 치수, Preset, 후보 오버레이, SVG/JSON Export, Windows ZIP(Chrome/Edge) | S1 전 과정을 새 화면에서 완료. S2a·S2b는 입력·Preview·실패 원인 표시까지. 도면 좌표가 엔진 값과 1 nm 이내 일치. 기존 Workspace와 R5~R9·R20 의존 자료 보관 |
 | P2 후보 생성 v2 | 예정 | 제약 기반 연속 탐색(Envelope·Keep-out·입사각·최소 곡률반경), Pareto 순위, 실행 가능한 Fail 안내 | S2a·S2b(공기 중 Edge 배치)에서 서로 다른 절충의 후보 3개 이상. S3는 수치 안내. 기본 Design 5초 이내 |
 | P3 물리 Domain 확장 | 예정 | 균질 매질·평면 굴절 계면(Glass 상면, Glass 내부 반사면, 매립 WG 깊이) → 3D q-tensor(비동일평면) → 비근축 Scalar 검산 | 첫 Gate: S2a·S2b의 수직 SMF → Glass 내부 반사 → 매립 WG 후보와 Edge 배치 비교. 다음: S3·S4 |
 | P4 Architecture Family | 예정 | Lens–Mirror, 단일·이중 Lens, Cylindrical Lens, Family 자동 선택 | S5 통과, Family 간 비교 |

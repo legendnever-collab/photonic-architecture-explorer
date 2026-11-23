@@ -14,9 +14,7 @@ test = ["numpy>=2,<3"]
 
 [project.scripts]
 pae-app = "photonic_architecture_explorer.app:main"
-pae-workspace = "photonic_architecture_explorer.workspace:main"
 pae-design = "photonic_architecture_explorer.design:main"
-pae-inspector = "photonic_architecture_explorer.inspector:main"
 pae-external = "photonic_architecture_explorer.external:main"
 pae-benchmark = "photonic_architecture_explorer.benchmark:main"
 
@@ -24,4 +22,4 @@ pae-benchmark = "photonic_architecture_explorer.benchmark:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-photonic_architecture_explorer = ["data/m7r1_mode_references.json", "data/tutorial.html", "scenarios/*.json", "web/*", "web/**/*"]
+photonic_architecture_explorer = ["data/m7r1_mode_references.json", "scenarios/*.json", "web/*", "web/**/*"]

@@ -3,6 +3,20 @@
 새 항목을 위에 추가한다. 항목당 10줄 이내: 새로 가능해진 설계 판단, 주요 기술 선택, 남은 한계.
 2026-11-24 이전의 Milestone 기록(M1~M7-R28)은 [history/](history/)에 있다.
 
+## 2026-11-24 · P1 3D/2D 시각 Workspace (`phase/p1-visual-workspace`)
+
+- **가능해진 판단**: Port를 표나 3D Gizmo로 배치하면서 Guard를 바로 확인하고, 후보를 3D(반사면 Sag·Beam 튜브)와
+  2D(XY·XZ·YZ 정투상, 광로 길이·입사각·곡률반경 치수, Fold 전개 Beam Envelope)에서 비교한다. 실패하면 사유, 임계값,
+  다음 Phase와 거절 사유 분포가 보인다(S2b: 91%가 3w·|κ| > 0.15).
+- **기술 선택**: TypeScript + Vite + three.js 0.187, 빌드 결과는 패키지 `web/`에 커밋(사용자는 Node 불필요, CI가 재빌드
+  결과 일치를 확인). 화면은 엔진 Scene만 그리고, Beam·Mode 반경만 표시 배율을 쓰며 배율을 화면에 적는다.
+- **결과 무효화**: 입력이 바뀌면 이전 결과를 도면에서 숨겨 입력과 결과가 섞이지 않게 했다.
+- **검사**: `scripts/check_app.py`(Playwright) — 도면 좌표·Fold 거리 = 엔진 값(1 nm), 결과 무효화, 실패 화면, Export, WebGL 없는 환경.
+  Windows 패키지는 Edge·Chrome 채널로 같은 검사를 하고, 모든 시나리오 결과가 Checkout 엔진과 같은지 확인한다.
+- **정리**: 기존 Workspace·Inspector·HTML 보고서·Near-match 작업·Envelope 화면을 `archive/legacy-workspace/`로 옮겼다.
+  엔진 함수(`visible_overlap`, `review_cases`, `review_snapshot`)는 옮겨 두었다. `pae-design`은 JSON만 쓴다.
+- **한계**: Package Envelope·Keep-out 입력 화면은 아직 없다(P2 제약 탐색과 함께). 2D 치수는 자동 배치라 겹칠 수 있다.
+
 ## 2026-11-24 · P0 정리와 기반 (`phase/p0-foundation`)
 
 - **가능해진 판단**: 시나리오 S1~S6에서 현재 엔진이 어디까지 답하는지 한 번에 확인할 수 있다. S2a·S2b(SMF → LDW/IOX)는
@@ -17,4 +31,4 @@
   Flat Phase와 축 대응(t = vertical)은 가정으로 표시한다.
 - **보관**: M4-C, M7-R11~R20 Wave/FDTD 연구물은 `archive/wave-research/`로, Milestone 문서는 `docs/history/`로 옮겼다.
   R5~R9·R12·R20 자료는 기존 Workspace가 쓰므로 P1에서 함께 정리한다.
-- **한계**: P0 화면은 임시 API Console이다. 기존 Workspace(`pae-workspace`)와 CI 검사는 P1까지 유지한다.
+- **한계**: P0 화면은 임시 API Console이었다(P1에서 교체).

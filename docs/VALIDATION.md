@@ -31,6 +31,14 @@ python scripts/build_scenarios.py                  # 시나리오 Fixture 재생
 | 시나리오 | S1~S6의 현재 상태와 사유를 고정. Fixture가 생성 스크립트와 같은지 확인 |
 | API | 엔드포인트, Round trip, 경로 Traversal 거절 |
 
+## P1에서 추가한 검사
+
+| 대상 | 검사 |
+|---|---|
+| Workspace(브라우저) | `scripts/check_app.py`: 3D 렌더, S1 Design, 2D 도면의 반사면·Port 좌표와 Fold 반사면 거리 = 엔진 Scene(1 nm), 입력 변경 시 결과 무효화, S2b·S3 실패 사유와 다음 단계, 입력 JSON Export 왕복, WebGL 없는 환경의 2D 동작 |
+| Frontend 빌드 | CI가 `npm ci && npm run build` 결과와 커밋된 `web/`가 같은지 확인 |
+| Windows 패키지 | 파일 SHA 매니페스트, 오염된 환경 변수 무시, `.cmd` 실행, HTTP로 모든 시나리오 결과가 Checkout 엔진과 동일, Edge·Chrome 브라우저 검사 |
+
 ## 근거의 한계
 
 - 모든 결과는 Scalar Paraxial, 동일평면, 축 정렬 분리형 Gaussian 범위다.

@@ -7,10 +7,7 @@ import math
 from collections import Counter
 from pathlib import Path
 
-from photonic_architecture_explorer.design_report import (
-    render_design_report,
-    review_snapshot,
-)
+from photonic_architecture_explorer.design import review_snapshot
 from photonic_architecture_explorer.external import (
     CONVENTION,
     adapt_ports,
@@ -164,9 +161,7 @@ def run(out, capture_dir):
                 }
             },
         }
-    (out / "design.html").write_text(
-        render_design_report(review_snapshot(result)), encoding="utf-8"
-    )
+    write(out / "design.json", review_snapshot(result))
     near_counts = Counter()
     for geometry in fallback.get("geometries", []):
         near_counts.update(geometry["counts"])

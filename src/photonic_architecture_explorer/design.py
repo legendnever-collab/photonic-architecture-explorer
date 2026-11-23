@@ -252,6 +252,14 @@ def design_two_ports(document):
     return json.loads(json.dumps(result,allow_nan=False))
 
 
+def review_snapshot(result):
+    """Add review diagnostics (sensitivity, placement) while preserving the engine result and ranking."""
+    from .placement import compare_placement
+    from .sensitivity import compare_sensitivity
+    return {**result, 'candidate_sensitivity': compare_sensitivity(result),
+            'reflector_placement': compare_placement(result)}
+
+
 def main():
     parser=argparse.ArgumentParser(description='Design from two fixed Ports; no mirror or solver settings')
     parser.add_argument('input',type=Path)
@@ -264,11 +272,9 @@ def main():
         result=design_two_ports(None)
         result['reason']=f'Cannot read two-Port JSON: {exc}'
         result['input_contract']={'status':'Fail','path':str(args.input),'reason':result['reason']}
-    from .design_report import render_design_report, review_snapshot
     report = review_snapshot(result)
     args.output_dir.mkdir(parents=True,exist_ok=True)
     (args.output_dir/'design.json').write_text(json.dumps(report,indent=2,ensure_ascii=False,allow_nan=False)+'\n')
-    (args.output_dir/'design.html').write_text(render_design_report(report),encoding='utf-8')
     print(json.dumps({'status':result['status'],'selected':result['selected_candidate_id'],
                       'candidates':len(result['candidates']),'reason':result['reason']},ensure_ascii=False))
     return 0 if result['status']=='Computed' else 1

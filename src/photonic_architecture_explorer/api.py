@@ -5,13 +5,11 @@ on the converted Design Document and returns `pae.result/1`: engine verdicts plu
 drawable geometry for every representative candidate.
 """
 
-from .design import design_two_ports
+from .design import design_two_ports, review_snapshot
 from .design_document import DocumentError, document_sha256, to_engine_input, validate_document
 from .external import InputIssue
 from .gaussian import DomainError
-from .placement import compare_placement
 from .scene import candidate_scene, ports_scene
-from .sensitivity import compare_sensitivity
 
 RESULT_SCHEMA = 'pae.result/1'
 STATUS_KEYS = ('input_contract', 'geometry', 'model_domain', 'gaussian_mode_matching',
@@ -76,8 +74,7 @@ def design(document):
         return _invalid(document, [{'path': getattr(exc, 'path', '$'), 'message': getattr(exc, 'reason', str(exc))}])
     report = design_two_ports(engine_input)
     if report['candidates']:
-        report = {**report, 'candidate_sensitivity': compare_sensitivity(report),
-                  'reflector_placement': compare_placement(report)}
+        report = review_snapshot(report)
     search = report.get('search', {})
     return {
         'schema': RESULT_SCHEMA,
