@@ -49,9 +49,41 @@ python scripts/build_scenarios.py                  # 시나리오 Fixture 재생
 | 재현성·시간 | 같은 입력에서 같은 후보, 시나리오당 15 s 예산(실측 0.2~1.1 s) |
 | 화면 | 탐색 지도의 후보 위치 = 결과 a, c(1 nm), Keep-out 추가 후 후보 주광선이 박스를 지나지 않음, Near-match 표시와 안내 |
 
+## P3(1단계, Glass 매질)에서 추가한 검사
+
+| 대상 | 검사 |
+|---|---|
+| 평면 계면 | Coddington q 배율 vs 정확한 Snell Ray Trace(0/10/25/40°, 대칭 Pencil), 수직 입사 Field 연속, Source·Target 통과의 정·역방향 일관성(q → −q*), 축 기울어짐·TIR 거절, Fresnel 투과 범위 |
+| 등가 Port | 상면 위 Port(간격 0)는 MFD 그대로, 곡률 1/n배. 외부 문서는 기존 변환과 완전히 같음 |
+| Glass 영역 | 반사면 Patch가 상면 아래·하면 위에 있음(Patch 13×13 Grid 전 점). 외부 Relay일 때 Glass 침범 거절 |
+| 장면 | Source 쪽 통과: 첫 구간이 외부, 첫 샘플 반경 = Fiber Waist, 외부 경로 0.1 mm. Target 쪽 통과(역방향 S2a-1550-glass): 마지막 샘플 반경 = Fiber Waist(상대 1e-6) |
+| 탐색 여유 | 모든 후보에서 ±5 µm·±1 mrad 자세 검사가 계산됨(입사각 ≤ 69°, 가림 여유). Adapter 재평가에서 가림 거절 없음 |
+| 화면 | Glass 카드, 2D 상면 선(Z = 0)과 반사면이 상면 아래, Fold 상면 표시 = 외부 구간 길이(1 nm), 3D Slab, Glass 끄기, 얕은 IOX 안내 |
+
+### Edge(공기) 배치와 Glass 내부 배치 비교
+
+Glass 배치: 수직 SMF-28을 상면 0.1 mm 위에 두고, 도파로는 2 mm 옆, 표의 깊이에 +X 방향으로 매립(모두 가정 값).
+굴절률은 Fused silica Malitson(1310 nm 1.4468, 1550 nm 1.4440), D 263 T eco 1.511(Cauchy 외삽 가정, ±0.01).
+
+| 시나리오 | 배치 | 결과 | η | 광경로 [mm] | 입사각 M1/M2 [°] | 정렬 민감도 [dB] |
+|---|---|---|---|---|---|---|
+| S2a-1310 | 공기 Edge | Near-match 3 | 0.989~0.995 | 4.93~6.26 | 17~27 (같음) | 5.5~6.0 |
+| S2a-1310-glass | Glass 1.1 mm, 깊이 0.5 | Near-match 1 | 0.983 | 6.68 | 39.8 / 5.2 | 15.4 |
+| S2a-1550 | 공기 Edge | Exact 3 | 1 | 4.68~7.40 | 13~31 (같음) | 3.6~4.3 |
+| S2a-1550-glass | Glass 2.0 mm, 깊이 0.5 | Exact 3 | 1 | 3.53~4.60 | 12~24 / 57~69 | 6.8~8.9 |
+| S2b-1550 | 공기 Edge | Near-match 3 | 0.981~0.990 | 4.73~6.58 | 16~30 (같음) | 3.7~4.5 |
+| S2b-1550-glass | D 263 1.1 mm, 깊이 0.02 | Fail(반사면이 상면을 넘음) | — | — | — | — |
+| S2b-1550-glass-deep | 2.0 mm, 깊이 0.3(가정) | Exact 3 | 1 | 3.31~3.90 | 15~24 / 60~69 | 7.9~9.5 |
+
+두께·깊이 탐색(같은 배치, 2 mm 옆): 1.1 mm Glass에서는 S2a-1550과 IOX(깊이 0.1~0.8 mm) 모두 후보가 없고,
+2.0 mm에서는 LDW 깊이 0.5 mm, IOX 깊이 0.3 mm 이상에서 Exact가 나온다(IOX 0.2 mm는 Near-match η 0.966). 수평 거리 4 mm는
+2.0 mm에서도 후보가 없다. 관찰: Glass 안의 1/n 발산 감소가 Guard 여유로 바로 이어지지 않았다. 수직 입력을 90° 꺾으려면
+M2 입사각이 55~69°로 커지고, 두께 안에 두 반사면을 넣으려면 경로가 짧아 곡률이 커진다. 그 결과 정렬 민감도는
+공기 Edge 배치의 약 2배다. M2는 입사각이 임계각(약 43.8°)보다 커서 뒤가 공기라면 TIR이 가능하고, M1은 반사 Coating이 필요하다.
+
 ## 근거의 한계
 
-- 모든 결과는 Scalar Paraxial, 동일평면, 축 정렬 분리형 Gaussian 범위다.
+- 모든 결과는 Scalar Paraxial, 동일평면, 축 정렬 분리형 Gaussian 범위다. Glass는 평면 상면 하나와 균질 굴절률만 모델링한다.
 - Guard(발산각 0.1 rad, 3w·|κ| 0.15)는 보수적 Screening 규칙이며 오차의 엄밀한 상한이 아니다.
 - Total Coupling, Vector Field, 조립 공차·수율, 전체 Package Clearance, 특허성은 Uncomputed다.
 - 비근축·Vector 연구 산출물은 [archive/wave-research](../archive/wave-research/README.md)에 보관했고 P3에서 필요할 때 재개한다.

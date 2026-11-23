@@ -42,6 +42,26 @@ reflection을 complex conjugation이나 음의 전파거리로 처리하지 않�
 Skew folds와 arbitrary rolled elliptical fields는 cross-axis q tensor가 필요하여
 M1에서 명시적으로 거절합니다. General 3D world rigid transform은 허용합니다.
 
+## 평면 굴절 계면 (P3)
+
+Glass Block은 평면 상면 하나(선택적으로 평행한 하면)를 가진 균질 매질이다. 외부 Port에서 나온 Beam은 상면에서
+Snell 법칙으로 방향이 바뀌고, 축별 q는 평면 계면의 Coddington 관계로 바뀐다(물리 길이 q 규약).
+
+- 입사면 안의 축(t): q₂ = q₁ · n₂ cos²θ₂ / (n₁ cos²θ₁)
+- 입사면에 수직인 축(s): q₂ = q₁ · n₂ / n₁
+
+수직 입사에서는 두 축 모두 q₂ = (n₂/n₁) q₁이라 반경은 그대로이고 곡률 1/R은 1/n배가 된다(테스트로 확인).
+경사 입사는 s축이 입사면에 수직일 때만 받는다(Port 축이 기울어 있으면 거절). Target 쪽 통과는 같은 관계를
+역방향으로 적용하며, 정·역방향의 일관성(q → −q*)을 테스트한다. Coddington 배율은 정확한 Snell Ray Trace와
+0~40°에서 비교한다.
+
+Relay는 상면 바로 안쪽의 등가 Port에서 Glass 굴절률을 균질 매질로 하여 기존 엔진으로 푼다. 따라서 Glass 안에서는
+발산각이 1/n로 줄어 같은 Mode라도 Paraxial Guard 여유가 커진다.
+
+계산하지 않는 것: 상면의 Fresnel 반사 손실(무코팅 평면파 투과율만 참고값으로 표시), AR Coating, 상면 거칠기·기울기
+오차, Glass 분산·흡수, 이온 교환에 의한 굴절률 분포. Glass 안 반사면에서 TIR 가능 여부는 반사면 뒤가 외부 매질이라는
+가정의 임계각 비교뿐이며, 실제 반사면 구조(Trench, Coating)는 다루지 않는다.
+
 ## Mode Overlap
 
 η_mode=|∫E_target* E_incident dA|² / (∫|E_target|² dA ∫|E_incident|² dA).
@@ -74,6 +94,9 @@ support/body collision, manufacturability, placement tolerance, assembly yield,
 total coupling. Surface-to-surface mechanical clearance 전체 검증도 포함하지 않습니다.
 
 ## 공개 이론 Reference
+
+- I. H. Malitson, "Interspecimen comparison of the refractive index of fused silica," J. Opt. Soc. Am. 55, 1205 (1965) — Fused silica Sellmeier.
+- SCHOTT D 263 T eco data sheet (nC, nd, nF) — 1550 nm 값은 2항 Cauchy 외삽 가정(±0.01).
 
 Franz X. Kärtner, MIT 6.977 *Ultrafast Optics*, Spring 2005,
 §7.1.1, Eqs. (7.4)–(7.10), Table 7.1 (printed pp. 258–262):

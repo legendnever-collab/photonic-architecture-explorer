@@ -3,6 +3,17 @@
 새 항목을 위에 추가한다. 항목당 10줄 이내: 새로 가능해진 설계 판단, 주요 기술 선택, 남은 한계.
 2026-11-24 이전의 Milestone 기록(M1~M7-R28)은 [history/](history/)에 있다.
 
+## 2026-11-24 · P3 1단계: Glass 매질 (`phase/p3-glass-media`)
+
+- **가능해진 판단**: 수직 SMF → Glass 상면 → Glass 안 두 반사면 → 매립 도파로 배치를 공기 Edge 배치와 같은 화면·지표로 비교한다.
+  LDW는 2.0 mm Glass(깊이 0.5 mm)에서 Exact 3개, 1.1 mm에서는 1310 nm Near-match(η 0.983)뿐이다. 깊이 20 µm IOX는 Target 축 위
+  반사면이 상면을 넘어 이 Family로는 안 되고(0.3 mm 매립 가정 시 Exact), Glass 배치의 정렬 민감도는 공기 Edge의 약 2배다.
+- **원리**: 외부 Port를 상면에서 굴절한 등가 Port(Snell, Coddington q 배율)로 바꾸고, 엔진은 Glass 굴절률의 균질 매질로 변경 없이
+  푼다. 반사면은 Glass 안에만 둔다. 외부 구간은 장면 앞·뒤에 붙이고 Fresnel 투과·TIR 가능 여부는 참고로만 표시한다.
+- **탐색 정책 `P3-CONTINUOUS-2`**: Beam 가장자리(1e-6 꼬리 반경)가 다른 반사면의 조사 영역을 지나지 않을 것, 주광선 가림은 Patch를
+  10 µm + 2 % 키워 검사, 입사각 1° 여유(정렬 검사가 Guard 안에서 돌도록), Near-match 시도 최대 256개. 공기 시나리오 결과는 그대로다.
+- **한계**: 평면 상면 하나, 균질 굴절률, 하면은 평행. 반사면 뒤 매질·Coating, AR, 상면 오차, 이온 교환 굴절률 분포는 Uncomputed.
+
 ## 2026-11-24 · P2 후보 생성 v2 (`phase/p2-candidate-search`)
 
 - **가능해진 판단**: 최우선 시나리오 S2a·S2b(SMF → LDW/IOX)에서 서로 다른 후보 3개씩을 비교할 수 있다. S2a-1550은 Exact 3개,

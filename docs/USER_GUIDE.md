@@ -17,7 +17,8 @@
 | 상단 | 시나리오 선택, **Design**(Ctrl+Enter), 열기(Design Document JSON), 내보내기(입력 JSON, 결과 JSON, 도면 SVG) |
 | 왼쪽 | 공통(파장, 외부 매질 n), Source/Target Port: Preset, Position, Direction, Sagittal 축, MFD t/s, 1/R t/s, 출처 Chip, 발산각 Guard |
 | 가운데 위 | 3D 장면(Z가 위). Port 기준면·전파 화살표·Mode 타원, 반사면 실제 Sag 형상, 주광선, 1/e² Beam 튜브 |
-| 왼쪽 아래 | 공간·제작 제약: Port 뒤 공간 사용 금지(기본), 최대 입사각, 최소 곡률반경, Keep-out 여유, Package Envelope, Keep-out 박스 |
+| 왼쪽 아래 | Glass 매질(P3): 사용 여부, 이름, 굴절률과 근거, 상면 위의 한 점·법선, 두께, Port별 매질(위치로 자동 결정) |
+| 왼쪽 맨 아래 | 공간·제작 제약: Port 뒤 공간 사용 금지(기본), 최대 입사각, 최소 곡률반경, Keep-out 여유, Package Envelope, Keep-out 박스 |
 | 가운데 아래 | 2D 도면: 주 평면 + Fold(기본), 2×2, Top XY, Front XZ, Side YZ, Fold 전개 Beam Envelope, 탐색 지도 |
 | 오른쪽 | 결과 상태와 사유, 해석과 다음 단계, 후보 비교 표, 선택 후보의 반사면 상세와 엔진 판정, 탐색 결과 분포, 미계산 항목 |
 
@@ -43,6 +44,13 @@
 같은 후보가 여러 목표에서 최선이면 역할을 합쳐 보여 주고, 서로 다른 후보가 3개가 안 되면 "Pareto 대안"으로 채운다.
 모든 후보는 기존 엔진 Adapter가 다시 평가해 통과한 것만 표시한다.
 
+**Glass 매질(P3)**: "Glass Block 사용"을 켜면 평면 상면을 가진 Glass가 생긴다(기본값은 Fused silica, 실제 Glass로 바꿀 것).
+Glass 밖의 Port(예: 상면 위 수직 Fiber)는 상면에서 굴절한 등가 Port로 바뀌고, Relay는 Glass 안에서 계산된다.
+Glass 안에서는 발산각이 1/n로 줄어든다. 반사면은 Glass 안(상면 아래, 하면 위)에만 둔다. 결과에는 "Glass 상면 통과" 카드
+(외부 구간 길이, 굴절각, q 배율, 무코팅 Fresnel 투과 참고값)와, 반사면별 "TIR 가능 / 반사 Coating 필요"가 나온다.
+3D에는 반투명 Slab, 2D 정투상에는 빗금 띠(상면 실선, 하면 점선), Fold에는 "Glass 상면" 위치가 표시된다.
+도파로가 너무 얕으면 Target 축 위 반사면이 상면을 뚫고 나와 후보가 없다는 안내가 나온다. 매립 깊이나 두께를 바꿔 본다.
+
 **탐색 지도** 탭은 (a, c) 평면에서 배치별 판정을 색으로 보여 준다(초록 = 통과, 주황 = 3w·|κ| 초과, 회색 = 공간 제약 등).
 번호 원은 표시된 후보, 파란 점은 Near-match가 가능한 배치다. 칸에 마우스를 올리면 a, c와 사유가 보인다.
 
@@ -66,7 +74,7 @@
 | Invalid | 입력 문서 오류. 왼쪽 패널에 항목별 경로가 표시된다 |
 | η | Scalar Paraxial Normalized Mode Overlap. Total Coupling이 아니다 |
 | 3w·\|κ\| | 반사면 곡률 대비 Beam 크기 Guard(한계 0.15). 한계에 가까울수록 모델 여유가 작다 |
-| 정렬 민감도 [dB] | 반사면 하나씩 ±5 µm 이동 또는 ±1 mrad 기울였을 때 Target에서의 최악 Gaussian 손실(주광선 Pointing만 반영) |
+| 정렬 민감도 [dB] | 반사면 하나씩 ±5 µm 이동 또는 ±1 mrad 기울였을 때 Target에서의 최악 Gaussian 손실(주광선 Pointing만 반영). 탐색은 이 검사가 Guard 안에서 돌도록 입사각 1° 여유, 반사면 가림 여유(10 µm + 2 %)를 둔다 |
 | 최소 R [mm] | 두 반사면 중 가장 강한 곡률의 곡률반경. 클수록 제작이 쉽다 |
 | 통과 최소 MFD | 이 파장·매질에서 발산각 Guard(0.1 rad)를 통과하는 최소 Waist MFD(1310 nm 공기 중 약 8.34 µm) |
 

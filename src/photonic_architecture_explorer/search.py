@@ -1,4 +1,7 @@
-"""P2 continuous two-reflector candidate generator (policy P2-CONTINUOUS-1).
+"""Continuous two-reflector candidate generator (policy P3-CONTINUOUS-2).
+
+P3-CONTINUOUS-2 = P2-CONTINUOUS-1 plus the glass region constraint, beam clearance, obstruction and
+incidence margins for the pose study, and extra near-match trials.
 
 Two fixed coplanar Ports leave exactly two free lengths for a two-reflector relay:
 a (Source → M1 along the Source axis) and c (M2 → Target, back along the Target axis).
@@ -35,7 +38,7 @@ from .solver import MAX_DIVERGENCE, MAX_FOOTPRINT_SLOPE, MIN_COSINE
 
 APERTURE_FACTOR = 4.0  # same projected-radius factor as the M5-A prescription
 POLICY = {
-    'id': 'P2-CONTINUOUS-1',
+    'id': 'P3-CONTINUOUS-2',
     'free_parameters': 'a = |Source→M1|, c = |M2→Target| (two coplanar reflectors)',
     'grid_points_per_axis': 64,
     'length_range': 'log-spaced from 1 % to 400 % of the Port separation',
