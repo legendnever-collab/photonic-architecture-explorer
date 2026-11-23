@@ -4,6 +4,11 @@ The Workspace, the JSON API and the scenario fixtures all exchange this document
 It uses engineering units (mm, µm, nm) and carries provenance for every Port
 quantity. `to_engine_input` converts it, without defaults or normalization, into
 the existing M3A-1 two-Port contract that the validated engine consumes.
+
+P3 adds an optional `medium_block` (one glass block with a planar surface) and a
+per-Port `medium`. `to_engine_problem` turns a Port on the other side of the surface
+into an equivalent Port just inside the block (media.py), so the relay is solved in
+one homogeneous medium.
 """
 
 import hashlib
@@ -93,7 +98,59 @@ def validate_document(document):
                 issues.append({'path': f'{path}.evidence.{key}',
                                'message': f'provenance({", ".join(sorted(PROVENANCE - {"unprovided"}))})와 source가 필요합니다'})
     issues += validate_constraints(document.get('constraints'))
+    issues += validate_block(document, ports)
     return issues
+
+
+def validate_block(document, ports):
+    block = document.get('medium_block')
+    issues = []
+    media = {name: (ports.get(name) or {}).get('medium', 'ambient') for name in PORT_NAMES if isinstance(ports.get(name), dict)}
+    for name, medium in media.items():
+        if medium not in ('ambient', 'block'):
+            issues.append({'path': f'ports.{name}.medium', 'message': '"ambient" 또는 "block"이 필요합니다'})
+    if block is None:
+        for name, medium in media.items():
+            if medium == 'block':
+                issues.append({'path': f'ports.{name}.medium', 'message': 'medium_block이 없으면 "ambient"여야 합니다'})
+        return issues
+    if not isinstance(block, dict):
+        return issues + [{'path': 'medium_block', 'message': 'object가 필요합니다'}]
+    unknown = set(block) - {'label', 'index', 'surface_point_mm', 'surface_normal', 'thickness_mm', 'index_source'}
+    if unknown:
+        issues.append({'path': 'medium_block', 'message': f'알 수 없는 항목: {", ".join(sorted(unknown))}'})
+    index, ambient = block.get('index'), document.get('ambient_index')
+    if not _finite(index) or not _finite(ambient) or index <= ambient:
+        issues.append({'path': 'medium_block.index', 'message': '외부 매질보다 큰 굴절률이 필요합니다'})
+    point = _vector(issues, block, 'surface_point_mm', 3, 'medium_block')
+    normal = _vector(issues, block, 'surface_normal', 3, 'medium_block', unit=True)
+    thickness = block.get('thickness_mm')
+    if thickness is not None and (not _finite(thickness) or thickness <= 0):
+        issues.append({'path': 'medium_block.thickness_mm', 'message': '양수 또는 null이 필요합니다'})
+    source = block.get('index_source')
+    if source is not None and (not isinstance(source, dict) or source.get('provenance') not in PROVENANCE - {'unprovided'}
+                               or not isinstance(source.get('source'), str)):
+        issues.append({'path': 'medium_block.index_source', 'message': 'provenance와 source가 필요합니다'})
+    if point and normal and not issues:
+        for name, medium in media.items():
+            position = ports[name].get('position_mm')
+            if not (isinstance(position, list) and len(position) == 3 and all(_finite(v) for v in position)):
+                continue
+            depth = -sum((p - q) * n for p, q, n in zip(position, point, normal))
+            on_surface = abs(depth) <= 1e-9  # a Port on the surface may be declared on either side
+            inside = depth > 0 and (thickness is None or depth <= thickness + 1e-9)
+            if not on_surface and (medium == 'block') != inside:
+                issues.append({'path': f'ports.{name}.medium', 'message': 'Port 위치가 선언한 매질 쪽에 있지 않습니다'})
+    return issues
+
+
+def block_of(document):
+    from .media import Block
+    b = document.get('medium_block')
+    if not b:
+        return None
+    return Block(b['index'], tuple(v * 1e-3 for v in b['surface_point_mm']), tuple(b['surface_normal']),
+                 b['thickness_mm'] * 1e-3 if b.get('thickness_mm') else None, b.get('label') or 'Glass')
 
 
 def _box(issues, node, path):
@@ -210,22 +267,85 @@ def _engine_port(name, port):
     }
 
 
-def to_engine_input(document):
-    """Convert a valid Design Document into the engine's M3A-1 two-Port contract."""
-    issues = validate_document(document)
-    if issues:
-        raise DocumentError(issues)
+def _header(document, index, medium_label):
     common = {'provenance': 'assumed', 'source': f'Design Document: {document.get("title") or "untitled"}'}
-    engine = {
+    index_ev = common if medium_label == 'ambient' else (
+        (document['medium_block'].get('index_source') or common))
+    return {
         'contract_version': 'M3A-1',
         'coordinate_convention': CONVENTION,
         'description': document.get('description') or document.get('title') or 'Design Document',
         'wavelength_m': _record(document['wavelength_nm'] * 1e-9, 'm', common),
-        'ambient_index': _record(document['ambient_index'], '1', common,
-                                 quantity='external_ambient_refractive_index'),
-        **{name: _engine_port(name, document['ports'][name]) for name in PORT_NAMES},
+        'ambient_index': _record(index, '1', index_ev, quantity='external_ambient_refractive_index'),
     }
+
+
+def to_engine_input(document):
+    """Convert a valid Design Document into the engine's M3A-1 two-Port contract (ambient medium)."""
+    issues = validate_document(document)
+    if issues:
+        raise DocumentError(issues)
+    engine = {**_header(document, document['ambient_index'], 'ambient'),
+              **{name: _engine_port(name, document['ports'][name]) for name in PORT_NAMES}}
     package = _package(document)
     if package:
         engine['package'] = package
     return engine
+
+
+def _effective_port(name, port, crossing, wavelength, index):
+    """Engine Port record for an ambient Port replaced by its equivalent just inside the block."""
+    from .media import q_to_record
+    placement, mode, phase = (evidence(port, k) for k in EVIDENCE_KEYS)
+    mfd, curvature = q_to_record(crossing.q_in_block, wavelength, index)
+    position = list(crossing.point)
+    direction = list(crossing.direction_in_block)
+    derived = (f'Equivalent {name} Port inside the block: {port.get("label") or name} carried '
+               f'{crossing.ambient_length * 1e3:.4f} mm through the ambient medium and refracted at the block surface '
+               f'(q scaling, Coddington); ')
+    ev = lambda base: {'provenance': base['provenance'], 'source': derived + base['source']}  # noqa: E731
+    kind = 'synthetic_gaussian' if mode['provenance'] == 'synthetic' else 'gaussian_assumption'
+    return {
+        'position_m': _record(position, 'm', ev(placement)),
+        'propagation_direction': _record(direction, '1', ev(placement)),
+        'sagittal_axis': _record(list(port['sagittal_axis']), '1', ev(placement)),
+        'reference_plane': _record({'id': f'{name}-block-surface', 'frame_id': 'world', 'side': 'external',
+                                    'origin_m': position, 'normal': direction}, 'plane', ev(placement)),
+        'polarization': _record({'treatment': 'scalar_ignored'}, '1',
+                                {'provenance': 'assumed', 'source': 'Scalar model; polarization not transported'}),
+        'mode_evidence': _record({'kind': kind, 'label': port.get('label'), 'preset': port.get('preset')}, 'evidence', ev(mode)),
+        'mfd_ts_m': _record(mfd, 'm', ev(mode)),
+        'wavefront_curvature_ts_per_m': _record(curvature, 'm^-1', ev(phase)),
+    }
+
+
+def to_engine_problem(document):
+    """Engine input for the relay medium plus the surface crossing, if any.
+
+    Returns {'engine': M3A-1 document, 'medium': 'ambient'|'block', 'block': Block|None,
+             'crossing': media.Crossing|None, 'ambient_engine': ambient-medium document}.
+    """
+    from .external import adapt_ports
+    from .media import cross_source, cross_target
+    ambient_engine = to_engine_input(document)
+    block = block_of(document)
+    media = {name: document['ports'][name].get('medium', 'ambient') for name in PORT_NAMES}
+    if block is None or set(media.values()) == {'ambient'}:
+        return {'engine': ambient_engine, 'medium': 'ambient', 'block': block, 'crossing': None,
+                'ambient_engine': ambient_engine}
+    wavelength = document['wavelength_nm'] * 1e-9
+    engine = _header(document, block.index, 'block')
+    crossing = None
+    ambient_ports = adapt_ports(ambient_engine)
+    for name in PORT_NAMES:
+        port = document['ports'][name]
+        if media[name] == 'block':
+            engine[name] = _engine_port(name, port)
+        else:
+            original = getattr(ambient_ports, name)
+            crossing = (cross_source if name == 'source' else cross_target)(original, block, document['ambient_index'])
+            engine[name] = _effective_port(name, port, crossing, wavelength, block.index)
+    package = _package(document)
+    if package:
+        engine['package'] = package
+    return {'engine': engine, 'medium': 'block', 'block': block, 'crossing': crossing, 'ambient_engine': ambient_engine}

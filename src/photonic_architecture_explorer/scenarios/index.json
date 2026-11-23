@@ -66,6 +66,66 @@
       }
     },
     {
+      "id": "S2a-1310-glass",
+      "title": "S2a · 수직 SMF → Glass 상면 → 매립 LDW (1310 nm, 1.1 mm)",
+      "file": "S2a-1310-glass.json",
+      "decision": "Same Mode pair as S2a-1310, but the relay runs inside the glass block",
+      "expect": {
+        "status": "Computed",
+        "min_candidates": 1,
+        "family": "near_match",
+        "reason_contains": "Near-match",
+        "target": {
+          "status": "Computed",
+          "phase": "P3"
+        }
+      }
+    },
+    {
+      "id": "S2a-1550-glass",
+      "title": "S2a · 수직 SMF → Glass 상면 → 매립 LDW (1550 nm, 2.0 mm)",
+      "file": "S2a-1550-glass.json",
+      "decision": "Same Mode pair as S2a-1550, relay inside a thicker glass block",
+      "expect": {
+        "status": "Computed",
+        "min_candidates": 3,
+        "family": "exact",
+        "target": {
+          "status": "Computed",
+          "phase": "P3"
+        }
+      }
+    },
+    {
+      "id": "S2b-1550-glass",
+      "title": "S2b · 수직 SMF → Glass 상면 → 얕은 IOX (1550 nm)",
+      "file": "S2b-1550-glass.json",
+      "decision": "Can a shallow ion-exchanged guide be fed from above with two in-glass reflectors?",
+      "expect": {
+        "status": "Fail",
+        "reason_contains": "No valid two-reflector",
+        "target": {
+          "status": "Computed",
+          "phase": "P4"
+        }
+      }
+    },
+    {
+      "id": "S2b-1550-glass-deep",
+      "title": "S2b · 수직 SMF → Glass 상면 → 깊게 매립한 IOX 가정 (0.3 mm)",
+      "file": "S2b-1550-glass-deep.json",
+      "decision": "What burial depth would let the in-glass two-reflector family reach an IOX guide?",
+      "expect": {
+        "status": "Computed",
+        "min_candidates": 3,
+        "family": "exact",
+        "target": {
+          "status": "Computed",
+          "phase": "P3"
+        }
+      }
+    },
+    {
       "id": "S3",
       "title": "S3 · SiPh SSC → SMF",
       "file": "S3.json",

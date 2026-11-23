@@ -125,3 +125,51 @@ def arrival_check(scene, target):
     """Beam radii at the Target plane from the scene samples (used by consistency tests)."""
     last = scene['beam']['samples'][-1]
     return [last['radius_t_um'], last['radius_s_um']], [p['radius_m'] * 1e6 for p in target.mode.parameters()]
+
+
+def extend_with_crossing(scene, crossing, original, arrival_q_in_block=None):
+    """Add the ambient segment between an ambient Port and the block surface to a relay scene.
+
+    `original` is the ambient Port (position, direction, sagittal, mode). For a Target-side
+    crossing, `arrival_q_in_block` is the beam evaluated at the surface inside the block.
+    """
+    from .gaussian import Gaussian
+    length = crossing.ambient_length
+    d, s = original.direction, original.sagittal
+    t = _t_axis(s, d)
+    if crossing.side == 'source':
+        start, beam, offset = original.position, original.mode, 0.0
+    else:
+        q_air = tuple(q * f for q, f in zip(arrival_q_in_block, crossing.q_scale))
+        start, beam = crossing.point, Gaussian(*q_air, original.mode.wavelength, original.mode.index)
+        offset = scene['path']['total_length_mm'] * 1e-3
+    samples = []
+    for k in range(BEAM_SAMPLES_PER_SEGMENT + 1):
+        z = length * k / BEAM_SAMPLES_PER_SEGMENT
+        radii = [p['radius_m'] for p in beam.propagate(z).parameters()]
+        samples.append({'segment': 0, 'distance_mm': (offset + z) * 1e3, 'point_mm': _mm(add(start, mul(d, z))),
+                        'radius_t_um': radii[0] * 1e6, 'radius_s_um': radii[1] * 1e6, 'medium': 'ambient'})
+    segment = {'start_mm': _mm(start), 'end_mm': _mm(add(start, mul(d, length))), 'length_mm': length * 1e3,
+               'direction': list(d), 't_axis': t, 's_axis': list(s), 'medium': 'ambient'}
+    path, relay = scene['path'], scene['beam']['samples']
+    for sample in relay:
+        sample.setdefault('medium', 'block')
+    for seg in path['segments']:
+        seg.setdefault('medium', 'block')
+    if crossing.side == 'source':
+        for sample in relay:
+            sample['segment'] += 1
+            sample['distance_mm'] += length * 1e3
+        path['points_mm'] = [_mm(original.position), *path['points_mm']]
+        path['segments'] = [segment, *path['segments']]
+        scene['beam']['samples'] = samples + relay
+    else:
+        index = len(path['segments'])
+        for sample in samples:
+            sample['segment'] = index
+        path['points_mm'] = [*path['points_mm'], _mm(original.position)]
+        path['segments'] = [*path['segments'], segment]
+        scene['beam']['samples'] = relay + samples
+    path['total_length_mm'] += length * 1e3
+    path['surface_point_mm'] = _mm(crossing.point)
+    return scene

@@ -28,7 +28,7 @@ from .design import candidate_document, power_pairs
 from .diagnostics import ray_to_target
 from .external import InputIssue, adapt_external, adapt_ports, evaluate_external, fail
 from .gaussian import DomainError, mode_overlap
-from .geometry import Reflector, add, cross, dot, mul, norm, sub, unit
+from .geometry import Reflector, add, cross, dot, mul, norm, patch_intersections, sub, unit
 from .package_geometry import box_distance, patch_world_aabb, segment_hits_box
 from .placement import ROTATION_RAD, TRANSLATION_M, reflector_poses
 from .solver import MAX_DIVERGENCE, MAX_FOOTPRINT_SLOPE, MIN_COSINE
@@ -42,7 +42,8 @@ POLICY = {
     'exact': 'closed-form two-power exact-q branches per axis, all four branch pairs',
     'refinement': 'Nelder-Mead on (ln a, ln c) per objective, branch pair fixed',
     'near_match': 'only if no exact candidate: per-axis bounded overlap maximisation inside the guards',
-    'near_match_geometries': 'the 64 grid points closest to the 3w|κ| guard plus up to 32 without a real exact branch',
+    'near_match_geometries': ('the 64 grid points closest to the 3w|κ| guard plus up to 32 without a real exact branch; '
+                              'if none of these is feasible, further guard-limited points up to 256 trials'),
     'acceptance': 'unchanged external Adapter evaluation (geometry, domain, interception, aperture tail)',
     'guards': 'frozen: divergence 0.1 rad, 3w|κ| 0.15, incidence 70°, aperture tail 1e-6',
     'aperture_projected_radius_factor': APERTURE_FACTOR,
@@ -58,11 +59,13 @@ OBJECTIVES = {
     'robust_alignment': ('worst_pose_mismatch_db', 'min', '정렬 공차'),
     'pareto_alternative': (None, None, 'Pareto 대안'),
 }
+NEAR_MATCH_FIRST_TRIALS = 96
+NEAR_MATCH_MAX_TRIALS = 256
 LIMITS = ['Conceptual Geometry; prescribed aperture is not fabrication capability',
           'Scalar paraxial normalized overlap is not Total Coupling',
           'Finite-field aberration, coating, interface and polarization losses Uncomputed',
           'Port bodies are modelled only as the half-spaces behind the reference planes (when enabled)',
-          'Two coplanar reflectors in one homogeneous medium; other families are later phases']
+          'Two coplanar reflectors in one homogeneous medium (ambient or one glass block); other families are later phases']
 
 
 @dataclass(frozen=True)
@@ -75,6 +78,8 @@ class Constraints:
     clearance: float = 0.0                 # m, between reflector patches and keep-outs
     max_incidence_deg: float = 70.0
     min_radius_of_curvature: float | None = None  # m, |R| lower bound for curved axes
+    block: object | None = None            # media.Block
+    block_side: str = 'inside'             # reflectors must lie 'inside' or 'outside' the block
 
     @property
     def min_cosine(self):
@@ -161,10 +166,29 @@ def patch_extent_along(mirror, sagittal, direction):
     return lo, hi
 
 
+def block_violation(constraints, mirror, sagittal):
+    block = constraints.block
+    if block is None:
+        return None
+    lo, hi = patch_extent_along(mirror, sagittal, block.normal)
+    height = -block.depth(mirror.vertex)  # signed height above the surface
+    if constraints.block_side == 'inside':
+        if height + hi > 0:
+            return 'reflector crosses the block surface'
+        if block.thickness is not None and height + lo < -block.thickness:
+            return 'reflector leaves the block bottom'
+    elif height + lo < 0:
+        return 'reflector enters the block'
+    return None
+
+
 def constraint_violation(ports, constraints, vertices, mirrors):
     """First violated user/package constraint for a fully specified candidate, else None."""
     source, target, sagittal = ports.source, ports.target, ports.source.sagittal
     for mirror in mirrors:
+        violation = block_violation(constraints, mirror, sagittal)
+        if violation:
+            return violation
         if constraints.min_radius_of_curvature:
             if any(abs(k) > 1 / constraints.min_radius_of_curvature for k in mirror.curvatures):
                 return 'radius of curvature below the user minimum'
@@ -205,6 +229,17 @@ def build(ports, geometry, kappas_t, kappas_s, chains):
     return mirrors
 
 
+def intercepted(ports, vertices, lengths, mirrors):
+    """Same chief-ray patch-obstruction rule as the engine (solver.evaluate), applied while screening."""
+    points = [ports.source.position, *vertices, ports.target.position]
+    for (start, end), length in zip(zip(points, points[1:]), lengths):
+        direction = unit(sub(end, start))
+        for mirror in mirrors:
+            if any(1e-10 < x < length - 1e-10 for x in patch_intersections(start, direction, mirror, ports.source.sagittal)):
+                return True
+    return False
+
+
 def evaluate_point(ports, constraints, a, c, lam_n, *, branch=None, kappas=None):
     """Screen one (a, c): exact branches (or given curvatures) through guards and constraints."""
     try:
@@ -219,6 +254,12 @@ def evaluate_point(ports, constraints, a, c, lam_n, *, branch=None, kappas=None)
             return [Point(a, c, 'constraint', 'reflector enters the Source body half-space')]
         if dot(sub(vertices[0], ports.target.position), ports.target.direction) > 0:
             return [Point(a, c, 'constraint', 'reflector enters the Target body half-space')]
+    if constraints.block is not None:
+        inside = [constraints.block.contains(v) for v in vertices]
+        if constraints.block_side == 'inside' and not all(inside):
+            return [Point(a, c, 'constraint', 'reflector crosses the block surface')]
+        if constraints.block_side == 'outside' and any(inside):
+            return [Point(a, c, 'constraint', 'reflector enters the block')]
     qs, qt = ports.source.mode.q, ports.target.mode.q
     if kappas is not None:
         options = [(('NM', 'NM'), kappas)]
@@ -259,9 +300,13 @@ def evaluate_point(ports, constraints, a, c, lam_n, *, branch=None, kappas=None)
         elif divergence > MAX_DIVERGENCE:
             point.status, point.reason = 'domain', 'Gaussian divergence exceeds 0.1 rad'
         else:
-            violation = constraint_violation(ports, constraints, vertices, build(ports, geometry, kt, ks, chains))
-            if violation:
-                point.status, point.reason = 'constraint', violation
+            mirrors = build(ports, geometry, kt, ks, chains)
+            if intercepted(ports, vertices, lengths, mirrors):
+                point.status, point.reason = 'geometry', 'unintended reflector interception'
+            else:
+                violation = constraint_violation(ports, constraints, vertices, mirrors)
+                if violation:
+                    point.status, point.reason = 'constraint', violation
         points.append(point)
     return points
 
@@ -313,10 +358,16 @@ def near_match_curvatures(ports, lengths, cosines, lam_n):
 
 
 def near_match_seeds(grid):
-    """Geometries worth a Near-match: exact branches just outside the guard, then no-real-branch points."""
-    near_guard = sorted((p for p in grid if p.status == 'domain' and p.metrics), key=lambda p: p.metrics['max_footprint_slope'])[:64]
-    no_branch = [p for p in grid if p.status == 'power'][::max(1, sum(p.status == 'power' for p in grid) // 32)][:32]
-    return near_guard + no_branch
+    """Geometries worth a Near-match, in trial order.
+
+    First the 64 exact branches closest to the guard and up to 32 points without a real exact
+    branch (the P2 set), then the remaining guard-limited points. Guard-limited points are not yet
+    checked against the region constraints, so the later ones replace seeds that a constraint rejects.
+    """
+    near_guard = sorted((p for p in grid if p.status == 'domain' and p.metrics), key=lambda p: p.metrics['max_footprint_slope'])
+    power = [p for p in grid if p.status == 'power']
+    no_branch = power[::max(1, len(power) // 32)][:32]
+    return near_guard[:64] + no_branch + near_guard[64:]
 
 
 # ---------- alignment tolerance ----------
@@ -427,7 +478,9 @@ def design_continuous(document, constraints=Constraints(), *, include_map=True):
         pool = exact
         near_matches = []
         if not exact:
-            for point in near_match_seeds(grid):
+            for tried, point in enumerate(near_match_seeds(grid)):
+                if tried >= NEAR_MATCH_MAX_TRIALS or (tried >= NEAR_MATCH_FIRST_TRIALS and near_matches):
+                    break
                 try:
                     vertices, normals, lengths, cosines = fold(ports, point.a, point.c)
                 except (DomainError, ZeroDivisionError, ValueError, ArithmeticError):
@@ -586,4 +639,8 @@ def constraints_record(constraints):
             'keepouts_m': [{'label': label, 'min_m': list(box[0]), 'max_m': list(box[1])}
                            for label, box in zip(constraints.keepout_labels or [''] * len(constraints.keepouts), constraints.keepouts)],
             'clearance_m': constraints.clearance, 'max_incidence_deg': constraints.max_incidence_deg,
-            'min_radius_of_curvature_m': constraints.min_radius_of_curvature}
+            'min_radius_of_curvature_m': constraints.min_radius_of_curvature,
+            'block': None if constraints.block is None else {
+                'label': constraints.block.label, 'index': constraints.block.index, 'side': constraints.block_side,
+                'surface_point_m': list(constraints.block.point), 'surface_normal': list(constraints.block.normal),
+                'thickness_m': constraints.block.thickness}}
