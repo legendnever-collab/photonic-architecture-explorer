@@ -1,5 +1,5 @@
 import type { Store } from './state';
-import type { Candidate, NonparaxialStudy, Result } from './types';
+import type { AlignmentStats, Candidate, NonparaxialStudy, Result } from './types';
 
 type LensReview = NonNullable<Result['lens_review']>;
 import { STATUS_LABEL, el, fmt, nextStep, reasonLabel } from './util';
@@ -46,6 +46,7 @@ export class ResultsPanel {
     if (current.lens_review) this.root.append(this.lensReview(current.lens_review));
     const chosen = this.store.selectedCandidate;
     if (chosen?.family === 'lens_two_reflector') this.root.append(this.lensDetail(chosen));
+    if (chosen?.alignment) this.root.append(this.alignmentCard(chosen));
     if (current.nonparaxial_study?.cases?.length) this.root.append(this.study(current.nonparaxial_study));
     if (current.search?.screening_counts) {
       this.root.append(this.rejections(current.search.screening_counts, current.search.grid_points, current.search.elapsed_seconds));
@@ -95,12 +96,36 @@ export class ResultsPanel {
         + '후보로 채택하지 않으며, 다른 Family나 Guard 재검토(사용자 승인)를 판단하는 근거입니다.'));
   }
 
+  /** P4b simultaneous placement errors: passive assembly and active alignment (chief-ray linear model). */
+  private alignmentCard(c: Candidate) {
+    const a = c.alignment!;
+    if (!a.passive) return el('section', { class: 'card', 'data-card': 'alignment' }, el('h3', {}, '정렬 공차'), el('div', { class: 'muted' }, `계산하지 않음: ${a.reason ?? ''}`));
+    const pct = (v: number) => `${fmt(100 * v, 1)} %`;
+    const row = (label: string, s: AlignmentStats, extra: string, attrs: Record<string, string> = {}) => el('tr', attrs, el('td', {}, label),
+      el('td', {}, fmt(s.median_db, 2)), el('td', { class: s.p90_db > 1 ? 'warn' : 'good' }, fmt(s.p90_db, 2)), el('td', {}, fmt(s.p99_db, 2)),
+      el('td', {}, pct(s.yield_1db)), el('td', {}, extra));
+    const head = el('tr', {}, ...['조립', '중앙값 [dB]', '90 % [dB]', '99 % [dB]', '1 dB 이내', '보정량(최대)'].map((h) => el('th', {}, h)));
+    const rows = [row('Passive(모두 공차 안 무작위)', a.passive, '—', { 'data-alignment-passive': String(a.passive.p90_db) })];
+    a.active.forEach((o, i) => rows.push(row(`Active: ${o.body} ${o.dofs === 'translation' ? '위치' : '기울기'}${o.practical ? '' : ' (범위 밖)'}`, o,
+      `${o.max_travel.map((v) => fmt(v, 1)).join(' / ')} ${o.travel_unit === 'um' ? 'µm' : 'mrad'}`,
+      i === 0 && a.best_compensator ? { 'data-alignment-best': String(o.p90_db) } : {})));
+    const worst = [...a.single].sort((x, y) => y.loss_db - x.loss_db).slice(0, 4)
+      .map((s) => `${s.body} ${s.dof} ±${fmt(s.tolerance, 2)} ${s.unit === 'um' ? 'µm' : 'mrad'} → ${fmt(s.loss_db, 2)} dB`).join(' · ');
+    return el('section', { class: 'card', 'data-card': 'alignment' }, el('h3', {}, `정렬 공차 — ${c.id}`),
+      el('table', { class: 'grid-table' }, el('thead', {}, head), el('tbody', {}, ...rows)),
+      el('div', { class: 'muted' }, `가장 민감한 단일 오차: ${worst}`),
+      el('div', { class: 'muted' }, `모델: 주광선 Jacobian + Gaussian 위치·각도 어긋남의 정확한 Overlap(크기·초점 변화 제외). 모든 소자의 5자유도를 공차 안에서 독립 균일 분포로 ${a.samples}회 추출. `
+        + `Active는 한 소자의 위치(3) 또는 기울기(2)를 최적값으로 맞춘 뒤 고정 이동(±${fmt(a.tolerances.bond_translation_um, 2)} µm, ±${fmt(a.tolerances.bond_rotation_mrad, 2)} mrad)을 더한 결과. `
+        + `보정량이 ${fmt(a.active_range.translation_um, 0)} µm 또는 ${fmt(a.active_range.rotation_mrad, 0)} mrad를 넘으면 범위 밖으로 표시합니다. 공차 값은 왼쪽 카드에서 바꿉니다(가정값).`));
+  }
+
   /** P4 Family comparison and the automatic choice. */
   private familyCard(rows: NonNullable<Result['families']>) {
-    const head = el('tr', {}, ...['Family', '상태', '후보', '최고 η', '반사면 정렬 최악 [dB]', 'Lens 1 dB 편심 [µm]', '소자', '선택'].map((h) => el('th', {}, h)));
+    const head = el('tr', {}, ...['Family', '상태', '후보', '최고 η', '반사면 정렬 최악 [dB]', 'Lens 1 dB 편심 [µm]', 'Passive 1 dB 수율', 'Active 90 % [dB]', '소자', '선택'].map((h) => el('th', {}, h)));
     const body = rows.map((r) => el('tr', { class: r.selected ? 'selected' : '', 'data-family-row': r.key, 'data-selected': String(r.selected) },
       el('td', {}, r.label), el('td', { title: r.reason ?? '' }, r.status), el('td', {}, String(r.count)),
       el('td', {}, fmt(r.best_eta, 4)), el('td', {}, fmt(r.best_reflector_pose_db, 2)), el('td', {}, fmt(r.lens_decenter_1db_um, 2)),
+      el('td', {}, r.passive_yield_1db != null ? `${fmt(100 * r.passive_yield_1db, 1)} %` : '—'), el('td', {}, fmt(r.active_p90_db ?? null, 2)),
       el('td', {}, String(r.elements)), el('td', {}, r.selected ? `선택 · ${r.why ?? ''}` : '')));
     return el('section', { class: 'card', 'data-card': 'families' }, el('h3', {}, 'Family 비교'),
       el('table', { class: 'grid-table' }, el('thead', {}, head), el('tbody', {}, ...body)),

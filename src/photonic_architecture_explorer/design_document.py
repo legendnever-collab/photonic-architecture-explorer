@@ -100,6 +100,25 @@ def validate_document(document):
     issues += validate_constraints(document.get('constraints'))
     issues += validate_block(document, ports)
     issues += validate_families(document.get('families'))
+    issues += validate_tolerances(document.get('tolerances'))
+    return issues
+
+
+def validate_tolerances(tolerances):
+    """Optional ± placement tolerances for the P4b alignment study (assumed values, see alignment.TOLERANCE_DEFAULTS)."""
+    from .alignment import TOLERANCE_DEFAULTS
+    if tolerances is None:
+        return []
+    if not isinstance(tolerances, dict):
+        return [{'path': 'tolerances', 'message': 'object가 필요합니다'}]
+    issues = []
+    unknown = set(tolerances) - set(TOLERANCE_DEFAULTS)
+    if unknown:
+        issues.append({'path': 'tolerances', 'message': f'알 수 없는 항목: {", ".join(sorted(unknown))}'})
+    for key in set(tolerances) & set(TOLERANCE_DEFAULTS):
+        value = tolerances[key]
+        if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value) or value < 0 or value > 1000:
+            issues.append({'path': f'tolerances.{key}', 'message': '0 이상 1000 이하의 수가 필요합니다'})
     return issues
 
 

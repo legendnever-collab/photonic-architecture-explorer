@@ -16,6 +16,7 @@ Starts the packaged server, drives Chromium with Playwright and checks:
   * P4 Lens Family on S3: Computed candidates in the table, Lens card, detail, lens drawn in 2D and the unfolded view
   * P4 Lens Family on S5: silicon source lens and silica target lens, both drawn in the unfolded view
   * P4 Family comparison card (S3 selects the lens Family) and the lens pose table
+  * P4b alignment card on S1 (passive vs active 90th percentile)
   * P3 q-tensor: S4 (non-coplanar) gives verified candidates, the q-tensor note and guidance,
     beam ellipses in the scene and 2D mirror positions equal to the scene vertices (1 nm)
   * Design Document export round-trips
@@ -150,6 +151,11 @@ def main():
         summary['S1_corrected'] = corrected
         check(corrected and all(v >= 0.95 for v in corrected) and page.locator('[data-freeform="Computed"]').count() == 1
               and page.locator('[data-guidance="freeform"]').count() == 1, f'S1 corrected surfaces (P4 gate): {corrected}', failures)
+        passive = page.eval_on_selector_all('[data-alignment-passive]', 'els => els.map(e => Number(e.getAttribute("data-alignment-passive")))')
+        best = page.eval_on_selector_all('[data-alignment-best]', 'els => els.map(e => Number(e.getAttribute("data-alignment-best")))')
+        summary['S1_alignment_p90_db'] = {'passive': passive, 'active': best}
+        check(len(passive) == 1 and len(best) == 1 and best[0] < passive[0], f'S1 alignment card: {passive} {best}', failures)
+        page.locator('[data-card="alignment"]').screenshot(path=str(out / 'p4b_S1_alignment.png'))
         page.screenshot(path=str(out / 'p1_S1_auto.png'))
         for view in ('all', 'xz', 'fold'):
             page.click(f'.tab[data-view="{view}"]')

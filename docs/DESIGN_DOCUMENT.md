@@ -101,6 +101,11 @@ Envelope·Keep-out은 엔진 입력의 `package`(available_volume, keepout_bodie
 | `compare` | 두 반사면이 성공해도 Lens Family를 함께 계산(발산각 > 0.02 rad인 모든 Port에 Lens). 수십 초 걸림 |
 | `off` | Lens Family를 계산하지 않음 |
 
+### 정렬 공차 `tolerances` (선택, P4b)
+
+± 공차(가정값). 비우면 기본값: `mirror_translation_um` 5, `mirror_rotation_mrad` 1, `lens_translation_um` 1, `lens_axial_um` 1,
+`lens_rotation_mrad` 1, `bond_translation_um` 0.2, `bond_rotation_mrad` 0.05. 각 값은 0 이상 1000 이하.
+
 `evidence`의 항목이 없으면 `assumed`(사용자 입력)로 기록한다. 검증 오류는 첫 오류에서 멈추지 않고 전부 `{path, message}`로 돌려준다.
 
 ## 결과 `pae.result/1`
@@ -113,6 +118,7 @@ Envelope·Keep-out은 엔진 입력의 `package`(available_volume, keepout_bodie
 | `family` | 선택된 Family의 후보 종류: `exact`(두 축 q 일치, η = 1), `near_match`(Guard 안 Overlap 최대, η < 1), `lens_two_reflector`(Micro-lens + 두 반사면) |
 | `families[]` | 계산한 Family별 상태, 후보 수, 최고 최종 η, 반사면 정렬 최악 손실, Lens 1 dB 편심 허용치, 소자 수, `selected`와 이유. 규칙: 최고 η, 단 0.01 이내면 소자가 적은 Family |
 | `lens_review` | Lens Family의 모든 후보(미채택 포함), 실행한 θ', 실패 사유, 채택 규칙 |
+| `candidates[].alignment` | 동시 오차 연구: Passive(중앙값·90 %·99 % 손실 dB, 1 dB·0.5 dB 이내 비율), Active 보정 후보(소자, 위치/기울기, 같은 통계, 최대 보정량, 범위 안 여부), 단일 오차 손실, 사용한 공차 |
 | `candidates[].lens_pose` | Lens 후보: Lens별 ±1 µm 편심·축 방향, ±1 mrad 기울기 손실 [dB], 1 dB 허용치, 반사면 ±5 µm·±1 mrad 최악 손실(비근축, 65²) |
 | `candidates[].scene.lenses[]` | Lens 외곽선, 재료·출처, f, 두께, Clear 반경, Port 거리, 무코팅 투과 |
 | `candidates[]` | `id`, `rank`, `roles`·`role_labels`(최단 광경로, Guard 여유, 작은 Beam, 완만한 곡률, 정렬 공차, 최대 Overlap, Pareto 대안), `family`, `parameters_mm`(a, b, c), `metrics`(광경로, η, 3w·\|κ\|, 최대 \|κ\|, 정렬 민감도 dB, 입사각, 곡률반경), `status`(엔진 판정), `scene` |

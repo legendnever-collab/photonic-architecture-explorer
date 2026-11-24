@@ -3,6 +3,13 @@
 새 항목을 위에 추가한다. 항목당 10줄 이내: 새로 가능해진 설계 판단, 주요 기술 선택, 남은 한계.
 2026-11-24 이전의 Milestone 기록(M1~M7-R28)은 [history/](history/)에 있다.
 
+## 2026-11-25 · P4b ① 동시 오차와 Active alignment (`phase/p4b-deferred`)
+
+- **가능해진 판단**: Passive 조립이 되는지, 어느 소자를 Active 정렬해야 하는지. S1 Passive 90 % 31.7 dB(1 dB 이내 6 %) → M1 위치 Active 0.01 dB.
+  S3 Passive 1 dB 이내 13~17 % → Active 0.06~0.08 dB. S5 → M2 기울기 Active 0.36~0.44 dB.
+- **모델**: 주광선 Jacobian + 정확한 Gaussian 위치·각도 Overlap(크기·초점 변화 제외). 비근축 계산과 15 % 이내로 확인.
+- **가정**: 공차 기본값과 고정 이동, 보정 범위(50 µm, 20 mrad)는 가정값이며 Design Document에서 바꾼다.
+
 ## 2026-11-25 · P4 Gate 통과, P4 종료 (PR #66 병합)
 
 - **수용 기준**(재설계 계획): S5 통과, 같은 입력에서 Family별 최선 후보 비교표. 둘 다 충족(S5 Computed 0.987~0.988, `families[]` 비교표).
