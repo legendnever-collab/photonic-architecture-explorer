@@ -66,6 +66,10 @@ const REASONS: [RegExp, string][] = [
   [/incidence exceeds limit/, '입사각 한계 초과'],
   [/zero\/short middle segment/, '가운데 구간이 너무 짧음'],
   [/invalid paraxial transformation/, 'Paraxial 변환 불가'],
+  [/beam clips another reflector/, 'Beam이 다른 반사면에 걸림'],
+  [/crosses the block surface/, '반사면이 Glass 상면을 넘음'],
+  [/leaves the block bottom/, '반사면이 Glass 하면을 넘음'],
+  [/enters the block/, '반사면이 Glass 안으로 들어감'],
 ];
 
 export function reasonLabel(reason: string | null | undefined): string {

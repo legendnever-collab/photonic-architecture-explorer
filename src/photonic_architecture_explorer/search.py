@@ -1,6 +1,9 @@
-"""P2 continuous two-reflector candidate generator (policy P2-CONTINUOUS-1).
+"""Continuous two-reflector candidate generator (policy P3-CONTINUOUS-2).
 
-Two fixed coplanar Ports leave exactly two free lengths for a two-reflector relay:
+P3-CONTINUOUS-2 = P2-CONTINUOUS-1 plus the glass region constraint, beam clearance, obstruction and
+incidence margins for the pose study, and extra near-match trials.
+
+Two fixed Ports leave exactly two free lengths for a two-reflector relay (coplanar or not; see qtensor.py):
 a (Source → M1 along the Source axis) and c (M2 → Target, back along the Target axis).
 Everything else (middle segment, fold normals, incidence) follows, and the exact-q
 reflector powers per axis have at most two closed-form branches (`design.power_pairs`).
@@ -28,21 +31,27 @@ from .design import candidate_document, power_pairs
 from .diagnostics import ray_to_target
 from .external import InputIssue, adapt_external, adapt_ports, evaluate_external, fail
 from .gaussian import DomainError, mode_overlap
-from .geometry import Reflector, add, cross, dot, mul, norm, sub, unit
+from .geometry import Reflector, add, cross, dot, mul, norm, patch_intersections, sub, unit
 from .package_geometry import box_distance, patch_world_aabb, segment_hits_box
 from .placement import ROTATION_RAD, TRANSLATION_M, reflector_poses
 from .solver import MAX_DIVERGENCE, MAX_FOOTPRINT_SLOPE, MIN_COSINE
 
 APERTURE_FACTOR = 4.0  # same projected-radius factor as the M5-A prescription
 POLICY = {
-    'id': 'P2-CONTINUOUS-1',
-    'free_parameters': 'a = |Source→M1|, c = |M2→Target| (two coplanar reflectors)',
+    'id': 'P3-CONTINUOUS-2',
+    'free_parameters': 'a = |Source→M1|, c = |M2→Target| (two reflectors; non-coplanar Ports use the q-tensor model)',
     'grid_points_per_axis': 64,
     'length_range': 'log-spaced from 1 % to 400 % of the Port separation',
     'exact': 'closed-form two-power exact-q branches per axis, all four branch pairs',
     'refinement': 'Nelder-Mead on (ln a, ln c) per objective, branch pair fixed',
     'near_match': 'only if no exact candidate: per-axis bounded overlap maximisation inside the guards',
-    'near_match_geometries': 'the 64 grid points closest to the 3w|κ| guard plus up to 32 without a real exact branch',
+    'incidence_margin_deg': 1.0,
+    'chief_ray_margin': 'prescribed patches grown by 10 µm + 2 % when screening chief-ray obstruction',
+    'beam_clearance': ('fold-plane beam edges at 2.63 w (1e-6 power tail), 16 samples per segment, must miss the '
+                       'illuminated 2.63 w region of the reflector the segment does not end on'),
+    'near_match_geometries': ('the 64 grid points closest to the 3w|κ| guard plus up to 32 without a real exact branch; '
+                              'if none of these is feasible, further guard-limited points up to 256 trials; '
+                              'q-tensor: at most 24 optimisations, skipping seeds whose exact-solution patches violate a space constraint'),
     'acceptance': 'unchanged external Adapter evaluation (geometry, domain, interception, aperture tail)',
     'guards': 'frozen: divergence 0.1 rad, 3w|κ| 0.15, incidence 70°, aperture tail 1e-6',
     'aperture_projected_radius_factor': APERTURE_FACTOR,
@@ -56,13 +65,22 @@ OBJECTIVES = {
     'small_beam': ('max_footprint_radius_m', 'min', '작은 Beam'),
     'gentle_curvature': ('max_abs_curvature_per_m', 'min', '완만한 곡률'),
     'robust_alignment': ('worst_pose_mismatch_db', 'min', '정렬 공차'),
+    'best_nonparaxial': ('nonparaxial_overlap_screen', 'max', '비근축 Overlap 최대'),
     'pareto_alternative': (None, None, 'Pareto 대안'),
 }
+INCIDENCE_MARGIN_DEG = 1.0  # room for the ±5 µm / ±1 mrad pose study to stay inside the 70° guard
+CLEARANCE_TAIL_FACTOR = math.sqrt(math.log(1e6) / 2)  # radius outside which a Gaussian carries < 1e-6 of its power (per axis)
+CLEARANCE_SAMPLES = 16
+POSE_PATCH_MARGIN = (10e-6, 0.02)  # m, fraction: chief-ray obstruction margin around each prescribed patch
+NEAR_MATCH_FIRST_TRIALS = 96
+NEAR_MATCH_MAX_TRIALS = 256
+NEAR_MATCH_TENSOR_TRIALS = 24  # each q-tensor Near-match is a 6-parameter optimisation (~0.3 s)
 LIMITS = ['Conceptual Geometry; prescribed aperture is not fabrication capability',
           'Scalar paraxial normalized overlap is not Total Coupling',
           'Finite-field aberration, coating, interface and polarization losses Uncomputed',
           'Port bodies are modelled only as the half-spaces behind the reference planes (when enabled)',
-          'Two coplanar reflectors in one homogeneous medium; other families are later phases']
+          'Two reflectors with local quadratic (vertex) surfaces in one homogeneous medium (ambient or one glass block); '
+          'the non-paraxial check shows coma at oblique incidence that the paraxial overlap does not; other families are later phases']
 
 
 @dataclass(frozen=True)
@@ -75,10 +93,14 @@ class Constraints:
     clearance: float = 0.0                 # m, between reflector patches and keep-outs
     max_incidence_deg: float = 70.0
     min_radius_of_curvature: float | None = None  # m, |R| lower bound for curved axes
+    block: object | None = None            # media.Block
+    block_side: str = 'inside'             # reflectors must lie 'inside' or 'outside' the block
 
     @property
     def min_cosine(self):
-        return max(MIN_COSINE, math.cos(math.radians(min(self.max_incidence_deg, 70.0))))
+        """Search limit: the tighter of the user and frozen limits, less a margin for the pose study."""
+        limit = min(self.max_incidence_deg, 70.0) - INCIDENCE_MARGIN_DEG
+        return max(MIN_COSINE, math.cos(math.radians(limit)))
 
 
 @dataclass
@@ -161,10 +183,30 @@ def patch_extent_along(mirror, sagittal, direction):
     return lo, hi
 
 
+def block_violation(constraints, mirror, sagittal):
+    block = constraints.block
+    if block is None:
+        return None
+    lo, hi = patch_extent_along(mirror, sagittal, block.normal)
+    height = -block.depth(mirror.vertex)  # signed height above the surface
+    if constraints.block_side == 'inside':
+        if height + hi > 0:
+            return 'reflector crosses the block surface'
+        if block.thickness is not None and height + lo < -block.thickness:
+            return 'reflector leaves the block bottom'
+    elif height + lo < 0:
+        return 'reflector enters the block'
+    return None
+
+
 def constraint_violation(ports, constraints, vertices, mirrors):
     """First violated user/package constraint for a fully specified candidate, else None."""
     source, target, sagittal = ports.source, ports.target, ports.source.sagittal
     for mirror in mirrors:
+        sagittal = getattr(mirror, 'axis', None) or ports.source.sagittal  # q-tensor reflectors carry their own axes
+        violation = block_violation(constraints, mirror, sagittal)
+        if violation:
+            return violation
         if constraints.min_radius_of_curvature:
             if any(abs(k) > 1 / constraints.min_radius_of_curvature for k in mirror.curvatures):
                 return 'radius of curvature below the user minimum'
@@ -205,6 +247,63 @@ def build(ports, geometry, kappas_t, kappas_s, chains):
     return mirrors
 
 
+def intercepted(ports, vertices, lengths, mirrors, chains, lam_n):
+    """Reflector obstruction while screening.
+
+    The chief-ray rule is the engine's (solver.evaluate), applied to patches grown by a pose margin so
+    the ±5 µm / ±1 mrad pose study does not run into the same obstruction. In addition the beam itself must clear the
+    reflector a segment does not end on: the fold-plane edges of the segment's t-axis beam, at the
+    1e-6 power-tail radius and sampled along the segment, must miss that reflector's illuminated
+    region (its own beam's 1e-6 tail radius, smaller than the prescribed 4w aperture).
+    """
+    points = [ports.source.position, *vertices, ports.target.position]
+    sagittal = ports.source.sagittal
+    grown = [Reflector(m.vertex, m.normal, m.curvatures,
+                       tuple(a * (1 + POSE_PATCH_MARGIN[1]) + POSE_PATCH_MARGIN[0] for a in m.half_aperture)) for m in mirrors]
+    for (start, end), length in zip(zip(points, points[1:]), lengths):
+        direction = unit(sub(end, start))
+        for mirror in grown:
+            if any(1e-10 < x < length - 1e-10 for x in patch_intersections(start, direction, mirror, sagittal)):
+                return 'unintended reflector interception'
+    shrink = CLEARANCE_TAIL_FACTOR / APERTURE_FACTOR
+    lit = [Reflector(m.vertex, m.normal, m.curvatures, tuple(a * shrink for a in m.half_aperture)) for m in mirrors]
+    q_start = (ports.source.mode.q[0], chains[0]['q'] - lengths[2])  # t-axis q at the start of segments 0 and 2
+    for j, other, q0 in ((0, lit[1], q_start[0]), (2, lit[0], q_start[1])):
+        start, end = points[j], points[j + 1]
+        direction = unit(sub(end, start))
+        t_axis = unit(cross(sagittal, direction))
+        n = CLEARANCE_SAMPLES
+        z = [lengths[j] * k / n for k in range(n + 1)]
+        r = [CLEARANCE_TAIL_FACTOR * math.sqrt(-lam_n / (1 / (q0 + zk)).imag) for zk in z]
+        for sign in (1, -1):
+            for k in range(n):
+                a = add(add(start, mul(direction, z[k])), mul(t_axis, sign * r[k]))
+                b = add(add(start, mul(direction, z[k + 1])), mul(t_axis, sign * r[k + 1]))
+                span = norm(sub(b, a))
+                if any(1e-10 < x < span for x in patch_intersections(a, unit(sub(b, a)), other, sagittal)):
+                    return 'beam clips another reflector'
+    return None
+
+
+def prescreen(ports, constraints, a, c, geometry):
+    """Geometry-only tests shared by the separable and q-tensor screens; a rejected Point or None."""
+    vertices, _, _, cosines = geometry
+    if min(cosines) < constraints.min_cosine:
+        return Point(a, c, 'geometry', 'incidence exceeds limit')
+    if constraints.port_halfspace:  # vertex-level test first; the patch extent is checked later
+        if dot(sub(vertices[1], ports.source.position), ports.source.direction) < 0:
+            return Point(a, c, 'constraint', 'reflector enters the Source body half-space')
+        if dot(sub(vertices[0], ports.target.position), ports.target.direction) > 0:
+            return Point(a, c, 'constraint', 'reflector enters the Target body half-space')
+    if constraints.block is not None:
+        inside = [constraints.block.contains(v) for v in vertices]
+        if constraints.block_side == 'inside' and not all(inside):
+            return Point(a, c, 'constraint', 'reflector crosses the block surface')
+        if constraints.block_side == 'outside' and any(inside):
+            return Point(a, c, 'constraint', 'reflector enters the block')
+    return None
+
+
 def evaluate_point(ports, constraints, a, c, lam_n, *, branch=None, kappas=None):
     """Screen one (a, c): exact branches (or given curvatures) through guards and constraints."""
     try:
@@ -212,13 +311,9 @@ def evaluate_point(ports, constraints, a, c, lam_n, *, branch=None, kappas=None)
     except (DomainError, ZeroDivisionError, ValueError, ArithmeticError):
         return [Point(a, c, 'geometry', 'zero/short middle segment')]
     vertices, normals, lengths, cosines = geometry
-    if min(cosines) < constraints.min_cosine:
-        return [Point(a, c, 'geometry', 'incidence exceeds limit')]
-    if constraints.port_halfspace:  # vertex-level test first; the patch extent is checked later
-        if dot(sub(vertices[1], ports.source.position), ports.source.direction) < 0:
-            return [Point(a, c, 'constraint', 'reflector enters the Source body half-space')]
-        if dot(sub(vertices[0], ports.target.position), ports.target.direction) > 0:
-            return [Point(a, c, 'constraint', 'reflector enters the Target body half-space')]
+    rejected = prescreen(ports, constraints, a, c, geometry)
+    if rejected:
+        return [rejected]
     qs, qt = ports.source.mode.q, ports.target.mode.q
     if kappas is not None:
         options = [(('NM', 'NM'), kappas)]
@@ -259,9 +354,14 @@ def evaluate_point(ports, constraints, a, c, lam_n, *, branch=None, kappas=None)
         elif divergence > MAX_DIVERGENCE:
             point.status, point.reason = 'domain', 'Gaussian divergence exceeds 0.1 rad'
         else:
-            violation = constraint_violation(ports, constraints, vertices, build(ports, geometry, kt, ks, chains))
-            if violation:
-                point.status, point.reason = 'constraint', violation
+            mirrors = build(ports, geometry, kt, ks, chains)
+            obstruction = intercepted(ports, vertices, lengths, mirrors, chains, lam_n)
+            if obstruction:
+                point.status, point.reason = 'geometry', obstruction
+            else:
+                violation = constraint_violation(ports, constraints, vertices, mirrors)
+                if violation:
+                    point.status, point.reason = 'constraint', violation
         points.append(point)
     return points
 
@@ -313,10 +413,16 @@ def near_match_curvatures(ports, lengths, cosines, lam_n):
 
 
 def near_match_seeds(grid):
-    """Geometries worth a Near-match: exact branches just outside the guard, then no-real-branch points."""
-    near_guard = sorted((p for p in grid if p.status == 'domain' and p.metrics), key=lambda p: p.metrics['max_footprint_slope'])[:64]
-    no_branch = [p for p in grid if p.status == 'power'][::max(1, sum(p.status == 'power' for p in grid) // 32)][:32]
-    return near_guard + no_branch
+    """Geometries worth a Near-match, in trial order.
+
+    First the 64 exact branches closest to the guard and up to 32 points without a real exact
+    branch (the P2 set), then the remaining guard-limited points. Guard-limited points are not yet
+    checked against the region constraints, so the later ones replace seeds that a constraint rejects.
+    """
+    near_guard = sorted((p for p in grid if p.status == 'domain' and p.metrics), key=lambda p: p.metrics['max_footprint_slope'])
+    power = [p for p in grid if p.status == 'power']
+    no_branch = power[::max(1, len(power) // 32)][:32]
+    return near_guard[:64] + no_branch + near_guard[64:]
 
 
 # ---------- alignment tolerance ----------
@@ -352,10 +458,12 @@ def grid_values(scale):
     return [lo * (hi / lo) ** (i / (n - 1)) for i in range(n)]
 
 
-def refine(ports, constraints, lam_n, point, metric):
+def refine(ports, constraints, lam_n, point, metric, evaluator=None):
     """Continuous improvement of one objective on the feasible set, branch pair fixed."""
+    evaluator = evaluator or evaluate_point
+
     def cost(x):
-        found = evaluate_point(ports, constraints, math.exp(x[0]), math.exp(x[1]), lam_n, branch=point.branch)
+        found = evaluator(ports, constraints, math.exp(x[0]), math.exp(x[1]), lam_n, branch=point.branch)
         if not found or found[0].status != 'ok':
             return 1e9
         return found[0].metrics[metric]
@@ -363,7 +471,7 @@ def refine(ports, constraints, lam_n, point, metric):
     run = minimize(cost, start, method='Nelder-Mead',
                    options={'xatol': 1e-4, 'fatol': 1e-12, 'maxiter': 160, 'initial_simplex': [
                        start, [start[0] + 0.05, start[1]], [start[0], start[1] + 0.05]]})
-    better = evaluate_point(ports, constraints, math.exp(run.x[0]), math.exp(run.x[1]), lam_n, branch=point.branch)
+    better = evaluator(ports, constraints, math.exp(run.x[0]), math.exp(run.x[1]), lam_n, branch=point.branch)
     if better and better[0].status == 'ok' and better[0].metrics[metric] <= point.metrics[metric]:
         return better[0]
     return point
@@ -399,15 +507,18 @@ def design_continuous(document, constraints=Constraints(), *, include_map=True):
         ports = adapt_ports(document)
         result['input_contract'] = {'status': 'Pass', 'scope': 'explicit two-Port subset of M3A contract'}
         source, target = ports.source, ports.target
-        if norm(sub(source.sagittal, target.sagittal)) > 1e-10:
-            raise DomainError('rolled Target axes unsupported')
-        if abs(dot(source.sagittal, target.direction)) > 1e-10:
-            raise DomainError('noncoplanar Target direction')
         scale = norm(sub(target.position, source.position))
         if scale < 1e-9:
             raise DomainError('coincident/near-coincident Ports outside the two-reflector family')
-        if abs(dot(source.sagittal, sub(target.position, source.position))) / scale > 1e-10:
-            raise DomainError('noncoplanar Port positions')
+        tensor = (norm(sub(source.sagittal, target.sagittal)) > 1e-10
+                  or abs(dot(source.sagittal, target.direction)) > 1e-10
+                  or abs(dot(source.sagittal, sub(target.position, source.position))) / scale > 1e-10)
+        if tensor:  # non-coplanar or rolled axes: general astigmatic q-tensor screen and ray-transfer check
+            from . import qtensor
+            evaluator, checker = qtensor.evaluate_point, qtensor.verify
+        else:
+            evaluator, checker = evaluate_point, verify
+        result['model'] = 'qtensor' if tensor else 'separable'
         if any(p['divergence_rad'] > MAX_DIVERGENCE for port in (source, target) for p in port.mode.parameters()):
             raise DomainError('Gaussian divergence exceeds 0.1 rad')
         lam_n = source.mode.wavelength / (math.pi * source.mode.index)
@@ -416,7 +527,7 @@ def design_continuous(document, constraints=Constraints(), *, include_map=True):
         grid, counts = [], Counter()
         for a in values:
             for c in values:
-                found = evaluate_point(ports, constraints, a, c, lam_n)
+                found = evaluator(ports, constraints, a, c, lam_n)
                 feasible = [p for p in found if p.status == 'ok']
                 chosen = min(feasible, key=lambda p: p.metrics['max_footprint_slope']) if feasible else (
                     min((p for p in found if p.metrics), key=lambda p: p.metrics['max_footprint_slope'], default=found[0]))
@@ -425,15 +536,26 @@ def design_continuous(document, constraints=Constraints(), *, include_map=True):
         exact = [p for p in grid if p.status == 'ok']
         family = 'exact'
         pool = exact
-        near_matches = []
+        near_matches, optimised = [], 0
         if not exact:
-            for point in near_match_seeds(grid):
-                try:
-                    vertices, normals, lengths, cosines = fold(ports, point.a, point.c)
-                except (DomainError, ZeroDivisionError, ValueError, ArithmeticError):
-                    continue
-                kappas, _ = near_match_curvatures(ports, lengths, cosines, lam_n)
-                found = evaluate_point(ports, constraints, point.a, point.c, lam_n, kappas=kappas)
+            for tried, point in enumerate(near_match_seeds(grid)):
+                if tried >= NEAR_MATCH_MAX_TRIALS or (tried >= NEAR_MATCH_FIRST_TRIALS and near_matches):
+                    break
+                if tensor:
+                    if optimised >= NEAR_MATCH_TENSOR_TRIALS:
+                        break
+                    found, ran = qtensor.near_match_point(ports, constraints, point, lam_n)
+                    optimised += ran
+                    if found is None:
+                        continue
+                    found = [found]
+                else:
+                    try:
+                        vertices, normals, lengths, cosines = fold(ports, point.a, point.c)
+                    except (DomainError, ZeroDivisionError, ValueError, ArithmeticError):
+                        continue
+                    kappas, _ = near_match_curvatures(ports, lengths, cosines, lam_n)
+                    found = evaluate_point(ports, constraints, point.a, point.c, lam_n, kappas=kappas)
                 if found[0].status == 'ok':
                     near_matches.append(found[0])
             family = 'near_match'
@@ -454,11 +576,20 @@ def design_continuous(document, constraints=Constraints(), *, include_map=True):
                 result['search']['closest_exact'] = {'a_m': closest.a, 'c_m': closest.c, 'reason': closest.reason,
                                                      'max_footprint_slope': closest.metrics['max_footprint_slope'],
                                                      'limit': MAX_FOOTPRINT_SLOPE}
-        plan, front = select(ports, constraints, lam_n, pool, family)
+        plan, front = select(ports, constraints, lam_n, pool, family, evaluator=evaluator)
+        if pool:  # P3: rank the feasible set by the non-paraxial scalar overlap as one more objective
+            from . import nonparaxial
+            ranked = nonparaxial.screen(ports, pool)
+            result['search']['nonparaxial_screen'] = {
+                'screened': len(ranked), 'grid': nonparaxial.SCREEN_GRID,
+                'best': ranked[0].metrics['nonparaxial_overlap_screen'] if ranked else None,
+                'worst': ranked[-1].metrics['nonparaxial_overlap_screen'] if ranked else None}
+            if ranked:
+                plan.append(('best_nonparaxial', ranked[:6]))
         accepted, ledger = [], []
 
         def attempt(point, role):
-            candidate = verify(document, ports, point, role, family)
+            candidate = checker(document, ports, point, role, family)
             ledger.append({'role': role, 'a_m': point.a, 'c_m': point.c, 'status': candidate['status'],
                            'reason': candidate.get('reason')})
             if candidate['status'] == 'Accepted':
@@ -483,6 +614,14 @@ def design_continuous(document, constraints=Constraints(), *, include_map=True):
             remaining.remove(far)
             attempt(far, 'pareto_alternative')
         accepted = add_tolerance_roles(accepted)
+        if accepted:
+            from . import nonparaxial
+            for candidate in accepted:
+                try:
+                    candidate['nonparaxial_check'] = nonparaxial.check_candidate(candidate, document)
+                except (DomainError, ValueError, ArithmeticError) as exc:
+                    candidate['nonparaxial_check'] = {'status': 'Uncomputed', 'reason': str(exc)}
+            relabel_nonparaxial(accepted)
         result['candidates'] = accepted
         result['search']['verification'] = ledger
         result['selected_candidate_id'] = accepted[0]['id'] if accepted else None
@@ -510,7 +649,7 @@ ROLES = {'exact': ('short_path', 'model_margin', 'small_beam', 'gentle_curvature
          'near_match': ('best_overlap', 'short_path', 'small_beam', 'gentle_curvature')}
 
 
-def select(ports, constraints, lam_n, pool, family, tries=6):
+def select(ports, constraints, lam_n, pool, family, tries=6, evaluator=None):
     """Per objective, a short ranked list of Pareto points (refined first choice, then runners-up)."""
     if not pool:
         return [], []
@@ -529,7 +668,7 @@ def select(ports, constraints, lam_n, pool, family, tries=6):
         metric = 'mismatch' if role == 'best_overlap' else OBJECTIVES[role][0]
         ranked = sorted(front, key=lambda p: (p.metrics[metric], p.metrics['total_path_m']))[:tries]
         if family == 'exact' and ranked:
-            ranked[0] = refine(ports, constraints, lam_n, ranked[0], metric)
+            ranked[0] = refine(ports, constraints, lam_n, ranked[0], metric, evaluator or evaluate_point)
         plan.append((role, ranked))
     return plan, front
 
@@ -571,6 +710,19 @@ def same_point(point, candidate):
             and list(point.branch) == p['branch'])
 
 
+def relabel_nonparaxial(accepted):
+    """The coarse screen picks a concept; the role goes to the best fully checked non-paraxial overlap."""
+    checked = [c for c in accepted if (c.get('nonparaxial_check') or {}).get('status') == 'Computed']
+    if not checked:
+        return
+    for c in accepted:
+        if 'best_nonparaxial' in c['roles']:
+            c['roles'].remove('best_nonparaxial')
+            if not c['roles']:
+                c['roles'].append('pareto_alternative')
+    max(checked, key=lambda c: c['nonparaxial_check']['normalized_mode_overlap'])['roles'].append('best_nonparaxial')
+
+
 def add_tolerance_roles(accepted):
     """Keep objective order; mark the most alignment-tolerant concept explicitly."""
     tolerant = [c for c in accepted if c['worst_pose_mismatch_db'] is not None]
@@ -586,4 +738,8 @@ def constraints_record(constraints):
             'keepouts_m': [{'label': label, 'min_m': list(box[0]), 'max_m': list(box[1])}
                            for label, box in zip(constraints.keepout_labels or [''] * len(constraints.keepouts), constraints.keepouts)],
             'clearance_m': constraints.clearance, 'max_incidence_deg': constraints.max_incidence_deg,
-            'min_radius_of_curvature_m': constraints.min_radius_of_curvature}
+            'min_radius_of_curvature_m': constraints.min_radius_of_curvature,
+            'block': None if constraints.block is None else {
+                'label': constraints.block.label, 'index': constraints.block.index, 'side': constraints.block_side,
+                'surface_point_m': list(constraints.block.point), 'surface_normal': list(constraints.block.normal),
+                'thickness_m': constraints.block.thickness}}

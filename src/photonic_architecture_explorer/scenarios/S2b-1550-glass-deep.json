@@ -1,0 +1,112 @@
+{
+  "schema": "pae.design/1",
+  "title": "S2b · vertical SMF-28 → D 263-index glass top → IOX buried 0.3 mm (hypothetical)",
+  "scenario": "S2b-1550-glass-deep",
+  "description": "Hypothetical 0.3 mm burial in 2.0 mm of glass with the D 263 index, to show what the family needs; neither value is a process or product claim. With 1.1 mm the family has no candidate at any depth tried.",
+  "wavelength_nm": 1550.0,
+  "ambient_index": 1.0,
+  "ports": {
+    "source": {
+      "label": "Corning SMF-28 Ultra · 1550 nm",
+      "preset": "smf28-ultra-1550",
+      "position_mm": [
+        0,
+        0,
+        0.1
+      ],
+      "direction": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "sagittal_axis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "mfd_um": [
+        10.4,
+        10.4
+      ],
+      "wavefront_curvature_per_m": [
+        0.0,
+        0.0
+      ],
+      "evidence": {
+        "placement": {
+          "provenance": "synthetic",
+          "source": "Synthetic scenario placement (not a package drawing)"
+        },
+        "mode": {
+          "provenance": "measured",
+          "source": "Corning Incorporated, Corning SMF-28 Ultra Optical Fiber, Product Information PI1424 · PI1424, Optical Specifications, p. 1 · t=vertical axis (Circular scalar MFD)"
+        },
+        "phase": {
+          "provenance": "assumed",
+          "source": "Flat phase (1/R = 0) at the external reference plane is an assumption; the source reports intensity only"
+        }
+      }
+    },
+    "target": {
+      "label": "Fraunhofer IZM IOX · D263Teco",
+      "preset": "brusberg-iox-1550",
+      "position_mm": [
+        2.0,
+        0,
+        -0.3
+      ],
+      "direction": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "sagittal_axis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "mfd_um": [
+        12.0,
+        18.8
+      ],
+      "wavefront_curvature_per_m": [
+        0.0,
+        0.0
+      ],
+      "evidence": {
+        "placement": {
+          "provenance": "synthetic",
+          "source": "Synthetic scenario placement (not a package drawing)"
+        },
+        "mode": {
+          "provenance": "measured",
+          "source": "Lars Brusberg, Henning Schröder, Marco Queisser, Klaus-Dieter Lang, Single-mode Glass Waveguide Platform for DWDM Chip-to-Chip Interconnects, IEEE ECTC 2012, Fraunhofer IZM and TU Berlin · Figs. 4–5 and adjacent text · t=vertical axis (Published horizontal/vertical axes)"
+        },
+        "phase": {
+          "provenance": "assumed",
+          "source": "Flat phase (1/R = 0) at the external reference plane is an assumption; the source reports intensity only"
+        }
+      },
+      "medium": "block"
+    }
+  },
+  "medium_block": {
+    "label": "D 263 T eco (IOX host, assumed index)",
+    "index": 1.511,
+    "surface_point_mm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "surface_normal": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "thickness_mm": 2.0,
+    "index_source": {
+      "provenance": "assumed",
+      "source": "Two-term Cauchy extrapolation of SCHOTT D 263 T eco data-sheet nC = 1.5204, nF = 1.5300 to 1550 nm; uncertainty about ±0.01; ion-exchange index change ignored"
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import type { Store } from './state';
-import type { Candidate, Result } from './types';
+import type { Candidate, NonparaxialStudy, Result } from './types';
 import { STATUS_LABEL, el, fmt, nextStep, reasonLabel } from './util';
 
 const STATUS_TEXT: Record<string, string> = {
@@ -29,11 +29,13 @@ export class ResultsPanel {
       return;
     }
     this.root.append(this.verdict(current));
+    if (current.crossing) this.root.append(this.crossing(current));
     if (current.candidates.length) {
       this.root.append(this.table(current.candidates));
       const selected = this.store.selectedCandidate;
       if (selected) this.root.append(this.detail(selected));
     }
+    if (current.nonparaxial_study?.cases?.length) this.root.append(this.study(current.nonparaxial_study));
     if (current.search?.screening_counts) {
       this.root.append(this.rejections(current.search.screening_counts, current.search.grid_points, current.search.elapsed_seconds));
     }
@@ -58,9 +60,33 @@ export class ResultsPanel {
     return card;
   }
 
+  private crossing(result: Result) {
+    const x = result.crossing!;
+    const block = this.store.state.doc.medium_block;
+    const t = x.fresnel_transmission_uncoated;
+    return el('section', { class: 'card', 'data-crossing': x.side },
+      el('h3', {}, `Glass 상면 통과 (${x.side === 'source' ? 'Source 쪽' : 'Target 쪽'})`),
+      el('div', {}, `${block?.label || 'Glass'} n ${block?.index ?? '—'} · 외부 구간 ${fmt(x.ambient_length_mm, 4)} mm · 입사각 ${fmt(x.incidence_deg, 2)}° → 굴절각 ${fmt(x.refraction_deg, 2)}°`),
+      el('div', {}, `q 배율 t/s ${x.q_scale_ts.map((v) => fmt(v, 4)).join(' / ')} (Coddington) · 무코팅 Fresnel 투과 s ${fmt(t.s, 4)} / p ${fmt(t.p, 4)}`),
+      el('div', { class: 'muted' }, 'Relay는 상면 바로 안쪽의 등가 Port에서 Glass 굴절률로 풉니다. Fresnel 투과는 평면파 참고값이며 η나 Total Coupling에 넣지 않습니다(AR Coating 미반영).'));
+  }
+
+  private study(study: NonparaxialStudy) {
+    const head = el('tr', {}, ...['a [mm]', 'c [mm]', '광경로 [mm]', '3w·|κ|', '입사각 [°]', '근축 η', '비근축 η', '수렴'].map((h) => el('th', {}, h)));
+    const rows = study.cases.map((x) => el('tr', { 'data-study': '' },
+      el('td', {}, fmt(x.a_mm, 3)), el('td', {}, fmt(x.c_mm, 3)), el('td', {}, fmt(x.total_path_mm, 3)),
+      el('td', {}, fmt(x.max_3w_footprint_curvature, 3)), el('td', {}, x.incidence_deg.map((v) => fmt(v, 1)).join(' / ')),
+      el('td', {}, fmt(x.paraxial_overlap, 4)), el('td', { class: 'warn' }, fmt(x.nonparaxial_overlap, 4)),
+      el('td', {}, x.nonparaxial_status === 'Computed' ? '예' : '격자 변화 > 1e-4')));
+    return el('section', { class: 'card', 'data-card': 'nonparaxial-study' }, el('h3', {}, 'Guard 밖 비근축 검산 (후보 아님)'),
+      el('table', { class: 'grid-table' }, el('thead', {}, head), el('tbody', {}, ...rows)),
+      el('div', { class: 'muted' }, 'Frozen Guard를 끈 근축 Exact 설계를 비근축 Scalar로 다시 계산했습니다. Aperture는 1e-6 Power 꼬리 반경(2.63 w)입니다. '
+        + '후보로 채택하지 않으며, 다른 Family나 Guard 재검토(사용자 승인)를 판단하는 근거입니다.'));
+  }
+
   private table(candidates: Candidate[]) {
     const selected = this.store.selectedCandidate;
-    const head = el('tr', {}, ...['#', '종류', '역할', '광경로 [mm]', 'η', '3w·|κ|', '정렬 민감도 [dB]', '최소 R [mm]'].map((h) => el('th', {}, h)));
+    const head = el('tr', {}, ...['#', '종류', '역할', '광경로 [mm]', 'η', '비근축 η', '3w·|κ|', '정렬 민감도 [dB]', '최소 R [mm]'].map((h) => el('th', { title: h === '비근축 η' ? '각스펙트럼 + 실제 곡면 광선으로 계산한 Scalar Overlap(근축 근사 없음)' : '' }, h)));
     const rows = candidates.map((c) => {
       const kmax = c.metrics.max_abs_curvature_per_m;
       const row = el('tr', { class: c.id === selected?.id ? 'selected' : '', 'data-candidate': c.id, title: c.id },
@@ -68,6 +94,8 @@ export class ResultsPanel {
         el('td', {}, el('span', { class: `family ${c.family}` }, c.family === 'exact' ? 'Exact' : 'Near-match')),
         el('td', {}, c.role_labels.join(' · ')),
         el('td', {}, fmt(c.metrics.total_path_mm, 3)), el('td', {}, fmt(c.metrics.normalized_mode_overlap, 4)),
+        el('td', { 'data-nonparaxial': String(c.metrics.nonparaxial_overlap ?? ''),
+          class: (c.metrics.nonparaxial_overlap ?? 1) < 0.95 ? 'warn' : '' }, fmt(c.metrics.nonparaxial_overlap ?? null, 4)),
         el('td', {}, fmt(c.metrics.max_3w_footprint_curvature, 3)),
         el('td', {}, fmt(c.metrics.worst_pose_mismatch_db, 2)),
         el('td', {}, kmax ? fmt(1000 / kmax, 2) : '∞'));
@@ -80,21 +108,32 @@ export class ResultsPanel {
       el('div', { class: 'muted' }, near
         ? 'Near-match는 Frozen Guard 안에서 Overlap을 최대로 한 배치입니다(η < 1). '
         : 'Exact는 두 축 모두 q가 정확히 맞는 배치입니다(η = 1). ',
-        'η는 Scalar Paraxial Normalized Mode Overlap이며 Total Coupling이 아닙니다. 정렬 민감도는 반사면 하나씩 ±5 µm·±1 mrad 오차를 줬을 때의 최악 Gaussian 손실이고, 3w·|κ| 한계는 0.15입니다.'));
+        'η는 Scalar Paraxial Normalized Mode Overlap이며 Total Coupling이 아닙니다. 비근축 η는 같은 처방을 근축 근사 없이(각스펙트럼 + 실제 곡면 광선) 계산한 값으로, 경사 반사면의 Coma 같은 고차 수차를 포함합니다. 정렬 민감도는 반사면 하나씩 ±5 µm·±1 mrad 오차를 줬을 때의 최악 Gaussian 손실이고, 3w·|κ| 한계는 0.15입니다.'));
   }
 
   private detail(c: Candidate) {
-    const head = el('tr', {}, ...['반사면', 'Vertex [mm]', 'R t / s [mm]', '입사각 [°]', 'Aperture 반폭 t / s [mm]', 'Footprint w t / s [µm]'].map((h) => el('th', {}, h)));
+    const glass = c.scene.mirrors.some((m) => m.tir_possible !== undefined);
+    const tensor = c.model === 'qtensor';
+    const head = el('tr', {}, ...['반사면', 'Vertex [mm]', tensor ? 'R 주곡률 1 / 2 [mm]' : 'R t / s [mm]', '입사각 [°]', tensor ? 'Aperture 반폭 1 / 2 [mm]' : 'Aperture 반폭 t / s [mm]', tensor ? 'Footprint w 1 / 2 [µm]' : 'Footprint w t / s [µm]', ...(glass ? ['반사 방식'] : [])].map((h) => el('th', {}, h)));
     const rows = c.scene.mirrors.map((m) => el('tr', {},
       el('td', {}, m.id), el('td', { class: 'mono' }, m.vertex_mm.map((v) => fmt(v, 4)).join(', ')),
       el('td', {}, m.radius_of_curvature_ts_mm.map((r) => (r === null ? '∞' : fmt(r, 3))).join(' / ')),
       el('td', {}, fmt(m.incidence_deg, 2)), el('td', {}, m.half_aperture_ts_mm.map((a) => fmt(a, 4)).join(' / ')),
-      el('td', {}, m.beam_footprint_radius_ts_um.map((w) => fmt(w, 2)).join(' / '))));
+      el('td', {}, m.beam_footprint_radius_ts_um.map((w) => fmt(w, 2)).join(' / ')),
+      ...(glass ? [el('td', { 'data-tir': String(m.tir_possible) }, m.tir_possible ? 'TIR 가능(뒤가 외부 매질일 때)' : '반사 Coating 필요')] : [])));
     const chips = el('div', { class: 'chips' }, ...Object.entries(c.status).map(([key, value]) =>
       el('span', { class: `chip st-${value}` }, `${STATUS_LABEL[key] ?? key}: ${value}`)));
     return el('section', { class: 'card', 'data-detail': c.id }, el('h3', {}, `${c.id} 상세`),
       el('table', { class: 'grid-table' }, el('thead', {}, head), el('tbody', {}, ...rows)), chips,
-      el('div', { class: 'muted' }, `총 광경로 ${fmt(c.metrics.total_path_mm, 4)} mm · 최대 투영 Beam 반경 ${fmt(c.metrics.max_projected_beam_radius_um, 2)} µm · Mode mismatch ${fmt(c.metrics.mode_mismatch_db, 4)} dB`));
+      ...(c.nonparaxial_check?.status ? [el('div', { class: 'muted', 'data-nonparaxial-detail': c.nonparaxial_check.status },
+        c.nonparaxial_check.status === 'Uncomputed' ? '비근축 검산: 계산 안 됨'
+          : `비근축 Scalar 검산 η ${fmt(c.nonparaxial_check.normalized_mode_overlap ?? null, 4)} (근축 η ${fmt(c.metrics.normalized_mode_overlap, 4)}) · `
+            + `격자 변화 ${(c.nonparaxial_check.grid_change ?? 0).toExponential(1)} · Aperture 밖 Power ${(c.nonparaxial_check.clipped_power_fraction ?? 0).toExponential(1)} · `
+            + '각스펙트럼 + 실제 곡면 광선, 모서리 회절·편광·Fresnel 계수 제외')] : []),
+      ...(tensor && c.ray_transfer_check ? [el('div', { class: 'muted', 'data-model': 'qtensor' },
+        `q-tensor 모델(평면 밖 경로): 반사면 곡률 축은 각 반사면의 주곡률 방향입니다(3D에서 확인). Ray-transfer 검산 상대차 `
+        + `${c.ray_transfer_check.q_tensor_relative_difference.toExponential(1)}, Symplectic 오차 ${c.ray_transfer_check.symplectic_error.toExponential(1)}`)] : []),
+      el('div', { class: 'muted' }, `총 광경로 ${fmt(c.metrics.total_path_mm, 4)} mm${c.metrics.ambient_path_mm ? ` (외부 ${fmt(c.metrics.ambient_path_mm, 4)} mm 포함)` : ''} · 최대 투영 Beam 반경 ${fmt(c.metrics.max_projected_beam_radius_um, 2)} µm · Mode mismatch ${fmt(c.metrics.mode_mismatch_db, 4)} dB`));
   }
 
   private rejections(counts: Record<string, number>, total?: number, elapsed?: number) {

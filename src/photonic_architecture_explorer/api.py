@@ -6,12 +6,17 @@ was accepted by the unchanged external Adapter. The result `pae.result/1` adds d
 geometry, the explored (a, c) map and plain next-step guidance.
 """
 
+from dataclasses import replace
+
 from .design import review_snapshot
-from .design_document import DocumentError, document_sha256, search_constraints, to_engine_input, validate_document
-from .external import InputIssue
+from .design_document import (DocumentError, document_sha256, search_constraints, to_engine_problem,
+                              validate_document)
+from .external import InputIssue, adapt_ports
 from .gaussian import DomainError
-from .scene import candidate_scene, ports_scene
-from .search import OBJECTIVES, design_continuous
+from .media import tir_possible
+from .mode_match import arrived_mode
+from .scene import candidate_scene, extend_with_crossing, ports_scene
+from .search import APERTURE_FACTOR, OBJECTIVES, design_continuous
 from .solver import MAX_DIVERGENCE, MAX_FOOTPRINT_SLOPE
 
 RESULT_SCHEMA = 'pae.result/1'
@@ -53,16 +58,54 @@ def preview(document):
     if issues:
         return _invalid(document, issues)
     try:
-        scene = ports_scene(to_engine_input(document))
+        problem = to_engine_problem(document)
+        scene = native_ports_scene(document, problem)
     except (InputIssue, DomainError) as exc:
         return _invalid(document, [{'path': getattr(exc, 'path', '$'), 'message': getattr(exc, 'reason', str(exc))}])
     return {'schema': RESULT_SCHEMA, 'status': 'Preview', 'document_sha256': document_sha256(document),
-            'ports': scene, 'candidates': [], 'guidance': port_guidance(scene, document['ambient_index'])}
+            'ports': scene, 'crossing': crossing_record(problem), 'candidates': [],
+            'guidance': port_guidance(scene, document['ambient_index'])}
 
 
-def _candidate(rank, candidate):
+def native_ports_scene(document, problem):
+    """Each Port drawn and guarded in its own medium (ambient or block)."""
+    ambient = ports_scene(problem['ambient_engine'])
+    if problem['medium'] == 'ambient':
+        return ambient
+    block = ports_scene(problem['engine'])
+    ports = []
+    for item_a, item_b in zip(ambient['ports'], block['ports']):
+        native = document['ports'][item_a['name']].get('medium', 'ambient')
+        ports.append({**(item_b if native == 'block' else item_a), 'medium': native})
+    return {'frame_id': ambient['frame_id'], 'ports': ports, 'equivalent_in_block': block['ports']}
+
+
+def crossing_record(problem):
+    crossing = problem['crossing']
+    if crossing is None:
+        return None
+    return {'side': crossing.side, 'surface_point_mm': [v * 1e3 for v in crossing.point],
+            'ambient_length_mm': crossing.ambient_length * 1e3, 'incidence_deg': crossing.incidence_deg,
+            'refraction_deg': crossing.refraction_deg, 'q_scale_ts': list(crossing.q_scale),
+            'fresnel_transmission_uncoated': {'s': crossing.transmission[0], 'p': crossing.transmission[1],
+                                              'mean': crossing.transmission[2]},
+            'meaning': 'Plane-wave Fresnel transmission of an uncoated surface; information only, not Total Coupling'}
+
+
+def _candidate(rank, candidate, problem=None, ambient_ports=None):
     evaluation, ranking = candidate['evaluation'], candidate['ranking']
-    scene = candidate_scene(candidate['prescription'])
+    scene = candidate.get('scene') or candidate_scene(candidate['prescription'])  # q-tensor candidates carry their scene
+    crossing = problem['crossing'] if problem else None
+    if crossing is not None:
+        original = getattr(ambient_ports, crossing.side)
+        arrival = None
+        if crossing.side == 'target':
+            relay_target = adapt_ports(problem['engine']).target
+            arrival = arrived_mode(evaluation, relay_target.mode).q
+        extend_with_crossing(scene, crossing, original, arrival)
+    if problem and problem['medium'] == 'block':
+        for mirror in scene['mirrors']:
+            mirror['tir_possible'] = tir_possible(problem['block'].index, problem['ambient_index'], mirror['incidence_deg'])
     matching = evaluation['gaussian_mode_matching']
     roles = candidate.get('roles') or [candidate.get('recommendation_role')]
     return {
@@ -72,10 +115,15 @@ def _candidate(rank, candidate):
         'roles': roles,
         'role_labels': [OBJECTIVES.get(r, (None, None, r))[2] for r in roles],
         'family': candidate.get('family', 'exact'),
+        'model': candidate.get('model', 'separable'),
+        'ray_transfer_check': evaluation.get('ray_transfer_check'),
+        'nonparaxial_check': candidate.get('nonparaxial_check'),
         'parameters_mm': {k[:-2]: v * 1e3 for k, v in candidate.get('parameters', {}).items() if k.endswith('_m')},
         'metrics': {
             'total_path_mm': scene['path']['total_length_mm'],
+            'ambient_path_mm': sum(seg['length_mm'] for seg in scene['path']['segments'] if seg.get('medium') == 'ambient'),
             'normalized_mode_overlap': matching.get('normalized_mode_overlap'),
+            'nonparaxial_overlap': (candidate.get('nonparaxial_check') or {}).get('normalized_mode_overlap'),
             'mode_mismatch_db': matching.get('mismatch_db'),
             'max_projected_beam_radius_um': ranking['max_projected_radius_m'] * 1e6,
             'max_3w_footprint_curvature': ranking['max_3w_footprint_curvature'],
@@ -90,27 +138,54 @@ def _candidate(rank, candidate):
     }
 
 
-def design_guidance(report, ports, ambient_index):
+def design_guidance(report, ports, ambient_index, medium='ambient'):
     out = port_guidance(ports, ambient_index) if ports else []
-    reason = report.get('reason') or ''
     search = report.get('search', {})
     counts = search.get('screening_counts', {})
-    if 'noncoplanar' in reason:
-        out.append({'kind': 'noncoplanar', 'phase': 'P3',
-                    'message': '두 Port가 한 평면에 있지 않습니다. 평면 밖으로 꺾이는 경로는 3D q-tensor 모델(P3)에서 다룹니다. '
-                               '지금은 두 Port를 한 평면에 두면 계산할 수 있습니다.'})
+    if report.get('model') == 'qtensor':
+        out.append({'kind': 'qtensor', 'phase': 'P3',
+                    'message': '두 Port가 한 평면에 있지 않거나 축이 돌아가 있어, 반사마다 Beam 축이 회전하는 일반 비점수차 '
+                               'q-tensor 모델(2×2 복소 q)로 계산했습니다. 반사면 곡률 축은 Port 축과 다르며, 후보마다 실제 '
+                               '곡면을 지나는 광선으로 만든 4×4 Ray-transfer 행렬로 따로 검산합니다.'})
     closest = search.get('closest_exact')
     if closest and report.get('candidates'):
         out.append({'kind': 'exact_outside_guard', 'phase': 'P3',
                     'values': {**closest, 'a_mm': closest['a_m'] * 1e3, 'c_mm': closest['c_m'] * 1e3},
                     'message': f"Exact-q 해는 있지만 가장 여유 있는 배치도 3w·|κ| = {closest['max_footprint_slope']:.4f} > "
                                f"{closest['limit']}입니다. Guard 안에서 Overlap을 최대로 한 Near-match 후보(η < 1)를 표시합니다. "
-                               "Glass 매질 안 배치(P3)는 발산각을 줄여 Exact 해를 Guard 안으로 들일 수 있습니다."})
+                               + ("Glass 두께·도파로 깊이·수평 거리를 바꾸면 반사면을 둘 공간이 달라집니다. 렌즈 Family는 P4입니다."
+                                  if medium == 'block' else
+                                  "Glass 매질 안 배치(P3)는 발산각을 줄여 Exact 해를 Guard 안으로 들일 수 있습니다.")})
     constrained = {k.split(': ', 1)[1]: v for k, v in counts.items() if k.startswith('constraint:')}
     if constrained:
         out.append({'kind': 'constraints', 'values': constrained,
                     'message': f'탐색한 {search.get("grid_points", 0)}개 배치 중 {sum(constrained.values())}개가 '
-                               'Port 뒤 공간·Envelope·Keep-out 등 공간 제약으로 제외됐습니다.'})
+                               + ('Port 뒤 공간·Glass 영역·Envelope·Keep-out 등' if medium == 'block' else 'Port 뒤 공간·Envelope·Keep-out 등')
+                               + ' 공간 제약으로 제외됐습니다.'})
+    region = {k: v for k, v in constrained.items() if 'block' in k}
+    if medium == 'block' and region and report.get('status') == 'Fail':
+        out.append({'kind': 'block_region', 'values': region,
+                    'message': f'{sum(region.values())}개 배치에서 반사면 Patch(Beam 반경의 {APERTURE_FACTOR:g}배 투영 Aperture)가 '
+                               'Glass 상면이나 하면을 벗어났습니다. 두 반사면은 모두 Glass 안에 있어야 합니다. '
+                               '도파로가 얕으면 Target 축 위의 반사면이 상면을 뚫고 나오므로, 매립 깊이나 Glass 두께를 늘리거나 '
+                               'Edge(측면) 배치와 비교하세요.'})
+    values = [c['nonparaxial_check']['normalized_mode_overlap'] for c in report.get('candidates', [])
+              if (c.get('nonparaxial_check') or {}).get('status') == 'Computed']
+    if values:
+        paraxial = [c['evaluation']['gaussian_mode_matching']['normalized_mode_overlap'] for c in report['candidates']]
+        low = min(values) < min(paraxial) - 0.01
+        out.append({'kind': 'nonparaxial', 'phase': 'P3', 'level': 'warning' if max(values) < 0.95 else 'info',
+                    'values': {'nonparaxial_min': min(values), 'nonparaxial_max': max(values)},
+                    'message': f'비근축 Scalar 검산 η는 {min(values):.3f}~{max(values):.3f}입니다(근축 η {min(paraxial):.3f}~{max(paraxial):.3f}). '
+                               + ('차이는 반사면을 국소 이차곡면으로 처방해서 생기는 3차 이상 수차(경사 입사의 Coma 등)와 근축 전파 오차입니다. '
+                                  '두 반사면이 같은 방향으로 꺾는 배치에서는 Coma가 더해지고, 반대로 꺾는 Z형 배치에서는 상쇄됩니다. '
+                                  '근축 η만으로 판단하지 말고 "비근축 Overlap 최대" 후보를 함께 보세요. '
+                                  '고차 곡면(Conic·Freeform) 처방은 P4 과제입니다.' if low else
+                                  '근축 결과와 차이가 작아 이 후보들에서는 근축 모델이 맞습니다.')})
+    study = report.get('nonparaxial_study')
+    if study:
+        out.append({'kind': 'nonparaxial_study', 'phase': 'P3', 'level': 'info', 'values': study.get('summary'),
+                    'message': study.get('message', '')})
     if report.get('status') == 'Fail' and search.get('status') == 'Completed':
         top = sorted(counts.items(), key=lambda kv: -kv[1])[:3]
         out.append({'kind': 'no_candidate', 'phase': 'P4',
@@ -133,17 +208,27 @@ def design(document):
     if issues:
         return _invalid(document, issues)
     try:
-        engine_input = to_engine_input(document)
-        ports = ports_scene(engine_input)
+        problem = to_engine_problem(document)
+        problem['ambient_index'] = document['ambient_index']
+        engine_input = problem['engine']
+        ports = native_ports_scene(document, problem)
         constraints = search_constraints(document)
+        if problem['block'] is not None:
+            constraints = replace(constraints, block=problem['block'],
+                                  block_side='inside' if problem['medium'] == 'block' else 'outside')
+        ambient_ports = adapt_ports(problem['ambient_engine'])
     except (DocumentError, InputIssue, DomainError) as exc:
         return _invalid(document, [{'path': getattr(exc, 'path', '$'), 'message': getattr(exc, 'reason', str(exc))}])
     report = design_continuous(engine_input, constraints)
-    if report['candidates']:
+    if report['status'] == 'Fail' and 'divergence' in (report.get('reason') or ''):
+        from .nonparaxial import guard_study
+        report['nonparaxial_study'] = guard_study(engine_input, constraints)
+    if report['candidates'] and report.get('model') != 'qtensor':  # sensitivity/placement studies are separable-engine tools
         report = review_snapshot(report)
     search = report.get('search', {})
     summary = {k: search.get(k) for k in ('status', 'reason', 'grid_points', 'exact_feasible', 'near_match_feasible',
-                                          'screening_counts', 'closest_exact', 'elapsed_seconds', 'verification')}
+                                          'screening_counts', 'closest_exact', 'elapsed_seconds', 'verification',
+                                          'nonparaxial_screen')}
     return {
         'schema': RESULT_SCHEMA,
         'status': report['status'],
@@ -154,9 +239,12 @@ def design(document):
         'family': report['candidates'][0].get('family') if report['candidates'] else None,
         'ports': ports,
         'constraints': report.get('constraints'),
-        'candidates': [_candidate(i + 1, c) for i, c in enumerate(report['candidates'])],
+        'relay_medium': problem['medium'],
+        'crossing': crossing_record(problem),
+        'candidates': [_candidate(i + 1, c, problem, ambient_ports) for i, c in enumerate(report['candidates'])],
         'search': {**summary, 'policy': report.get('search_policy', {}).get('id'), 'map': _map(search)},
-        'guidance': design_guidance(report, ports, document['ambient_index']),
+        'guidance': design_guidance(report, ports, document['ambient_index'], problem['medium']),
+        'nonparaxial_study': report.get('nonparaxial_study'),
         'limitations': report.get('limitations', []),
         'uncomputed': UNCOMPUTED,
         'engine_report': {**report, 'search': {k: v for k, v in search.items() if k != 'map'}},

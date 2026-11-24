@@ -104,7 +104,7 @@ class ScenarioSearchTest(unittest.TestCase):
 
     def test_domain_refusals_are_unchanged(self):
         self.assertIn('divergence', run('S3')['reason'])
-        self.assertIn('noncoplanar', run('S4')['reason'])
+        self.assertEqual(run('S4')['model'], 'qtensor')  # P3: non-coplanar Ports go to the q-tensor model
 
     def test_search_is_deterministic(self):
         first = search.design_continuous(engine('S2a-1550'), include_map=False)

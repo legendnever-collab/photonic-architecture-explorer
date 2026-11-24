@@ -14,6 +14,19 @@ export interface PortSpec {
   mfd_um: [number, number];
   wavefront_curvature_per_m: [number, number];
   evidence: { placement?: Evidence; mode?: Evidence; phase?: Evidence };
+  medium?: Medium;
+}
+
+export type Medium = 'ambient' | 'block';
+
+/** One glass block bounded by a planar top surface (and an optional parallel bottom). */
+export interface MediumBlock {
+  label?: string;
+  index: number;
+  surface_point_mm: Vec3;
+  surface_normal: Vec3;   // points out of the block, into the ambient medium
+  thickness_mm?: number | null;
+  index_source?: Evidence;
 }
 
 export type PortName = 'source' | 'target';
@@ -39,6 +52,7 @@ export interface DesignDocument {
   ambient_index: number;
   ports: Record<PortName, PortSpec>;
   constraints?: Constraints;
+  medium_block?: MediumBlock | null;
 }
 
 export interface Preset {
@@ -96,15 +110,18 @@ export interface MirrorScene {
   incidence_deg: number;
   beam_footprint_radius_ts_um: [number, number];
   surface_grid_mm: Vec3[][];
+  tir_possible?: boolean;
 }
 
-export interface Segment { start_mm: Vec3; end_mm: Vec3; length_mm: number; direction: Vec3; t_axis: Vec3; s_axis: Vec3 }
-export interface BeamSample { segment: number; distance_mm: number; point_mm: Vec3; radius_t_um: number; radius_s_um: number }
+export interface Segment { start_mm: Vec3; end_mm: Vec3; length_mm: number; direction: Vec3; t_axis: Vec3; s_axis: Vec3; medium?: Medium }
+/** General astigmatic beams (q-tensor): true 1/e² semi-axes; angle of the major axis from the segment t axis. */
+export interface BeamEllipse { major_um: number; minor_um: number; angle_rad: number }
+export interface BeamSample { segment: number; distance_mm: number; point_mm: Vec3; radius_t_um: number; radius_s_um: number; medium?: Medium; ellipse?: BeamEllipse }
 
 export interface CandidateScene {
   mirrors: MirrorScene[];
-  path: { points_mm: Vec3[]; segments: Segment[]; total_length_mm: number };
-  beam: { definition: string; samples: BeamSample[] };
+  path: { points_mm: Vec3[]; segments: Segment[]; total_length_mm: number; surface_point_mm?: Vec3 };
+  beam: { definition: string; samples: BeamSample[]; model?: 'qtensor' };
 }
 
 export interface Candidate {
@@ -114,12 +131,17 @@ export interface Candidate {
   roles: string[];
   role_labels: string[];
   family: 'exact' | 'near_match';
+  model?: 'separable' | 'qtensor';
+  nonparaxial_check?: { status: string; normalized_mode_overlap?: number; grid_change?: number; clipped_power_fraction?: number; method?: string; omits?: string } | null;
+  ray_transfer_check?: { q_tensor_relative_difference: number; symplectic_error: number; method: string } | null;
   parameters_mm: { a?: number; b?: number; c?: number };
   metrics: {
     max_abs_curvature_per_m: number | null;
     worst_pose_mismatch_db: number | null;
     total_path_mm: number;
+    ambient_path_mm?: number;
     normalized_mode_overlap: number | null;
+    nonparaxial_overlap?: number | null;
     mode_mismatch_db: number | null;
     max_projected_beam_radius_um: number;
     max_3w_footprint_curvature: number;
@@ -133,7 +155,13 @@ export interface Candidate {
 
 export interface Issue { path: string; message: string }
 
-export interface Guidance { kind: string; phase?: string; port?: string; message: string; values?: Record<string, unknown> }
+export interface Guidance { kind: string; phase?: string; port?: string; level?: 'info' | 'warning'; message: string; values?: Record<string, unknown> }
+
+export interface StudyCase {
+  a_mm: number; c_mm: number; total_path_mm: number; max_3w_footprint_curvature: number; max_divergence_rad: number;
+  incidence_deg: number[]; paraxial_overlap: number; nonparaxial_overlap: number; nonparaxial_status: string; clipped_power_fraction: number;
+}
+export interface NonparaxialStudy { status: string; cases: StudyCase[]; meaning?: string; message?: string; reason?: string }
 
 export interface SearchMap {
   a_mm: number[];
@@ -141,6 +169,17 @@ export interface SearchMap {
   cells: { status: string; reason: string; slope: number | null; path_m: number | null }[];
   near_match: { a_mm: number; c_mm: number; eta: number }[];
   slope_limit: number;
+}
+
+export interface Crossing {
+  side: 'source' | 'target';
+  surface_point_mm: Vec3;
+  ambient_length_mm: number;
+  incidence_deg: number;
+  refraction_deg: number;
+  q_scale_ts: [number, number];
+  fresnel_transmission_uncoated: { s: number; p: number; mean: number };
+  meaning: string;
 }
 
 export interface Result {
@@ -154,7 +193,10 @@ export interface Result {
   ports: { frame_id: string; ports: PortScene[] } | null;
   candidates: Candidate[];
   family?: 'exact' | 'near_match' | null;
+  relay_medium?: Medium;
+  crossing?: Crossing | null;
   guidance?: Guidance[];
+  nonparaxial_study?: NonparaxialStudy | null;
   search?: {
     status?: string; reason?: string; grid_points?: number; exact_feasible?: number; near_match_feasible?: number;
     screening_counts?: Record<string, number>; elapsed_seconds?: number; policy?: string; map?: SearchMap | null;
