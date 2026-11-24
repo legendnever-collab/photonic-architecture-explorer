@@ -1,0 +1,47 @@
+name: Windows release
+# Pushing a release/vX.Y.Z branch builds, validates and publishes the Windows offline package
+# as GitHub Release vX.Y.Z (notes: docs/releases/vX.Y.Z.md).
+on:
+  push:
+    branches: ['release/v*']
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    env:
+      PYTHONUTF8: '1'
+      PYTHONNOUSERSITE: '1'
+    steps:
+      - name: Preserve source bytes for cross-platform reference hashes
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e '.[test]'
+      - run: python -m unittest discover -s tests -q
+      - run: python scripts/build_windows_package.py --output-dir dist/windows
+      - name: Extract package ZIP outside the checkout
+        shell: pwsh
+        run: |
+          $destination = Join-Path $env:RUNNER_TEMP 'PAE release check'
+          Expand-Archive -LiteralPath 'dist/windows/Photonic-Architecture-Explorer-Windows-x64.zip' -DestinationPath $destination
+          $package = Join-Path $destination 'Photonic-Architecture-Explorer-Windows-x64'
+          "PAE_REVIEW_PACKAGE=$package" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "PAE_PYTHON=$package\runtime\python.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "PAE_EXPECT_ROOT=$package\app" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          'PYTHONPATH=' | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - run: python -m pip install playwright==1.63.0
+      - run: python -m playwright install chromium
+      - run: python scripts/validate_windows_package.py "$env:PAE_REVIEW_PACKAGE" --output-dir results/runtime-release --browser-channel msedge --browser-channel chrome
+      - name: Publish GitHub Release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = '${{ github.ref_name }}'.Substring('release/'.Length)
+          $zip = "Photonic-Architecture-Explorer-$tag-Windows-x64.zip"
+          Copy-Item 'dist/windows/Photonic-Architecture-Explorer-Windows-x64.zip' $zip
+          gh release create $tag $zip --target '${{ github.sha }}' --title "Photonic Architecture Explorer $tag" --notes-file "docs/releases/$tag.md"
