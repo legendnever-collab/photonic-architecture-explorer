@@ -152,7 +152,8 @@ SCENARIOS = [
                         note='Representative laser-class elliptical mode; not a specific device'),
          port('synthetic-siph-ssc-3um', [1.0, 0, 0.5], X),
          'Both modes are far outside the paraxial divergence guard.'),
-     {'status': 'Fail', 'reason_contains': 'divergence', 'target': {'status': 'Computed', 'phase': 'P4'}}),
+     {'status': 'Computed', 'min_candidates': 1, 'family': 'lens_two_reflector', 'reason_contains': 'divergence',
+      'target': {'status': 'Computed', 'phase': 'P4'}}),
 ]
 
 UNSUPPORTED = [

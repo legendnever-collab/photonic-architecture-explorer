@@ -152,23 +152,40 @@ PV 0.01~0.9 µm, 기울기 변화 0.1~10 mrad로 작다(S1 0.22 µm·1.4 mrad, S
 관찰: 공기 중 배치는 3·4차 Sag로 Coma가 거의 완전히 보정된다. Glass 안의 가파른 입사(M2 50~69°)에서는 방향 대응의 비선형이
 커서 보정량이 크고(50~130 µm) 수렴 판정이 1e-4를 넘는다(η 불확도 약 1e-3). 계산 시간은 공기 중 2~8 s, Glass 배치 10~20 s다.
 
-## P4(2단계, Lens Family)에서 추가한 검사
+## P4(2·3단계, Lens Family)에서 추가한 검사
 
 | 대상 | 검사 |
 |---|---|
 | Aplanatic Lens | S3 SSC(θ 0.278 rad), θ' 0.005: 출사 방향 잔차 < 2e-4 rad, 사인 조건 오차 < 50 nm(1/e² 각의 1.5배까지), EFL 유지(1e-9 m), 맞춘 범위에서 높이 대응 단조 |
-| 한계 | S5 Laser(0.556 rad)는 단일 비구면 Lens 범위(0.39 rad) 밖이라 DomainError |
+| 재료 | Silica 1.44680(1310 nm), Silicon 3.5005(1310 nm)·3.4764(1550 nm), 1.2 µm 미만 Silicon은 DomainError. S3 → Silica, S5 Source → Silicon |
+| 고NA Lens | S5 Laser(0.556 rad) Silicon Lens: Port 각을 0.556/0.5560로 바꿔도 출사 방향 잔차 < 2e-4 rad, 1.2θ 이상 통과. θ ≈ 1.4 rad Port는 DomainError |
+| 가장자리 미분 | 모두 살아 있으면 np.gradient와 같음(1e-12), 죽은 광선의 자리표시 값(1e9)이 미분에 섞이지 않음 |
+| 가림 | 자기 구간은 건너뛰고, 다른 구간 Beam 표본이 Lens 몸체를 지나면 위반 |
 | Scene | Port → Lens → Relay 경로 연속(1e-12 mm), 총 길이 = 구간 합, Beam 표본 거리 단조, Lens 외곽선 4개 |
-| API | S3 결과 Computed(Family `lens_two_reflector`), 채택 = 수렴 ∧ η ≥ 0.95 ∧ Lens 제약 통과와 정확히 일치, Lens 없는 엔진 후보 0개 |
-| 화면 | S3 후보 표(채택 수와 일치), Lens 카드, 상세, 2D Lens 외곽선과 Fold 화면 Lens 구간 |
+| API | S3·S5 결과 Computed(Family `lens_two_reflector`), 채택 = 수렴 ∧ η ≥ 0.95 ∧ Lens 제약 통과와 정확히 일치, S5 Lens 재료 Silicon/Silica, 경로 연속(1e-12 mm) |
+| 화면 | S3 후보 표(채택 수와 일치), Lens 카드, 상세, 2D Lens 외곽선과 Fold 화면 Lens 구간. S5 재료 열, Fold 화면 Lens 구간 2개 |
 
 | 시나리오 | Lens(f / Clear Ø) | 보정 전 η(Aplanatic Lens + 이차곡면) | 보정 후 비근축 η | 비고 |
 |---|---|---|---|---|
-| S3 | 300 / 437 µm, Port에서 196 µm | 0.85~0.94 | **0.984~0.997** | 3개 모두 수렴, Lens 제약 통과. 약 22 s |
-| S5 | — | — | — | Source 발산각 0.556 rad가 단일 Lens 한계 밖 |
+| S3 | Silica 300 / 402 µm, Port에서 196 µm | 0.85~0.94 | **0.986~0.998** | 3개 모두 수렴, Lens 제약 통과. 약 20 s |
+| S5 | Source Silicon 100 / 149 µm, Target Silica 200 / 267 µm(θ' 0.0075) | 0.95~0.99 | **0.987~0.988** | 2개 채택, 1개 미수렴. 잘린 Power 0.5 %. 약 35 s |
 
 과정의 기록: 단일 비구면 등광로 Collimator만 쓰면 0.71(재조정 후 0.87, 미수렴)이었다. 두 면 Aplanatic Lens로 사인 조건까지 맞추고
 θ'를 0.01에서 0.005로 줄이자 0.98~0.997이 되었다. 비근축 검산의 접힘 판정은 잘린(Aperture 밖) 광선과 맞닿은 격자의 차분을 접힘으로 세지 않도록 고쳤다.
+Lens 정렬 연구와 Family 비교(4단계):
+
+| 시나리오 | 선택 Family | Lens 1 dB 편심 [µm] | Lens ±1 µm 편심 손실 [dB] | 반사면 ±5 µm·±1 mrad 최악 [dB] |
+|---|---|---|---|---|
+| S3 (auto) | Lens + 두 반사면 | L1 0.69~0.71 | 1.96~2.05 | 4.4~8.3 |
+| S5 (auto) | Lens + 두 반사면 | L1 0.38, L2 0.73~0.75 | L1 7.3, L2 1.9~2.0 | 1.6~2.8 |
+| S1 (compare) | 두 반사면(η 1.000 vs 0.9998, 소자 2 < 4) | Lens Family 2.19 | — | 두 반사면 5.67 / Lens Family 0.70 |
+| S2a-1550 (compare) | 두 반사면(η 0.9999 vs 0.9999) | Lens Family 2.38 | — | 두 반사면 3.58 / Lens Family 0.31 |
+
+검사: S3 편심 손실이 Gaussian 각도 불일치 해석값과 15 % 이내, 1 dB 허용치도 15 % 이내, 기울기 손실 < 0.05 dB. `off`면 S3 Fail·Lens 미계산,
+`compare`면 S1에서 두 Family 모두 Computed, 선택 1개, 후보 순위 연속. 선택 규칙(0.01 초과 우세 → 그 Family, 이내 → 소자 적은 쪽) 단위 검사.
+
+S5는 Silicon Lens와 넓혀 가는 광선 부채꼴 맞춤, 가장자리 한쪽 차분 Jacobian으로 0.987~0.988(수렴)이 되었다. 같은 수정 후 P3·P4 표의 값은
+S2a-1310-glass 0.958 → 0.956, S4 0.994~0.999 → 0.995~0.999, S4-glass 0.987~0.992 → 0.985~0.991로 바뀌었고 나머지는 같다.
 
 ## 근거의 한계
 

@@ -178,7 +178,9 @@
       "file": "S5.json",
       "decision": "Elliptical laser mode conversion (needs P4)",
       "expect": {
-        "status": "Fail",
+        "status": "Computed",
+        "min_candidates": 1,
+        "family": "lens_two_reflector",
         "reason_contains": "divergence",
         "target": {
           "status": "Computed",

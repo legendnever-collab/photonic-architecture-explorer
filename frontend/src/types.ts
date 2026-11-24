@@ -53,6 +53,18 @@ export interface DesignDocument {
   ports: Record<PortName, PortSpec>;
   constraints?: Constraints;
   medium_block?: MediumBlock | null;
+  families?: { lens_two_reflector?: 'auto' | 'compare' | 'off' };
+}
+
+export interface FamilyRow {
+  key: string; label: string; elements: number; status: string; count: number; reason: string | null;
+  best_eta: number | null; best_reflector_pose_db: number | null; lens_decenter_1db_um: number | null;
+  selected: boolean; why: string | null; mode?: string;
+}
+export interface LensPose {
+  grid: number; reflectors_worst_loss_db: number; steps: { decenter_um: number; axial_um: number; tilt_mrad: number };
+  lenses: { id: string; decenter_loss_db: number; axial_loss_db: number; tilt_loss_db: number;
+    decenter_1db_um: number | null; axial_1db_um: number | null; tilt_1db_mrad: number | null }[];
 }
 
 export interface Preset {
@@ -124,10 +136,11 @@ export interface BeamSample { segment: number; distance_mm: number; point_mm: Ve
 export interface LensScene {
   id: string; side: PortName; flat_vertex_mm: Vec3; curved_vertex_mm: Vec3; axis: Vec3; focal_length_um: number;
   thickness_um: number; clear_radius_um: number; port_distance_um: number; relative_index: number; outline_mm: Vec3[][];
+  material?: string; material_source?: string; uncoated_transmission?: number | null;
 }
 export interface LensCheck {
   max_direction_rad: number; max_sine_condition_error_m: number; rays_alive: boolean; checked_to_angle_rad: number;
-  fitted_to_angle_rad: number; clear_radius_m: number;
+  fitted_to_angle_rad: number; clear_radius_m: number; passes_to_sine?: number;
 }
 
 export interface CandidateScene {
@@ -150,6 +163,7 @@ export interface Candidate {
   theta_out_rad?: number;
   lens_checks?: LensCheck[];
   lens_constraint?: string | null;
+  lens_pose?: LensPose | null;
   fit_history?: { step: string; eta: number }[];
   model?: 'separable' | 'qtensor';
   freeform?: {
@@ -225,6 +239,7 @@ export interface Result {
   crossing?: Crossing | null;
   guidance?: Guidance[];
   nonparaxial_study?: NonparaxialStudy | null;
+  families?: FamilyRow[];
   lens_review?: { status: string; candidates: Candidate[]; fail_reasons?: string[]; meaning?: string;
     accept_rule?: { min_nonparaxial_overlap: number } } | null;
   search?: {

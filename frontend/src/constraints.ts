@@ -29,6 +29,20 @@ export function constraintsCard(store: Store, rerender: () => void) {
   card.append(numberRow('constraints.clearance_um', 'Keep-out 여유 [µm]', c.clearance_um ?? 0, 1,
     (v) => edit((x) => { x.clearance_um = v ?? 0; })));
 
+  const mode = doc.families?.lens_two_reflector ?? 'auto';
+  const select = el('select', { 'data-key': 'families.lens_two_reflector' },
+    ...[['auto', '자동 (Lens 없이 발산각 실패할 때만)'], ['compare', '항상 비교 (두 반사면과 함께 계산)'], ['off', '사용 안 함']]
+      .map(([value, label]) => el('option', { value }, label))) as HTMLSelectElement;
+  select.value = mode;
+  select.addEventListener('change', () => {
+    const next = clone(doc);
+    next.families = { ...(next.families ?? {}), lens_two_reflector: select.value as 'auto' | 'compare' | 'off' };
+    store.set({ doc: next });
+    rerender();
+  });
+  card.append(el('div', { class: 'field', title: '비교 모드는 Lens를 붙일 수 있는 모든 Port(발산각 > 0.02 rad)에 Micro-lens를 두고 따로 계산합니다(수십 초)' },
+    el('label', {}, 'Lens Family (P4)'), select));
+
   const envToggle = el('input', { type: 'checkbox', 'data-key': 'constraints.envelope_on' }) as HTMLInputElement;
   envToggle.checked = Boolean(c.envelope_mm);
   envToggle.addEventListener('change', () => edit((x) => { x.envelope_mm = envToggle.checked ? defaultEnvelope(store) : null; }));

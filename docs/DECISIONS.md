@@ -3,6 +3,30 @@
 새 항목을 위에 추가한다. 항목당 10줄 이내: 새로 가능해진 설계 판단, 주요 기술 선택, 남은 한계.
 2026-11-24 이전의 Milestone 기록(M1~M7-R28)은 [history/](history/)에 있다.
 
+## 2026-11-25 · P4 Gate 통과, P4 종료 (PR #66 병합)
+
+- **수용 기준**(재설계 계획): S5 통과, 같은 입력에서 Family별 최선 후보 비교표. 둘 다 충족(S5 Computed 0.987~0.988, `families[]` 비교표).
+- **시나리오**: 12개 중 11개 Computed, S2b-1550-glass(얕은 IOX, Glass)만 Fail. 전 시나리오 기대값 일치(`build_scenarios.py`).
+- **넘긴 항목**: Cylindrical Lens(S5가 회전대칭 Lens + 토로이드 반사면으로 통과해 필요성 낮음), Glass 안 Lens Family,
+  Active alignment·동시 오차 공차. 다음 Phase 순서는 사용자 피드백으로 정한다(P5 특허·설계 산출물 예정).
+
+## 2026-11-25 · P4 4단계: Lens 정렬 연구, Family 비교·자동 선택 (`phase/p4-family-selection`)
+
+- **가능해진 판단**: Lens 후보의 편심·축 방향·기울기 손실과 1 dB 허용치(S3 0.7 µm, S5 L1 0.38 µm), 두 Family의 η·정렬 공차·소자 수 비교.
+- **선택 규칙**: 최종 η 최고, 단 0.01 이내면 소자가 적은 Family. 정렬 공차는 규칙에 넣지 않고 표로 보여 준다(판단은 사용자).
+- **스위치**: Design Document `families.lens_two_reflector` = auto(기본) / compare / off. compare는 S1·S2a에서 두 반사면을 그대로 선택.
+- **관찰**: Lens는 반사면 정렬 민감도를 크게 줄인다(S1 5.67 → 0.70 dB) 대신 Lens 편심 1 dB 허용치 약 2 µm가 생긴다.
+- **한계**: 다른 소자를 다시 맞추는 Active alignment, 제작 공차 분포, 동시 오차는 계산하지 않는다.
+
+## 2026-11-25 · P4 3단계: 고NA Lens, 재료, Lens 가림 (`phase/p4-family-selection`)
+
+- **가능해진 판단**: S5(Laser 0.556 rad → SSC)가 Silicon Lens + 두 반사면 + Silica Lens로 Computed(비근축 η 0.987~0.988, 수렴).
+- **재료**: Port 발산각 0.39 rad 이하 Fused silica(Malitson), 넘으면 Silicon(Li 1980, λ ≥ 1.2 µm). 무코팅 Fresnel 투과는 정보로만.
+- **맞춤**: 광선 부채꼴을 단계적으로 넓히고, 최대 출사 방향 오차로 해를 고름. Clear 구경은 방향 오차 1 mrad 이내 광선까지.
+- **검산 수정**: 잘린 광선 옆 Jacobian을 한쪽 차분으로. Hard aperture가 있는 경우 격자 수렴이 정상화(기존 값 변화 ≤ 2e-3).
+- **가림**: 다른 구간 Beam과 반사면이 Lens 몸체를 지나면 제약 위반. θ'는 0.005 → 0.0075 → 0.01 순으로, 채택이 나오면 멈춤.
+- **한계**: Lens 공차·코팅·분산 미계산. S5 Design 약 35 s.
+
 ## 2026-11-24 · P4 2단계 채택 정책: Lens Family를 Computed로 (`phase/p4-coma-correction`)
 
 - **사용자 결정**: Lens Family 후보를 Computed로 올린다. 채택 = 비근축 검산 수렴 ∧ η ≥ 0.95(P4 Gate와 같음) ∧ Lens 몸체가 Keep-out·Envelope 안.

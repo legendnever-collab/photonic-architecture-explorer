@@ -14,6 +14,8 @@ Starts the packaged server, drives Chromium with Playwright and checks:
   * P4 coma correction: S1 corrected non-paraxial η ≥ 0.95, coefficient table and guidance
   * P3 non-paraxial check: η column and guidance on S1, beyond-guard study card on S3
   * P4 Lens Family on S3: Computed candidates in the table, Lens card, detail, lens drawn in 2D and the unfolded view
+  * P4 Lens Family on S5: silicon source lens and silica target lens, both drawn in the unfolded view
+  * P4 Family comparison card (S3 selects the lens Family) and the lens pose table
   * P3 q-tensor: S4 (non-coplanar) gives verified candidates, the q-tensor note and guidance,
     beam ellipses in the scene and 2D mirror positions equal to the scene vertices (1 nm)
   * Design Document export round-trips
@@ -290,12 +292,25 @@ def main():
             rows.first.click()
             page.wait_for_timeout(400)
             check(page.locator('[data-lens-detail]').count() == 1, 'S3 lens detail missing', failures)
+            check(page.locator('[data-family-row="lens_two_reflector"][data-selected="true"]').count() == 1
+                  and page.locator('[data-lens-pose] [data-decenter-1db]').count() >= 1, 'S3 family card or lens pose missing', failures)
+            summary['S3_lens_decenter_1db_um'] = page.eval_on_selector_all('[data-decenter-1db]', 'els => els.map(e => e.getAttribute("data-decenter-1db"))')
             page.click('.tab[data-view="all"]')
             page.wait_for_timeout(300)
             check(page.locator('[data-kind="lens"]').count() >= 2 and page.locator('[data-kind="fold-lens"]').count() == 1,
                   'S3 lens not drawn in 2D / unfolded view', failures)
             page.screenshot(path=str(out / 'p4_S3_lens_family.png'))
             page.locator('[data-card="lens-review"]').screenshot(path=str(out / 'p4_S3_lens_card.png'))
+            page.locator('[data-card="families"]').screenshot(path=str(out / 'p4_S3_families.png'))
+            page.locator('[data-lens-detail]').screenshot(path=str(out / 'p4_S3_lens_detail.png'))
+        load_scenario(page, 'S5')
+        status = design(page)
+        summary['S5_status'] = status
+        materials = page.eval_on_selector_all('[data-lens-material]', 'els => els.map(e => e.dataset.lensMaterial)')
+        summary['S5_lens_materials'] = materials
+        check(status == 'Computed' and materials == ['Silicon', 'Fused silica']
+              and page.locator('[data-kind="fold-lens"]').count() == 2, f'S5 lens family view: {status} {materials}', failures)
+        page.screenshot(path=str(out / 'p4_S5_lens_family.png'))
         check(not errors, f'page errors: {errors}', failures)
         summary['page_errors'] = errors
 

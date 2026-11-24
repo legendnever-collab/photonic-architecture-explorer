@@ -31,6 +31,15 @@ class ConstraintDocumentTest(unittest.TestCase):
         self.assertEqual(paths, {'constraints', 'constraints.envelope_mm', 'constraints.max_incidence_deg',
                                  'constraints.keepouts_mm[0]', 'constraints.clearance_um'})
 
+    def test_family_switch_validation(self):
+        doc = load('S2a-1550')
+        for mode in ('auto', 'compare', 'off'):
+            doc['families'] = {'lens_two_reflector': mode}
+            self.assertEqual(validate_document(doc), [])
+        doc['families'] = {'lens_two_reflector': 'always', 'prism': 'on'}
+        paths = {issue['path'] for issue in validate_document(doc)}
+        self.assertEqual(paths, {'families', 'families.lens_two_reflector'})
+
     def test_package_and_constraints_convert_to_si_without_changing_ports(self):
         doc = load('S2a-1550')
         plain = to_engine_input(doc)

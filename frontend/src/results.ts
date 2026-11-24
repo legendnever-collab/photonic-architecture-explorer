@@ -42,6 +42,7 @@ export class ResultsPanel {
       const selected = this.store.selectedCandidate;
       if (selected && selected.family !== 'lens_two_reflector') this.root.append(this.detail(selected));
     }
+    if ((current.families ?? []).length > 1) this.root.append(this.familyCard(current.families!));
     if (current.lens_review) this.root.append(this.lensReview(current.lens_review));
     const chosen = this.store.selectedCandidate;
     if (chosen?.family === 'lens_two_reflector') this.root.append(this.lensDetail(chosen));
@@ -94,7 +95,21 @@ export class ResultsPanel {
         + '후보로 채택하지 않으며, 다른 Family나 Guard 재검토(사용자 승인)를 판단하는 근거입니다.'));
   }
 
-  /** P4 Lens Family: shown and drawable, never counted as Computed candidates. */
+  /** P4 Family comparison and the automatic choice. */
+  private familyCard(rows: NonNullable<Result['families']>) {
+    const head = el('tr', {}, ...['Family', '상태', '후보', '최고 η', '반사면 정렬 최악 [dB]', 'Lens 1 dB 편심 [µm]', '소자', '선택'].map((h) => el('th', {}, h)));
+    const body = rows.map((r) => el('tr', { class: r.selected ? 'selected' : '', 'data-family-row': r.key, 'data-selected': String(r.selected) },
+      el('td', {}, r.label), el('td', { title: r.reason ?? '' }, r.status), el('td', {}, String(r.count)),
+      el('td', {}, fmt(r.best_eta, 4)), el('td', {}, fmt(r.best_reflector_pose_db, 2)), el('td', {}, fmt(r.lens_decenter_1db_um, 2)),
+      el('td', {}, String(r.elements)), el('td', {}, r.selected ? `선택 · ${r.why ?? ''}` : '')));
+    return el('section', { class: 'card', 'data-card': 'families' }, el('h3', {}, 'Family 비교'),
+      el('table', { class: 'grid-table' }, el('thead', {}, head), el('tbody', {}, ...body)),
+      el('div', { class: 'muted' }, '선택 규칙: 최종 η(보정 곡면 비근축 → 비근축 → 근축 순으로 있는 값)가 가장 높은 Family. 다만 최고 η와 0.01 이내면 소자가 적은 Family를 고릅니다. '
+        + '정렬 최악은 반사면 하나를 ±5 µm·±1 mrad 움직였을 때의 손실이고, Lens 1 dB 편심은 다른 소자를 다시 맞추지 않을 때 Lens 편심 허용치입니다. '
+        + '정렬 공차는 선택 규칙에 넣지 않았으니 표에서 함께 보세요.'));
+  }
+
+  /** P4 Lens Family candidates (accepted ones are also in the main table). */
   private lensReview(review: LensReview) {
     const selected = this.store.selectedCandidate;
     const head = el('tr', {}, ...['#', '채택', '비근축 η', '수렴', 'Lens f / Ø [µm]', '광경로 [mm]', '입사각 [°]', '제약'].map((h) => el('th', {}, h)));
@@ -121,34 +136,47 @@ export class ResultsPanel {
         el('span', { class: `status ${count ? 'Computed' : 'Review'}` }, count ? `Computed ${count}개` : '채택 없음')),
       ...(review.candidates.length ? [el('table', { class: 'grid-table' }, el('thead', {}, head), el('tbody', {}, ...rows))] : []),
       ...(reasons.length && !review.candidates.length ? [el('div', { class: 'issue' }, reasons.map((r) => reasonLabel(r)).join(' / '))] : []),
-      el('div', { class: 'muted' }, `Port 바로 앞에 두 면 비구면 Micro-lens(Silica, 평평한 쪽이 Port)를 두어 출사 발산각을 θ' ${fmt(review.candidates[0]?.theta_out_rad ?? null, 3)} rad로 줄인 뒤`
+      el('div', { class: 'muted' }, `Port 바로 앞에 두 면 비구면 Micro-lens(발산각 0.39 rad 이하 Fused silica, 넘으면 Silicon; 평평한 쪽이 Port)를 두어 출사 발산각을 θ' ${fmt(review.candidates[0]?.theta_out_rad ?? null, 3)} rad로 줄인 뒤`
         + ', 등가 Port 사이에서 두 반사면 Relay를 근축으로 설계했습니다. '
         + 'Lens는 Aplanatic(평행 출사 + Abbe 사인 조건)으로 맞추고, Lens·반사면 전체를 비근축 η로만 판정하며 반사면은 3·4차 Sag로 보정합니다. '
-        + `채택 기준: 비근축 검산 수렴, η ≥ ${limit}, Lens 몸체가 Keep-out·Envelope 안. 근축 Guard 대신 비근축 검산으로 채택하는 Family입니다. `
-        + '행을 누르면 3D/2D에 Lens와 Beam이 그려집니다. Lens 몸체와 Beam 사이 가림, Lens 공차·코팅은 아직 계산하지 않았습니다.'));
+        + `채택 기준: 비근축 검산 수렴, η ≥ ${limit}, Lens 몸체가 Keep-out·Envelope 안, 다른 구간 Beam(1e-6 꼬리)과 반사면이 Lens 몸체를 지나지 않음. `
+        + '근축 Guard 대신 비근축 검산으로 채택하는 Family입니다. 행을 누르면 3D/2D에 Lens와 Beam이 그려집니다. Lens 공차·코팅은 아직 계산하지 않았습니다.'));
   }
 
   private lensDetail(c: Candidate) {
     const lenses = c.scene.lenses ?? [];
     const checks = c.lens_checks ?? [];
-    const head = el('tr', {}, ...['Lens', 'f [µm]', '중심 두께 [µm]', 'Clear Ø [µm]', 'Port→Lens [µm]', 'n (상대)', '출사 방향 잔차 [mrad]', '사인 조건 오차 [nm]', '맞춘 광선각 [rad]'].map((h) => el('th', {}, h)));
+    const head = el('tr', {}, ...['Lens', '재료 · n', 'f [µm]', '중심 두께 [µm]', 'Clear Ø [µm]', 'Port→Lens [µm]', '출사 방향 잔차 [mrad]', '사인 조건 오차 [nm]', '통과 sin', '무코팅 투과'].map((h) => el('th', {}, h)));
     const rows = lenses.map((l, i) => {
       const k = checks[i];
-      return el('tr', {}, el('td', {}, `${l.id} (${l.side === 'source' ? 'Source' : 'Target'})`), el('td', {}, fmt(l.focal_length_um, 1)),
+      return el('tr', { 'data-lens-material': l.material ?? '' }, el('td', {}, `${l.id} (${l.side === 'source' ? 'Source' : 'Target'})`),
+        el('td', { title: l.material_source ?? '' }, `${l.material ?? '—'} · ${fmt(l.relative_index, 4)}`), el('td', {}, fmt(l.focal_length_um, 1)),
         el('td', {}, fmt(l.thickness_um, 1)), el('td', {}, fmt(2 * l.clear_radius_um, 0)), el('td', {}, fmt(l.port_distance_um, 2)),
-        el('td', {}, fmt(l.relative_index, 4)), el('td', {}, k ? fmt(k.max_direction_rad * 1e3, 3) : '—'),
-        el('td', {}, k ? fmt(k.max_sine_condition_error_m * 1e9, 1) : '—'), el('td', {}, k ? fmt(k.fitted_to_angle_rad, 3) : '—'));
+        el('td', {}, k ? fmt(k.max_direction_rad * 1e3, 3) : '—'),
+        el('td', {}, k ? fmt(k.max_sine_condition_error_m * 1e9, 1) : '—'), el('td', {}, k?.passes_to_sine != null ? fmt(k.passes_to_sine, 3) : '—'),
+        el('td', { class: (l.uncoated_transmission ?? 1) < 0.9 ? 'warn' : '' }, l.uncoated_transmission != null ? fmt(l.uncoated_transmission, 3) : '—'));
     });
     const mirrors = c.scene.mirrors.map((m) => el('tr', {}, el('td', {}, m.id), el('td', { class: 'mono' }, m.vertex_mm.map((v) => fmt(v, 4)).join(', ')),
       el('td', {}, m.radius_of_curvature_ts_mm.map((r) => (r === null ? '∞' : fmt(r, 3))).join(' / ')), el('td', {}, fmt(m.incidence_deg, 2))));
     const history = (c.fit_history ?? []).map((h) => `${h.step} ${fmt(h.eta, 4)}`).join(' → ');
+    const pose = c.lens_pose;
+    const poseTable = pose ? el('table', { class: 'grid-table', 'data-lens-pose': '' },
+      el('thead', {}, el('tr', {}, ...['Lens', `편심 ±${pose.steps.decenter_um} µm [dB]`, `축 방향 ±${pose.steps.axial_um} µm [dB]`, `기울기 ±${pose.steps.tilt_mrad} mrad [dB]`,
+        '1 dB 편심 [µm]', '1 dB 축 방향 [µm]', '1 dB 기울기 [mrad]'].map((h) => el('th', {}, h)))),
+      el('tbody', {}, ...pose.lenses.map((l) => el('tr', {}, el('td', {}, l.id), el('td', { class: l.decenter_loss_db > 1 ? 'warn' : '' }, fmt(l.decenter_loss_db, 2)),
+        el('td', {}, fmt(l.axial_loss_db, 3)), el('td', {}, fmt(l.tilt_loss_db, 3)), el('td', { 'data-decenter-1db': String(l.decenter_1db_um ?? '') }, fmt(l.decenter_1db_um, 2)),
+        el('td', {}, fmt(l.axial_1db_um, 2)), el('td', {}, fmt(l.tilt_1db_mrad, 1)))))) : null;
     return el('section', { class: 'card', 'data-detail': c.id, 'data-lens-detail': '' }, el('h3', {}, `${c.id} 상세 (Lens Family${c.accepted ? '' : ' · 미채택'})`),
       el('table', { class: 'grid-table' }, el('thead', {}, head), el('tbody', {}, ...rows)),
       el('table', { class: 'grid-table' }, el('thead', {}, el('tr', {}, ...['반사면', 'Vertex [mm]', 'R t / s [mm]', '입사각 [°]'].map((h) => el('th', {}, h)))), el('tbody', {}, ...mirrors)),
       el('div', { class: 'muted' }, `비근축 η ${fmt(c.metrics.nonparaxial_overlap ?? null, 4)} (${c.review_status}) · 격자 변화 ${(c.nonparaxial_check?.grid_change ?? 0).toExponential(1)} · `
         + `Aperture 밖 Power ${(c.nonparaxial_check?.clipped_power_fraction ?? 0).toExponential(1)} · 등가 Port 사이 근축 η ${fmt(c.metrics.normalized_mode_overlap, 4)}`),
       el('div', { class: 'muted' }, `맞춤 과정: ${history}`),
-      el('div', { class: 'muted' }, '방향 잔차와 사인 조건 오차는 Port 1/e² 각의 1.5배까지 자오면 광선으로 확인한 값입니다. Lens 계수와 반사면 보정 계수는 결과 JSON(lens_review)에 있습니다.'));
+      ...(poseTable ? [poseTable, el('div', { class: 'muted' }, `비근축 정렬 연구(격자 ${pose!.grid}², 한 번에 하나씩, 다른 소자는 다시 맞추지 않음): `
+        + `반사면 하나를 ±5 µm·±1 mrad 움직일 때 최악 ${fmt(pose!.reflectors_worst_loss_db, 2)} dB. 1 dB 허용치는 계산한 손실로 2차 추정 후 한 번 더 계산해 보정한 값입니다.`)] : []),
+      el('div', { class: 'muted' }, '방향 잔차와 사인 조건 오차는 Port 1/e² 각의 1.5배(통과 sin 이내)까지 자오면 광선으로 확인한 값입니다. '
+        + 'Clear 구경은 출사 방향 오차 1 mrad 이내인 광선까지이고, 그 밖의 Power는 비근축 검산에서 잘린 Power로 셉니다. '
+        + '무코팅 투과는 두 면 수직 입사 Fresnel 값이며 η에는 넣지 않습니다(Silicon은 AR 코팅 전제). Lens 계수와 반사면 보정 계수는 결과 JSON(lens_review)에 있습니다.'));
   }
 
   private freeform(c: Candidate) {
