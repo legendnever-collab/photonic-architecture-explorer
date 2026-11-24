@@ -322,7 +322,7 @@ export class Viewer3D {
       new THREE.LineBasicMaterial({ color: selected ? COLOR.path : COLOR.faint, transparent: !selected, opacity }));
     group.add(path);
     for (const mirror of c.scene.mirrors) {
-      const grid = mirror.surface_grid_mm;
+      const grid = mirror.surface_grid_corrected_mm ?? mirror.surface_grid_mm;
       const n = grid.length;
       const positions: number[] = [];
       for (const row of grid) for (const p of row) positions.push(...p);

@@ -104,6 +104,25 @@ Near-match는 반사면마다 주축 각도와 두 곡률 좌표(±1 × Guard �
 해석: 국소 이차곡면(Vertex 기준 2차 Sag)은 경사 입사에서 점→점 결상이 완전하지 않다. 완전한 결상면(두 초점을 잇는
 타원면, Off-axis 포물면)과는 3차 Sag 항이 다르고, 그 차이가 Coma로 나타난다. 3w·|κ| Guard는 이 효과를 충분히 막지 못한다.
 
+## Coma 보정 곡면 (P4)
+
+근축 설계가 정한 반사면(꼭짓점, 법선, 곡률 Tensor = 2차 Sag)에 각 반사면 주축 좌표 (u, v)의 3·4차 Sag 항을 더한다.
+
+h(u, v) = ½(κ₁u² + κ₂v²) + Σ c_mn u^m v^n,  m + n = 3, 4 (반사면당 9개 계수)
+
+3차 이상 항은 꼭짓점의 위치·기울기·곡률을 바꾸지 않으므로 근축 Relay(q 대수, 엔진 Adapter, Ray-transfer 검산)는 그대로
+유효하다(테스트: 보정 전후 4×4 Ray-transfer 행렬 동일). 계수는 비근축 Overlap을 최대로 하도록 정한다.
+
+1. 방향 Bundle을 한 번 추적해 광선마다 각 반사면의 Hit (u, v)와 국소 입사 cos를 기록한다. Sag 변화 δh는 그 광선의 광경로를
+   2δh·cosθ 줄이므로, Overlap의 위상 부분은 계수에 선형이다. 이 모델은 같이 바뀌는 방향 대응(Target 면 위치·진폭)을 넣지 않으므로
+   단계 제안에만 쓴다.
+2. 선형 위상 모델에서 |Σ a·e^{i(φ₀+Gb)}|²를 해석적 Gradient로 최대화한다(b = 발자국 반경에서의 Sag, 파장 단위).
+3. 새 곡면으로 정확히 다시 추적(Newton 교점, 정확한 법선)하고 Overlap이 좋아지지 않으면 보폭을 줄인다. 선형 모델이 계속 빗나가면
+   (가파른 입사, Glass 배치) 정확한 Overlap을 성긴 격자(49²)에서 직접 최대화한다.
+4. 보고 값은 항상 정확한 재추적의 수렴 검사 결과다. 방향 대응이 접히면(Caustic, 접힌 영역 Power > 1e-4) 결과를 Invalid로 둔다.
+
+보정 곡면은 공간 제약(Port 뒤 공간, Glass 영역, Envelope, Keep-out)을 Patch 41×41 점에서 다시 검사한다.
+
 ## Mode Overlap
 
 η_mode=|∫E_target* E_incident dA|² / (∫|E_target|² dA ∫|E_incident|² dA).

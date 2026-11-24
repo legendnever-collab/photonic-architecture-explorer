@@ -110,6 +110,8 @@ export interface MirrorScene {
   incidence_deg: number;
   beam_footprint_radius_ts_um: [number, number];
   surface_grid_mm: Vec3[][];
+  surface_grid_corrected_mm?: Vec3[][];  // P4: quadric + coma-correcting sag terms
+  max_sag_change_um?: number;
   tir_possible?: boolean;
 }
 
@@ -132,6 +134,11 @@ export interface Candidate {
   role_labels: string[];
   family: 'exact' | 'near_match';
   model?: 'separable' | 'qtensor';
+  freeform?: {
+    status: string; normalized_mode_overlap?: number; grid_change?: number; constraint?: string | null; reason?: string;
+    reflectors?: { id: string; max_sag_change_um: number; terms: { u_power: number; v_power: number; coefficient_si: number }[] }[];
+    surface?: string; meaning?: string;
+  } | null;
   nonparaxial_check?: { status: string; normalized_mode_overlap?: number; grid_change?: number; clipped_power_fraction?: number; method?: string; omits?: string } | null;
   ray_transfer_check?: { q_tensor_relative_difference: number; symplectic_error: number; method: string } | null;
   parameters_mm: { a?: number; b?: number; c?: number };
@@ -142,6 +149,7 @@ export interface Candidate {
     ambient_path_mm?: number;
     normalized_mode_overlap: number | null;
     nonparaxial_overlap?: number | null;
+    corrected_nonparaxial_overlap?: number | null;
     mode_mismatch_db: number | null;
     max_projected_beam_radius_um: number;
     max_3w_footprint_curvature: number;

@@ -114,7 +114,7 @@ export class Drawings {
     }
     for (const c of candidates) {
       points.push(...c.scene.path.points_mm.map(project));
-      for (const m of c.scene.mirrors) points.push(...m.surface_grid_mm.flat().map(project));
+      for (const m of c.scene.mirrors) points.push(...(m.surface_grid_corrected_mm ?? m.surface_grid_mm).flat().map(project));
     }
     let [u0, u1] = [Math.min(...points.map((p) => p[0])), Math.max(...points.map((p) => p[0]))];
     let [v0, v1] = [Math.min(...points.map((p) => p[1])), Math.max(...points.map((p) => p[1]))];
@@ -165,7 +165,7 @@ export class Drawings {
           `L${j + 1} ${fmt(segment.length_mm, 3)}`));
       });
       selected.scene.mirrors.forEach((mirror, index) => {
-        const g = mirror.surface_grid_mm, n = g.length;
+        const g = mirror.surface_grid_corrected_mm ?? mirror.surface_grid_mm, n = g.length;
         const border = [...g[0], ...g.map((r) => r[n - 1]), ...[...g[n - 1]].reverse(), ...g.map((r) => r[0]).reverse()];
         root.append(svg('polygon', { points: border.map((q) => xy(project(q))).join(' '), fill: '#8b95a1', 'fill-opacity': 0.18, stroke: '#57606a', 'stroke-width': 0.8 }));
         const p = project(mirror.vertex_mm);

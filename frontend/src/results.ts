@@ -2,6 +2,11 @@ import type { Store } from './state';
 import type { Candidate, NonparaxialStudy, Result } from './types';
 import { STATUS_LABEL, el, fmt, nextStep, reasonLabel } from './util';
 
+const TITLES: Record<string, string> = {
+  '비근축 η': '이차곡면 처방을 근축 근사 없이(각스펙트럼 + 실제 곡면 광선) 계산한 Scalar Overlap',
+  '보정 곡면 η': '3·4차 Sag(Coma 보정)를 더한 곡면의 비근축 Overlap. 근축 설계(꼭짓점·법선·곡률)는 그대로',
+};
+
 const STATUS_TEXT: Record<string, string> = {
   Computed: '후보 생성', Fail: '후보 없음', Uncomputed: '미계산', Invalid: '입력 오류', Preview: 'Preview',
 };
@@ -84,9 +89,24 @@ export class ResultsPanel {
         + '후보로 채택하지 않으며, 다른 Family나 Guard 재검토(사용자 승인)를 판단하는 근거입니다.'));
   }
 
+  private freeform(c: Candidate) {
+    const f = c.freeform!;
+    const names = (t: { u_power: number; v_power: number }) => `u${sup(t.u_power)}v${sup(t.v_power)}`;
+    const rows = (f.reflectors ?? []).map((r) => el('tr', {},
+      el('td', {}, r.id), el('td', {}, fmt(r.max_sag_change_um, 2)),
+      el('td', { class: 'mono' }, r.terms.filter((t) => t.coefficient_si !== 0)
+        .map((t) => `${names(t)} ${t.coefficient_si.toExponential(3)}`).join(' · '))));
+    return el('div', { 'data-freeform': f.status },
+      el('div', { class: 'muted' }, `보정 곡면(P4): 비근축 η ${fmt(c.metrics.nonparaxial_overlap ?? null, 4)} → ${fmt(f.normalized_mode_overlap ?? null, 4)}`
+        + (f.status !== 'Computed' ? ` (${f.status})` : '') + (f.constraint ? ` · 제약 위반: ${reasonLabel(f.constraint)}` : '')
+        + ' · h = ½(κ₁u² + κ₂v²) + Σ c·uᵐvⁿ (u = t축, v = s축, SI 단위)'),
+      el('table', { class: 'grid-table' }, el('thead', {}, el('tr', {}, ...['반사면', '최대 Sag 변화 [µm]', '3·4차 계수'].map((h) => el('th', {}, h)))),
+        el('tbody', {}, ...rows)));
+  }
+
   private table(candidates: Candidate[]) {
     const selected = this.store.selectedCandidate;
-    const head = el('tr', {}, ...['#', '종류', '역할', '광경로 [mm]', 'η', '비근축 η', '3w·|κ|', '정렬 민감도 [dB]', '최소 R [mm]'].map((h) => el('th', { title: h === '비근축 η' ? '각스펙트럼 + 실제 곡면 광선으로 계산한 Scalar Overlap(근축 근사 없음)' : '' }, h)));
+    const head = el('tr', {}, ...['#', '종류', '역할', '광경로 [mm]', 'η', '비근축 η', '보정 곡면 η', '3w·|κ|', '정렬 민감도 [dB]', '최소 R [mm]'].map((h) => el('th', { title: TITLES[h] ?? '' }, h)));
     const rows = candidates.map((c) => {
       const kmax = c.metrics.max_abs_curvature_per_m;
       const row = el('tr', { class: c.id === selected?.id ? 'selected' : '', 'data-candidate': c.id, title: c.id },
@@ -96,6 +116,10 @@ export class ResultsPanel {
         el('td', {}, fmt(c.metrics.total_path_mm, 3)), el('td', {}, fmt(c.metrics.normalized_mode_overlap, 4)),
         el('td', { 'data-nonparaxial': String(c.metrics.nonparaxial_overlap ?? ''),
           class: (c.metrics.nonparaxial_overlap ?? 1) < 0.95 ? 'warn' : '' }, fmt(c.metrics.nonparaxial_overlap ?? null, 4)),
+        el('td', { 'data-corrected': String(c.metrics.corrected_nonparaxial_overlap ?? ''),
+          class: c.freeform?.constraint ? 'warn' : 'good', title: c.freeform?.constraint ?? '' },
+          c.freeform?.status === 'Computed' ? fmt(c.metrics.corrected_nonparaxial_overlap ?? null, 4) + (c.freeform.constraint ? ' ⚠' : '')
+            : c.freeform?.status ? `${fmt(c.metrics.corrected_nonparaxial_overlap ?? null, 4)} (${c.freeform.status === 'Unconverged' ? '미수렴' : c.freeform.status})` : '—'),
         el('td', {}, fmt(c.metrics.max_3w_footprint_curvature, 3)),
         el('td', {}, fmt(c.metrics.worst_pose_mismatch_db, 2)),
         el('td', {}, kmax ? fmt(1000 / kmax, 2) : '∞'));
@@ -130,6 +154,7 @@ export class ResultsPanel {
           : `비근축 Scalar 검산 η ${fmt(c.nonparaxial_check.normalized_mode_overlap ?? null, 4)} (근축 η ${fmt(c.metrics.normalized_mode_overlap, 4)}) · `
             + `격자 변화 ${(c.nonparaxial_check.grid_change ?? 0).toExponential(1)} · Aperture 밖 Power ${(c.nonparaxial_check.clipped_power_fraction ?? 0).toExponential(1)} · `
             + '각스펙트럼 + 실제 곡면 광선, 모서리 회절·편광·Fresnel 계수 제외')] : []),
+      ...(c.freeform?.reflectors ? [this.freeform(c)] : []),
       ...(tensor && c.ray_transfer_check ? [el('div', { class: 'muted', 'data-model': 'qtensor' },
         `q-tensor 모델(평면 밖 경로): 반사면 곡률 축은 각 반사면의 주곡률 방향입니다(3D에서 확인). Ray-transfer 검산 상대차 `
         + `${c.ray_transfer_check.q_tensor_relative_difference.toExponential(1)}, Symplectic 오차 ${c.ray_transfer_check.symplectic_error.toExponential(1)}`)] : []),
@@ -152,4 +177,8 @@ export class ResultsPanel {
       el('ul', {}, ...(result.uncomputed ?? []).map((u) => el('li', {}, `Uncomputed · ${u}`)),
         ...(result.limitations ?? []).map((l) => el('li', {}, l))));
   }
+}
+
+function sup(n: number) {
+  return '⁰¹²³⁴'[n] ?? String(n);
 }

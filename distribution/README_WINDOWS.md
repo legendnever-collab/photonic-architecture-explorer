@@ -18,7 +18,7 @@
 | 왼쪽 | Port 입력(Preset, 위치, 방향, MFD, 위상)과 출처, 발산각 Guard, Glass 매질(굴절률·상면·두께), 공간·제작 제약 |
 | 가운데 위 | 3D 장면. 드래그 회전, 휠 확대, Port를 더블클릭하거나 "3D에서 이동"을 누른 뒤 화살표로 이동 |
 | 가운데 아래 | 2D 도면(주 평면 + Fold, 2×2, XY/XZ/YZ, Fold 전개 Beam Envelope, 탐색 지도) |
-| 오른쪽 | 결과, 후보 비교(근축 η와 비근축 η), 반사면 상세, 실패 원인과 다음 단계 |
+| 오른쪽 | 결과, 후보 비교(근축 η, 비근축 η, Coma 보정 곡면 η), 반사면 상세와 보정 계수, 실패 원인과 다음 단계 |
 
 η는 Scalar Paraxial Normalized Mode Overlap, 비근축 η는 같은 처방을 근축 근사 없이 계산한 Scalar Overlap이며 둘 다 Total Coupling이 아닙니다. 근축 η가 1이어도 비근축 η가 낮으면(빨간 글씨) 반사면 수차(Coma) 때문에 실제로는 덜 결합됩니다. Total Coupling, 조립 공차, Package, 특허성은 계산하지 않습니다.
 

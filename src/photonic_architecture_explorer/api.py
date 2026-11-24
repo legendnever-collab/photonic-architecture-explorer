@@ -8,6 +8,8 @@ geometry, the explored (a, c) map and plain next-step guidance.
 
 from dataclasses import replace
 
+import numpy as np
+
 from .design import review_snapshot
 from .design_document import (DocumentError, document_sha256, search_constraints, to_engine_problem,
                               validate_document)
@@ -103,6 +105,16 @@ def _candidate(rank, candidate, problem=None, ambient_ports=None):
             relay_target = adapt_ports(problem['engine']).target
             arrival = arrived_mode(evaluation, relay_target.mode).q
         extend_with_crossing(scene, crossing, original, arrival)
+    corrected = candidate.get('freeform') or {}
+    if corrected.get('reflectors'):  # P4: draw the corrected surface (13 × 13, same grid as the quadric patch)
+        from .freeform import surface_points
+        for mirror, record in zip(scene['mirrors'], corrected['reflectors']):
+            poly = tuple((t['u_power'], t['v_power'], t['coefficient_si']) for t in record['terms'])
+            grid = surface_points(np.array(mirror['vertex_mm']) * 1e-3, mirror['normal'], mirror['t_axis'], mirror['s_axis'],
+                                  mirror['curvature_ts_per_m'], [a * 1e-3 for a in mirror['half_aperture_ts_mm']], poly,
+                                  n=len(mirror['surface_grid_mm']))
+            mirror['surface_grid_corrected_mm'] = (grid * 1e3).tolist()
+            mirror['max_sag_change_um'] = record['max_sag_change_um']
     if problem and problem['medium'] == 'block':
         for mirror in scene['mirrors']:
             mirror['tir_possible'] = tir_possible(problem['block'].index, problem['ambient_index'], mirror['incidence_deg'])
@@ -118,12 +130,14 @@ def _candidate(rank, candidate, problem=None, ambient_ports=None):
         'model': candidate.get('model', 'separable'),
         'ray_transfer_check': evaluation.get('ray_transfer_check'),
         'nonparaxial_check': candidate.get('nonparaxial_check'),
+        'freeform': candidate.get('freeform'),
         'parameters_mm': {k[:-2]: v * 1e3 for k, v in candidate.get('parameters', {}).items() if k.endswith('_m')},
         'metrics': {
             'total_path_mm': scene['path']['total_length_mm'],
             'ambient_path_mm': sum(seg['length_mm'] for seg in scene['path']['segments'] if seg.get('medium') == 'ambient'),
             'normalized_mode_overlap': matching.get('normalized_mode_overlap'),
             'nonparaxial_overlap': (candidate.get('nonparaxial_check') or {}).get('normalized_mode_overlap'),
+            'corrected_nonparaxial_overlap': (candidate.get('freeform') or {}).get('normalized_mode_overlap'),
             'mode_mismatch_db': matching.get('mismatch_db'),
             'max_projected_beam_radius_um': ranking['max_projected_radius_m'] * 1e6,
             'max_3w_footprint_curvature': ranking['max_3w_footprint_curvature'],
@@ -179,9 +193,16 @@ def design_guidance(report, ports, ambient_index, medium='ambient'):
                     'message': f'비근축 Scalar 검산 η는 {min(values):.3f}~{max(values):.3f}입니다(근축 η {min(paraxial):.3f}~{max(paraxial):.3f}). '
                                + ('차이는 반사면을 국소 이차곡면으로 처방해서 생기는 3차 이상 수차(경사 입사의 Coma 등)와 근축 전파 오차입니다. '
                                   '두 반사면이 같은 방향으로 꺾는 배치에서는 Coma가 더해지고, 반대로 꺾는 Z형 배치에서는 상쇄됩니다. '
-                                  '근축 η만으로 판단하지 말고 "비근축 Overlap 최대" 후보를 함께 보세요. '
-                                  '고차 곡면(Conic·Freeform) 처방은 P4 과제입니다.' if low else
+                                  '근축 η만으로 판단하지 말고 비근축 η와 보정 곡면 결과를 함께 보세요.' if low else
                                   '근축 결과와 차이가 작아 이 후보들에서는 근축 모델이 맞습니다.')})
+    corrected = [c['freeform']['normalized_mode_overlap'] for c in report.get('candidates', [])
+                 if (c.get('freeform') or {}).get('status') == 'Computed' and not c['freeform'].get('constraint')]
+    if corrected:
+        out.append({'kind': 'freeform', 'phase': 'P4', 'level': 'info',
+                    'values': {'corrected_min': min(corrected), 'corrected_max': max(corrected)},
+                    'message': f'3·4차 Sag 보정(Coma 보정 곡면)을 더하면 비근축 η가 {min(corrected):.3f}~{max(corrected):.3f}가 됩니다. '
+                               '꼭짓점·법선·곡률(근축 설계)은 그대로이고, 보정량은 후보 상세의 반사면별 최대 Sag 변화로 확인합니다. '
+                               '보정 곡면은 3D에 그려지고 결과 JSON에 계수가 있습니다.'})
     study = report.get('nonparaxial_study')
     if study:
         out.append({'kind': 'nonparaxial_study', 'phase': 'P3', 'level': 'info', 'values': study.get('summary'),

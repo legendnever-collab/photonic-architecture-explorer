@@ -11,6 +11,7 @@ Starts the packaged server, drives Chromium with Playwright and checks:
   * P3 glass scenarios: block card, hatched surface band, crossing record, TIR column,
     Fold surface marker at the air-gap distance, reflectors below the surface, 3D slab,
     turning the block off, and the shallow-guide region guidance
+  * P4 coma correction: S1 corrected non-paraxial η ≥ 0.95, coefficient table and guidance
   * P3 non-paraxial check: η column and guidance on S1, beyond-guard study card on S3
   * P3 q-tensor: S4 (non-coplanar) gives verified candidates, the q-tensor note and guidance,
     beam ellipses in the scene and 2D mirror positions equal to the scene vertices (1 nm)
@@ -142,6 +143,10 @@ def main():
         summary['S1_nonparaxial'] = np_cells
         check(np_cells and all(0 < v <= 1 for v in np_cells) and page.locator('[data-guidance="nonparaxial"]').count() == 1,
               f'S1 non-paraxial column/guidance: {np_cells}', failures)
+        corrected = page.evaluate("""() => [...document.querySelectorAll('[data-corrected]')].map(td => Number(td.dataset.corrected))""")
+        summary['S1_corrected'] = corrected
+        check(corrected and all(v >= 0.95 for v in corrected) and page.locator('[data-freeform="Computed"]').count() == 1
+              and page.locator('[data-guidance="freeform"]').count() == 1, f'S1 corrected surfaces (P4 gate): {corrected}', failures)
         page.screenshot(path=str(out / 'p1_S1_auto.png'))
         for view in ('all', 'xz', 'fold'):
             page.click(f'.tab[data-view="{view}"]')
