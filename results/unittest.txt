@@ -148,6 +148,15 @@ test_exact_tensors_close_on_the_target_mode (test_p3_qtensor.NonCoplanarTest.tes
 test_ray_transfer_matrix_reproduces_the_tensor (test_p3_qtensor.NonCoplanarTest.test_ray_transfer_matrix_reproduces_the_tensor)
 Exact rays through the quadric patches (independent of the q algebra) give the same arrival. ... ok
 test_rigid_rotation_of_the_whole_problem_changes_nothing (test_p3_qtensor.NonCoplanarTest.test_rigid_rotation_of_the_whole_problem_changes_nothing) ... ok
+test_corrected_surface_constraints_are_checked (test_p4_freeform.CorrectionTest.test_corrected_surface_constraints_are_checked) ... ok
+test_correction_is_reproducible_from_the_engine_record (test_p4_freeform.CorrectionTest.test_correction_is_reproducible_from_the_engine_record) ... ok
+test_gate_s1_and_s4_reach_095 (test_p4_freeform.CorrectionTest.test_gate_s1_and_s4_reach_095) ... ok
+test_reported_overlap_is_the_exact_retrace (test_p4_freeform.CorrectionTest.test_reported_overlap_is_the_exact_retrace)
+The linear phase model only proposes steps; the reported value is the exact surface trace. ... ok
+test_hits_lie_on_the_corrected_surface (test_p4_freeform.SurfaceTraceTest.test_hits_lie_on_the_corrected_surface) ... ok
+test_paraxial_ray_transfer_is_unchanged_by_the_correction (test_p4_freeform.SurfaceTraceTest.test_paraxial_ray_transfer_is_unchanged_by_the_correction)
+Terms of order ≥ 3 leave the 4×4 ray-transfer matrix (central differences) untouched. ... ok
+test_zero_terms_reproduce_the_quadric_trace (test_p4_freeform.SurfaceTraceTest.test_zero_terms_reproduce_the_quadric_trace) ... ok
 test_all_80_perturbations_match_independent_quadratic_and_newton_reference (test_placement.ReflectorPlacementTests.test_all_80_perturbations_match_independent_quadratic_and_newton_reference) ... ok
 test_failed_traces_are_classified_and_withhold_target_errors (test_placement.ReflectorPlacementTests.test_failed_traces_are_classified_and_withhold_target_errors) ... ok
 test_flat_second_mirror_has_signed_double_angle_response (test_placement.ReflectorPlacementTests.test_flat_second_mirror_has_signed_double_angle_response) ... ok
@@ -159,6 +168,6 @@ test_matched_flat_gaussian_closed_form (test_sensitivity.CandidateSensitivityTes
 test_snapshot_preserves_ports_and_ranking (test_sensitivity.CandidateSensitivityTests.test_snapshot_preserves_ports_and_ranking) ... ok
 
 ----------------------------------------------------------------------
-Ran 154 tests in 105.588s
+Ran 161 tests in 213.830s
 
 OK
