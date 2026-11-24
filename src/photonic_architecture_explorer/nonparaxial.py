@@ -66,6 +66,64 @@ def _poly(poly, u, v):
     return value, du, dv
 
 
+def refracting_surface(vertex, axis, curvature, conic, aspheric, n_before, n_after, radius):
+    """Rotationally symmetric refracting surface for the bundle trace (indices relative to the ambient medium).
+
+    Sag along `axis` (the forward propagation direction): z(r) = c r²/(1 + √(1 − (1+κ)c²r²)) + Σ a_i r^(2i), i = 2, 3, …
+    """
+    return ('refract', np.array(vertex, float), np.array(unit(axis)), float(curvature), float(conic),
+            tuple(float(a) for a in aspheric), float(n_before), float(n_after), float(radius))
+
+
+def asphere_sag(r2, c, kappa, aspheric):
+    """Sag and (dz/dr)/r as functions of r²."""
+    root = np.sqrt(np.clip(1 - (1 + kappa) * c * c * r2, 1e-12, None))
+    z = c * r2 / (1 + root)
+    slope = c / root
+    for i, a in enumerate(aspheric, start=2):
+        z = z + a * r2 ** i
+        slope = slope + 2 * i * a * r2 ** (i - 1)
+    return z, slope
+
+
+def _refract(element, o, d, alive, opl, index, target_direction):
+    _, vertex, axis, c, kappa, aspheric, n1, n2, radius = element
+    den = d @ axis
+    with np.errstate(divide='ignore', invalid='ignore'):
+        t = ((vertex - o) @ axis) / den
+    for _ in range(10):  # Newton on z(p) − sag(r(p)) = 0 from the vertex-plane intersection
+        p = o + d * t[:, None]
+        rel = p - vertex
+        z = rel @ axis
+        rho = rel - z[:, None] * axis
+        sag, slope = asphere_sag((rho * rho).sum(1), c, kappa, aspheric)
+        g = z - sag
+        dg = den - slope * (rho * (d - den[:, None] * axis)).sum(1)
+        with np.errstate(divide='ignore', invalid='ignore'):
+            t = t - g / dg
+    p = o + d * t[:, None]
+    rel = p - vertex
+    z = rel @ axis
+    rho = rel - z[:, None] * axis
+    r2 = (rho * rho).sum(1)
+    sag, slope = asphere_sag(r2, c, kappa, aspheric)
+    with np.errstate(invalid='ignore'):
+        ok = alive & np.isfinite(t) & (t > -1e-15) & (np.abs(z - sag) < 1e-13) & (r2 <= radius * radius) \
+            & ((1 + kappa) * c * c * r2 < 1)
+    normal = axis[None, :] - slope[:, None] * rho
+    normal /= np.linalg.norm(normal, axis=1)[:, None]
+    cos_i = (d * normal).sum(1)
+    eta = n1 / n2
+    inside = 1 - eta * eta * (1 - cos_i * cos_i)
+    ok &= (inside > 0) & (cos_i > 0)
+    root = np.sqrt(np.clip(inside, 0, None))
+    refracted = eta * d + (root - eta * cos_i)[:, None] * normal
+    opl = opl + np.where(ok, n1 * t, 0.0)
+    o = np.where(ok[:, None], p, o)
+    d = np.where(ok[:, None], refracted, np.array(target_direction))
+    return o, d, ok, opl
+
+
 def trace_bundle(origin, directions, mirrors, target_position, target_basis, target_direction):
     """Vectorised exact rays through clipped patches (quadric plus optional higher sag terms) to the Target plane.
 
@@ -77,7 +135,13 @@ def trace_bundle(origin, directions, mirrors, target_position, target_basis, tar
     alive = np.ones(len(d), bool)
     opl = np.zeros(len(d))
     hits = []
-    for vertex, n, e1, e2, k1, k2, h1, h2, *rest in mirrors:
+    index = 1.0  # relative to the ambient medium (refracting elements change it; OPL is in ambient units)
+    for element in mirrors:
+        if isinstance(element[0], str):  # ('refract', vertex, axis, c, kappa, aspheric, n_before, n_after, radius)
+            o, d, alive, opl = _refract(element, o, d, alive, opl, index, target_direction)
+            index = element[7]
+            continue
+        vertex, n, e1, e2, k1, k2, h1, h2, *rest = element
         poly = rest[0] if rest else ()
         rel = o - vertex
         u, v, h = rel @ e1, rel @ e2, rel @ n
@@ -120,6 +184,7 @@ def trace_bundle(origin, directions, mirrors, target_position, target_basis, tar
         d = np.where(alive[:, None], d, np.array(target_direction))  # dead rays: keep finite placeholders
         o = o + d * best[:, None]
         opl += best
+        opl += (index - 1.0) * best  # reflectors inside a medium other than the ambient one
         rel = o - vertex
         u, v = rel @ e1, rel @ e2
         _, pu, pv = _poly(poly, u, v) if poly else (0.0, 0.0, 0.0)
@@ -135,7 +200,7 @@ def trace_bundle(origin, directions, mirrors, target_position, target_basis, tar
     alive &= t > 0
     t = np.where(alive, t, 0.0)
     x = o + d * t[:, None] - np.array(target_position)
-    opl += t
+    opl += index * t
     keep = alive[:, None]
     return {'alive': alive, 'opl': np.where(alive, opl, 0.0), 'x': np.where(keep, x @ target_basis, 0.0),
             'u': np.where(keep, d @ target_basis, 0.0), 'hits': hits}

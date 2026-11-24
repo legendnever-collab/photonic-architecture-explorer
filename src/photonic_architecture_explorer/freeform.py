@@ -92,15 +92,17 @@ def max_sag(poly, half_aperture):
     return float(abs(value).max())
 
 
-def correct(args, mirrors, footprints, wavelength):
+def correct(args, mirrors, footprints, wavelength, prefix=(), suffix=()):
     """Coma-correcting sag terms for both reflectors.
 
     `args` are nonparaxial.check's leading arguments (both modes and Ports, k, half angle) without the
-    mirror list; `mirrors` are quadric mirror tuples; `footprints` the 1/e² footprints (w_u, w_v).
+    mirror list; `mirrors` are quadric mirror tuples; `footprints` the 1/e² footprints (w_u, w_v);
+    `prefix`/`suffix` are fixed refracting surfaces before and after the reflectors (lens family).
     Returns the polynomial terms, the exact non-paraxial check with them and the fit history.
     """
     def with_poly(poly):
-        return [nonparaxial.mirror_tuple(m[0], m[1], m[3], (m[4], m[5]), (m[6], m[7]), p) for m, p in zip(mirrors, poly)]
+        return [*prefix, *(nonparaxial.mirror_tuple(m[0], m[1], m[3], (m[4], m[5]), (m[6], m[7]), p)
+                           for m, p in zip(mirrors, poly)), *suffix]
 
     def exact(poly, grid=FIT_GRID):
         f = nonparaxial.field(*args[:8], with_poly(poly), *args[8:], grid=grid)
@@ -278,18 +280,23 @@ def surface_violation(ports, constraints, points):
     return None
 
 
-def correct_candidate(candidate, engine_document, constraints=None):
-    """Coma correction of one accepted candidate (separable engine prescription or q-tensor record)."""
+def candidate_mirrors(candidate, engine_document):
+    """(ports, reflector objects) of an accepted candidate (separable engine prescription or q-tensor record)."""
     from .external import adapt_external, adapt_ports
     from .qtensor import TensorReflector
-    from .search import APERTURE_FACTOR
     if candidate.get('model') == 'qtensor':
         ports = adapt_ports(engine_document)
         mirrors = [TensorReflector(r['vertex_m'], r['normal'], r['curvatures_per_m'], r['half_aperture_m'],
                                    r['principal_axes'][1]) for r in candidate['prescription']['reflectors']]
-    else:
-        design = adapt_external(candidate['prescription'])
-        ports, mirrors = design, design.reflectors
+        return ports, mirrors
+    design = adapt_external(candidate['prescription'])
+    return design, design.reflectors
+
+
+def correct_candidate(candidate, engine_document, constraints=None):
+    """Coma correction of one accepted candidate (separable engine prescription or q-tensor record)."""
+    from .search import APERTURE_FACTOR
+    ports, mirrors = candidate_mirrors(candidate, engine_document)
     result = correct_mirrors(ports, mirrors, APERTURE_FACTOR)
     check = result['check']
     violation = None

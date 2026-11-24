@@ -488,7 +488,7 @@ def pareto(points, keys):
     return front
 
 
-def design_continuous(document, constraints=Constraints(), *, include_map=True):
+def design_continuous(document, constraints=Constraints(), *, include_map=True, nonparaxial_checks=True):
     """Two fixed Ports (M3A-1 document, optional package) in; verified concepts out."""
     started = time.perf_counter()
     result = {'schema': 'P2-design-result-1', 'status': 'Uncomputed', 'input_snapshot': None,
@@ -579,7 +579,7 @@ def design_continuous(document, constraints=Constraints(), *, include_map=True):
                                                      'max_footprint_slope': closest.metrics['max_footprint_slope'],
                                                      'limit': MAX_FOOTPRINT_SLOPE}
         plan, front = select(ports, constraints, lam_n, pool, family, evaluator=evaluator)
-        if pool:  # P3: rank the feasible set by the non-paraxial scalar overlap as one more objective
+        if pool and nonparaxial_checks:  # P3: rank the feasible set by the non-paraxial scalar overlap as one more objective
             from . import nonparaxial
             ranked = nonparaxial.screen(ports, pool)
             result['search']['nonparaxial_screen'] = {
@@ -616,7 +616,7 @@ def design_continuous(document, constraints=Constraints(), *, include_map=True):
             remaining.remove(far)
             attempt(far, 'pareto_alternative')
         accepted = add_tolerance_roles(accepted)
-        if accepted:
+        if accepted and nonparaxial_checks:
             from . import nonparaxial
             for candidate in accepted:
                 try:

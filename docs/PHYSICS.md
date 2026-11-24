@@ -123,6 +123,13 @@ h(u, v) = ½(κ₁u² + κ₂v²) + Σ c_mn u^m v^n,  m + n = 3, 4 (반사면당
 
 보정 곡면은 공간 제약(Port 뒤 공간, Glass 영역, Envelope, Keep-out)을 Patch 41×41 점에서 다시 검사한다.
 
+## 굴절 비구면 (P4, 연구 중)
+
+비근축 추적은 회전대칭 비구면 굴절면도 지난다: z(r) = c r²/(1 + √(1 − (1+κ)c²r²)) + Σ a_i r^(2i). 교점은 꼭짓점 평면 교점에서 시작한
+Newton 반복, 굴절은 벡터 Snell 법칙(전반사 광선 제거), 광경로는 매질 굴절률을 곱해 누적한다. 검증: 평행 평판은 입사 방향을 보존하고
+측면 이동이 해석식과 일치(1e-12), 렌즈 근축 행렬이 광선 중앙 차분과 일치(1e-5), 등광로(Cartesian oval) Collimator 근사 비구면은
+±0.6 rad 광선을 2e-4 rad 이내로 평행하게 만든다. 렌즈는 Port의 원거리(Rayleigh 거리 10배 이상)에 두어 광선 대응 가정을 지킨다.
+
 ## Mode Overlap
 
 η_mode=|∫E_target* E_incident dA|² / (∫|E_target|² dA ∫|E_incident|² dA).

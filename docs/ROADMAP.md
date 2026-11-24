@@ -9,7 +9,7 @@
 | P1 3D/2D 시각 Workspace | **완료** (PR #62, P0와 함께 병합) | 3D Viewer(Port·Mode·반사면 Sag·Beam 튜브·Envelope), Gizmo↔표 동기화, XY/XZ/YZ/Fold 도면과 치수, Preset, 후보 오버레이, SVG/JSON Export, Windows ZIP(Chrome/Edge) | S1 전 과정을 새 화면에서 완료. S2a·S2b는 입력·Preview·실패 원인 표시까지. 도면 좌표가 엔진 값과 1 nm 이내 일치. 기존 Workspace와 R5~R9·R20 의존 자료 보관 |
 | P2 후보 생성 v2 | **완료** (PR #63) | 제약 기반 연속 탐색(Envelope·Keep-out·입사각·최소 곡률반경), Pareto 순위, 실행 가능한 Fail 안내 | S2a·S2b(공기 중 Edge 배치)에서 서로 다른 절충의 후보 3개 이상. S3는 수치 안내. 기본 Design 5초 이내 |
 | P3 물리 Domain 확장 | **완료** (PR #64, v0.3.0) | 균질 매질·평면 굴절 계면(Glass 상면, Glass 내부 반사면, 매립 WG 깊이), 3D q-tensor(비동일평면·축 회전), 비근축 Scalar 검산(모든 후보 + Guard 밖 연구) | Gate **통과**: S2a·S2b Glass 배치와 Edge 비교, S4 후보 생성(Ray-transfer 검산), S3 비근축 검산. 결과: 국소 이차곡면 반사면은 같은 방향으로 꺾는 배치에서 Coma가 커서 근축 η = 1이어도 비근축 η가 0.3~0.6까지 떨어짐([VALIDATION](VALIDATION.md)) |
-| P4 Architecture Family | **진행 중** — 1단계(Coma 보정 곡면) 완료 | ① Coma 보정 곡면(3·4차 Sag) ② Lens–Mirror, 단일·이중 Lens, Cylindrical Lens ③ Family 자동 선택 | ① **통과**: S1 보정 비근축 η 0.9999~1.000, S4 0.994~0.999. 다음: S5 통과(Lens Family), Family 간 비교 |
+| P4 Architecture Family | **진행 중** — 1단계(Coma 보정 곡면) 완료, 2단계(Micro-lens) 연구 중 | ① Coma 보정 곡면(3·4차 Sag) ② Lens–Mirror, 단일·이중 Lens, Cylindrical Lens ③ Family 자동 선택 | ① **통과**: S1 보정 비근축 η 0.9999~1.000, S4 0.994~0.999. ② 진행 중: S3 단일 비구면 렌즈 + 반사면 최고 비근축 η 0.87 → 두 면 비구면(Aplanatic) 렌즈로 개선 예정. 다음: S5 통과, Family 간 비교 |
 | P5 특허·설계 산출물 | 예정 | 부호 붙은 특허 Figure, 치수 도면, 후보 보고서, glTF/STL(STEP은 요청 시) | 시나리오별 Figure 세트 일괄 생성 |
 | P6 Field Import와 배열 | 미정 | FDTD/측정 Sampled Field 입력, 다채널(S6) | 실제 수요 확인 후 범위 확정 |
 
