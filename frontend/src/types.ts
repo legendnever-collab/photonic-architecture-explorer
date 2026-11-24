@@ -124,10 +124,11 @@ export interface BeamSample { segment: number; distance_mm: number; point_mm: Ve
 export interface LensScene {
   id: string; side: PortName; flat_vertex_mm: Vec3; curved_vertex_mm: Vec3; axis: Vec3; focal_length_um: number;
   thickness_um: number; clear_radius_um: number; port_distance_um: number; relative_index: number; outline_mm: Vec3[][];
+  material?: string; material_source?: string; uncoated_transmission?: number | null;
 }
 export interface LensCheck {
   max_direction_rad: number; max_sine_condition_error_m: number; rays_alive: boolean; checked_to_angle_rad: number;
-  fitted_to_angle_rad: number; clear_radius_m: number;
+  fitted_to_angle_rad: number; clear_radius_m: number; passes_to_sine?: number;
 }
 
 export interface CandidateScene {

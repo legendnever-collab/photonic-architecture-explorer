@@ -230,10 +230,13 @@ def design_guidance(report, ports, ambient_index, medium='ambient', lens_review=
 
 def lens_reason_label(reason):
     import re
-    found = re.match(r'Port divergence ([0-9.]+) rad is beyond a single aspheric singlet \(limit ([0-9.]+) rad', reason or '')
+    found = re.match(r'Port divergence ([0-9.]+) rad is beyond a single aspheric singlet', reason or '')
     if found:
-        return (f'Port 발산각 {found.group(1)} rad는 단일 비구면 Lens 하나로 받을 수 있는 범위({found.group(2)} rad)를 넘습니다 '
-                '(1/e² 각의 2.6배 광선까지 sin 0.85 이하로 꺾어야 함). 두 Lens 또는 고굴절률 Lens가 필요합니다.')
+        return (f'Port 발산각 {found.group(1)} rad는 단일 비구면 Lens 하나로 받을 수 있는 범위를 넘습니다 '
+                '(1/e² 각의 1.2배 광선까지 sin 0.85 이하로 꺾어야 함). 두 Lens 구성이 필요합니다.')
+    found = re.match(r'lens passes Port rays only to sin ([0-9.]+)', reason or '')
+    if found:
+        return f'맞춘 Lens가 Port 광선을 sin {found.group(1)}까지만 통과시켜 1/e² 각의 1.2배에 못 미칩니다.'
     return reason or ''
 
 
@@ -264,6 +267,10 @@ def lens_family_review(engine_input, constraints, problem, ports):
                 found = surface_violation(real, replace(constraints, port_halfspace=False), points)
                 if found and constraint is None:
                     constraint = found.replace('corrected surface', 'lens body')
+            for entry in record['scene']['lenses']:
+                blocked = lens_module.obstruction(record['scene'], entry)
+                if blocked and constraint is None:
+                    constraint = blocked
             check = row['nonparaxial_check']
             record.update({
                 'id': 'L-' + row['id'], 'review': True, 'role': 'lens_review', 'roles': ['lens_review'],

@@ -3,6 +3,15 @@
 새 항목을 위에 추가한다. 항목당 10줄 이내: 새로 가능해진 설계 판단, 주요 기술 선택, 남은 한계.
 2026-11-24 이전의 Milestone 기록(M1~M7-R28)은 [history/](history/)에 있다.
 
+## 2026-11-25 · P4 3단계: 고NA Lens, 재료, Lens 가림 (`phase/p4-family-selection`)
+
+- **가능해진 판단**: S5(Laser 0.556 rad → SSC)가 Silicon Lens + 두 반사면 + Silica Lens로 Computed(비근축 η 0.987~0.988, 수렴).
+- **재료**: Port 발산각 0.39 rad 이하 Fused silica(Malitson), 넘으면 Silicon(Li 1980, λ ≥ 1.2 µm). 무코팅 Fresnel 투과는 정보로만.
+- **맞춤**: 광선 부채꼴을 단계적으로 넓히고, 최대 출사 방향 오차로 해를 고름. Clear 구경은 방향 오차 1 mrad 이내 광선까지.
+- **검산 수정**: 잘린 광선 옆 Jacobian을 한쪽 차분으로. Hard aperture가 있는 경우 격자 수렴이 정상화(기존 값 변화 ≤ 2e-3).
+- **가림**: 다른 구간 Beam과 반사면이 Lens 몸체를 지나면 제약 위반. θ'는 0.005 → 0.0075 → 0.01 순으로, 채택이 나오면 멈춤.
+- **한계**: Lens 공차·코팅·분산 미계산. S5 Design 약 35 s.
+
 ## 2026-11-24 · P4 2단계 채택 정책: Lens Family를 Computed로 (`phase/p4-coma-correction`)
 
 - **사용자 결정**: Lens Family 후보를 Computed로 올린다. 채택 = 비근축 검산 수렴 ∧ η ≥ 0.95(P4 Gate와 같음) ∧ Lens 몸체가 Keep-out·Envelope 안.

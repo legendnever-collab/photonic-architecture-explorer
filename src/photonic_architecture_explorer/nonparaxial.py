@@ -212,6 +212,29 @@ def _spectrum(qmatrix, k, u):
     return np.exp(1j * np.einsum('...i,ij,...j', p, qmatrix, p) / (2 * k))
 
 
+def _derivative(values, alive, step, axis):
+    """∂values/∂axis from alive neighbours only: central inside, one-sided next to a clipped ray, so that the
+    Jacobian at the edge of a hard aperture does not use the placeholders of dead rays."""
+    v = np.moveaxis(values, axis, 0)
+    a = np.moveaxis(alive, axis, 0)
+    out = np.zeros_like(v)
+    prev_ok = np.zeros_like(a)
+    next_ok = np.zeros_like(a)
+    prev_ok[1:] = a[:-1]
+    next_ok[:-1] = a[1:]
+    back = np.zeros_like(v)
+    ahead = np.zeros_like(v)
+    back[1:] = v[1:] - v[:-1]
+    ahead[:-1] = v[1:] - v[:-1]
+    both = prev_ok & next_ok
+    out[both] = (back[both] + ahead[both]) / (2 * step)
+    only_prev = prev_ok & ~next_ok
+    out[only_prev] = back[only_prev] / step
+    only_next = next_ok & ~prev_ok
+    out[only_next] = ahead[only_next] / step
+    return np.moveaxis(out, 0, axis)
+
+
 def field(source_q, source_basis, source_position, source_direction, target_q, target_basis, target_position,
           target_direction, mirrors, k, half_angle, grid=GRID):
     """Terms of the overlap integral on one direction grid: η = |Σ amplitude·e^{i phase}|² · step⁴ / norm."""
@@ -231,8 +254,8 @@ def field(source_q, source_basis, source_position, source_direction, target_q, t
     xr = ray['x'].reshape(shape + (2,))
     qz = np.sqrt(np.clip(1 - (uq ** 2).sum(-1), 1e-300, None))
     w = ray['opl'].reshape(shape) - (uq * xr).sum(-1)
-    signed = (np.gradient(uq[..., 0], step, axis=0) * np.gradient(uq[..., 1], step, axis=1)
-              - np.gradient(uq[..., 0], step, axis=1) * np.gradient(uq[..., 1], step, axis=0))
+    signed = (_derivative(uq[..., 0], alive, step, 0) * _derivative(uq[..., 1], alive, step, 1)
+              - _derivative(uq[..., 0], alive, step, 1) * _derivative(uq[..., 1], alive, step, 0))
     jac = np.abs(signed)
     a = _spectrum(source_q, k, np.stack([uu, vv], -1))
     power = np.where(alive, abs(a) ** 2, 0.0)

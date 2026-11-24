@@ -119,5 +119,19 @@ class IntegrationTest(unittest.TestCase):
         self.assertIn('nonparaxial_study', {g['kind'] for g in result['guidance']})
 
 
+class EdgeDerivativeTest(unittest.TestCase):
+    def test_one_sided_differences_next_to_clipped_rays(self):
+        x = np.linspace(-1, 1, 9)
+        values = np.add.outer(x ** 2, 3 * x)
+        alive = np.ones_like(values, bool)
+        np.testing.assert_allclose(nonparaxial._derivative(values, alive, x[1] - x[0], 0),
+                                   np.gradient(values, x[1] - x[0], axis=0), atol=1e-12)
+        alive[6:] = False
+        values[6:] = 1e9  # placeholders of dead rays must not leak into the derivative
+        d = nonparaxial._derivative(values, alive, x[1] - x[0], 0)
+        self.assertAlmostEqual(d[5, 0], (x[5] ** 2 - x[4] ** 2) / (x[1] - x[0]), places=12)
+        self.assertTrue(np.all(np.abs(d[:6]) < 10))
+
+
 if __name__ == '__main__':
     unittest.main()

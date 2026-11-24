@@ -92,7 +92,7 @@ Glass 안에서는 발산각이 1/n로 줄어든다. 반사면은 Glass 안(상�
 | 보정 곡면 η | 3·4차 Sag로 Coma를 보정한 곡면의 비근축 η. 제작 공차·표면 오차는 넣지 않음 |
 | 3w·\|κ\| | 반사면 곡률 대비 Beam 크기 Guard(한계 0.15). 한계에 가까울수록 모델 여유가 작다 |
 | 정렬 민감도 [dB] | 반사면 하나씩 ±5 µm 이동 또는 ±1 mrad 기울였을 때 Target에서의 최악 Gaussian 손실(주광선 Pointing만 반영). 탐색은 이 검사가 Guard 안에서 돌도록 입사각 1° 여유, 반사면 가림 여유(10 µm + 2 %)를 둔다 |
-| Lens + 2 반사면 | 발산각 Guard를 넘는 Port에서 Micro-lens로 Mode를 키운 배치. 근축 Guard 대신 비근축 검산(수렴, η ≥ 0.95)과 Lens 몸체 제약으로 Computed가 된다. 표의 η는 등가 Port 사이 근축 값이므로 비근축 η를 본다. Lens(초록)는 3D/2D에 그려진다 |
+| Lens + 2 반사면 | 발산각 Guard를 넘는 Port에서 Micro-lens로 Mode를 키운 배치. 근축 Guard 대신 비근축 검산(수렴, η ≥ 0.95)과 Lens 몸체 제약으로 Computed가 된다. 표의 η는 등가 Port 사이 근축 값이므로 비근축 η를 본다. Lens(초록)는 3D/2D에 그려진다. 상세에 재료(Silica/Silicon), 통과 sin, 무코팅 투과가 나온다 |
 | 최소 R [mm] | 두 반사면 중 가장 강한 곡률의 곡률반경. 클수록 제작이 쉽다 |
 | 통과 최소 MFD | 이 파장·매질에서 발산각 Guard(0.1 rad)를 통과하는 최소 Waist MFD(1310 nm 공기 중 약 8.34 µm) |
 

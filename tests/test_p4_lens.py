@@ -84,16 +84,40 @@ class AplanaticLensTest(unittest.TestCase):
         m = L._reduced_matrix(lens)
         self.assertAlmostEqual(-1 / m[1, 0], f, delta=1e-9)
         # the mapping from Port angle to exit height is monotonic over the fitted fan (no fold)
-        alphas = np.linspace(0, check['fitted_to_angle_rad'], 60)
+        alphas = np.linspace(0, check['passes_to_angle_rad'], 60)
         alive, height, _ = L.meridional(lens, alphas)
         self.assertTrue(alive.all())
         self.assertTrue((np.diff(height) > 0).all())
 
-    def test_singlet_divergence_limit(self):
-        doc = json.loads((SCENARIOS / 'S5.json').read_text(encoding='utf-8'))
-        source = adapt_ports(to_engine_input(doc)).source
+    def test_material_choice_and_public_indices(self):
+        from photonic_architecture_explorer import materials
+        self.assertAlmostEqual(materials.silica_index(1.31e-6), 1.44680, places=5)   # Malitson 1965
+        self.assertAlmostEqual(materials.silicon_index(1.31e-6), 3.5005, places=4)   # Li 1980, 293 K
+        self.assertAlmostEqual(materials.silicon_index(1.55e-6), 3.4764, places=4)
         with self.assertRaises(L.DomainError):
-            L.design(source, 0.005, 1.4468, 'source')
+            materials.silicon_index(1.0e-6)  # absorbing below 1.2 µm
+        self.assertEqual(L.choose_material(ssc_port())['key'], 'fused_silica')  # 0.278 rad ≤ 0.39 rad
+        doc = json.loads((SCENARIOS / 'S5.json').read_text(encoding='utf-8'))
+        laser = adapt_ports(to_engine_input(doc)).source
+        chosen = L.choose_material(laser)
+        self.assertEqual(chosen['key'], 'silicon')  # 0.556 rad
+        self.assertLess(chosen['uncoated_normal_transmission_two_faces'], 0.5)
+
+    def test_high_na_silicon_lens_is_robust_to_the_port_angle(self):
+        doc = json.loads((SCENARIOS / 'S5.json').read_text(encoding='utf-8'))
+        laser = adapt_ports(to_engine_input(doc)).source
+        theta = max(p['divergence_rad'] for p in laser.mode.parameters())
+        for angle in (theta, round(theta, 3)):  # the fit used to jump to a misdirected edge for one of these
+            lens = L.design(laser, 0.0075, 3.5005, 'source')
+            check = L.fit_aplanatic(lens, angle)
+            self.assertLess(check['max_direction_rad'], 2e-4)
+            self.assertGreaterEqual(check['passes_to_sine'], L.MIN_APERTURE_FACTOR * angle)
+        from types import SimpleNamespace
+        from photonic_architecture_explorer.gaussian import Gaussian
+        tiny = SimpleNamespace(position=laser.position, direction=laser.direction, sagittal=laser.sagittal,
+                               mode=Gaussian.from_radii((0.3e-6, 0.3e-6), 1.31e-6, 1.0))  # θ ≈ 1.4 rad
+        with self.assertRaises(L.DomainError):  # beyond what one singlet can take
+            L.design(tiny, 0.0075, 3.5005, 'source')
 
     def test_scene_extension_is_continuous(self):
         port = ssc_port()
@@ -114,9 +138,31 @@ class AplanaticLensTest(unittest.TestCase):
         self.assertTrue(all(b >= a for a, b in zip(distances, distances[1:])))
         self.assertEqual(scene['lenses'][0]['id'], 'L1')
         self.assertEqual(len(scene['lenses'][0]['outline_mm']), 4)
+        scene['mirrors'] = []
+        self.assertIsNone(L.obstruction(scene, scene['lenses'][0]))  # its own gap, glass and exit are skipped
+        centre = list((np.array(lens.vertex) + np.array(lens.curved_vertex)) / 2 * 1e3)
+        scene['beam']['samples'].append({'segment': 99, 'distance_mm': 9.0, 'point_mm': centre,
+                                         'radius_t_um': 5.0, 'radius_s_um': 5.0})
+        self.assertEqual(L.obstruction(scene, scene['lenses'][0]), 'relay beam passes through lens L1')
 
 
 class LensFamilyResultTest(unittest.TestCase):
+    def test_s5_silicon_and_silica_lenses(self):
+        from photonic_architecture_explorer import api
+        doc = json.loads((SCENARIOS / 'S5.json').read_text(encoding='utf-8'))
+        result = api.design(doc)
+        self.assertEqual(result['status'], 'Computed')
+        self.assertEqual(result['family'], 'lens_two_reflector')
+        best = result['candidates'][0]
+        self.assertEqual([l['material'] for l in best['scene']['lenses']], ['Silicon', 'Fused silica'])
+        self.assertEqual([l['id'] for l in best['scene']['lenses']], ['L1', 'L2'])
+        self.assertGreaterEqual(best['metrics']['nonparaxial_overlap'], 0.95)
+        self.assertEqual(best['nonparaxial_check']['status'], 'Computed')
+        segments = best['scene']['path']['segments']
+        self.assertEqual([s.get('medium') for s in segments].count('lens'), 2)
+        for a, b in zip(segments, segments[1:]):
+            np.testing.assert_allclose(a['end_mm'], b['start_mm'], atol=1e-12)
+
     def test_s3_lens_family_candidates_are_computed_by_the_nonparaxial_rule(self):
         from photonic_architecture_explorer import api
         doc = json.loads((SCENARIOS / 'S3.json').read_text(encoding='utf-8'))
