@@ -3,6 +3,14 @@
 새 항목을 위에 추가한다. 항목당 10줄 이내: 새로 가능해진 설계 판단, 주요 기술 선택, 남은 한계.
 2026-11-24 이전의 Milestone 기록(M1~M7-R28)은 [history/](history/)에 있다.
 
+## 2026-11-25 · P4 4단계: Lens 정렬 연구, Family 비교·자동 선택 (`phase/p4-family-selection`)
+
+- **가능해진 판단**: Lens 후보의 편심·축 방향·기울기 손실과 1 dB 허용치(S3 0.7 µm, S5 L1 0.38 µm), 두 Family의 η·정렬 공차·소자 수 비교.
+- **선택 규칙**: 최종 η 최고, 단 0.01 이내면 소자가 적은 Family. 정렬 공차는 규칙에 넣지 않고 표로 보여 준다(판단은 사용자).
+- **스위치**: Design Document `families.lens_two_reflector` = auto(기본) / compare / off. compare는 S1·S2a에서 두 반사면을 그대로 선택.
+- **관찰**: Lens는 반사면 정렬 민감도를 크게 줄인다(S1 5.67 → 0.70 dB) 대신 Lens 편심 1 dB 허용치 약 2 µm가 생긴다.
+- **한계**: 다른 소자를 다시 맞추는 Active alignment, 제작 공차 분포, 동시 오차는 계산하지 않는다.
+
 ## 2026-11-25 · P4 3단계: 고NA Lens, 재료, Lens 가림 (`phase/p4-family-selection`)
 
 - **가능해진 판단**: S5(Laser 0.556 rad → SSC)가 Silicon Lens + 두 반사면 + Silica Lens로 Computed(비근축 η 0.987~0.988, 수렴).

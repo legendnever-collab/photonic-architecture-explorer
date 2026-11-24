@@ -182,7 +182,56 @@ class LensFamilyResultTest(unittest.TestCase):
             self.assertTrue(c['scene']['lenses'])
         self.assertGreaterEqual(min(c['metrics']['nonparaxial_overlap'] for c in accepted), 0.95)
         self.assertEqual(accepted[0]['role_labels'], ['Lens Family · 비근축 η 최대'])
+        # lens decenter δ tilts the collimated beam by δ/f: Gaussian angle mismatch exp(-(δ/(f θ'))²)
+        lens_scene = accepted[0]['scene']['lenses'][0]
+        theta_out = accepted[0]['theta_out_rad']
+        ratio = 1e-6 / (lens_scene['focal_length_um'] * 1e-6 * theta_out)
+        expected_db = 10 * ratio ** 2 / math.log(10)
+        pose = accepted[0]['lens_pose']['lenses'][0]
+        self.assertAlmostEqual(pose['decenter_loss_db'], expected_db, delta=0.15 * expected_db)
+        self.assertLess(pose['tilt_loss_db'], 0.05)  # tilt about the lens middle barely moves the beam
+        self.assertAlmostEqual(pose['decenter_1db_um'], 1 / math.sqrt(expected_db), delta=0.15 / math.sqrt(expected_db))
+        rows = {r['key']: r for r in result['families']}
+        self.assertEqual(rows['two_reflector']['status'], 'Fail')
+        self.assertTrue(rows['lens_two_reflector']['selected'])
         json.dumps(result)
+
+    def test_family_switch_off_and_compare(self):
+        from photonic_architecture_explorer import api
+        doc = json.loads((SCENARIOS / 'S3.json').read_text(encoding='utf-8'))
+        doc['families'] = {'lens_two_reflector': 'off'}
+        result = api.design(doc)
+        self.assertEqual(result['status'], 'Fail')
+        self.assertIsNone(result['lens_review'])
+        self.assertEqual([r['key'] for r in result['families']], ['two_reflector'])
+        doc = json.loads((SCENARIOS / 'S1.json').read_text(encoding='utf-8'))
+        doc['families'] = {'lens_two_reflector': 'compare'}
+        result = api.design(doc)
+        rows = {r['key']: r for r in result['families']}
+        self.assertEqual(rows['lens_two_reflector']['status'], 'Computed')
+        self.assertEqual(sum(r['selected'] for r in result['families']), 1)
+        self.assertTrue(rows['two_reflector']['selected'])  # same η within 0.01 and fewer elements
+        self.assertEqual(result['family'], 'exact')
+        self.assertEqual([c['rank'] for c in result['candidates']], list(range(1, len(result['candidates']) + 1)))
+        self.assertIn('lens_two_reflector', {c['family'] for c in result['candidates']})
+
+    def test_selection_rule(self):
+        from photonic_architecture_explorer import api
+
+        def candidate(eta, pose):
+            return {'metrics': {'corrected_nonparaxial_overlap': eta, 'worst_pose_mismatch_db': pose}}
+
+        def review(eta):
+            return {'candidates': [{'accepted': True, 'metrics': {'nonparaxial_overlap': eta}, 'scene': {'lenses': [{}]},
+                                    'lens_pose': {'reflectors_worst_loss_db': 0.5, 'lenses': [{'decenter_1db_um': 2.0}]}}]}
+        report = {'status': 'Computed', 'reason': ''}
+        rows = api.compare_families(report, [candidate(0.95, 5.0)], review(0.99), 'compare')
+        self.assertEqual([r['selected'] for r in rows], [False, True])      # better by more than 0.01
+        rows = api.compare_families(report, [candidate(0.985, 5.0)], review(0.99), 'compare')
+        self.assertEqual([r['selected'] for r in rows], [True, False])      # within 0.01: fewer elements
+        self.assertEqual(rows[1]['elements'], 3)
+        rows = api.compare_families({'status': 'Fail', 'reason': 'x'}, [], review(0.99), 'auto')
+        self.assertEqual(rows[1]['why'], '유일하게 계산된 Family')
 
 
 if __name__ == '__main__':

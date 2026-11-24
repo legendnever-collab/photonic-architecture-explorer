@@ -228,6 +228,53 @@ def design_guidance(report, ports, ambient_index, medium='ambient', lens_review=
     return out
 
 
+COMPARE_GUARD = 0.02         # 'compare' mode: a lens on every Port whose divergence exceeds this
+FAMILY_ETA_MARGIN = 0.01     # selection: the simpler Family wins unless the other is better by more than this
+
+
+def _final_eta(c):
+    m = c['metrics']
+    for key in ('corrected_nonparaxial_overlap', 'nonparaxial_overlap', 'normalized_mode_overlap'):
+        if m.get(key) is not None:
+            return m[key]
+    return None
+
+
+def compare_families(report, mirror_candidates, lens_review, lens_mode):
+    """One row per Family tried, and the automatic choice: the highest final η (corrected non-paraxial when
+    available); a Family with fewer elements wins when it is within FAMILY_ETA_MARGIN of the best."""
+    rows = [{'key': 'two_reflector', 'label': '두 반사면', 'elements': 2,
+             'status': 'Computed' if mirror_candidates else report['status'], 'count': len(mirror_candidates),
+             'reason': report.get('reason'),
+             'best_eta': max((_final_eta(c) or 0 for c in mirror_candidates), default=None),
+             'best_reflector_pose_db': min((c['metrics']['worst_pose_mismatch_db'] for c in mirror_candidates
+                                            if c['metrics'].get('worst_pose_mismatch_db') is not None), default=None),
+             'lens_decenter_1db_um': None}]
+    if lens_review is not None:
+        good = [c for c in lens_review.get('candidates', []) if c.get('accepted')]
+        tolerances = [l['decenter_1db_um'] for c in good for l in (c.get('lens_pose') or {}).get('lenses', [])
+                      if l.get('decenter_1db_um') is not None]
+        lens_count = max((len(c['scene'].get('lenses', [])) for c in good), default=0)
+        rows.append({'key': 'lens_two_reflector', 'label': 'Micro-lens + 두 반사면', 'elements': 2 + lens_count,
+                     'status': 'Computed' if good else (lens_review.get('status') if lens_review.get('status') == 'Uncomputed' else 'Fail'),
+                     'count': len(good), 'reason': None if good else '; '.join(sorted(set(lens_review.get('fail_reasons', []))))[:300] or None,
+                     'best_eta': max((c['metrics']['nonparaxial_overlap'] for c in good), default=None),
+                     'best_reflector_pose_db': min(((c.get('lens_pose') or {}).get('reflectors_worst_loss_db') for c in good
+                                                    if (c.get('lens_pose') or {}).get('reflectors_worst_loss_db') is not None), default=None),
+                     'lens_decenter_1db_um': min(tolerances) if tolerances else None, 'mode': lens_mode})
+    computed = [r for r in rows if r['status'] == 'Computed' and r['best_eta'] is not None]
+    for r in rows:
+        r['selected'], r['why'] = False, None
+    if computed:
+        best = max(r['best_eta'] for r in computed)
+        near = [r for r in computed if r['best_eta'] >= best - FAMILY_ETA_MARGIN]
+        pick = min(near, key=lambda r: (r['elements'], -r['best_eta']))
+        pick['selected'] = True
+        pick['why'] = ('최고 η' if pick['best_eta'] == best else
+                       f'최고 η와 {FAMILY_ETA_MARGIN} 이내이고 소자 수가 적음') if len(computed) > 1 else '유일하게 계산된 Family'
+    return rows
+
+
 def lens_reason_label(reason):
     import re
     found = re.match(r'Port divergence ([0-9.]+) rad is beyond a single aspheric singlet', reason or '')
@@ -240,12 +287,12 @@ def lens_reason_label(reason):
     return reason or ''
 
 
-def lens_family_review(engine_input, constraints, problem, ports):
-    """P4 Lens Family (Micro-lens + two reflectors) as review candidates: never counted as Computed."""
+def lens_family_review(engine_input, constraints, problem, ports, guard=0.1):
+    """P4 Lens Family (Micro-lens + two reflectors); candidates are accepted by the non-paraxial rule."""
     if problem['block'] is not None:
         return {'status': 'Uncomputed', 'candidates': [], 'runs': [],
                 'meaning': 'Lens Family는 아직 공기(주변 매질) Relay만 다룹니다. Glass Block 문제에는 적용하지 않았습니다.'}
-    family = lens_module.lens_family(engine_input, constraints)
+    family = lens_module.lens_family(engine_input, constraints, guard=guard)
     if family is None:
         return None
     real = adapt_ports(engine_input)
@@ -276,7 +323,7 @@ def lens_family_review(engine_input, constraints, problem, ports):
                 'id': 'L-' + row['id'], 'review': True, 'role': 'lens_review', 'roles': ['lens_review'],
                 'role_labels': ['Lens Family 검토 후보'], 'family': 'lens_two_reflector', 'review_status': row['status'],
                 'theta_out_rad': run['theta_out_rad'], 'lenses': row['lenses'], 'lens_checks': row['lens_checks'],
-                'lens_constraint': constraint,
+                'lens_constraint': constraint, 'lens_pose': row.get('pose'),
                 'nonparaxial_check': check, 'fit_history': row['fit_history'],
                 'reflector_terms': row['reflector_terms'], 'freeform': None,
             })
@@ -331,9 +378,12 @@ def design(document):
     if report['status'] == 'Fail' and 'divergence' in (report.get('reason') or ''):
         from .nonparaxial import guard_study
         report['nonparaxial_study'] = guard_study(engine_input, constraints)
+    lens_mode = (document.get('families') or {}).get('lens_two_reflector', 'auto')
     lens_review = None
-    if report['status'] == 'Fail' and 'divergence' in (report.get('reason') or ''):
+    if lens_mode != 'off' and report['status'] == 'Fail' and 'divergence' in (report.get('reason') or ''):
         lens_review = lens_family_review(engine_input, constraints, problem, ports)
+    elif lens_mode == 'compare':  # lenses on every Port that a lens can still expand (θ > COMPARE_GUARD)
+        lens_review = lens_family_review(engine_input, constraints, problem, ports, guard=COMPARE_GUARD)
     if report['candidates'] and report.get('model') != 'qtensor':  # sensitivity/placement studies are separable-engine tools
         report = review_snapshot(report)
     status, reason = report['status'], report.get('reason')
@@ -341,13 +391,23 @@ def design(document):
     family = report['candidates'][0].get('family') if report['candidates'] else None
     candidates = [_candidate(i + 1, c, problem, ambient_ports) for i, c in enumerate(report['candidates'])]
     accepted = [c for c in (lens_review or {}).get('candidates', []) if c.get('accepted')]
-    if accepted:  # P4 Lens Family: accepted by the non-paraxial check only (user decision 2026-11-24)
+    families = compare_families(report, candidates, lens_review, lens_mode)
+    chosen = next((f for f in families if f['selected']), None)
+    if accepted and status != 'Computed':  # P4 Lens Family: accepted by the non-paraxial check only (user decision 2026-11-24)
         status, family, candidates, selected_id = 'Computed', 'lens_two_reflector', accepted, accepted[0]['id']
         if report.get('nonparaxial_study'):
             study = report['nonparaxial_study']
             study['message'] = study.get('message', '').replace('후보는 내지 않았습니다', 'Lens 없는 두 반사면 후보는 내지 않았습니다')
         reason = (f'Lens Family: {reason}; a micro-lens expands the Port mode inside the guard and '
                   f'{len(accepted)} candidates pass the non-paraxial check (η ≥ {lens_module.LENS_ACCEPT_ETA})')
+    elif accepted:  # both Families computed: the selection rule orders the table and picks the default candidate
+        if chosen and chosen['key'] == 'lens_two_reflector':
+            family, selected_id = 'lens_two_reflector', accepted[0]['id']
+            candidates = accepted + candidates
+            reason = f"Family selection: {chosen['label']} ({chosen['why']}); {reason}"
+        else:
+            candidates = candidates + accepted
+        candidates = [{**c, 'rank': i + 1} for i, c in enumerate(candidates)]
     search = report.get('search', {})
     summary = {k: search.get(k) for k in ('status', 'reason', 'grid_points', 'exact_feasible', 'near_match_feasible',
                                           'screening_counts', 'closest_exact', 'elapsed_seconds', 'verification',
@@ -369,6 +429,7 @@ def design(document):
         'guidance': design_guidance(report, ports, document['ambient_index'], problem['medium'], lens_review),
         'nonparaxial_study': report.get('nonparaxial_study'),
         'lens_review': lens_review,
+        'families': families,
         'limitations': report.get('limitations', []),
         'uncomputed': UNCOMPUTED,
         'engine_report': {**report, 'search': {k: v for k, v in search.items() if k != 'map'}},

@@ -89,6 +89,18 @@ Envelope·Keep-out은 엔진 입력의 `package`(available_volume, keepout_bodie
 엔진은 Glass 굴절률을 균질 매질로 하여 변경 없이 Relay를 푼다. 등가 Port의 출처 문자열에는 원래 출처와 변환 내용이 함께 남는다.
 반사면은 한쪽 Port라도 Glass 안이면 Glass 안(상면 아래, 하면 위)에만, 두 Port가 모두 외부면 Glass 밖에만 둔다.
 
+### Family 스위치 `families` (선택, P4)
+
+```json
+"families": {"lens_two_reflector": "auto"}
+```
+
+| 값 | 의미 |
+|---|---|
+| `auto`(기본) | Lens 없는 두 반사면이 발산각 Guard로 실패할 때만 Micro-lens Family를 계산 |
+| `compare` | 두 반사면이 성공해도 Lens Family를 함께 계산(발산각 > 0.02 rad인 모든 Port에 Lens). 수십 초 걸림 |
+| `off` | Lens Family를 계산하지 않음 |
+
 `evidence`의 항목이 없으면 `assumed`(사용자 입력)로 기록한다. 검증 오류는 첫 오류에서 멈추지 않고 전부 `{path, message}`로 돌려준다.
 
 ## 결과 `pae.result/1`
@@ -98,7 +110,11 @@ Envelope·Keep-out은 엔진 입력의 `package`(available_volume, keepout_bodie
 | `status` | `Computed`, `Fail`, `Uncomputed`, `Invalid`(입력 오류), `Preview` |
 | `document_sha256` | 입력 문서의 정규화 JSON SHA-256 |
 | `ports.ports[]` | 기준면, t/s 축, 축별 Mode(반경, Waist, Rayleigh range, 발산각), 발산각 Guard와 통과에 필요한 최소 Waist MFD |
-| `family` | `exact`(두 축 q 일치, η = 1) 또는 `near_match`(Guard 안 Overlap 최대, η < 1) |
+| `family` | 선택된 Family의 후보 종류: `exact`(두 축 q 일치, η = 1), `near_match`(Guard 안 Overlap 최대, η < 1), `lens_two_reflector`(Micro-lens + 두 반사면) |
+| `families[]` | 계산한 Family별 상태, 후보 수, 최고 최종 η, 반사면 정렬 최악 손실, Lens 1 dB 편심 허용치, 소자 수, `selected`와 이유. 규칙: 최고 η, 단 0.01 이내면 소자가 적은 Family |
+| `lens_review` | Lens Family의 모든 후보(미채택 포함), 실행한 θ', 실패 사유, 채택 규칙 |
+| `candidates[].lens_pose` | Lens 후보: Lens별 ±1 µm 편심·축 방향, ±1 mrad 기울기 손실 [dB], 1 dB 허용치, 반사면 ±5 µm·±1 mrad 최악 손실(비근축, 65²) |
+| `candidates[].scene.lenses[]` | Lens 외곽선, 재료·출처, f, 두께, Clear 반경, Port 거리, 무코팅 투과 |
 | `candidates[]` | `id`, `rank`, `roles`·`role_labels`(최단 광경로, Guard 여유, 작은 Beam, 완만한 곡률, 정렬 공차, 최대 Overlap, Pareto 대안), `family`, `parameters_mm`(a, b, c), `metrics`(광경로, η, 3w·\|κ\|, 최대 \|κ\|, 정렬 민감도 dB, 입사각, 곡률반경), `status`(엔진 판정), `scene` |
 | `guidance[]` | `kind`, `phase`, `message`, `values`: 발산각 초과 시 필요한 굴절률, Guard 밖 Exact 해까지의 거리, 제약으로 제외된 배치 수, 비동일평면 등 |
 | `search.map` | 탐색한 (a, c) 격자(64 × 64)의 판정과 3w·\|κ\|, Near-match 가능 배치 |

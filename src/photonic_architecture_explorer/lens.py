@@ -384,7 +384,99 @@ def fit_system(ports, lenses, mirror_tuples, footprints, refit_lenses=False):
         history.append({'step': f'reflector correction {round_ + 1}', 'eta': eta()})
     prefix, middle, suffix = surfaces(poly)
     check = nonparaxial.check(*args[:8], [*prefix, *middle, *suffix], *args[8:])
-    return {'check': check, 'poly': poly, 'history': history, 'lens_checks': lens_checks}
+    pose = pose_study(args, lenses, middle) if check['status'] != 'Invalid' else None
+    return {'check': check, 'poly': poly, 'history': history, 'lens_checks': lens_checks, 'pose': pose}
+
+
+LENS_DECENTER_M = 1e-6   # lens placement study: ±1 µm across and along the axis, ±1 mrad tilt (one at a time)
+LENS_TILT_RAD = 1e-3
+
+
+def _rotate(v, pivot, angle):
+    v, k = np.array(v, float), np.array(pivot, float)
+    return v * math.cos(angle) + np.cross(k, v) * math.sin(angle) + k * (k @ v) * (1 - math.cos(angle))
+
+
+def _transverse(axis):
+    axis = np.array(axis, float)
+    side = np.array([0.0, 0.0, 1.0]) if abs(axis[2]) < 0.9 else np.array([1.0, 0.0, 0.0])
+    side = side - (side @ axis) * axis
+    side /= np.linalg.norm(side)
+    return side, np.cross(axis, side)
+
+
+def lens_poses(lens):
+    """(kind, step, moved lens) for decenter (two transverse axes), axial shift and tilt (about the lens middle)."""
+    axis = np.array(lens.axis)
+    e1, e2 = _transverse(axis)
+    middle = np.array(lens.vertex) + axis * lens.thickness / 2
+    for e in (e1, e2):
+        for sign in (-1, 1):
+            yield 'decenter', LENS_DECENTER_M, dataclasses.replace(lens, vertex=tuple(np.array(lens.vertex) + sign * LENS_DECENTER_M * e))
+    for sign in (-1, 1):
+        yield 'axial', LENS_DECENTER_M, dataclasses.replace(lens, vertex=tuple(np.array(lens.vertex) + sign * LENS_DECENTER_M * axis))
+    for e in (e1, e2):
+        for sign in (-1, 1):
+            tilted = _rotate(axis, e, sign * LENS_TILT_RAD)
+            yield 'tilt', LENS_TILT_RAD, dataclasses.replace(lens, axis=tuple(tilted), vertex=tuple(middle - tilted * lens.thickness / 2))
+
+
+def pose_study(args, lenses, middle):
+    """Non-paraxial loss [dB] when one lens or one reflector moves (one at a time), and the ±1 dB lens tolerances
+    estimated from the computed losses (loss ∝ step² near the optimum, refined once)."""
+    from .freeform import POSE_GRID, poses as reflector_poses
+
+    def eta(lens_set, mirrors):
+        elements = [*(s for l in lens_set if l.side == 'source' for s in l.surfaces()), *mirrors,
+                    *(s for l in lens_set if l.side == 'target' for s in l.surfaces())]
+        f = nonparaxial.field(*args[:8], elements, *args[8:], grid=POSE_GRID)
+        return abs((f['amplitude'] * np.exp(1j * f['phase'])).sum()) ** 2 / f['norm']
+
+    def loss(lens_set, mirrors):
+        try:
+            return -10 * math.log10(max(eta(lens_set, mirrors), 1e-300) / nominal)
+        except DomainError:
+            return float('inf')
+    nominal = eta(lenses, middle)
+    out = {'grid': POSE_GRID, 'lenses': [], 'reflectors_worst_loss_db': 0.0,
+           'steps': {'decenter_um': LENS_DECENTER_M * 1e6, 'axial_um': LENS_DECENTER_M * 1e6, 'tilt_mrad': LENS_TILT_RAD * 1e3}}
+    for index, lens in enumerate(lenses):
+        worst = {}
+        for kind, step, moved in lens_poses(lens):
+            changed = list(lenses)
+            changed[index] = moved
+            worst[kind] = max(worst.get(kind, 0.0), loss(changed, middle))
+        tolerance = {}
+        for kind, value in worst.items():  # ±1 dB step, quadratic estimate refined by one more computed case
+            step = LENS_DECENTER_M if kind != 'tilt' else LENS_TILT_RAD
+            if not math.isfinite(value) or value <= 0:
+                tolerance[kind] = None
+                continue
+            guess = step * math.sqrt(1.0 / value)
+            moved = next(m for k, _, m in lens_poses(dataclasses.replace(lens)) if k == kind)
+            scale = guess / step
+            if kind == 'tilt':
+                axis = np.array(lens.axis)
+                e1, _ = _transverse(axis)
+                tilted = _rotate(axis, e1, -guess)
+                middle_point = np.array(lens.vertex) + axis * lens.thickness / 2
+                moved = dataclasses.replace(lens, axis=tuple(tilted), vertex=tuple(middle_point - tilted * lens.thickness / 2))
+            else:
+                shift = (np.array(moved.vertex) - np.array(lens.vertex)) * scale
+                moved = dataclasses.replace(lens, vertex=tuple(np.array(lens.vertex) + shift))
+            changed = list(lenses)
+            changed[index] = moved
+            again = loss(changed, middle)
+            tolerance[kind] = guess * math.sqrt(1.0 / again) if math.isfinite(again) and again > 0 else guess
+        out['lenses'].append({
+            'id': 'L1' if lens.side == 'source' else 'L2',
+            'decenter_loss_db': worst['decenter'], 'axial_loss_db': worst['axial'], 'tilt_loss_db': worst['tilt'],
+            'decenter_1db_um': tolerance['decenter'] * 1e6 if tolerance['decenter'] else None,
+            'axial_1db_um': tolerance['axial'] * 1e6 if tolerance['axial'] else None,
+            'tilt_1db_mrad': tolerance['tilt'] * 1e3 if tolerance['tilt'] else None})
+    for changed in reflector_poses(middle):
+        out['reflectors_worst_loss_db'] = max(out['reflectors_worst_loss_db'], loss(lenses, changed))
+    return out
 
 
 def choose_material(port, engine_document=None):
@@ -442,6 +534,7 @@ def lens_family(engine_document, constraints, guard=0.1, options=LENS_EXPANSION_
                 continue
             rows.append({'id': candidate['id'], 'equivalent_candidate': candidate, 'status': fit['check']['status'],
                          'lens_checks': fit['lens_checks'], 'lens_objects': fitted, 'equivalent_document': equivalent,
+                         'pose': fit['pose'],
                          'nonparaxial_check': fit['check'], 'fit_history': fit['history'],
                          'lenses': [lens_record(l, getattr(ports, l.side)) for l in fitted],
                          'reflector_terms': [[{'u_power': m, 'v_power': n, 'coefficient_si': c} for m, n, c in p] for p in fit['poly']]})

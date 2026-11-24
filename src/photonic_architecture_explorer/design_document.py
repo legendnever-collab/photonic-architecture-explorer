@@ -99,6 +99,27 @@ def validate_document(document):
                                'message': f'provenance({", ".join(sorted(PROVENANCE - {"unprovided"}))})와 source가 필요합니다'})
     issues += validate_constraints(document.get('constraints'))
     issues += validate_block(document, ports)
+    issues += validate_families(document.get('families'))
+    return issues
+
+
+FAMILY_MODES = {'lens_two_reflector': ('auto', 'compare', 'off')}
+
+
+def validate_families(families):
+    """Optional Family switches. lens_two_reflector: 'auto' (only when the lens-less search fails on the
+    divergence guard), 'compare' (also alongside a working lens-less relay) or 'off'."""
+    if families is None:
+        return []
+    if not isinstance(families, dict):
+        return [{'path': 'families', 'message': 'object가 필요합니다'}]
+    issues = []
+    unknown = set(families) - set(FAMILY_MODES)
+    if unknown:
+        issues.append({'path': 'families', 'message': f'알 수 없는 항목: {", ".join(sorted(unknown))}'})
+    for key, modes in FAMILY_MODES.items():
+        if families.get(key, modes[0]) not in modes:
+            issues.append({'path': f'families.{key}', 'message': f'{" / ".join(modes)} 중 하나가 필요합니다'})
     return issues
 
 
