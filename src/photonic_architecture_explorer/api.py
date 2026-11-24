@@ -58,6 +58,20 @@ def port_guidance(scene, ambient_index):
     return out
 
 
+def whatif(document):
+    """P4b: for a Glass problem, the smallest single change of an assumed placement that gives candidates (opt-in)."""
+    from . import whatif as whatif_module
+    issues = validate_document(document)
+    if issues:
+        return _invalid(document, issues)
+    try:
+        study = whatif_module.study(document)
+    except (InputIssue, DomainError) as exc:
+        return _invalid(document, [{'path': getattr(exc, 'path', '$'), 'message': getattr(exc, 'reason', str(exc))}])
+    return {'schema': 'pae.whatif/1', 'status': 'Computed' if study else 'Uncomputed',
+            'document_sha256': document_sha256(document), 'whatif': study}
+
+
 def preview(document):
     """Port geometry and per-Port guards only; never generates or ranks candidates."""
     issues = validate_document(document)

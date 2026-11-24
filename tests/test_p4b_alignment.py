@@ -103,6 +103,17 @@ class MirrorSystemTest(unittest.TestCase):
                                delta=0.15 * A.loss_db(system, errors) + 0.05)
 
 
+class WhatIfTest(unittest.TestCase):
+    def test_shallow_iox_needs_a_deeper_waveguide_not_thicker_glass(self):
+        result = api.whatif(load('S2b-1550-glass'))
+        rows = {r['parameter']: r for r in result['whatif']['rows']}
+        self.assertEqual(rows['target_depth']['status'], 'Found')
+        self.assertLessEqual(rows['target_depth']['found_mm'], 0.4)
+        self.assertGreater(rows['target_depth']['found_mm'], 0.1)
+        self.assertEqual(rows['block_thickness']['status'], 'Not found')  # up to 3.3 mm does not help
+        self.assertIsNone(api.whatif(load('S1'))['whatif'])                # no Glass, nothing to vary
+
+
 class DocumentTest(unittest.TestCase):
     def test_tolerance_validation(self):
         doc = load('S1')

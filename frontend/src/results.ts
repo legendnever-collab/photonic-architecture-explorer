@@ -1,3 +1,4 @@
+import { api } from './api';
 import type { Store } from './state';
 import type { AlignmentStats, Candidate, NonparaxialStudy, Result } from './types';
 
@@ -17,7 +18,8 @@ const STATUS_TEXT: Record<string, string> = {
 export class ResultsPanel {
   constructor(private root: HTMLElement, private store: Store) {
     store.subscribe((_, changed) => {
-      if (changed.has('result') || changed.has('selected') || changed.has('doc') || changed.has('busy') || changed.has('error')) this.render();
+      if (changed.has('result') || changed.has('selected') || changed.has('doc') || changed.has('busy') || changed.has('error')
+        || changed.has('whatif') || changed.has('whatifBusy')) this.render();
     });
   }
 
@@ -48,6 +50,7 @@ export class ResultsPanel {
     if (chosen?.family === 'lens_two_reflector') this.root.append(this.lensDetail(chosen));
     if (chosen?.alignment) this.root.append(this.alignmentCard(chosen));
     if (current.nonparaxial_study?.cases?.length) this.root.append(this.study(current.nonparaxial_study));
+    if (current.status === 'Fail' && this.store.state.doc.medium_block) this.root.append(this.whatifCard());
     if (current.search?.screening_counts) {
       this.root.append(this.rejections(current.search.screening_counts, current.search.grid_points, current.search.elapsed_seconds));
     }
@@ -94,6 +97,37 @@ export class ResultsPanel {
       el('table', { class: 'grid-table' }, el('thead', {}, head), el('tbody', {}, ...rows)),
       el('div', { class: 'muted' }, 'Frozen Guard를 끈 근축 Exact 설계를 비근축 Scalar로 다시 계산했습니다. Aperture는 1e-6 Power 꼬리 반경(2.63 w)입니다. '
         + '후보로 채택하지 않으며, 다른 Family나 Guard 재검토(사용자 승인)를 판단하는 근거입니다.'));
+  }
+
+  /** P4b Glass placement what-if (opt-in, tens of seconds). */
+  private whatifCard() {
+    const { doc, whatif, whatifFor, whatifBusy } = this.store.state;
+    const key = JSON.stringify(doc);
+    const card = el('section', { class: 'card', 'data-card': 'whatif' }, el('h3', {}, 'Glass 배치 What-if'));
+    const button = el('button', { class: 'small', 'data-action': 'whatif', ...(whatifBusy ? { disabled: '' } : {}) },
+      whatifBusy ? '계산 중… (수십 초)' : 'What-if 계산 (수십 초)') as HTMLButtonElement;
+    button.addEventListener('click', async () => {
+      this.store.set({ whatifBusy: true });
+      try {
+        const out = await api.whatif(doc);
+        this.store.set({ whatif: out, whatifFor: key, whatifBusy: false });
+      } catch (e) {
+        this.store.set({ whatifBusy: false, error: String(e) });
+      }
+    });
+    card.append(el('div', { class: 'muted' }, '가정한 배치(Glass 두께, 도파로 매립 깊이, Fiber 높이)를 하나씩 바꿔 후보가 처음 나오는 값을 찾습니다.'), button);
+    const study = whatifFor === key ? whatif?.whatif : null;
+    if (study) {
+      const head = el('tr', {}, ...['바꾼 항목', '현재 [mm]', '후보가 나온 값 [mm]', '후보', '시도한 값'].map((h) => el('th', {}, h)));
+      const rows = study.rows.map((r) => el('tr', { 'data-whatif-row': r.parameter, 'data-found': r.found_mm === null ? '' : String(r.found_mm) },
+        el('td', {}, r.label), el('td', {}, fmt(r.original_mm, 3)),
+        el('td', { class: r.found_mm === null ? 'warn' : 'good' }, r.found_mm === null ? (r.status === 'Time limit' ? '시간 초과' : '찾지 못함') : fmt(r.found_mm, 3)),
+        el('td', {}, r.candidates ? `${r.candidates} (${r.family === 'exact' ? 'Exact' : 'Near-match'})` : '—'),
+        el('td', {}, r.tried_mm.map((t) => `${fmt(t.value_mm, 3)}: ${t.result === 'Fail' ? '실패' : t.result.replace(' candidates', '개')}`).join(' · '))));
+      card.append(el('table', { class: 'grid-table' }, el('thead', {}, head), el('tbody', {}, ...rows)),
+        el('div', { class: 'muted' }, `${study.meaning} (${fmt(study.elapsed_seconds, 1)} s, 격자 ${study.grid}²)`));
+    }
+    return card;
   }
 
   /** P4b simultaneous placement errors: passive assembly and active alignment (chief-ray linear model). */

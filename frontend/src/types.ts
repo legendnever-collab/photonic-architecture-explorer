@@ -57,6 +57,15 @@ export interface DesignDocument {
   tolerances?: Partial<Record<ToleranceKey, number>>;
 }
 
+export interface WhatIfRow {
+  parameter: string; label: string; original_mm: number; found_mm: number | null; candidates: number; family: string | null;
+  status: 'Found' | 'Not found' | 'Time limit' | 'Skipped'; tried_mm: { value_mm: number; result: string }[];
+}
+export interface WhatIfResult {
+  status: string; document_sha256: string; issues?: { path: string; message: string }[];
+  whatif: { grid: number; rows: WhatIfRow[]; elapsed_seconds: number; meaning: string } | null;
+}
+
 export type ToleranceKey = 'mirror_translation_um' | 'mirror_rotation_mrad' | 'lens_translation_um' | 'lens_axial_um'
   | 'lens_rotation_mrad' | 'bond_translation_um' | 'bond_rotation_mrad';
 export interface AlignmentStats { median_db: number; p90_db: number; p99_db: number; yield_1db: number; yield_0p5db: number }

@@ -108,6 +108,12 @@ Envelope·Keep-out은 엔진 입력의 `package`(available_volume, keepout_bodie
 
 `evidence`의 항목이 없으면 `assumed`(사용자 입력)로 기록한다. 검증 오류는 첫 오류에서 멈추지 않고 전부 `{path, message}`로 돌려준다.
 
+## 배치 What-if `POST /api/whatif` (P4b, Glass 문제만)
+
+Design Document를 받아 `pae.whatif/1`을 돌려준다. `whatif.rows[]`는 항목(`block_thickness`, `target_depth`, `source_depth`,
+`source_height`, `target_height`)별로 현재 값, 시도한 값과 결과, 후보가 처음 나온 값(`found_mm`), 후보 수와 Family를 담는다.
+한 번에 하나만 바꾸고 32 × 32 격자로 탐색하며, 충분 조건이지 최소값의 증명은 아니다. Glass가 없으면 `whatif`는 null이다.
+
 ## 결과 `pae.result/1`
 
 | 필드 | 내용 |

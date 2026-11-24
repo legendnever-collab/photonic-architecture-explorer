@@ -17,6 +17,7 @@ Starts the packaged server, drives Chromium with Playwright and checks:
   * P4 Lens Family on S5: silicon source lens and silica target lens, both drawn in the unfolded view
   * P4 Family comparison card (S3 selects the lens Family) and the lens pose table
   * P4b alignment card on S1 (passive vs active 90th percentile)
+  * P4b Glass what-if on S2b-1550-glass (deeper waveguide gives candidates)
   * P3 q-tensor: S4 (non-coplanar) gives verified candidates, the q-tensor note and guidance,
     beam ellipses in the scene and 2D mirror positions equal to the scene vertices (1 nm)
   * Design Document export round-trips
@@ -309,6 +310,14 @@ def main():
             page.locator('[data-card="lens-review"]').screenshot(path=str(out / 'p4_S3_lens_card.png'))
             page.locator('[data-card="families"]').screenshot(path=str(out / 'p4_S3_families.png'))
             page.locator('[data-lens-detail]').screenshot(path=str(out / 'p4_S3_lens_detail.png'))
+        load_scenario(page, 'S2b-1550-glass')
+        status = design(page)
+        page.click('[data-action="whatif"]')
+        page.wait_for_selector('[data-whatif-row="target_depth"]', timeout=240000)
+        found = page.get_attribute('[data-whatif-row="target_depth"]', 'data-found')
+        summary['S2b_glass_whatif_target_depth_mm'] = found
+        check(status == 'Fail' and found not in (None, '') and float(found) <= 0.4, f'S2b-glass what-if: {status} {found}', failures)
+        page.locator('[data-card="whatif"]').screenshot(path=str(out / 'p4b_S2b_glass_whatif.png'))
         load_scenario(page, 'S5')
         status = design(page)
         summary['S5_status'] = status

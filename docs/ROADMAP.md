@@ -23,7 +23,7 @@
 | S2b-1550 | SMF-28 → IOX(Brusberg 2012, 18.8 × 12.0 µm) | Near-match 3개, η 0.981~0.990 / 0.958~0.986 → 0.980~0.990 | — |
 | S2a-1310-glass | 수직 SMF → Fused silica 1.1 mm → 매립 LDW 0.5 mm | Near-match 1개, η 0.983 / 0.916 → 0.956 | — |
 | S2a-1550-glass | 수직 SMF → Fused silica 2.0 mm → 매립 LDW 0.5 mm | Exact 4개(3.53~4.60 mm), η 1 / 0.89~0.95 → 0.97~0.98, 정렬 민감도 6.8~8.9 dB | — |
-| S2b-1550-glass | 수직 SMF → D 263 1.1 mm → 얕은 IOX 0.02 mm | Fail: 반사면이 상면을 넘음(안내 표시). Lens Family는 Glass 문제에 아직 적용 안 함 | Glass 안 Lens·단일 반사면 Family(범위 결정 필요) |
+| S2b-1550-glass | 수직 SMF → D 263 1.1 mm → 얕은 IOX 0.02 mm | Fail: 마지막 반사면이 도파로 86 µm 안에 있어야 해 입사각 70° 초과. Lens도 못 풂(Fiber–상면 0.1 mm). What-if: 매립 깊이 0.3 mm면 후보, 두께 3.3 mm·Fiber 높이 1.6 mm까지는 안 됨 | 실제 매립 깊이 확인 |
 | S2b-1550-glass-deep | 같은 IOX를 0.3 mm 매립(가정), 2.0 mm | Exact 3개(3.31~3.90 mm), η 1 / 0.79~0.85 → 0.94~0.95 | — |
 | S3 | SiPh SSC 3 µm → SMF | Computed: Lens + 두 반사면, 비근축 η 0.986~0.998, Lens 1 dB 편심 0.7 µm | Lens 제작 공차·Active alignment 모델 |
 | S4 | PIC Edge → 측면으로 비켜 선 수직 Fiber | q-tensor Near-match 4개, η 0.995~0.9996 / 0.47~0.54 → **0.995~0.999** | — |

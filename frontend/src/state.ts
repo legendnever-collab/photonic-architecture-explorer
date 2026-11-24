@@ -1,5 +1,5 @@
 import { syncMedia } from './media';
-import type { DesignDocument, PortName, Preset, Result, ScenarioEntry } from './types';
+import type { DesignDocument, PortName, Preset, Result, ScenarioEntry, WhatIfResult } from './types';
 
 export interface AppState {
   doc: DesignDocument;
@@ -12,6 +12,9 @@ export interface AppState {
   activePort: PortName | null;
   busy: boolean;
   error: string | null;
+  whatif?: WhatIfResult | null;   // P4b Glass placement what-if for `whatifFor`
+  whatifFor?: string | null;
+  whatifBusy?: boolean;
 }
 
 type Listener = (state: AppState, changed: Set<keyof AppState>) => void;
