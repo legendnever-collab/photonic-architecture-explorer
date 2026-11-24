@@ -1,6 +1,13 @@
 import type { Store } from './state';
 import type { Candidate, NonparaxialStudy, Result } from './types';
+
+type LensReview = NonNullable<Result['lens_review']>;
 import { STATUS_LABEL, el, fmt, nextStep, reasonLabel } from './util';
+
+const TITLES: Record<string, string> = {
+  '비근축 η': '이차곡면 처방을 근축 근사 없이(각스펙트럼 + 실제 곡면 광선) 계산한 Scalar Overlap',
+  '보정 곡면 η': '3·4차 Sag(Coma 보정)를 더한 곡면의 비근축 Overlap. 근축 설계(꼭짓점·법선·곡률)는 그대로',
+};
 
 const STATUS_TEXT: Record<string, string> = {
   Computed: '후보 생성', Fail: '후보 없음', Uncomputed: '미계산', Invalid: '입력 오류', Preview: 'Preview',
@@ -33,8 +40,11 @@ export class ResultsPanel {
     if (current.candidates.length) {
       this.root.append(this.table(current.candidates));
       const selected = this.store.selectedCandidate;
-      if (selected) this.root.append(this.detail(selected));
+      if (selected && selected.family !== 'lens_two_reflector') this.root.append(this.detail(selected));
     }
+    if (current.lens_review) this.root.append(this.lensReview(current.lens_review));
+    const chosen = this.store.selectedCandidate;
+    if (chosen?.family === 'lens_two_reflector') this.root.append(this.lensDetail(chosen));
     if (current.nonparaxial_study?.cases?.length) this.root.append(this.study(current.nonparaxial_study));
     if (current.search?.screening_counts) {
       this.root.append(this.rejections(current.search.screening_counts, current.search.grid_points, current.search.elapsed_seconds));
@@ -84,18 +94,100 @@ export class ResultsPanel {
         + '후보로 채택하지 않으며, 다른 Family나 Guard 재검토(사용자 승인)를 판단하는 근거입니다.'));
   }
 
+  /** P4 Lens Family: shown and drawable, never counted as Computed candidates. */
+  private lensReview(review: LensReview) {
+    const selected = this.store.selectedCandidate;
+    const head = el('tr', {}, ...['#', '채택', '비근축 η', '수렴', 'Lens f / Ø [µm]', '광경로 [mm]', '입사각 [°]', '제약'].map((h) => el('th', {}, h)));
+    const rows = review.candidates.map((c) => {
+      const lenses = c.scene.lenses ?? [];
+      const ok = !!c.accepted;
+      const row = el('tr', { class: c.id === selected?.id ? 'selected' : '', 'data-lens-candidate': c.id, title: c.id },
+        el('td', {}, String(c.rank)),
+        el('td', { 'data-lens-accepted': String(ok) }, ok ? 'Computed' : '미채택'),
+        el('td', { class: ok ? 'good' : 'warn', 'data-lens-eta': String(c.metrics.nonparaxial_overlap ?? '') }, fmt(c.metrics.nonparaxial_overlap ?? null, 4)),
+        el('td', {}, c.review_status === 'Computed' ? '예' : c.review_status === 'Unconverged' ? '미수렴' : c.review_status ?? '—'),
+        el('td', {}, lenses.map((l) => `${l.id} ${fmt(l.focal_length_um, 0)} / ${fmt(2 * l.clear_radius_um, 0)}`).join(' · ')),
+        el('td', {}, fmt(c.metrics.total_path_mm, 3)),
+        el('td', {}, c.metrics.incidence_deg.map((v) => fmt(v, 1)).join(' / ')),
+        el('td', { class: c.lens_constraint ? 'warn' : '' }, c.lens_constraint ? reasonLabel(c.lens_constraint) : '통과'));
+      row.addEventListener('click', () => this.store.set({ selected: c.id }));
+      return row;
+    });
+    const reasons = review.fail_reasons ?? [];
+    const count = review.candidates.filter((c) => c.accepted).length;
+    const limit = review.accept_rule?.min_nonparaxial_overlap ?? 0.95;
+    return el('section', { class: 'card', 'data-card': 'lens-review' },
+      el('div', { class: 'card-head' }, el('h3', {}, `Lens Family 후보 (${review.candidates.length})`),
+        el('span', { class: `status ${count ? 'Computed' : 'Review'}` }, count ? `Computed ${count}개` : '채택 없음')),
+      ...(review.candidates.length ? [el('table', { class: 'grid-table' }, el('thead', {}, head), el('tbody', {}, ...rows))] : []),
+      ...(reasons.length && !review.candidates.length ? [el('div', { class: 'issue' }, reasons.map((r) => reasonLabel(r)).join(' / '))] : []),
+      el('div', { class: 'muted' }, `Port 바로 앞에 두 면 비구면 Micro-lens(Silica, 평평한 쪽이 Port)를 두어 출사 발산각을 θ' ${fmt(review.candidates[0]?.theta_out_rad ?? null, 3)} rad로 줄인 뒤`
+        + ', 등가 Port 사이에서 두 반사면 Relay를 근축으로 설계했습니다. '
+        + 'Lens는 Aplanatic(평행 출사 + Abbe 사인 조건)으로 맞추고, Lens·반사면 전체를 비근축 η로만 판정하며 반사면은 3·4차 Sag로 보정합니다. '
+        + `채택 기준: 비근축 검산 수렴, η ≥ ${limit}, Lens 몸체가 Keep-out·Envelope 안. 근축 Guard 대신 비근축 검산으로 채택하는 Family입니다. `
+        + '행을 누르면 3D/2D에 Lens와 Beam이 그려집니다. Lens 몸체와 Beam 사이 가림, Lens 공차·코팅은 아직 계산하지 않았습니다.'));
+  }
+
+  private lensDetail(c: Candidate) {
+    const lenses = c.scene.lenses ?? [];
+    const checks = c.lens_checks ?? [];
+    const head = el('tr', {}, ...['Lens', 'f [µm]', '중심 두께 [µm]', 'Clear Ø [µm]', 'Port→Lens [µm]', 'n (상대)', '출사 방향 잔차 [mrad]', '사인 조건 오차 [nm]', '맞춘 광선각 [rad]'].map((h) => el('th', {}, h)));
+    const rows = lenses.map((l, i) => {
+      const k = checks[i];
+      return el('tr', {}, el('td', {}, `${l.id} (${l.side === 'source' ? 'Source' : 'Target'})`), el('td', {}, fmt(l.focal_length_um, 1)),
+        el('td', {}, fmt(l.thickness_um, 1)), el('td', {}, fmt(2 * l.clear_radius_um, 0)), el('td', {}, fmt(l.port_distance_um, 2)),
+        el('td', {}, fmt(l.relative_index, 4)), el('td', {}, k ? fmt(k.max_direction_rad * 1e3, 3) : '—'),
+        el('td', {}, k ? fmt(k.max_sine_condition_error_m * 1e9, 1) : '—'), el('td', {}, k ? fmt(k.fitted_to_angle_rad, 3) : '—'));
+    });
+    const mirrors = c.scene.mirrors.map((m) => el('tr', {}, el('td', {}, m.id), el('td', { class: 'mono' }, m.vertex_mm.map((v) => fmt(v, 4)).join(', ')),
+      el('td', {}, m.radius_of_curvature_ts_mm.map((r) => (r === null ? '∞' : fmt(r, 3))).join(' / ')), el('td', {}, fmt(m.incidence_deg, 2))));
+    const history = (c.fit_history ?? []).map((h) => `${h.step} ${fmt(h.eta, 4)}`).join(' → ');
+    return el('section', { class: 'card', 'data-detail': c.id, 'data-lens-detail': '' }, el('h3', {}, `${c.id} 상세 (Lens Family${c.accepted ? '' : ' · 미채택'})`),
+      el('table', { class: 'grid-table' }, el('thead', {}, head), el('tbody', {}, ...rows)),
+      el('table', { class: 'grid-table' }, el('thead', {}, el('tr', {}, ...['반사면', 'Vertex [mm]', 'R t / s [mm]', '입사각 [°]'].map((h) => el('th', {}, h)))), el('tbody', {}, ...mirrors)),
+      el('div', { class: 'muted' }, `비근축 η ${fmt(c.metrics.nonparaxial_overlap ?? null, 4)} (${c.review_status}) · 격자 변화 ${(c.nonparaxial_check?.grid_change ?? 0).toExponential(1)} · `
+        + `Aperture 밖 Power ${(c.nonparaxial_check?.clipped_power_fraction ?? 0).toExponential(1)} · 등가 Port 사이 근축 η ${fmt(c.metrics.normalized_mode_overlap, 4)}`),
+      el('div', { class: 'muted' }, `맞춤 과정: ${history}`),
+      el('div', { class: 'muted' }, '방향 잔차와 사인 조건 오차는 Port 1/e² 각의 1.5배까지 자오면 광선으로 확인한 값입니다. Lens 계수와 반사면 보정 계수는 결과 JSON(lens_review)에 있습니다.'));
+  }
+
+  private freeform(c: Candidate) {
+    const f = c.freeform!;
+    const names = (t: { u_power: number; v_power: number }) => `u${sup(t.u_power)}v${sup(t.v_power)}`;
+    const rows = (f.reflectors ?? []).map((r) => el('tr', {},
+      el('td', {}, r.id),
+      el('td', {}, r.correction_size ? `${fmt(r.correction_size.footprint.pv_um, 3)} / ${fmt(r.correction_size.footprint.rms_um, 3)}` : '—'),
+      el('td', {}, r.correction_size ? fmt(r.correction_size.footprint.max_slope_mrad, 2) : '—'),
+      el('td', {}, fmt(r.max_sag_change_um, 1)),
+      el('td', { class: 'mono' }, r.terms.filter((t) => t.coefficient_si !== 0)
+        .map((t) => `${names(t)} ${t.coefficient_si.toExponential(3)}`).join(' · '))));
+    return el('div', { 'data-freeform': f.status },
+      el('div', { class: 'muted' }, `보정 곡면(P4): 비근축 η ${fmt(c.metrics.nonparaxial_overlap ?? null, 4)} → ${fmt(f.normalized_mode_overlap ?? null, 4)}`
+        + (f.status !== 'Computed' ? ` (${f.status})` : '') + (f.constraint ? ` · 제약 위반: ${reasonLabel(f.constraint)}` : '')
+        + ' · h = ½(κ₁u² + κ₂v²) + Σ c·uᵐvⁿ (u = t축, v = s축, SI 단위)'),
+      el('table', { class: 'grid-table' }, el('thead', {}, el('tr', {}, ...['반사면', 'Footprint 안 보정 PV / RMS [µm]', '최대 기울기 변화 [mrad]', 'Aperture 모서리 Sag [µm]', '3·4차 계수'].map((h) => el('th', {}, h)))),
+        el('tbody', {}, ...rows)),
+      ...(f.pose ? [el('div', { class: 'muted', 'data-freeform-pose': '' },
+        `비근축 정렬 민감도(반사면 하나씩 ±5 µm·두 주축 ±1 mrad, 최악 손실): 이차곡면 ${fmt(f.pose.quadric_worst_loss_db, 2)} dB · 보정 곡면 ${fmt(f.pose.corrected_worst_loss_db, 2)} dB. `
+        + 'Footprint 값은 1/e² 발자국 타원 안, 가장자리 값은 처방 Aperture(4w) 모서리까지입니다. 빛이 거의 없는 가장자리 Sag는 Aperture를 줄이면 작아집니다.')] : []));
+  }
+
   private table(candidates: Candidate[]) {
     const selected = this.store.selectedCandidate;
-    const head = el('tr', {}, ...['#', '종류', '역할', '광경로 [mm]', 'η', '비근축 η', '3w·|κ|', '정렬 민감도 [dB]', '최소 R [mm]'].map((h) => el('th', { title: h === '비근축 η' ? '각스펙트럼 + 실제 곡면 광선으로 계산한 Scalar Overlap(근축 근사 없음)' : '' }, h)));
+    const head = el('tr', {}, ...['#', '종류', '역할', '광경로 [mm]', 'η', '비근축 η', '보정 곡면 η', '3w·|κ|', '정렬 민감도 [dB]', '최소 R [mm]'].map((h) => el('th', { title: TITLES[h] ?? '' }, h)));
     const rows = candidates.map((c) => {
       const kmax = c.metrics.max_abs_curvature_per_m;
       const row = el('tr', { class: c.id === selected?.id ? 'selected' : '', 'data-candidate': c.id, title: c.id },
         el('td', {}, String(c.rank)),
-        el('td', {}, el('span', { class: `family ${c.family}` }, c.family === 'exact' ? 'Exact' : 'Near-match')),
+        el('td', {}, el('span', { class: `family ${c.family}` }, c.family === 'exact' ? 'Exact' : c.family === 'lens_two_reflector' ? 'Lens + 2 반사면' : 'Near-match')),
         el('td', {}, c.role_labels.join(' · ')),
         el('td', {}, fmt(c.metrics.total_path_mm, 3)), el('td', {}, fmt(c.metrics.normalized_mode_overlap, 4)),
         el('td', { 'data-nonparaxial': String(c.metrics.nonparaxial_overlap ?? ''),
           class: (c.metrics.nonparaxial_overlap ?? 1) < 0.95 ? 'warn' : '' }, fmt(c.metrics.nonparaxial_overlap ?? null, 4)),
+        el('td', { 'data-corrected': String(c.metrics.corrected_nonparaxial_overlap ?? ''),
+          class: c.freeform?.constraint ? 'warn' : 'good', title: c.freeform?.constraint ?? '' },
+          c.freeform?.status === 'Computed' ? fmt(c.metrics.corrected_nonparaxial_overlap ?? null, 4) + (c.freeform.constraint ? ' ⚠' : '')
+            : c.freeform?.status ? `${fmt(c.metrics.corrected_nonparaxial_overlap ?? null, 4)} (${c.freeform.status === 'Unconverged' ? '미수렴' : c.freeform.status})` : '—'),
         el('td', {}, fmt(c.metrics.max_3w_footprint_curvature, 3)),
         el('td', {}, fmt(c.metrics.worst_pose_mismatch_db, 2)),
         el('td', {}, kmax ? fmt(1000 / kmax, 2) : '∞'));
@@ -130,6 +222,7 @@ export class ResultsPanel {
           : `비근축 Scalar 검산 η ${fmt(c.nonparaxial_check.normalized_mode_overlap ?? null, 4)} (근축 η ${fmt(c.metrics.normalized_mode_overlap, 4)}) · `
             + `격자 변화 ${(c.nonparaxial_check.grid_change ?? 0).toExponential(1)} · Aperture 밖 Power ${(c.nonparaxial_check.clipped_power_fraction ?? 0).toExponential(1)} · `
             + '각스펙트럼 + 실제 곡면 광선, 모서리 회절·편광·Fresnel 계수 제외')] : []),
+      ...(c.freeform?.reflectors ? [this.freeform(c)] : []),
       ...(tensor && c.ray_transfer_check ? [el('div', { class: 'muted', 'data-model': 'qtensor' },
         `q-tensor 모델(평면 밖 경로): 반사면 곡률 축은 각 반사면의 주곡률 방향입니다(3D에서 확인). Ray-transfer 검산 상대차 `
         + `${c.ray_transfer_check.q_tensor_relative_difference.toExponential(1)}, Symplectic 오차 ${c.ray_transfer_check.symplectic_error.toExponential(1)}`)] : []),
@@ -152,4 +245,8 @@ export class ResultsPanel {
       el('ul', {}, ...(result.uncomputed ?? []).map((u) => el('li', {}, `Uncomputed · ${u}`)),
         ...(result.limitations ?? []).map((l) => el('li', {}, l))));
   }
+}
+
+function sup(n: number) {
+  return '⁰¹²³⁴'[n] ?? String(n);
 }

@@ -24,7 +24,7 @@ from . import api
 from .design_document import SCHEMA
 from .presets import load_presets
 
-VERSION = '0.2.0-p0'
+VERSION = '0.3.0'
 MAX_BODY = 2 * 1024 * 1024
 PACKAGE = resources.files(__package__)
 

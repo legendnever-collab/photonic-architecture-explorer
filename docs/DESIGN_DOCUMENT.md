@@ -109,6 +109,8 @@ Envelope·Keep-out은 엔진 입력의 `package`(available_volume, keepout_bodie
 | `candidates[].ray_transfer_check` | q-tensor 후보: 실제 곡면 광선의 4×4 행렬로 재현한 Q의 상대차, Symplectic 오차 |
 | `candidates[].nonparaxial_check`, `metrics.nonparaxial_overlap` | 비근축 Scalar 검산: η, 격자 수렴(129²→257² 변화), Aperture 밖 Power 비율, 방법과 제외 항목 |
 | `candidates[].roles`의 `best_nonparaxial` | 후보 중 비근축 η가 가장 높은 후보(탐색 단계에서 최대 400개 배치를 65² 격자로 순위화) |
+| `candidates[].freeform`, `metrics.corrected_nonparaxial_overlap` | P4 Coma 보정 곡면: 상태(Computed/Unconverged/Invalid), 보정 후 비근축 η, 격자 변화, 공간 제약 위반(`constraint`), 반사면별 3·4차 계수(`u_power`, `v_power`, `coefficient_si`, u = t축, v = s축)와 최대 Sag 변화, 최적화 이력 |
+| `candidates[].scene.mirrors[].surface_grid_corrected_mm` | 보정 곡면 13×13 격자(3D·2D 도면은 이 곡면을 그림) |
 | `nonparaxial_study` | Port 발산각이 Guard를 넘을 때만: Guard를 끈 근축 Exact 설계의 비근축 η(후보 아님) |
 | `candidates[].scene.beam.samples[].ellipse` | q-tensor 후보: 1/e² 강도 타원의 장·단반경과 구간 t축 기준 장축 각도 |
 | `relay_medium` | `ambient` 또는 `block`(Relay를 푼 매질) |

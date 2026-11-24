@@ -34,23 +34,115 @@ SCREEN_POINTS = 400        # at most this many feasible geometries are ranked by
 SPECTRUM_SIGMAS = 3.6      # half-width of the grid in units of the 1/e² intensity half-angle (|A|² ≈ e^-26 at the edge)
 MAX_DIRECTION_COSINE = 0.95
 CONVERGENCE_LIMIT = 1e-4
+FOLD_LIMIT = 1e-4         # beam power on a folded direction mapping (caustic) above which the ray picture is invalid
 
 
-def mirror_tuple(vertex, normal, second_axis, curvatures, half_aperture):
+def mirror_tuple(vertex, normal, second_axis, curvatures, half_aperture, poly=()):
+    """Reflector for the bundle trace. `poly`: higher sag terms ((m, n, c), …), Δh = Σ c·u^m·v^n (m units)."""
     n = unit(normal)
     e2 = unit(second_axis)
     e1 = unit(cross(e2, n))
     return (np.array(vertex, float), np.array(n), np.array(e1), np.array(e2),
-            float(curvatures[0]), float(curvatures[1]), float(half_aperture[0]), float(half_aperture[1]))
+            float(curvatures[0]), float(curvatures[1]), float(half_aperture[0]), float(half_aperture[1]),
+            tuple((int(m), int(q), float(c)) for m, q, c in poly))
+
+
+def _poly(poly, u, v):
+    """Higher sag terms and their u, v derivatives (powers built by multiplication: this is the hot loop)."""
+    top = max((max(m, n) for m, n, _ in poly), default=0)
+    up, vp = [np.ones_like(u), u], [np.ones_like(v), v]
+    for _ in range(2, top + 1):
+        up.append(up[-1] * u)
+        vp.append(vp[-1] * v)
+    value, du, dv = np.zeros_like(u), np.zeros_like(u), np.zeros_like(u)
+    for m, n, c in poly:
+        if c == 0:
+            continue
+        value += c * up[m] * vp[n]
+        if m:
+            du += (c * m) * up[m - 1] * vp[n]
+        if n:
+            dv += (c * n) * up[m] * vp[n - 1]
+    return value, du, dv
+
+
+def refracting_surface(vertex, axis, curvature, conic, aspheric, n_before, n_after, radius):
+    """Rotationally symmetric refracting surface for the bundle trace (indices relative to the ambient medium).
+
+    Sag along `axis` (the forward propagation direction): z(r) = c r²/(1 + √(1 − (1+κ)c²r²)) + Σ a_i r^(2i), i = 2, 3, …
+    """
+    return ('refract', np.array(vertex, float), np.array(unit(axis)), float(curvature), float(conic),
+            tuple(float(a) for a in aspheric), float(n_before), float(n_after), float(radius))
+
+
+def asphere_sag(r2, c, kappa, aspheric):
+    """Sag and (dz/dr)/r as functions of r²."""
+    root = np.sqrt(np.clip(1 - (1 + kappa) * c * c * r2, 1e-12, None))
+    z = c * r2 / (1 + root)
+    slope = c / root
+    for i, a in enumerate(aspheric, start=2):
+        z = z + a * r2 ** i
+        slope = slope + 2 * i * a * r2 ** (i - 1)
+    return z, slope
+
+
+def _refract(element, o, d, alive, opl, index, target_direction):
+    _, vertex, axis, c, kappa, aspheric, n1, n2, radius = element
+    den = d @ axis
+    with np.errstate(divide='ignore', invalid='ignore'):
+        t = ((vertex - o) @ axis) / den
+    for _ in range(10):  # Newton on z(p) − sag(r(p)) = 0 from the vertex-plane intersection
+        p = o + d * t[:, None]
+        rel = p - vertex
+        z = rel @ axis
+        rho = rel - z[:, None] * axis
+        sag, slope = asphere_sag((rho * rho).sum(1), c, kappa, aspheric)
+        g = z - sag
+        dg = den - slope * (rho * (d - den[:, None] * axis)).sum(1)
+        with np.errstate(divide='ignore', invalid='ignore'):
+            t = t - g / dg
+    p = o + d * t[:, None]
+    rel = p - vertex
+    z = rel @ axis
+    rho = rel - z[:, None] * axis
+    r2 = (rho * rho).sum(1)
+    sag, slope = asphere_sag(r2, c, kappa, aspheric)
+    with np.errstate(invalid='ignore'):
+        ok = alive & np.isfinite(t) & (t > -1e-15) & (np.abs(z - sag) < 1e-13) & (r2 <= radius * radius) \
+            & ((1 + kappa) * c * c * r2 < 1)
+    normal = axis[None, :] - slope[:, None] * rho
+    normal /= np.linalg.norm(normal, axis=1)[:, None]
+    cos_i = (d * normal).sum(1)
+    eta = n1 / n2
+    inside = 1 - eta * eta * (1 - cos_i * cos_i)
+    ok &= (inside > 0) & (cos_i > 0)
+    root = np.sqrt(np.clip(inside, 0, None))
+    refracted = eta * d + (root - eta * cos_i)[:, None] * normal
+    opl = opl + np.where(ok, n1 * t, 0.0)
+    o = np.where(ok[:, None], p, o)
+    d = np.where(ok[:, None], refracted, np.array(target_direction))
+    return o, d, ok, opl
 
 
 def trace_bundle(origin, directions, mirrors, target_position, target_basis, target_direction):
-    """Vectorised exact rays through clipped quadric patches to the Target plane."""
+    """Vectorised exact rays through clipped patches (quadric plus optional higher sag terms) to the Target plane.
+
+    With higher terms, each quadric root is refined by Newton steps on the full sag. Also returns,
+    per reflector, the hit coordinates (u, v) on its principal axes and the local incidence cosine.
+    """
     o = np.broadcast_to(np.array(origin, float), directions.shape).copy()
     d = directions.copy()
     alive = np.ones(len(d), bool)
     opl = np.zeros(len(d))
-    for vertex, n, e1, e2, k1, k2, h1, h2 in mirrors:
+    hits = []
+    index = 1.0  # relative to the ambient medium (refracting elements change it; OPL is in ambient units)
+    for element in mirrors:
+        if isinstance(element[0], str):  # ('refract', vertex, axis, c, kappa, aspheric, n_before, n_after, radius)
+            o, d, alive, opl = _refract(element, o, d, alive, opl, index, target_direction)
+            index = element[7]
+            continue
+        vertex, n, e1, e2, k1, k2, h1, h2, *rest = element
+        poly = rest[0] if rest else ()
         rel = o - vertex
         u, v, h = rel @ e1, rel @ e2, rel @ n
         du, dv, dh = d @ e1, d @ e2, d @ n
@@ -65,20 +157,41 @@ def trace_bundle(origin, directions, mirrors, target_position, target_basis, tar
             r1 = np.where(linear, -c / b, qq / a)
             r2 = np.where(linear, np.nan, c / qq)
         best = np.full(len(d), np.inf)
+        margin = 1.2 if poly else 1.0  # the quadric root seeds the higher-order surface; final aperture test below
         for r in (r1, r2):
             ok = np.isfinite(r) & (r > 1e-12)
             uu, vv = u + r * du, v + r * dv
-            ok &= (np.abs(uu) <= h1) & (np.abs(vv) <= h2)
+            ok &= (np.abs(uu) <= margin * h1) & (np.abs(vv) <= margin * h2)
             best = np.where(ok & (r < best), r, best)
+        if poly:  # Newton on the full sag from the chosen quadric root only
+            r = np.where(np.isfinite(best), best, 0.0)
+            for _ in range(8):
+                uu, vv = u + r * du, v + r * dv
+                extra, pu, pv = _poly(poly, uu, vv)
+                g = h + r * dh - (k1 * uu * uu + k2 * vv * vv) / 2 - extra
+                slope = dh - (k1 * uu + pu) * du - (k2 * vv + pv) * dv
+                with np.errstate(divide='ignore', invalid='ignore'):
+                    r = r - g / slope
+            uu, vv = u + r * du, v + r * dv
+            extra, _, _ = _poly(poly, uu, vv)
+            with np.errstate(invalid='ignore'):
+                good = (np.isfinite(best) & np.isfinite(r) & (r > 1e-12)
+                        & (np.abs(h + r * dh - (k1 * uu * uu + k2 * vv * vv) / 2 - extra) < 1e-13)
+                        & (np.abs(uu) <= h1) & (np.abs(vv) <= h2))
+            best = np.where(good, r, np.inf)
         alive &= np.isfinite(best)
         best = np.where(np.isfinite(best), best, 0.0)
         d = np.where(alive[:, None], d, np.array(target_direction))  # dead rays: keep finite placeholders
         o = o + d * best[:, None]
         opl += best
+        opl += (index - 1.0) * best  # reflectors inside a medium other than the ambient one
         rel = o - vertex
         u, v = rel @ e1, rel @ e2
-        normal = n[None, :] - (k1 * u)[:, None] * e1[None, :] - (k2 * v)[:, None] * e2[None, :]
+        _, pu, pv = _poly(poly, u, v) if poly else (0.0, 0.0, 0.0)
+        normal = n[None, :] - (k1 * u + pu)[:, None] * e1[None, :] - (k2 * v + pv)[:, None] * e2[None, :]
         normal /= np.linalg.norm(normal, axis=1)[:, None]
+        cosine = -(d * normal).sum(1)
+        hits.append({'u': np.where(alive, u, 0.0), 'v': np.where(alive, v, 0.0), 'cos': np.where(alive, cosine, 1.0)})
         d = d - 2 * (d * normal).sum(1)[:, None] * normal
     den = d @ target_direction
     alive &= den > 1e-9
@@ -87,10 +200,10 @@ def trace_bundle(origin, directions, mirrors, target_position, target_basis, tar
     alive &= t > 0
     t = np.where(alive, t, 0.0)
     x = o + d * t[:, None] - np.array(target_position)
-    opl += t
+    opl += index * t
     keep = alive[:, None]
     return {'alive': alive, 'opl': np.where(alive, opl, 0.0), 'x': np.where(keep, x @ target_basis, 0.0),
-            'u': np.where(keep, d @ target_basis, 0.0)}
+            'u': np.where(keep, d @ target_basis, 0.0), 'hits': hits}
 
 
 def _spectrum(qmatrix, k, u):
@@ -99,9 +212,9 @@ def _spectrum(qmatrix, k, u):
     return np.exp(1j * np.einsum('...i,ij,...j', p, qmatrix, p) / (2 * k))
 
 
-def overlap(source_q, source_basis, source_position, source_direction, target_q, target_basis, target_position,
-            target_direction, mirrors, k, half_angle, grid=GRID):
-    """Non-paraxial η, clipped power fraction and the mapped region, for one grid size."""
+def field(source_q, source_basis, source_position, source_direction, target_q, target_basis, target_position,
+          target_direction, mirrors, k, half_angle, grid=GRID):
+    """Terms of the overlap integral on one direction grid: η = |Σ amplitude·e^{i phase}|² · step⁴ / norm."""
     limit = min(MAX_DIRECTION_COSINE, SPECTRUM_SIGMAS * half_angle)
     axis = np.linspace(-limit, limit, grid)
     step = axis[1] - axis[0]
@@ -118,12 +231,21 @@ def overlap(source_q, source_basis, source_position, source_direction, target_q,
     xr = ray['x'].reshape(shape + (2,))
     qz = np.sqrt(np.clip(1 - (uq ** 2).sum(-1), 1e-300, None))
     w = ray['opl'].reshape(shape) - (uq * xr).sum(-1)
-    jac = np.abs(np.gradient(uq[..., 0], step, axis=0) * np.gradient(uq[..., 1], step, axis=1)
-                 - np.gradient(uq[..., 0], step, axis=1) * np.gradient(uq[..., 1], step, axis=0))
+    signed = (np.gradient(uq[..., 0], step, axis=0) * np.gradient(uq[..., 1], step, axis=1)
+              - np.gradient(uq[..., 0], step, axis=1) * np.gradient(uq[..., 1], step, axis=0))
+    jac = np.abs(signed)
     a = _spectrum(source_q, k, np.stack([uu, vv], -1))
+    power = np.where(alive, abs(a) ** 2, 0.0)
+    centre = np.sign(signed[grid // 2, grid // 2]) or 1.0
+    # direction mapping folded (caustic); differences that reach a dead (clipped) ray are not folds
+    interior = alive.copy()
+    interior[1:] &= alive[:-1]
+    interior[:-1] &= alive[1:]
+    interior[:, 1:] &= alive[:, :-1]
+    interior[:, :-1] &= alive[:, 1:]
+    fold = float(power[interior & (np.sign(signed) != centre)].sum() / max(power.sum(), 1e-300))
     b = _spectrum(target_q, k, uq)
     weight = np.where(alive, np.sqrt(np.nan_to_num(jac) * kz / qz), 0.0)
-    integral = (a * b.conj() * np.exp(-1j * k * w) * weight).sum() * step * step
     arriving = (np.where(alive, abs(a) ** 2 * kz / qz, 0.0)).sum() * step * step
     launched = (np.where(inside, abs(a) ** 2 * kz, 0.0)).sum() * step * step
     flux = (np.where(alive, abs(a) ** 2 * kz, 0.0)).sum() * step * step
@@ -131,9 +253,20 @@ def overlap(source_q, source_basis, source_position, source_direction, target_q,
     target_norm = math.pi / math.sqrt(np.linalg.det(m))
     if arriving <= 0:
         raise DomainError('no ray reaches the Target plane')
-    eta = abs(integral) ** 2 / (arriving * target_norm)
-    return {'eta': float(eta), 'clipped_power_fraction': float(1 - flux / launched), 'grid': grid,
-            'max_direction_cosine': float(limit)}
+    keep = alive.reshape(-1)
+    return {'amplitude': (a * b.conj() * weight).reshape(-1)[keep], 'phase': (-k * w).reshape(-1)[keep],
+            'hits': [{key: value[keep] for key, value in hit.items()} for hit in ray['hits']],
+            'norm': arriving * target_norm / (step * step) ** 2, 'clipped_power_fraction': float(1 - flux / launched),
+            'folded_power_fraction': fold,
+            'grid': grid, 'max_direction_cosine': float(limit)}
+
+
+def overlap(*args, grid=GRID):
+    """Non-paraxial η, clipped power fraction and the mapped region, for one grid size."""
+    f = field(*args, grid=grid)
+    eta = abs((f['amplitude'] * np.exp(1j * f['phase'])).sum()) ** 2 / f['norm']
+    return {'eta': float(eta), 'clipped_power_fraction': f['clipped_power_fraction'], 'grid': grid,
+            'max_direction_cosine': f['max_direction_cosine'], 'folded_power_fraction': f['folded_power_fraction']}
 
 
 def check(source_q, source_basis, source_position, source_direction, target_q, target_basis, target_position,
@@ -144,11 +277,17 @@ def check(source_q, source_basis, source_position, source_direction, target_q, t
     coarse = overlap(*args, grid=GRID)
     fine = overlap(*args, grid=2 * GRID - 1)
     change = abs(fine['eta'] - coarse['eta'])
-    return {'status': 'Computed' if change <= CONVERGENCE_LIMIT else 'Unconverged',
+    if change > CONVERGENCE_LIMIT:  # strongly varying phase (e.g. large corrections): one more doubling
+        coarse, fine = fine, overlap(*args, grid=4 * GRID - 3)
+        change = abs(fine['eta'] - coarse['eta'])
+    valid = fine['folded_power_fraction'] <= FOLD_LIMIT and fine['eta'] <= 1 + CONVERGENCE_LIMIT
+    return {'status': ('Computed' if change <= CONVERGENCE_LIMIT else 'Unconverged') if valid else 'Invalid',
+            'folded_power_fraction': fine['folded_power_fraction'],
             'normalized_mode_overlap': fine['eta'], 'grid_change': change,
             'clipped_power_fraction': fine['clipped_power_fraction'], 'max_direction_cosine': fine['max_direction_cosine'],
-            'method': ('scalar angular spectrum of both modes, exact rays through the quadric patches, '
-                       f'{2 * GRID - 1}² directions (convergence vs {GRID}²)'),
+            'grid': fine['grid'],
+            'method': ('scalar angular spectrum of both modes, exact rays through the reflector patches, '
+                       f'{fine["grid"]}² directions (convergence vs {coarse["grid"]}²)'),
             'omits': 'aperture-edge diffraction, polarization, Fresnel coefficients, multiple reflections'}
 
 

@@ -74,6 +74,8 @@ aside.right { border-left: 1px solid var(--line); }
 .status { font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 12px; }
 .status.Computed { background: #eefbf1; color: var(--pass); }
 .status.Fail, .status.Invalid { background: #fff1ef; color: var(--fail); }
+.status.Review { background: #eef6ff; color: #0969da; }
+.scene-label.lens-label { color: #1a7f37; }
 .grid-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 4px 0; }
 .grid-table th, .grid-table td { border: 1px solid var(--line); padding: 3px 5px; text-align: left; }
 .grid-table th { background: var(--soft); font-weight: 600; }
@@ -90,6 +92,7 @@ details ul { margin: 6px 0 0; padding-left: 18px; color: var(--muted); font-size
 .family { font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 8px; white-space: nowrap; }
 .family.exact { background: #eefbf1; color: var(--pass); }
 .family.near_match { background: #ddf4ff; color: #0969da; }
+.family.lens_two_reflector { background: #e6f4ea; color: #1a7f37; }
 .guidance { margin: 6px 0 0; padding-left: 18px; font-size: 12px; }
 .guidance li { margin-bottom: 4px; }
 .guidance .phase { font-weight: 700; color: var(--accent); }
@@ -102,3 +105,4 @@ details ul { margin: 6px 0 0; padding-left: 18px; color: var(--muted); font-size
 .card .media { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0; }
 .card .media .chip { background: #eef6fa; color: #0a5a75; }
 td.warn { color: var(--warn); font-size: inherit; margin: 0; font-weight: 600; }
+td.good { color: #1a7f37; font-weight: 600; }

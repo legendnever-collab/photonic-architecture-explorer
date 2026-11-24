@@ -17,7 +17,7 @@ export interface PortSpec {
   medium?: Medium;
 }
 
-export type Medium = 'ambient' | 'block';
+export type Medium = 'ambient' | 'block' | 'lens';
 
 /** One glass block bounded by a planar top surface (and an optional parallel bottom). */
 export interface MediumBlock {
@@ -110,6 +110,8 @@ export interface MirrorScene {
   incidence_deg: number;
   beam_footprint_radius_ts_um: [number, number];
   surface_grid_mm: Vec3[][];
+  surface_grid_corrected_mm?: Vec3[][];  // P4: quadric + coma-correcting sag terms
+  max_sag_change_um?: number;
   tir_possible?: boolean;
 }
 
@@ -118,7 +120,18 @@ export interface Segment { start_mm: Vec3; end_mm: Vec3; length_mm: number; dire
 export interface BeamEllipse { major_um: number; minor_um: number; angle_rad: number }
 export interface BeamSample { segment: number; distance_mm: number; point_mm: Vec3; radius_t_um: number; radius_s_um: number; medium?: Medium; ellipse?: BeamEllipse }
 
+/** P4 Lens Family: a rotationally symmetric two-asphere micro-lens (outline polylines in mm). */
+export interface LensScene {
+  id: string; side: PortName; flat_vertex_mm: Vec3; curved_vertex_mm: Vec3; axis: Vec3; focal_length_um: number;
+  thickness_um: number; clear_radius_um: number; port_distance_um: number; relative_index: number; outline_mm: Vec3[][];
+}
+export interface LensCheck {
+  max_direction_rad: number; max_sine_condition_error_m: number; rays_alive: boolean; checked_to_angle_rad: number;
+  fitted_to_angle_rad: number; clear_radius_m: number;
+}
+
 export interface CandidateScene {
+  lenses?: LensScene[];
   mirrors: MirrorScene[];
   path: { points_mm: Vec3[]; segments: Segment[]; total_length_mm: number; surface_point_mm?: Vec3 };
   beam: { definition: string; samples: BeamSample[]; model?: 'qtensor' };
@@ -130,8 +143,22 @@ export interface Candidate {
   role: string | null;
   roles: string[];
   role_labels: string[];
-  family: 'exact' | 'near_match';
+  family: 'exact' | 'near_match' | 'lens_two_reflector';
+  review?: boolean;          // P4 Lens Family candidate not accepted (shown in the Lens card only)
+  accepted?: boolean;        // P4 Lens Family candidate accepted as Computed (non-paraxial η, constraints)
+  review_status?: string;
+  theta_out_rad?: number;
+  lens_checks?: LensCheck[];
+  lens_constraint?: string | null;
+  fit_history?: { step: string; eta: number }[];
   model?: 'separable' | 'qtensor';
+  freeform?: {
+    status: string; normalized_mode_overlap?: number; grid_change?: number; constraint?: string | null; reason?: string;
+    reflectors?: { id: string; max_sag_change_um: number; terms: { u_power: number; v_power: number; coefficient_si: number }[];
+      correction_size?: Record<'footprint' | 'aperture', { pv_um: number; rms_um: number; max_slope_mrad: number }> }[];
+    pose?: { quadric_worst_loss_db: number | null; corrected_worst_loss_db: number | null; cases: string };
+    surface?: string; meaning?: string;
+  } | null;
   nonparaxial_check?: { status: string; normalized_mode_overlap?: number; grid_change?: number; clipped_power_fraction?: number; method?: string; omits?: string } | null;
   ray_transfer_check?: { q_tensor_relative_difference: number; symplectic_error: number; method: string } | null;
   parameters_mm: { a?: number; b?: number; c?: number };
@@ -142,6 +169,7 @@ export interface Candidate {
     ambient_path_mm?: number;
     normalized_mode_overlap: number | null;
     nonparaxial_overlap?: number | null;
+    corrected_nonparaxial_overlap?: number | null;
     mode_mismatch_db: number | null;
     max_projected_beam_radius_um: number;
     max_3w_footprint_curvature: number;
@@ -197,6 +225,8 @@ export interface Result {
   crossing?: Crossing | null;
   guidance?: Guidance[];
   nonparaxial_study?: NonparaxialStudy | null;
+  lens_review?: { status: string; candidates: Candidate[]; fail_reasons?: string[]; meaning?: string;
+    accept_rule?: { min_nonparaxial_overlap: number } } | null;
   search?: {
     status?: string; reason?: string; grid_points?: number; exact_feasible?: number; near_match_feasible?: number;
     screening_counts?: Record<string, number>; elapsed_seconds?: number; policy?: string; map?: SearchMap | null;

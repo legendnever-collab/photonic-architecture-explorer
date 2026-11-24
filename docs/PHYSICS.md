@@ -104,6 +104,51 @@ Near-match는 반사면마다 주축 각도와 두 곡률 좌표(±1 × Guard �
 해석: 국소 이차곡면(Vertex 기준 2차 Sag)은 경사 입사에서 점→점 결상이 완전하지 않다. 완전한 결상면(두 초점을 잇는
 타원면, Off-axis 포물면)과는 3차 Sag 항이 다르고, 그 차이가 Coma로 나타난다. 3w·|κ| Guard는 이 효과를 충분히 막지 못한다.
 
+## Coma 보정 곡면 (P4)
+
+근축 설계가 정한 반사면(꼭짓점, 법선, 곡률 Tensor = 2차 Sag)에 각 반사면 주축 좌표 (u, v)의 3·4차 Sag 항을 더한다.
+
+h(u, v) = ½(κ₁u² + κ₂v²) + Σ c_mn u^m v^n,  m + n = 3, 4 (반사면당 9개 계수)
+
+3차 이상 항은 꼭짓점의 위치·기울기·곡률을 바꾸지 않으므로 근축 Relay(q 대수, 엔진 Adapter, Ray-transfer 검산)는 그대로
+유효하다(테스트: 보정 전후 4×4 Ray-transfer 행렬 동일). 계수는 비근축 Overlap을 최대로 하도록 정한다.
+
+1. 방향 Bundle을 한 번 추적해 광선마다 각 반사면의 Hit (u, v)와 국소 입사 cos를 기록한다. Sag 변화 δh는 그 광선의 광경로를
+   2δh·cosθ 줄이므로, Overlap의 위상 부분은 계수에 선형이다. 이 모델은 같이 바뀌는 방향 대응(Target 면 위치·진폭)을 넣지 않으므로
+   단계 제안에만 쓴다.
+2. 선형 위상 모델에서 |Σ a·e^{i(φ₀+Gb)}|²를 해석적 Gradient로 최대화한다(b = 발자국 반경에서의 Sag, 파장 단위).
+3. 새 곡면으로 정확히 다시 추적(Newton 교점, 정확한 법선)하고 Overlap이 좋아지지 않으면 보폭을 줄인다. 선형 모델이 계속 빗나가면
+   (가파른 입사, Glass 배치) 정확한 Overlap을 성긴 격자(49²)에서 직접 최대화한다.
+4. 보고 값은 항상 정확한 재추적의 수렴 검사 결과다. 방향 대응이 접히면(Caustic, 접힌 영역 Power > 1e-4) 결과를 Invalid로 둔다.
+
+보정 곡면은 공간 제약(Port 뒤 공간, Glass 영역, Envelope, Keep-out)을 Patch 41×41 점에서 다시 검사한다.
+
+## 굴절 비구면 (P4)
+
+비근축 추적은 회전대칭 비구면 굴절면도 지난다: z(r) = c r²/(1 + √(1 − (1+κ)c²r²)) + Σ a_i r^(2i). 교점은 꼭짓점 평면 교점에서 시작한
+Newton 반복, 굴절은 벡터 Snell 법칙(전반사 광선 제거), 광경로는 매질 굴절률을 곱해 누적한다. 검증: 평행 평판은 입사 방향을 보존하고
+측면 이동이 해석식과 일치(1e-12), 렌즈 근축 행렬이 광선 중앙 차분과 일치(1e-5), 등광로(Cartesian oval) Collimator 근사 비구면은
+±0.6 rad 광선을 2e-4 rad 이내로 평행하게 만든다. 렌즈는 Port의 원거리(Rayleigh 거리 10배 이상)에 두어 광선 대응 가정을 지킨다.
+
+### Lens Family (P4 2단계, 검토 후보)
+
+발산각 Guard를 넘는 Port 앞에 두 면 비구면 Micro-lens(Silica, 평평한 쪽이 Port)를 둔다.
+
+1. 근축 설계: 출사 발산각 θ'(기본 0.005 rad)에서 w' = λ/(πθ'), f = π w₀ w'/λ. Port는 앞 초점(FFD d)에 놓고 중심 두께는 0.5 f.
+2. Aplanatic 맞춤: Port 점에서 나간 자오면 광선이 축과 평행하게(등광로) 그리고 높이 h = f sin α(Abbe 사인 조건)로 나오도록
+   두 면의 비구면 계수(곡면 쪽 Conic + r⁴…r¹⁰, Port 쪽 r⁴…r¹⁰)와 Bending을 최소제곱으로 맞춘다. Bending은 EFL과 FFD를 유지한다
+   (φ₂ = (1 − φ₁d)/f, t = n(1 − d/f)/φ₂). 사인 조건을 지키면 Port의 Gaussian 각스펙트럼이 출사면에서 Gaussian 높이 분포가 된다.
+   맞춤 범위는 1/e² 각의 2.6배(|A|² ≈ 1e-6)라서 Beam 안에서 방향 대응이 접히지 않는다. Clear 반경은 맞춘 광선 높이의 1.1배.
+3. 등가 Port: Lens 직후의 근축 q로 등가 Port를 만들어 기존 두 반사면 탐색으로 Relay를 설계한다.
+4. 판정: Lens·반사면(·Lens) 전체를 Port에서 Port까지 비근축 Scalar로 계산하고, 반사면에는 3·4차 Sag 보정을 더한다.
+   Port 양 끝이 원거리 조건을 만족하므로 각스펙트럼 + 광선 대응 방법이 유효하다(Lens만 따로 근거리에서 평가하면 유효하지 않다).
+5. 한계: 단일 비구면 Lens가 받을 수 있는 Port 발산각은 sin(2.6 θ) ≤ 0.85, 즉 θ ≤ 0.39 rad. 넘으면 Fail(S5 Laser 0.556 rad).
+   Lens 몸체의 Keep-out·Envelope 검사는 하지만, Lens와 다른 구간 Beam의 가림, Lens 공차, 코팅, 분산은 계산하지 않는다.
+
+채택(사용자 결정, 2026-11-24): 비근축 검산이 수렴하고 η ≥ 0.95이며 Lens 몸체가 Keep-out·Envelope 안이면 Computed 후보가 된다.
+Lens 없는 두 반사면이 Guard에서 실패했을 때만 돌고, 이 경우 결과는 Computed, Family `lens_two_reflector`, 사유는 `Lens Family:`로 시작한다.
+근축 Guard가 아니라 비근축 검산으로 채택하는 유일한 Family다. 모든 Lens 후보(미채택 포함)는 `lens_review`에도 남는다.
+
 ## Mode Overlap
 
 η_mode=|∫E_target* E_incident dA|² / (∫|E_target|² dA ∫|E_incident|² dA).

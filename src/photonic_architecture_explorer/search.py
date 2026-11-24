@@ -74,13 +74,15 @@ CLEARANCE_SAMPLES = 16
 POSE_PATCH_MARGIN = (10e-6, 0.02)  # m, fraction: chief-ray obstruction margin around each prescribed patch
 NEAR_MATCH_FIRST_TRIALS = 96
 NEAR_MATCH_MAX_TRIALS = 256
+CORRECT_SURFACES = True  # P4: add coma-correcting sag terms to every accepted candidate
 NEAR_MATCH_TENSOR_TRIALS = 24  # each q-tensor Near-match is a 6-parameter optimisation (~0.3 s)
 LIMITS = ['Conceptual Geometry; prescribed aperture is not fabrication capability',
           'Scalar paraxial normalized overlap is not Total Coupling',
           'Finite-field aberration, coating, interface and polarization losses Uncomputed',
           'Port bodies are modelled only as the half-spaces behind the reference planes (when enabled)',
           'Two reflectors with local quadratic (vertex) surfaces in one homogeneous medium (ambient or one glass block); '
-          'the non-paraxial check shows coma at oblique incidence that the paraxial overlap does not; other families are later phases']
+          'the non-paraxial check shows coma at oblique incidence; P4 adds third/fourth-order sag terms to correct it '
+          '(fabrication of these freeform terms is not assessed); lens families are later stages']
 
 
 @dataclass(frozen=True)
@@ -486,7 +488,7 @@ def pareto(points, keys):
     return front
 
 
-def design_continuous(document, constraints=Constraints(), *, include_map=True):
+def design_continuous(document, constraints=Constraints(), *, include_map=True, nonparaxial_checks=True):
     """Two fixed Ports (M3A-1 document, optional package) in; verified concepts out."""
     started = time.perf_counter()
     result = {'schema': 'P2-design-result-1', 'status': 'Uncomputed', 'input_snapshot': None,
@@ -577,7 +579,7 @@ def design_continuous(document, constraints=Constraints(), *, include_map=True):
                                                      'max_footprint_slope': closest.metrics['max_footprint_slope'],
                                                      'limit': MAX_FOOTPRINT_SLOPE}
         plan, front = select(ports, constraints, lam_n, pool, family, evaluator=evaluator)
-        if pool:  # P3: rank the feasible set by the non-paraxial scalar overlap as one more objective
+        if pool and nonparaxial_checks:  # P3: rank the feasible set by the non-paraxial scalar overlap as one more objective
             from . import nonparaxial
             ranked = nonparaxial.screen(ports, pool)
             result['search']['nonparaxial_screen'] = {
@@ -614,13 +616,19 @@ def design_continuous(document, constraints=Constraints(), *, include_map=True):
             remaining.remove(far)
             attempt(far, 'pareto_alternative')
         accepted = add_tolerance_roles(accepted)
-        if accepted:
+        if accepted and nonparaxial_checks:
             from . import nonparaxial
             for candidate in accepted:
                 try:
                     candidate['nonparaxial_check'] = nonparaxial.check_candidate(candidate, document)
                 except (DomainError, ValueError, ArithmeticError) as exc:
                     candidate['nonparaxial_check'] = {'status': 'Uncomputed', 'reason': str(exc)}
+                if CORRECT_SURFACES and candidate['nonparaxial_check'].get('status') == 'Computed':
+                    from . import freeform  # P4: coma-correcting third/fourth-order sag terms
+                    try:
+                        candidate['freeform'] = freeform.correct_candidate(candidate, document, constraints)
+                    except (DomainError, ValueError, ArithmeticError) as exc:
+                        candidate['freeform'] = {'status': 'Uncomputed', 'reason': str(exc)}
             relabel_nonparaxial(accepted)
         result['candidates'] = accepted
         result['search']['verification'] = ledger
@@ -710,17 +718,28 @@ def same_point(point, candidate):
             and list(point.branch) == p['branch'])
 
 
+def best_nonparaxial_value(candidate):
+    """Best verified non-paraxial overlap of a candidate: corrected surface if valid, else the quadric."""
+    values = []
+    check = candidate.get('nonparaxial_check') or {}
+    if check.get('status') == 'Computed':
+        values.append(check['normalized_mode_overlap'])
+    corrected = candidate.get('freeform') or {}
+    if corrected.get('status') == 'Computed' and not corrected.get('constraint'):
+        values.append(corrected['normalized_mode_overlap'])
+    return max(values) if values else None
+
+
 def relabel_nonparaxial(accepted):
     """The coarse screen picks a concept; the role goes to the best fully checked non-paraxial overlap."""
-    checked = [c for c in accepted if (c.get('nonparaxial_check') or {}).get('status') == 'Computed']
-    if not checked:
-        return
+    checked = [c for c in accepted if best_nonparaxial_value(c) is not None]
     for c in accepted:
         if 'best_nonparaxial' in c['roles']:
             c['roles'].remove('best_nonparaxial')
             if not c['roles']:
                 c['roles'].append('pareto_alternative')
-    max(checked, key=lambda c: c['nonparaxial_check']['normalized_mode_overlap'])['roles'].append('best_nonparaxial')
+    if checked:
+        max(checked, key=best_nonparaxial_value)['roles'].append('best_nonparaxial')
 
 
 def add_tolerance_roles(accepted):

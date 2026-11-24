@@ -89,13 +89,14 @@ class AberrationTest(unittest.TestCase):
 class IntegrationTest(unittest.TestCase):
     def test_every_candidate_is_checked_and_the_role_is_on_the_best(self):
         result = api.design(load('S2a-1550'))
-        values = [c['nonparaxial_check']['normalized_mode_overlap'] for c in result['candidates']]
+        from photonic_architecture_explorer.search import best_nonparaxial_value
+        values = [best_nonparaxial_value(c) for c in result['candidates']]  # P4: corrected surface counts if valid
         for c in result['candidates']:
             self.assertEqual(c['nonparaxial_check']['status'], 'Computed')
             self.assertLess(c['nonparaxial_check']['grid_change'], nonparaxial.CONVERGENCE_LIMIT)
         best = [c for c in result['candidates'] if 'best_nonparaxial' in c['roles']]
         self.assertEqual(len(best), 1)
-        self.assertEqual(best[0]['nonparaxial_check']['normalized_mode_overlap'], max(values))
+        self.assertEqual(best_nonparaxial_value(best[0]), max(values))
 
     def test_tensor_and_glass_candidates_are_checked(self):
         for name in ('S4-glass',):
@@ -106,10 +107,11 @@ class IntegrationTest(unittest.TestCase):
                 again = nonparaxial.check_candidate(raw, engine)
                 self.assertAlmostEqual(again['normalized_mode_overlap'], c['metrics']['nonparaxial_overlap'], places=12)
 
-    def test_beyond_guard_ports_get_a_study_not_candidates(self):
+    def test_beyond_guard_ports_get_a_study_and_only_lens_family_candidates(self):
         result = api.design(load('S3'))
-        self.assertEqual(result['status'], 'Fail')
-        self.assertEqual(result['candidates'], [])
+        self.assertEqual(result['status'], 'Computed')
+        self.assertEqual({c['family'] for c in result['candidates']}, {'lens_two_reflector'})  # no lens-less candidate
+        self.assertEqual(result['engine_report']['candidates'], [])
         study = result['nonparaxial_study']
         self.assertEqual(study['status'], 'Study')
         self.assertGreaterEqual(len(study['cases']), 1)

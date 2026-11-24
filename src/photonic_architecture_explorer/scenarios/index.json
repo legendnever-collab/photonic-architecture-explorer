@@ -131,11 +131,13 @@
       "file": "S3.json",
       "decision": "Which structure can relay a 3 µm SSC mode (needs P3/P4)",
       "expect": {
-        "status": "Fail",
+        "status": "Computed",
+        "min_candidates": 1,
+        "family": "lens_two_reflector",
         "reason_contains": "divergence",
         "target": {
           "status": "Computed",
-          "phase": "P3-P4"
+          "phase": "P4"
         }
       }
     },
