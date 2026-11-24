@@ -187,6 +187,7 @@ def fit_collimator(lens):
     return float(np.abs(residual(run.x)).max() * scale)
 
 
+LENS_ACCEPT_ETA = 0.95   # Lens Family acceptance: converged non-paraxial η, no constraint (user decision 2026-11-24)
 APLANATIC_TERMS = 4      # even aspheric terms per face (r⁴ … r¹⁰)
 APLANATIC_FAN = 2.6      # fitted ray fan in units of the Port 1/e² half-angle (|A|² ≈ 1e-6 at the edge)
 MAX_RAY_SINE = 0.85      # steepest ray a single aspheric singlet is asked to bend

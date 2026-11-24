@@ -13,7 +13,7 @@ Starts the packaged server, drives Chromium with Playwright and checks:
     turning the block off, and the shallow-guide region guidance
   * P4 coma correction: S1 corrected non-paraxial η ≥ 0.95, coefficient table and guidance
   * P3 non-paraxial check: η column and guidance on S1, beyond-guard study card on S3
-  * P4 Lens Family review candidates on S3 (card, detail, lens drawn in 2D and the unfolded view; status stays Fail)
+  * P4 Lens Family on S3: Computed candidates in the table, Lens card, detail, lens drawn in 2D and the unfolded view
   * P3 q-tensor: S4 (non-coplanar) gives verified candidates, the q-tensor note and guidance,
     beam ellipses in the scene and 2D mirror positions equal to the scene vertices (1 nm)
   * Design Document export round-trips
@@ -271,8 +271,8 @@ def main():
         status = design(page)
         text = page.inner_text('[data-result-status]')
         summary['S3_status'] = status
-        check(status == 'Fail' and '발산각' in text and page.locator('[data-guidance="port_divergence"]').count() >= 1,
-              f'S3 failure view: {status} {text[:80]}', failures)
+        check(status == 'Computed' and 'Lens Family' in text and page.locator('[data-guidance="port_divergence"]').count() >= 1,
+              f'S3 lens family view: {status} {text[:80]}', failures)
         page.screenshot(path=str(out / 'p1_S3.png'))
         check(page.locator('[data-guard="source"].fail').count() == 1, 'S3 source guard not shown as Fail', failures)
         check(page.locator('[data-card="nonparaxial-study"] [data-study]').count() >= 1
@@ -282,7 +282,10 @@ def main():
         check(rows.count() >= 1 and page.locator('[data-guidance="lens_review"]').count() == 1, 'S3 lens review card missing', failures)
         etas = [float(v) for v in page.eval_on_selector_all('[data-lens-eta]', 'els => els.map(e => e.dataset.lensEta)') if v]
         summary['S3_lens_review_eta'] = etas
-        check(status == 'Fail' and etas and max(etas) >= 0.95, f'S3 lens review η {etas} (status must stay Fail)', failures)
+        accepted = page.eval_on_selector_all('[data-lens-accepted]', 'els => els.map(e => e.dataset.lensAccepted)')
+        check(etas and min(e for e, a in zip(etas, accepted) if a == 'true') >= 0.95
+              and page.locator('tr[data-candidate]').count() == accepted.count('true'),
+              f'S3 lens family η {etas} accepted {accepted}', failures)
         if rows.count():
             rows.first.click()
             page.wait_for_timeout(400)
@@ -291,7 +294,7 @@ def main():
             page.wait_for_timeout(300)
             check(page.locator('[data-kind="lens"]').count() >= 2 and page.locator('[data-kind="fold-lens"]').count() == 1,
                   'S3 lens not drawn in 2D / unfolded view', failures)
-            page.screenshot(path=str(out / 'p4_S3_lens_review.png'))
+            page.screenshot(path=str(out / 'p4_S3_lens_family.png'))
             page.locator('[data-card="lens-review"]').screenshot(path=str(out / 'p4_S3_lens_card.png'))
         check(not errors, f'page errors: {errors}', failures)
         summary['page_errors'] = errors

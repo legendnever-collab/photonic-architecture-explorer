@@ -48,6 +48,7 @@ export const STATUS_LABEL: Record<string, string> = {
 };
 
 const REASONS: [RegExp, string][] = [
+  [/^Lens Family:/, 'Port 발산각이 근축 Guard를 넘어 Lens 없는 두 반사면은 실패했지만, Micro-lens로 Mode를 키운 Lens Family 배치가 비근축 검산을 통과했습니다'],
   [/beyond a single aspheric singlet \(limit ([0-9.]+)/, 'Port 발산각이 단일 비구면 Lens 한계를 넘음 (두 Lens 또는 고굴절률 Lens 필요)'],
   [/lens body inside a keep-out/, 'Lens 몸체가 Keep-out 여유 안에 들어감'],
   [/lens body outside the package envelope/, 'Lens 몸체가 Package Envelope 밖'],

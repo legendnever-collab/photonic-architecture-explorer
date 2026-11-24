@@ -3,6 +3,12 @@
 새 항목을 위에 추가한다. 항목당 10줄 이내: 새로 가능해진 설계 판단, 주요 기술 선택, 남은 한계.
 2026-11-24 이전의 Milestone 기록(M1~M7-R28)은 [history/](history/)에 있다.
 
+## 2026-11-24 · P4 2단계 채택 정책: Lens Family를 Computed로 (`phase/p4-coma-correction`)
+
+- **사용자 결정**: Lens Family 후보를 Computed로 올린다. 채택 = 비근축 검산 수렴 ∧ η ≥ 0.95(P4 Gate와 같음) ∧ Lens 몸체가 Keep-out·Envelope 안.
+- **범위**: Lens 없는 두 반사면이 발산각 Guard로 실패했을 때만 돈다. 결과 Computed, Family `lens_two_reflector`, 사유 `Lens Family: …`. S3 → Computed(3개).
+- **유지**: Frozen Guard(0.1 rad 등)는 그대로다. Lens 뒤 등가 Port가 Guard 안에 있고, Guard 밖인 Lens 구간은 비근축 검산이 판정한다.
+
 ## 2026-11-24 · P4 2단계: Lens Family 검토 후보 (`phase/p4-coma-correction`)
 
 - **가능해진 판단**: S3처럼 발산각 Guard를 넘는 Port에서 두 면 비구면 Micro-lens + 두 반사면 배치와 그 비근축 η를 3D/2D로 본다.

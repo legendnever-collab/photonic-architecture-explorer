@@ -144,7 +144,8 @@ export interface Candidate {
   roles: string[];
   role_labels: string[];
   family: 'exact' | 'near_match' | 'lens_two_reflector';
-  review?: boolean;          // P4 Lens Family review candidate: never counted as Computed
+  review?: boolean;          // P4 Lens Family candidate not accepted (shown in the Lens card only)
+  accepted?: boolean;        // P4 Lens Family candidate accepted as Computed (non-paraxial η, constraints)
   review_status?: string;
   theta_out_rad?: number;
   lens_checks?: LensCheck[];
@@ -224,7 +225,8 @@ export interface Result {
   crossing?: Crossing | null;
   guidance?: Guidance[];
   nonparaxial_study?: NonparaxialStudy | null;
-  lens_review?: { status: string; candidates: Candidate[]; fail_reasons?: string[]; meaning?: string; counted_as_computed?: boolean } | null;
+  lens_review?: { status: string; candidates: Candidate[]; fail_reasons?: string[]; meaning?: string;
+    accept_rule?: { min_nonparaxial_overlap: number } } | null;
   search?: {
     status?: string; reason?: string; grid_points?: number; exact_feasible?: number; near_match_feasible?: number;
     screening_counts?: Record<string, number>; elapsed_seconds?: number; policy?: string; map?: SearchMap | null;

@@ -10,6 +10,7 @@ from dataclasses import replace
 
 import numpy as np
 
+from . import lens as lens_module
 from .freeform import surface_violation
 
 from .design import review_snapshot
@@ -210,20 +211,19 @@ def design_guidance(report, ports, ambient_index, medium='ambient', lens_review=
         out.append({'kind': 'nonparaxial_study', 'phase': 'P3', 'level': 'info', 'values': study.get('summary'),
                     'message': study.get('message', '')})
     if lens_review:
-        values = [c['metrics']['nonparaxial_overlap'] for c in lens_review['candidates']
-                  if c['review_status'] == 'Computed' and not c['lens_constraint']]
+        values = [c['metrics']['nonparaxial_overlap'] for c in lens_review['candidates'] if c.get('accepted')]
         out.append({'kind': 'lens_review', 'phase': 'P4', 'level': 'info',
                     'values': {'count': len(values), 'eta_min': min(values) if values else None,
                                'eta_max': max(values) if values else None},
-                    'message': (f'Micro-lens + 두 반사면 검토 후보 {len(values)}개: 비근축 η {min(values):.3f}~{max(values):.3f}. '
-                                'Lens가 Port Mode를 Guard 안으로 키운 뒤 Relay를 설계하고, Lens·반사면 전체를 비근축 η로만 확인했습니다. '
-                                'Computed 후보로 세지 않으며 결과 상태는 Fail 그대로입니다. 아래 "Lens Family 검토 후보"에서 3D/2D로 볼 수 있습니다.'
+                    'message': (f'Micro-lens + 두 반사면 Family 후보 {len(values)}개를 Computed로 채택했습니다: 비근축 η {min(values):.3f}~{max(values):.3f}. '
+                                'Lens가 Port Mode를 Guard 안으로 키운 뒤 Relay를 설계하고, Lens·반사면 전체의 비근축 η(수렴, ≥ '
+                                f'{lens_module.LENS_ACCEPT_ETA})와 Lens 몸체 제약으로 채택합니다. 표의 η는 등가 Port 사이 근축 값이므로 비근축 η 열을 보세요.'
                                 if values else 'Micro-lens + 두 반사면 Family도 비근축 확인을 통과한 후보가 없습니다. '
                                 + ' '.join(lens_reason_label(r) for r in sorted(set(lens_review.get('fail_reasons', []))))[:400])})
     if report.get('status') == 'Fail' and search.get('status') == 'Completed':
         top = sorted(counts.items(), key=lambda kv: -kv[1])[:3]
         out.append({'kind': 'no_candidate', 'phase': 'P4',
-                    'message': '두 반사면 Family 안에서 Guard와 제약을 모두 만족하는 배치가 없습니다(물리적 불가능의 증명은 아님). '
+                    'message': 'Lens 없는 두 반사면 Family 안에서 Guard와 제약을 모두 만족하는 배치가 없습니다(물리적 불가능의 증명은 아님). '
                                '주요 사유: ' + ', '.join(f'{k} ({v})' for k, v in top)})
     return out
 
@@ -239,7 +239,6 @@ def lens_reason_label(reason):
 
 def lens_family_review(engine_input, constraints, problem, ports):
     """P4 Lens Family (Micro-lens + two reflectors) as review candidates: never counted as Computed."""
-    from . import lens as lens_module
     if problem['block'] is not None:
         return {'status': 'Uncomputed', 'candidates': [], 'runs': [],
                 'meaning': 'Lens Family는 아직 공기(주변 매질) Relay만 다룹니다. Glass Block 문제에는 적용하지 않았습니다.'}
@@ -278,11 +277,22 @@ def lens_family_review(engine_input, constraints, problem, ports):
                                       'corrected_nonparaxial_overlap': None,
                                       'paraxial_equivalent_overlap': record['metrics']['normalized_mode_overlap']})
             candidates.append(record)
-    order = sorted(candidates, key=lambda c: -(c['metrics']['nonparaxial_overlap'] or 0) if c['review_status'] == 'Computed' else 1)
+    def accepted(c):
+        return (c['review_status'] == 'Computed' and not c['lens_constraint']
+                and (c['metrics']['nonparaxial_overlap'] or 0) >= lens_module.LENS_ACCEPT_ETA)
+    order = sorted(candidates, key=lambda c: (not accepted(c), -(c['metrics']['nonparaxial_overlap'] or 0)))
     for rank, c in enumerate(order, start=1):
         c['rank'] = rank
-    return {'status': 'Review', 'sides': family['sides'], 'runs': runs, 'candidates': order, 'fail_reasons': reasons,
-            'counted_as_computed': False, 'meaning': family['meaning']}
+        c['accepted'] = accepted(c)
+        c['review'] = not c['accepted']
+        if c['accepted']:
+            c['roles'] = ['lens_best'] if rank == 1 else ['lens_alternative']
+            c['role_labels'] = ['Lens Family · 비근축 η 최대'] if rank == 1 else ['Lens Family 대안']
+    return {'status': 'Computed' if any(c['accepted'] for c in order) else 'Review', 'sides': family['sides'],
+            'runs': runs, 'candidates': order, 'fail_reasons': reasons,
+            'accept_rule': {'nonparaxial_status': 'Computed', 'min_nonparaxial_overlap': lens_module.LENS_ACCEPT_ETA,
+                            'lens_constraint': None},
+            'meaning': family['meaning']}
 
 
 def _map(search):
@@ -319,23 +329,35 @@ def design(document):
         lens_review = lens_family_review(engine_input, constraints, problem, ports)
     if report['candidates'] and report.get('model') != 'qtensor':  # sensitivity/placement studies are separable-engine tools
         report = review_snapshot(report)
+    status, reason = report['status'], report.get('reason')
+    selected_id = report.get('selected_candidate_id')
+    family = report['candidates'][0].get('family') if report['candidates'] else None
+    candidates = [_candidate(i + 1, c, problem, ambient_ports) for i, c in enumerate(report['candidates'])]
+    accepted = [c for c in (lens_review or {}).get('candidates', []) if c.get('accepted')]
+    if accepted:  # P4 Lens Family: accepted by the non-paraxial check only (user decision 2026-11-24)
+        status, family, candidates, selected_id = 'Computed', 'lens_two_reflector', accepted, accepted[0]['id']
+        if report.get('nonparaxial_study'):
+            study = report['nonparaxial_study']
+            study['message'] = study.get('message', '').replace('후보는 내지 않았습니다', 'Lens 없는 두 반사면 후보는 내지 않았습니다')
+        reason = (f'Lens Family: {reason}; a micro-lens expands the Port mode inside the guard and '
+                  f'{len(accepted)} candidates pass the non-paraxial check (η ≥ {lens_module.LENS_ACCEPT_ETA})')
     search = report.get('search', {})
     summary = {k: search.get(k) for k in ('status', 'reason', 'grid_points', 'exact_feasible', 'near_match_feasible',
                                           'screening_counts', 'closest_exact', 'elapsed_seconds', 'verification',
                                           'nonparaxial_screen')}
     return {
         'schema': RESULT_SCHEMA,
-        'status': report['status'],
-        'reason': report.get('reason'),
+        'status': status,
+        'reason': reason,
         'document_sha256': document_sha256(document),
         'engine_input_sha256': report.get('input_sha256'),
-        'selected_candidate_id': report.get('selected_candidate_id'),
-        'family': report['candidates'][0].get('family') if report['candidates'] else None,
+        'selected_candidate_id': selected_id,
+        'family': family,
         'ports': ports,
         'constraints': report.get('constraints'),
         'relay_medium': problem['medium'],
         'crossing': crossing_record(problem),
-        'candidates': [_candidate(i + 1, c, problem, ambient_ports) for i, c in enumerate(report['candidates'])],
+        'candidates': candidates,
         'search': {**summary, 'policy': report.get('search_policy', {}).get('id'), 'map': _map(search)},
         'guidance': design_guidance(report, ports, document['ambient_index'], problem['medium'], lens_review),
         'nonparaxial_study': report.get('nonparaxial_study'),

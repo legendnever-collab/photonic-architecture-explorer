@@ -145,7 +145,9 @@ Newton 반복, 굴절은 벡터 Snell 법칙(전반사 광선 제거), 광경로
 5. 한계: 단일 비구면 Lens가 받을 수 있는 Port 발산각은 sin(2.6 θ) ≤ 0.85, 즉 θ ≤ 0.39 rad. 넘으면 Fail(S5 Laser 0.556 rad).
    Lens 몸체의 Keep-out·Envelope 검사는 하지만, Lens와 다른 구간 Beam의 가림, Lens 공차, 코팅, 분산은 계산하지 않는다.
 
-결과는 `lens_review`로 따로 낸다. 비근축 검산으로만 채택되는 Family라서 Computed 후보로 세지 않으며 시나리오 상태는 Fail 그대로다.
+채택(사용자 결정, 2026-11-24): 비근축 검산이 수렴하고 η ≥ 0.95이며 Lens 몸체가 Keep-out·Envelope 안이면 Computed 후보가 된다.
+Lens 없는 두 반사면이 Guard에서 실패했을 때만 돌고, 이 경우 결과는 Computed, Family `lens_two_reflector`, 사유는 `Lens Family:`로 시작한다.
+근축 Guard가 아니라 비근축 검산으로 채택하는 유일한 Family다. 모든 Lens 후보(미채택 포함)는 `lens_review`에도 남는다.
 
 ## Mode Overlap
 

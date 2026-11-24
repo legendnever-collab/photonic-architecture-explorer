@@ -116,19 +116,26 @@ class AplanaticLensTest(unittest.TestCase):
         self.assertEqual(len(scene['lenses'][0]['outline_mm']), 4)
 
 
-class LensReviewTest(unittest.TestCase):
-    def test_s3_lens_review_is_not_counted_as_computed(self):
+class LensFamilyResultTest(unittest.TestCase):
+    def test_s3_lens_family_candidates_are_computed_by_the_nonparaxial_rule(self):
         from photonic_architecture_explorer import api
         doc = json.loads((SCENARIOS / 'S3.json').read_text(encoding='utf-8'))
         result = api.design(doc)
-        self.assertEqual(result['status'], 'Fail')          # the scenario stays Fail
-        self.assertEqual(result['candidates'], [])
+        self.assertEqual(result['status'], 'Computed')
+        self.assertEqual(result['family'], 'lens_two_reflector')
+        self.assertTrue(result['reason'].startswith('Lens Family:'))
         review = result['lens_review']
-        self.assertFalse(review['counted_as_computed'])
-        good = [c for c in review['candidates'] if c['review_status'] == 'Computed' and not c['lens_constraint']]
-        self.assertTrue(good)
-        self.assertGreaterEqual(max(c['metrics']['nonparaxial_overlap'] for c in good), 0.95)
-        self.assertTrue(all(c['review'] and c['scene']['lenses'] for c in review['candidates']))
+        accepted = [c for c in review['candidates'] if c['accepted']]
+        self.assertEqual([c['id'] for c in result['candidates']], [c['id'] for c in accepted])
+        self.assertEqual(result['selected_candidate_id'], accepted[0]['id'])
+        for c in review['candidates']:  # the rule: converged, η ≥ 0.95, lens body inside keep-outs and envelope
+            rule = (c['review_status'] == 'Computed' and not c['lens_constraint']
+                    and c['metrics']['nonparaxial_overlap'] >= L.LENS_ACCEPT_ETA)
+            self.assertEqual(c['accepted'], rule)
+            self.assertNotEqual(c['accepted'], c['review'])
+            self.assertTrue(c['scene']['lenses'])
+        self.assertGreaterEqual(min(c['metrics']['nonparaxial_overlap'] for c in accepted), 0.95)
+        self.assertEqual(accepted[0]['role_labels'], ['Lens Family · 비근축 η 최대'])
         json.dumps(result)
 
 

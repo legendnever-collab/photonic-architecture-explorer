@@ -152,15 +152,15 @@ PV 0.01~0.9 µm, 기울기 변화 0.1~10 mrad로 작다(S1 0.22 µm·1.4 mrad, S
 관찰: 공기 중 배치는 3·4차 Sag로 Coma가 거의 완전히 보정된다. Glass 안의 가파른 입사(M2 50~69°)에서는 방향 대응의 비선형이
 커서 보정량이 크고(50~130 µm) 수렴 판정이 1e-4를 넘는다(η 불확도 약 1e-3). 계산 시간은 공기 중 2~8 s, Glass 배치 10~20 s다.
 
-## P4(2단계, Lens Family 검토 후보)에서 추가한 검사
+## P4(2단계, Lens Family)에서 추가한 검사
 
 | 대상 | 검사 |
 |---|---|
 | Aplanatic Lens | S3 SSC(θ 0.278 rad), θ' 0.005: 출사 방향 잔차 < 2e-4 rad, 사인 조건 오차 < 50 nm(1/e² 각의 1.5배까지), EFL 유지(1e-9 m), 맞춘 범위에서 높이 대응 단조 |
 | 한계 | S5 Laser(0.556 rad)는 단일 비구면 Lens 범위(0.39 rad) 밖이라 DomainError |
 | Scene | Port → Lens → Relay 경로 연속(1e-12 mm), 총 길이 = 구간 합, Beam 표본 거리 단조, Lens 외곽선 4개 |
-| API | S3 결과 상태 Fail 유지, Computed 후보 0개, `lens_review` 후보 비근축 η ≥ 0.95, `counted_as_computed` false |
-| 화면 | S3 Lens 검토 카드, 상세, 2D Lens 외곽선과 Fold 화면 Lens 구간 |
+| API | S3 결과 Computed(Family `lens_two_reflector`), 채택 = 수렴 ∧ η ≥ 0.95 ∧ Lens 제약 통과와 정확히 일치, Lens 없는 엔진 후보 0개 |
+| 화면 | S3 후보 표(채택 수와 일치), Lens 카드, 상세, 2D Lens 외곽선과 Fold 화면 Lens 구간 |
 
 | 시나리오 | Lens(f / Clear Ø) | 보정 전 η(Aplanatic Lens + 이차곡면) | 보정 후 비근축 η | 비고 |
 |---|---|---|---|---|

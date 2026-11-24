@@ -92,6 +92,7 @@ details ul { margin: 6px 0 0; padding-left: 18px; color: var(--muted); font-size
 .family { font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 8px; white-space: nowrap; }
 .family.exact { background: #eefbf1; color: var(--pass); }
 .family.near_match { background: #ddf4ff; color: #0969da; }
+.family.lens_two_reflector { background: #e6f4ea; color: #1a7f37; }
 .guidance { margin: 6px 0 0; padding-left: 18px; font-size: 12px; }
 .guidance li { margin-bottom: 4px; }
 .guidance .phase { font-weight: 700; color: var(--accent); }

@@ -9,7 +9,7 @@
 | P1 3D/2D 시각 Workspace | **완료** (PR #62, P0와 함께 병합) | 3D Viewer(Port·Mode·반사면 Sag·Beam 튜브·Envelope), Gizmo↔표 동기화, XY/XZ/YZ/Fold 도면과 치수, Preset, 후보 오버레이, SVG/JSON Export, Windows ZIP(Chrome/Edge) | S1 전 과정을 새 화면에서 완료. S2a·S2b는 입력·Preview·실패 원인 표시까지. 도면 좌표가 엔진 값과 1 nm 이내 일치. 기존 Workspace와 R5~R9·R20 의존 자료 보관 |
 | P2 후보 생성 v2 | **완료** (PR #63) | 제약 기반 연속 탐색(Envelope·Keep-out·입사각·최소 곡률반경), Pareto 순위, 실행 가능한 Fail 안내 | S2a·S2b(공기 중 Edge 배치)에서 서로 다른 절충의 후보 3개 이상. S3는 수치 안내. 기본 Design 5초 이내 |
 | P3 물리 Domain 확장 | **완료** (PR #64, v0.3.0) | 균질 매질·평면 굴절 계면(Glass 상면, Glass 내부 반사면, 매립 WG 깊이), 3D q-tensor(비동일평면·축 회전), 비근축 Scalar 검산(모든 후보 + Guard 밖 연구) | Gate **통과**: S2a·S2b Glass 배치와 Edge 비교, S4 후보 생성(Ray-transfer 검산), S3 비근축 검산. 결과: 국소 이차곡면 반사면은 같은 방향으로 꺾는 배치에서 Coma가 커서 근축 η = 1이어도 비근축 η가 0.3~0.6까지 떨어짐([VALIDATION](VALIDATION.md)) |
-| P4 Architecture Family | **진행 중** — 1단계(Coma 보정 곡면) 완료, 2단계(Micro-lens) 검토 후보로 화면 연결 | ① Coma 보정 곡면(3·4차 Sag) ② Lens–Mirror, 단일·이중 Lens, Cylindrical Lens ③ Family 자동 선택 | ① **통과**: S1 보정 비근축 η 0.9999~1.000, S4 0.994~0.999. ② S3: 두 면 비구면(Aplanatic) Lens + 보정 반사면 비근축 η 0.984~0.997(검토 후보, Computed 아님). S5는 단일 Lens 한계(0.39 rad) 밖. 다음: S5용 두 Lens/고굴절률 Lens, Family 간 비교·자동 선택 |
+| P4 Architecture Family | **진행 중** — 1단계(Coma 보정 곡면), 2단계(Micro-lens, Computed 채택) 병합 | ① Coma 보정 곡면(3·4차 Sag) ② Lens–Mirror, 단일·이중 Lens, Cylindrical Lens ③ Family 자동 선택 | ① **통과**: S1 보정 비근축 η 0.9999~1.000, S4 0.994~0.999. ② **통과**: S3 두 면 비구면(Aplanatic) Lens + 보정 반사면 비근축 η 0.984~0.997, Computed. S5는 단일 Lens 한계(0.39 rad) 밖. 다음: S5용 두 Lens/고굴절률 Lens, Family 간 비교·자동 선택 |
 | P5 특허·설계 산출물 | 예정 | 부호 붙은 특허 Figure, 치수 도면, 후보 보고서, glTF/STL(STEP은 요청 시) | 시나리오별 Figure 세트 일괄 생성 |
 | P6 Field Import와 배열 | 미정 | FDTD/측정 Sampled Field 입력, 다채널(S6) | 실제 수요 확인 후 범위 확정 |
 
@@ -25,7 +25,7 @@
 | S2a-1550-glass | 수직 SMF → Fused silica 2.0 mm → 매립 LDW 0.5 mm | Exact 4개(3.53~4.60 mm), η 1 / 0.89~0.95 → 0.97~0.98, 정렬 민감도 6.8~8.9 dB | — |
 | S2b-1550-glass | 수직 SMF → D 263 1.1 mm → 얕은 IOX 0.02 mm | Fail: 반사면이 상면을 넘음(안내 표시) | Lens·단일 반사면 Family(P4) |
 | S2b-1550-glass-deep | 같은 IOX를 0.3 mm 매립(가정), 2.0 mm | Exact 3개(3.31~3.90 mm), η 1 / 0.79~0.85 → 0.94~0.95 | — |
-| S3 | SiPh SSC 3 µm → SMF | Fail: 발산각. Lens Family 검토 후보 비근축 η 0.984~0.997(Computed 아님) | Lens Family 채택 여부 결정(사용자) |
+| S3 | SiPh SSC 3 µm → SMF | Computed: Lens + 두 반사면, 비근축 η 0.984~0.997 | Lens 공차, Lens–Beam 가림 |
 | S4 | PIC Edge → 측면으로 비켜 선 수직 Fiber | q-tensor Near-match 4개, η 0.995~0.9996 / 0.47~0.54 → **0.994~0.999** | — |
 | S4-glass | 수직 SMF → Glass → 옆으로 1 mm 비켜 선 매립 LDW(평면 밖) | q-tensor Exact 4개, η 1 / 0.91~0.94 → 0.987~0.992 | — |
 | S5 | Laser 1.5 × 3.5 µm → SSC 3 µm | Fail: 발산각. Source 0.556 rad는 단일 비구면 Lens 한계 밖 | 두 Lens 또는 고굴절률 Lens(P4) |

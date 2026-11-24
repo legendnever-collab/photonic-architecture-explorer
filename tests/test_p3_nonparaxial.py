@@ -107,10 +107,11 @@ class IntegrationTest(unittest.TestCase):
                 again = nonparaxial.check_candidate(raw, engine)
                 self.assertAlmostEqual(again['normalized_mode_overlap'], c['metrics']['nonparaxial_overlap'], places=12)
 
-    def test_beyond_guard_ports_get_a_study_not_candidates(self):
+    def test_beyond_guard_ports_get_a_study_and_only_lens_family_candidates(self):
         result = api.design(load('S3'))
-        self.assertEqual(result['status'], 'Fail')
-        self.assertEqual(result['candidates'], [])
+        self.assertEqual(result['status'], 'Computed')
+        self.assertEqual({c['family'] for c in result['candidates']}, {'lens_two_reflector'})  # no lens-less candidate
+        self.assertEqual(result['engine_report']['candidates'], [])
         study = result['nonparaxial_study']
         self.assertEqual(study['status'], 'Study')
         self.assertGreaterEqual(len(study['cases']), 1)
