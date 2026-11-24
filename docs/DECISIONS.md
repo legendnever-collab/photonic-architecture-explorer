@@ -3,6 +3,13 @@
 새 항목을 위에 추가한다. 항목당 10줄 이내: 새로 가능해진 설계 판단, 주요 기술 선택, 남은 한계.
 2026-11-24 이전의 Milestone 기록(M1~M7-R28)은 [history/](history/)에 있다.
 
+## 2026-11-25 · P4 Gate 통과, P4 종료 (PR #66 병합)
+
+- **수용 기준**(재설계 계획): S5 통과, 같은 입력에서 Family별 최선 후보 비교표. 둘 다 충족(S5 Computed 0.987~0.988, `families[]` 비교표).
+- **시나리오**: 12개 중 11개 Computed, S2b-1550-glass(얕은 IOX, Glass)만 Fail. 전 시나리오 기대값 일치(`build_scenarios.py`).
+- **넘긴 항목**: Cylindrical Lens(S5가 회전대칭 Lens + 토로이드 반사면으로 통과해 필요성 낮음), Glass 안 Lens Family,
+  Active alignment·동시 오차 공차. 다음 Phase 순서는 사용자 피드백으로 정한다(P5 특허·설계 산출물 예정).
+
 ## 2026-11-25 · P4 4단계: Lens 정렬 연구, Family 비교·자동 선택 (`phase/p4-family-selection`)
 
 - **가능해진 판단**: Lens 후보의 편심·축 방향·기울기 손실과 1 dB 허용치(S3 0.7 µm, S5 L1 0.38 µm), 두 Family의 η·정렬 공차·소자 수 비교.
