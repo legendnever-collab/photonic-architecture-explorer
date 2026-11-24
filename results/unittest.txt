@@ -128,6 +128,26 @@ test_coddington_factors_match_an_exact_ray_trace (test_p3_media.InterfaceTest.te
 test_cross_source_and_cross_target_are_reverse_paths (test_p3_media.InterfaceTest.test_cross_source_and_cross_target_are_reverse_paths) ... ok
 test_field_is_continuous_across_a_normal_surface (test_p3_media.InterfaceTest.test_field_is_continuous_across_a_normal_surface) ... ok
 test_refusals (test_p3_media.InterfaceTest.test_refusals) ... ok
+test_coma_cancels_in_a_z_fold_and_adds_in_a_u_turn (test_p3_nonparaxial.AberrationTest.test_coma_cancels_in_a_z_fold_and_adds_in_a_u_turn) ... ok
+test_low_divergence_limit_recovers_the_paraxial_result (test_p3_nonparaxial.FreeSpaceTest.test_low_divergence_limit_recovers_the_paraxial_result) ... ok
+test_non_paraxial_error_grows_with_divergence (test_p3_nonparaxial.FreeSpaceTest.test_non_paraxial_error_grows_with_divergence) ... ok
+test_rays_through_flat_reflectors_equal_the_direct_angular_spectrum (test_p3_nonparaxial.FreeSpaceTest.test_rays_through_flat_reflectors_equal_the_direct_angular_spectrum) ... ok
+test_beyond_guard_ports_get_a_study_not_candidates (test_p3_nonparaxial.IntegrationTest.test_beyond_guard_ports_get_a_study_not_candidates) ... ok
+test_every_candidate_is_checked_and_the_role_is_on_the_best (test_p3_nonparaxial.IntegrationTest.test_every_candidate_is_checked_and_the_role_is_on_the_best) ... ok
+test_tensor_and_glass_candidates_are_checked (test_p3_nonparaxial.IntegrationTest.test_tensor_and_glass_candidates_are_checked) ... ok
+test_overlap_matches_engine_for_separable_beams (test_p3_qtensor.AlgebraTest.test_overlap_matches_engine_for_separable_beams) ... ok
+test_overlap_of_a_rotated_astigmatic_beam_by_quadrature (test_p3_qtensor.AlgebraTest.test_overlap_of_a_rotated_astigmatic_beam_by_quadrature)
+Closed-form tensor overlap vs direct 2D integration of the two fields. ... ok
+test_width_matching_hits_the_required_width (test_p3_qtensor.AlgebraTest.test_width_matching_hits_the_required_width) ... ok
+test_rolled_target_axes_are_solved_by_the_tensor_model (test_p3_qtensor.CoplanarReductionTest.test_rolled_target_axes_are_solved_by_the_tensor_model)
+A Target whose axes are rolled 180° is the same physical mode: same exact solutions. ... ok
+test_tensor_branches_equal_the_separable_branches (test_p3_qtensor.CoplanarReductionTest.test_tensor_branches_equal_the_separable_branches) ... ok
+test_s4_now_has_verified_candidates (test_p3_qtensor.DesignTest.test_s4_now_has_verified_candidates) ... ok
+test_scene_closes_and_carries_beam_ellipses (test_p3_qtensor.DesignTest.test_scene_closes_and_carries_beam_ellipses) ... ok
+test_exact_tensors_close_on_the_target_mode (test_p3_qtensor.NonCoplanarTest.test_exact_tensors_close_on_the_target_mode) ... ok
+test_ray_transfer_matrix_reproduces_the_tensor (test_p3_qtensor.NonCoplanarTest.test_ray_transfer_matrix_reproduces_the_tensor)
+Exact rays through the quadric patches (independent of the q algebra) give the same arrival. ... ok
+test_rigid_rotation_of_the_whole_problem_changes_nothing (test_p3_qtensor.NonCoplanarTest.test_rigid_rotation_of_the_whole_problem_changes_nothing) ... ok
 test_all_80_perturbations_match_independent_quadratic_and_newton_reference (test_placement.ReflectorPlacementTests.test_all_80_perturbations_match_independent_quadratic_and_newton_reference) ... ok
 test_failed_traces_are_classified_and_withhold_target_errors (test_placement.ReflectorPlacementTests.test_failed_traces_are_classified_and_withhold_target_errors) ... ok
 test_flat_second_mirror_has_signed_double_angle_response (test_placement.ReflectorPlacementTests.test_flat_second_mirror_has_signed_double_angle_response) ... ok
@@ -139,6 +159,6 @@ test_matched_flat_gaussian_closed_form (test_sensitivity.CandidateSensitivityTes
 test_snapshot_preserves_ports_and_ranking (test_sensitivity.CandidateSensitivityTests.test_snapshot_preserves_ports_and_ranking) ... ok
 
 ----------------------------------------------------------------------
-Ran 137 tests in 40.306s
+Ran 154 tests in 105.588s
 
 OK
