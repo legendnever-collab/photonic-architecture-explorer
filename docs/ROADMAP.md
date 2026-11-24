@@ -10,6 +10,7 @@
 | P2 후보 생성 v2 | **완료** (PR #63) | 제약 기반 연속 탐색(Envelope·Keep-out·입사각·최소 곡률반경), Pareto 순위, 실행 가능한 Fail 안내 | S2a·S2b(공기 중 Edge 배치)에서 서로 다른 절충의 후보 3개 이상. S3는 수치 안내. 기본 Design 5초 이내 |
 | P3 물리 Domain 확장 | **완료** (PR #64, v0.3.0) | 균질 매질·평면 굴절 계면(Glass 상면, Glass 내부 반사면, 매립 WG 깊이), 3D q-tensor(비동일평면·축 회전), 비근축 Scalar 검산(모든 후보 + Guard 밖 연구) | Gate **통과**: S2a·S2b Glass 배치와 Edge 비교, S4 후보 생성(Ray-transfer 검산), S3 비근축 검산. 결과: 국소 이차곡면 반사면은 같은 방향으로 꺾는 배치에서 Coma가 커서 근축 η = 1이어도 비근축 η가 0.3~0.6까지 떨어짐([VALIDATION](VALIDATION.md)) |
 | P4 Architecture Family | **완료** (PR #65, #66) | ① Coma 보정 곡면(3·4차 Sag) ② Micro-lens + 두 반사면(단일·양쪽 Lens, Aplanatic 두 면 비구면, Silica/Silicon) ③ Lens 정렬 연구 ④ Family 비교·자동 선택 | Gate **통과**(수용 기준: S5 통과, 같은 입력에서 Family별 최선 후보 비교표). S5 Silicon + Silica Lens 비근축 η 0.987~0.988 Computed. S3 0.986~0.998. S1·S4 보정 곡면 0.9999~1.000·0.994~0.999. `families.lens_two_reflector = compare`로 S1·S2a에서 두 Family 비교표, 선택 규칙(η, 0.01 이내면 소자 수). 미착수로 넘김: Cylindrical Lens(S5가 회전대칭 Lens로 통과), Glass 안 Lens(S2b-1550-glass 얕은 IOX는 Fail 유지) |
+| P4b 넘긴 항목 | **완료** (PR #67, v0.4.0) | ① 동시 오차·Active alignment(주광선 Jacobian + 정확한 Gaussian Overlap, Monte Carlo) ② Glass 배치 What-if(`/api/whatif`) ③ Cylindrical Lens는 하지 않음(Port 앞 Lens 편심 허용치가 Lens 형태와 무관하게 ≈ 0.48 w₀라 이득 없음) | S1·S3·S5 Passive 1 dB 이내 6~17 % → 반사면 하나 Active로 0.01~0.44 dB. 비근축과 15 % 이내. S2b-1550-glass는 매립 깊이 0.3 mm 필요 |
 | P5 특허·설계 산출물 | 예정 | 부호 붙은 특허 Figure, 치수 도면, 후보 보고서, glTF/STL(STEP은 요청 시) | 시나리오별 Figure 세트 일괄 생성 |
 | P6 Field Import와 배열 | 미정 | FDTD/측정 Sampled Field 입력, 다채널(S6) | 실제 수요 확인 후 범위 확정 |
 
@@ -23,7 +24,7 @@
 | S2b-1550 | SMF-28 → IOX(Brusberg 2012, 18.8 × 12.0 µm) | Near-match 3개, η 0.981~0.990 / 0.958~0.986 → 0.980~0.990 | — |
 | S2a-1310-glass | 수직 SMF → Fused silica 1.1 mm → 매립 LDW 0.5 mm | Near-match 1개, η 0.983 / 0.916 → 0.956 | — |
 | S2a-1550-glass | 수직 SMF → Fused silica 2.0 mm → 매립 LDW 0.5 mm | Exact 4개(3.53~4.60 mm), η 1 / 0.89~0.95 → 0.97~0.98, 정렬 민감도 6.8~8.9 dB | — |
-| S2b-1550-glass | 수직 SMF → D 263 1.1 mm → 얕은 IOX 0.02 mm | Fail: 반사면이 상면을 넘음(안내 표시). Lens Family는 Glass 문제에 아직 적용 안 함 | Glass 안 Lens·단일 반사면 Family(범위 결정 필요) |
+| S2b-1550-glass | 수직 SMF → D 263 1.1 mm → 얕은 IOX 0.02 mm | Fail: 마지막 반사면이 도파로 86 µm 안에 있어야 해 입사각 70° 초과. Lens도 못 풂(Fiber–상면 0.1 mm). What-if: 매립 깊이 0.3 mm면 후보, 두께 3.3 mm·Fiber 높이 1.6 mm까지는 안 됨 | 실제 매립 깊이 확인 |
 | S2b-1550-glass-deep | 같은 IOX를 0.3 mm 매립(가정), 2.0 mm | Exact 3개(3.31~3.90 mm), η 1 / 0.79~0.85 → 0.94~0.95 | — |
 | S3 | SiPh SSC 3 µm → SMF | Computed: Lens + 두 반사면, 비근축 η 0.986~0.998, Lens 1 dB 편심 0.7 µm | Lens 제작 공차·Active alignment 모델 |
 | S4 | PIC Edge → 측면으로 비켜 선 수직 Fiber | q-tensor Near-match 4개, η 0.995~0.9996 / 0.47~0.54 → **0.995~0.999** | — |

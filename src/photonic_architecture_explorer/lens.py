@@ -385,7 +385,8 @@ def fit_system(ports, lenses, mirror_tuples, footprints, refit_lenses=False):
     prefix, middle, suffix = surfaces(poly)
     check = nonparaxial.check(*args[:8], [*prefix, *middle, *suffix], *args[8:])
     pose = pose_study(args, lenses, middle) if check['status'] != 'Invalid' else None
-    return {'check': check, 'poly': poly, 'history': history, 'lens_checks': lens_checks, 'pose': pose}
+    return {'check': check, 'poly': poly, 'history': history, 'lens_checks': lens_checks, 'pose': pose,
+            'mirror_elements': middle, 'args': args}
 
 
 LENS_DECENTER_M = 1e-6   # lens placement study: ±1 µm across and along the axis, ±1 mrad tilt (one at a time)
@@ -534,7 +535,7 @@ def lens_family(engine_document, constraints, guard=0.1, options=LENS_EXPANSION_
                 continue
             rows.append({'id': candidate['id'], 'equivalent_candidate': candidate, 'status': fit['check']['status'],
                          'lens_checks': fit['lens_checks'], 'lens_objects': fitted, 'equivalent_document': equivalent,
-                         'pose': fit['pose'],
+                         'pose': fit['pose'], 'mirror_elements': fit['mirror_elements'], 'args': fit['args'],
                          'nonparaxial_check': fit['check'], 'fit_history': fit['history'],
                          'lenses': [lens_record(l, getattr(ports, l.side)) for l in fitted],
                          'reflector_terms': [[{'u_power': m, 'v_power': n, 'coefficient_si': c} for m, n, c in p] for p in fit['poly']]})

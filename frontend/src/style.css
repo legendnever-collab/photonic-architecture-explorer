@@ -106,3 +106,4 @@ details ul { margin: 6px 0 0; padding-left: 18px; color: var(--muted); font-size
 .card .media .chip { background: #eef6fa; color: #0a5a75; }
 td.warn { color: var(--warn); font-size: inherit; margin: 0; font-weight: 600; }
 td.good { color: #1a7f37; font-weight: 600; }
+.subhead { margin: 10px 0 2px; font-weight: 600; font-size: 12px; color: #57606a; }

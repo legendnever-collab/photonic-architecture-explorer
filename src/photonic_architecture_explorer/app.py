@@ -24,7 +24,7 @@ from . import api
 from .design_document import SCHEMA
 from .presets import load_presets
 
-VERSION = '0.3.0'
+VERSION = '0.4.0'
 MAX_BODY = 2 * 1024 * 1024
 PACKAGE = resources.files(__package__)
 
@@ -91,7 +91,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         path = urlparse(self.path).path
-        handlers = {'/api/preview': api.preview, '/api/design': api.design}
+        handlers = {'/api/preview': api.preview, '/api/design': api.design, '/api/whatif': api.whatif}
         if path not in handlers:
             return self._send(404, {'error': 'unknown endpoint'})
         length = int(self.headers.get('Content-Length') or 0)

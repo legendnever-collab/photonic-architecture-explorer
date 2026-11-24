@@ -10,6 +10,7 @@ from dataclasses import replace
 
 import numpy as np
 
+from . import alignment
 from . import lens as lens_module
 from .freeform import surface_violation
 
@@ -55,6 +56,20 @@ def port_guidance(scene, ambient_index):
                                f"현재 매질에서는 Waist MFD가 {guard['min_waist_mfd_um']:.2f} µm 이상이어야 합니다. 같은 Mode를 "
                                f"굴절률 n ≥ {required_index:.2f}인 매질 안에서 다루거나(P3), Lens로 Mode를 키우는 Family(P4)가 필요합니다."})
     return out
+
+
+def whatif(document):
+    """P4b: for a Glass problem, the smallest single change of an assumed placement that gives candidates (opt-in)."""
+    from . import whatif as whatif_module
+    issues = validate_document(document)
+    if issues:
+        return _invalid(document, issues)
+    try:
+        study = whatif_module.study(document)
+    except (InputIssue, DomainError) as exc:
+        return _invalid(document, [{'path': getattr(exc, 'path', '$'), 'message': getattr(exc, 'reason', str(exc))}])
+    return {'schema': 'pae.whatif/1', 'status': 'Computed' if study else 'Uncomputed',
+            'document_sha256': document_sha256(document), 'whatif': study}
 
 
 def preview(document):
@@ -240,6 +255,14 @@ def _final_eta(c):
     return None
 
 
+def _alignment_summary(candidates):
+    """Best (over a Family's candidates) passive 1 dB yield and active-alignment 90th-percentile loss."""
+    studies = [c.get('alignment') for c in candidates if (c.get('alignment') or {}).get('passive')]
+    active = [s['best_compensator'] for s in studies if s.get('best_compensator')]
+    return {'passive_yield_1db': max((s['passive']['yield_1db'] for s in studies), default=None),
+            'active_p90_db': min((a['p90_db'] for a in active), default=None)}
+
+
 def compare_families(report, mirror_candidates, lens_review, lens_mode):
     """One row per Family tried, and the automatic choice: the highest final η (corrected non-paraxial when
     available); a Family with fewer elements wins when it is within FAMILY_ETA_MARGIN of the best."""
@@ -249,7 +272,7 @@ def compare_families(report, mirror_candidates, lens_review, lens_mode):
              'best_eta': max((_final_eta(c) or 0 for c in mirror_candidates), default=None),
              'best_reflector_pose_db': min((c['metrics']['worst_pose_mismatch_db'] for c in mirror_candidates
                                             if c['metrics'].get('worst_pose_mismatch_db') is not None), default=None),
-             'lens_decenter_1db_um': None}]
+             'lens_decenter_1db_um': None, **_alignment_summary(mirror_candidates)}]
     if lens_review is not None:
         good = [c for c in lens_review.get('candidates', []) if c.get('accepted')]
         tolerances = [l['decenter_1db_um'] for c in good for l in (c.get('lens_pose') or {}).get('lenses', [])
@@ -261,7 +284,8 @@ def compare_families(report, mirror_candidates, lens_review, lens_mode):
                      'best_eta': max((c['metrics']['nonparaxial_overlap'] for c in good), default=None),
                      'best_reflector_pose_db': min(((c.get('lens_pose') or {}).get('reflectors_worst_loss_db') for c in good
                                                     if (c.get('lens_pose') or {}).get('reflectors_worst_loss_db') is not None), default=None),
-                     'lens_decenter_1db_um': min(tolerances) if tolerances else None, 'mode': lens_mode})
+                     'lens_decenter_1db_um': min(tolerances) if tolerances else None, 'mode': lens_mode,
+                     **_alignment_summary(good)})
     computed = [r for r in rows if r['status'] == 'Computed' and r['best_eta'] is not None]
     for r in rows:
         r['selected'], r['why'] = False, None
@@ -287,7 +311,7 @@ def lens_reason_label(reason):
     return reason or ''
 
 
-def lens_family_review(engine_input, constraints, problem, ports, guard=0.1):
+def lens_family_review(engine_input, constraints, problem, ports, guard=0.1, tolerances=None):
     """P4 Lens Family (Micro-lens + two reflectors); candidates are accepted by the non-paraxial rule."""
     if problem['block'] is not None:
         return {'status': 'Uncomputed', 'candidates': [], 'runs': [],
@@ -324,6 +348,8 @@ def lens_family_review(engine_input, constraints, problem, ports, guard=0.1):
                 'role_labels': ['Lens Family 검토 후보'], 'family': 'lens_two_reflector', 'review_status': row['status'],
                 'theta_out_rad': run['theta_out_rad'], 'lenses': row['lenses'], 'lens_checks': row['lens_checks'],
                 'lens_constraint': constraint, 'lens_pose': row.get('pose'),
+                'alignment': alignment.study(alignment.lens_system(row['args'], row['lens_objects'], row['mirror_elements']),
+                                             tolerances),
                 'nonparaxial_check': check, 'fit_history': row['fit_history'],
                 'reflector_terms': row['reflector_terms'], 'freeform': None,
             })
@@ -381,15 +407,22 @@ def design(document):
     lens_mode = (document.get('families') or {}).get('lens_two_reflector', 'auto')
     lens_review = None
     if lens_mode != 'off' and report['status'] == 'Fail' and 'divergence' in (report.get('reason') or ''):
-        lens_review = lens_family_review(engine_input, constraints, problem, ports)
+        lens_review = lens_family_review(engine_input, constraints, problem, ports, tolerances=document.get('tolerances'))
     elif lens_mode == 'compare':  # lenses on every Port that a lens can still expand (θ > COMPARE_GUARD)
-        lens_review = lens_family_review(engine_input, constraints, problem, ports, guard=COMPARE_GUARD)
+        lens_review = lens_family_review(engine_input, constraints, problem, ports, guard=COMPARE_GUARD,
+                                         tolerances=document.get('tolerances'))
     if report['candidates'] and report.get('model') != 'qtensor':  # sensitivity/placement studies are separable-engine tools
         report = review_snapshot(report)
     status, reason = report['status'], report.get('reason')
     selected_id = report.get('selected_candidate_id')
     family = report['candidates'][0].get('family') if report['candidates'] else None
     candidates = [_candidate(i + 1, c, problem, ambient_ports) for i, c in enumerate(report['candidates'])]
+    tolerances = document.get('tolerances')
+    for record, raw in zip(candidates, report['candidates']):
+        try:
+            record['alignment'] = alignment.study(alignment.mirror_system(raw, problem['engine'], raw.get('freeform')), tolerances)
+        except (DomainError, ValueError, np.linalg.LinAlgError) as exc:
+            record['alignment'] = {'status': 'Uncomputed', 'reason': str(exc)}
     accepted = [c for c in (lens_review or {}).get('candidates', []) if c.get('accepted')]
     families = compare_families(report, candidates, lens_review, lens_mode)
     chosen = next((f for f in families if f['selected']), None)

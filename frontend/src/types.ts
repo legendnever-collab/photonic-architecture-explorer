@@ -54,12 +54,35 @@ export interface DesignDocument {
   constraints?: Constraints;
   medium_block?: MediumBlock | null;
   families?: { lens_two_reflector?: 'auto' | 'compare' | 'off' };
+  tolerances?: Partial<Record<ToleranceKey, number>>;
+}
+
+export interface WhatIfRow {
+  parameter: string; label: string; original_mm: number; found_mm: number | null; candidates: number; family: string | null;
+  status: 'Found' | 'Not found' | 'Time limit' | 'Skipped'; tried_mm: { value_mm: number; result: string }[];
+}
+export interface WhatIfResult {
+  status: string; document_sha256: string; issues?: { path: string; message: string }[];
+  whatif: { grid: number; rows: WhatIfRow[]; elapsed_seconds: number; meaning: string } | null;
+}
+
+export type ToleranceKey = 'mirror_translation_um' | 'mirror_rotation_mrad' | 'lens_translation_um' | 'lens_axial_um'
+  | 'lens_rotation_mrad' | 'bond_translation_um' | 'bond_rotation_mrad';
+export interface AlignmentStats { median_db: number; p90_db: number; p99_db: number; yield_1db: number; yield_0p5db: number }
+export interface AlignmentOption extends AlignmentStats {
+  body: string; kind: string; dofs: 'translation' | 'rotation'; max_travel: number[]; travel_unit: string; practical: boolean;
+}
+export interface AlignmentStudy {
+  status?: string; reason?: string; model: string; samples: number; distribution: string;
+  tolerances: Record<ToleranceKey, number>; passive: AlignmentStats; active: AlignmentOption[];
+  best_compensator: AlignmentOption | null; active_range: { translation_um: number; rotation_mrad: number };
+  single: { body: string; dof: string; tolerance: number; unit: string; loss_db: number }[];
 }
 
 export interface FamilyRow {
   key: string; label: string; elements: number; status: string; count: number; reason: string | null;
   best_eta: number | null; best_reflector_pose_db: number | null; lens_decenter_1db_um: number | null;
-  selected: boolean; why: string | null; mode?: string;
+  selected: boolean; why: string | null; mode?: string; passive_yield_1db?: number | null; active_p90_db?: number | null;
 }
 export interface LensPose {
   grid: number; reflectors_worst_loss_db: number; steps: { decenter_um: number; axial_um: number; tilt_mrad: number };
@@ -164,6 +187,7 @@ export interface Candidate {
   lens_checks?: LensCheck[];
   lens_constraint?: string | null;
   lens_pose?: LensPose | null;
+  alignment?: AlignmentStudy | null;
   fit_history?: { step: string; eta: number }[];
   model?: 'separable' | 'qtensor';
   freeform?: {

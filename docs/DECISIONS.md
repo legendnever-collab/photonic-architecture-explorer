@@ -3,6 +3,26 @@
 새 항목을 위에 추가한다. 항목당 10줄 이내: 새로 가능해진 설계 판단, 주요 기술 선택, 남은 한계.
 2026-11-24 이전의 Milestone 기록(M1~M7-R28)은 [history/](history/)에 있다.
 
+## 2026-11-25 · P4b 종료, v0.4.0 Release (PR #67 병합)
+
+- **사용자 결정**: Cylindrical Lens는 하지 않고 병합·Release. 근거: Port 바로 앞 Lens의 1 dB 편심 허용치 ≈ 0.48 × 그 축의 Port Waist로
+  Lens 형태와 무관하다(S3 0.7 µm, S5 빠른 축 0.38 µm와 일치). S5는 이미 η 0.988이며 타원 보정은 반사면이 한다.
+- **다음**: P5 특허·설계 산출물(순서는 사용자 피드백으로 확정).
+
+## 2026-11-25 · P4b ② Glass 안 Lens 검토 → 배치 What-if (`phase/p4b-deferred`)
+
+- **결론**: S2b-1550-glass는 Lens로 풀리지 않는다. 원인은 마지막 반사면이 얕은 도파로(20 µm) 축 위 86 µm 안에 있어야 하고 그 입사각이 70°를 넘는 것.
+  Micro-lens는 Fiber–상면 0.1 mm에 들어갈 수 없고, 상면 곡면 Lens는 발산각 Guard에 먼저 걸린다(실험 후 코드 미반영).
+  반사면 Aperture를 상면에서 잘라도(1e-6 꼬리 안) 결과가 같아 정책을 바꾸지 않았다.
+- **가능해진 판단**: Glass Fail에서 어떤 가정 배치를 얼마나 바꾸면 되는지. S2b: 매립 깊이 0.3 mm, 두께·Fiber 높이는 무효. `/api/whatif`, 화면 버튼(수십 초, Opt-in).
+
+## 2026-11-25 · P4b ① 동시 오차와 Active alignment (`phase/p4b-deferred`)
+
+- **가능해진 판단**: Passive 조립이 되는지, 어느 소자를 Active 정렬해야 하는지. S1 Passive 90 % 31.7 dB(1 dB 이내 6 %) → M1 위치 Active 0.01 dB.
+  S3 Passive 1 dB 이내 13~17 % → Active 0.06~0.08 dB. S5 → M2 기울기 Active 0.36~0.44 dB.
+- **모델**: 주광선 Jacobian + 정확한 Gaussian 위치·각도 Overlap(크기·초점 변화 제외). 비근축 계산과 15 % 이내로 확인.
+- **가정**: 공차 기본값과 고정 이동, 보정 범위(50 µm, 20 mrad)는 가정값이며 Design Document에서 바꾼다.
+
 ## 2026-11-25 · P4 Gate 통과, P4 종료 (PR #66 병합)
 
 - **수용 기준**(재설계 계획): S5 통과, 같은 입력에서 Family별 최선 후보 비교표. 둘 다 충족(S5 Computed 0.987~0.988, `families[]` 비교표).

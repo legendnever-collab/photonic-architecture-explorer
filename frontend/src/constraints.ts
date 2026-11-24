@@ -1,5 +1,5 @@
 import { clone, type Store } from './state';
-import type { BoxMm, Constraints, Vec3 } from './types';
+import type { BoxMm, Constraints, ToleranceKey, Vec3 } from './types';
 import { el } from './util';
 
 /** Constraint card: they can only tighten the frozen guards (incidence ≤ 70°). */
@@ -42,6 +42,24 @@ export function constraintsCard(store: Store, rerender: () => void) {
   });
   card.append(el('div', { class: 'field', title: '비교 모드는 Lens를 붙일 수 있는 모든 Port(발산각 > 0.02 rad)에 Micro-lens를 두고 따로 계산합니다(수십 초)' },
     el('label', {}, 'Lens Family (P4)'), select));
+
+  const tol = doc.tolerances ?? {};
+  const setTol = (key: ToleranceKey, v: number | null) => {
+    const next = clone(doc);
+    const t = { ...(next.tolerances ?? {}) };
+    if (v === null) delete t[key]; else t[key] = v;
+    next.tolerances = t;
+    store.set({ doc: next });
+    rerender();
+  };
+  const tolRows: [ToleranceKey, string, number][] = [
+    ['mirror_translation_um', '반사면 위치 ± [µm]', 5], ['mirror_rotation_mrad', '반사면 기울기 ± [mrad]', 1],
+    ['lens_translation_um', 'Lens 편심 ± [µm]', 1], ['lens_axial_um', 'Lens 축 방향 ± [µm]', 1], ['lens_rotation_mrad', 'Lens 기울기 ± [mrad]', 1],
+    ['bond_translation_um', 'Active 정렬 후 고정 이동 ± [µm]', 0.2], ['bond_rotation_mrad', 'Active 정렬 후 고정 기울기 ± [mrad]', 0.05]];
+  card.append(el('div', { class: 'subhead' }, '정렬 공차 (P4b, 가정값)'));
+  for (const [key, label, fallback] of tolRows) {
+    card.append(numberRow(`tolerances.${key}`, label, tol[key] ?? fallback, key.endsWith('mrad') ? 0.01 : 0.1, (v) => setTol(key, v)));
+  }
 
   const envToggle = el('input', { type: 'checkbox', 'data-key': 'constraints.envelope_on' }) as HTMLInputElement;
   envToggle.checked = Boolean(c.envelope_mm);

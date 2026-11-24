@@ -454,8 +454,8 @@ def pose_tolerance(prescription):
 
 # ---------- driver ----------
 
-def grid_values(scale):
-    n = POLICY['grid_points_per_axis']
+def grid_values(scale, n=None):
+    n = n or POLICY['grid_points_per_axis']
     lo, hi = 0.01 * scale, 4.0 * scale
     return [lo * (hi / lo) ** (i / (n - 1)) for i in range(n)]
 
@@ -488,7 +488,7 @@ def pareto(points, keys):
     return front
 
 
-def design_continuous(document, constraints=Constraints(), *, include_map=True, nonparaxial_checks=True):
+def design_continuous(document, constraints=Constraints(), *, include_map=True, nonparaxial_checks=True, grid_points=None):
     """Two fixed Ports (M3A-1 document, optional package) in; verified concepts out."""
     started = time.perf_counter()
     result = {'schema': 'P2-design-result-1', 'status': 'Uncomputed', 'input_snapshot': None,
@@ -525,7 +525,7 @@ def design_continuous(document, constraints=Constraints(), *, include_map=True, 
             raise DomainError('Gaussian divergence exceeds 0.1 rad')
         lam_n = source.mode.wavelength / (math.pi * source.mode.index)
 
-        values = grid_values(scale)
+        values = grid_values(scale, grid_points)
         grid, counts = [], Counter()
         for a in values:
             for c in values:

@@ -1,4 +1,4 @@
-import type { DesignDocument, Preset, Result, ScenarioEntry } from './types';
+import type { DesignDocument, Preset, Result, ScenarioEntry, WhatIfResult } from './types';
 
 async function json<T>(response: Response): Promise<T> {
   if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
@@ -11,6 +11,8 @@ export const api = {
   scenario: async (id: string) => json<DesignDocument>(await fetch(`api/scenarios/${encodeURIComponent(id)}`)),
   preview: async (doc: DesignDocument) => post('api/preview', doc),
   design: async (doc: DesignDocument) => post('api/design', doc),
+  whatif: async (doc: DesignDocument) => json<WhatIfResult>(await fetch('api/whatif', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(doc) })),
 };
 
 async function post(path: string, doc: DesignDocument): Promise<Result> {
