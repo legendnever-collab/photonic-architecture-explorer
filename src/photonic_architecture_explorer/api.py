@@ -117,11 +117,13 @@ def _candidate(rank, candidate, problem=None, ambient_ports=None):
         'family': candidate.get('family', 'exact'),
         'model': candidate.get('model', 'separable'),
         'ray_transfer_check': evaluation.get('ray_transfer_check'),
+        'nonparaxial_check': candidate.get('nonparaxial_check'),
         'parameters_mm': {k[:-2]: v * 1e3 for k, v in candidate.get('parameters', {}).items() if k.endswith('_m')},
         'metrics': {
             'total_path_mm': scene['path']['total_length_mm'],
             'ambient_path_mm': sum(seg['length_mm'] for seg in scene['path']['segments'] if seg.get('medium') == 'ambient'),
             'normalized_mode_overlap': matching.get('normalized_mode_overlap'),
+            'nonparaxial_overlap': (candidate.get('nonparaxial_check') or {}).get('normalized_mode_overlap'),
             'mode_mismatch_db': matching.get('mismatch_db'),
             'max_projected_beam_radius_um': ranking['max_projected_radius_m'] * 1e6,
             'max_3w_footprint_curvature': ranking['max_3w_footprint_curvature'],
@@ -167,6 +169,23 @@ def design_guidance(report, ports, ambient_index, medium='ambient'):
                                'Glass 상면이나 하면을 벗어났습니다. 두 반사면은 모두 Glass 안에 있어야 합니다. '
                                '도파로가 얕으면 Target 축 위의 반사면이 상면을 뚫고 나오므로, 매립 깊이나 Glass 두께를 늘리거나 '
                                'Edge(측면) 배치와 비교하세요.'})
+    values = [c['nonparaxial_check']['normalized_mode_overlap'] for c in report.get('candidates', [])
+              if (c.get('nonparaxial_check') or {}).get('status') == 'Computed']
+    if values:
+        paraxial = [c['evaluation']['gaussian_mode_matching']['normalized_mode_overlap'] for c in report['candidates']]
+        low = min(values) < min(paraxial) - 0.01
+        out.append({'kind': 'nonparaxial', 'phase': 'P3', 'level': 'warning' if max(values) < 0.95 else 'info',
+                    'values': {'nonparaxial_min': min(values), 'nonparaxial_max': max(values)},
+                    'message': f'비근축 Scalar 검산 η는 {min(values):.3f}~{max(values):.3f}입니다(근축 η {min(paraxial):.3f}~{max(paraxial):.3f}). '
+                               + ('차이는 반사면을 국소 이차곡면으로 처방해서 생기는 3차 이상 수차(경사 입사의 Coma 등)와 근축 전파 오차입니다. '
+                                  '두 반사면이 같은 방향으로 꺾는 배치에서는 Coma가 더해지고, 반대로 꺾는 Z형 배치에서는 상쇄됩니다. '
+                                  '근축 η만으로 판단하지 말고 "비근축 Overlap 최대" 후보를 함께 보세요. '
+                                  '고차 곡면(Conic·Freeform) 처방은 P4 과제입니다.' if low else
+                                  '근축 결과와 차이가 작아 이 후보들에서는 근축 모델이 맞습니다.')})
+    study = report.get('nonparaxial_study')
+    if study:
+        out.append({'kind': 'nonparaxial_study', 'phase': 'P3', 'level': 'info', 'values': study.get('summary'),
+                    'message': study.get('message', '')})
     if report.get('status') == 'Fail' and search.get('status') == 'Completed':
         top = sorted(counts.items(), key=lambda kv: -kv[1])[:3]
         out.append({'kind': 'no_candidate', 'phase': 'P4',
@@ -201,11 +220,15 @@ def design(document):
     except (DocumentError, InputIssue, DomainError) as exc:
         return _invalid(document, [{'path': getattr(exc, 'path', '$'), 'message': getattr(exc, 'reason', str(exc))}])
     report = design_continuous(engine_input, constraints)
+    if report['status'] == 'Fail' and 'divergence' in (report.get('reason') or ''):
+        from .nonparaxial import guard_study
+        report['nonparaxial_study'] = guard_study(engine_input, constraints)
     if report['candidates'] and report.get('model') != 'qtensor':  # sensitivity/placement studies are separable-engine tools
         report = review_snapshot(report)
     search = report.get('search', {})
     summary = {k: search.get(k) for k in ('status', 'reason', 'grid_points', 'exact_feasible', 'near_match_feasible',
-                                          'screening_counts', 'closest_exact', 'elapsed_seconds', 'verification')}
+                                          'screening_counts', 'closest_exact', 'elapsed_seconds', 'verification',
+                                          'nonparaxial_screen')}
     return {
         'schema': RESULT_SCHEMA,
         'status': report['status'],
@@ -221,6 +244,7 @@ def design(document):
         'candidates': [_candidate(i + 1, c, problem, ambient_ports) for i, c in enumerate(report['candidates'])],
         'search': {**summary, 'policy': report.get('search_policy', {}).get('id'), 'map': _map(search)},
         'guidance': design_guidance(report, ports, document['ambient_index'], problem['medium']),
+        'nonparaxial_study': report.get('nonparaxial_study'),
         'limitations': report.get('limitations', []),
         'uncomputed': UNCOMPUTED,
         'engine_report': {**report, 'search': {k: v for k, v in search.items() if k != 'map'}},

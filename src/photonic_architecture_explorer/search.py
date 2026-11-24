@@ -3,7 +3,7 @@
 P3-CONTINUOUS-2 = P2-CONTINUOUS-1 plus the glass region constraint, beam clearance, obstruction and
 incidence margins for the pose study, and extra near-match trials.
 
-Two fixed coplanar Ports leave exactly two free lengths for a two-reflector relay:
+Two fixed Ports leave exactly two free lengths for a two-reflector relay (coplanar or not; see qtensor.py):
 a (Source → M1 along the Source axis) and c (M2 → Target, back along the Target axis).
 Everything else (middle segment, fold normals, incidence) follows, and the exact-q
 reflector powers per axis have at most two closed-form branches (`design.power_pairs`).
@@ -39,7 +39,7 @@ from .solver import MAX_DIVERGENCE, MAX_FOOTPRINT_SLOPE, MIN_COSINE
 APERTURE_FACTOR = 4.0  # same projected-radius factor as the M5-A prescription
 POLICY = {
     'id': 'P3-CONTINUOUS-2',
-    'free_parameters': 'a = |Source→M1|, c = |M2→Target| (two coplanar reflectors)',
+    'free_parameters': 'a = |Source→M1|, c = |M2→Target| (two reflectors; non-coplanar Ports use the q-tensor model)',
     'grid_points_per_axis': 64,
     'length_range': 'log-spaced from 1 % to 400 % of the Port separation',
     'exact': 'closed-form two-power exact-q branches per axis, all four branch pairs',
@@ -65,6 +65,7 @@ OBJECTIVES = {
     'small_beam': ('max_footprint_radius_m', 'min', '작은 Beam'),
     'gentle_curvature': ('max_abs_curvature_per_m', 'min', '완만한 곡률'),
     'robust_alignment': ('worst_pose_mismatch_db', 'min', '정렬 공차'),
+    'best_nonparaxial': ('nonparaxial_overlap_screen', 'max', '비근축 Overlap 최대'),
     'pareto_alternative': (None, None, 'Pareto 대안'),
 }
 INCIDENCE_MARGIN_DEG = 1.0  # room for the ±5 µm / ±1 mrad pose study to stay inside the 70° guard
@@ -78,7 +79,8 @@ LIMITS = ['Conceptual Geometry; prescribed aperture is not fabrication capabilit
           'Scalar paraxial normalized overlap is not Total Coupling',
           'Finite-field aberration, coating, interface and polarization losses Uncomputed',
           'Port bodies are modelled only as the half-spaces behind the reference planes (when enabled)',
-          'Two coplanar reflectors in one homogeneous medium (ambient or one glass block); other families are later phases']
+          'Two reflectors with local quadratic (vertex) surfaces in one homogeneous medium (ambient or one glass block); '
+          'the non-paraxial check shows coma at oblique incidence that the paraxial overlap does not; other families are later phases']
 
 
 @dataclass(frozen=True)
@@ -575,6 +577,15 @@ def design_continuous(document, constraints=Constraints(), *, include_map=True):
                                                      'max_footprint_slope': closest.metrics['max_footprint_slope'],
                                                      'limit': MAX_FOOTPRINT_SLOPE}
         plan, front = select(ports, constraints, lam_n, pool, family, evaluator=evaluator)
+        if pool:  # P3: rank the feasible set by the non-paraxial scalar overlap as one more objective
+            from . import nonparaxial
+            ranked = nonparaxial.screen(ports, pool)
+            result['search']['nonparaxial_screen'] = {
+                'screened': len(ranked), 'grid': nonparaxial.SCREEN_GRID,
+                'best': ranked[0].metrics['nonparaxial_overlap_screen'] if ranked else None,
+                'worst': ranked[-1].metrics['nonparaxial_overlap_screen'] if ranked else None}
+            if ranked:
+                plan.append(('best_nonparaxial', ranked[:6]))
         accepted, ledger = [], []
 
         def attempt(point, role):
@@ -603,6 +614,14 @@ def design_continuous(document, constraints=Constraints(), *, include_map=True):
             remaining.remove(far)
             attempt(far, 'pareto_alternative')
         accepted = add_tolerance_roles(accepted)
+        if accepted:
+            from . import nonparaxial
+            for candidate in accepted:
+                try:
+                    candidate['nonparaxial_check'] = nonparaxial.check_candidate(candidate, document)
+                except (DomainError, ValueError, ArithmeticError) as exc:
+                    candidate['nonparaxial_check'] = {'status': 'Uncomputed', 'reason': str(exc)}
+            relabel_nonparaxial(accepted)
         result['candidates'] = accepted
         result['search']['verification'] = ledger
         result['selected_candidate_id'] = accepted[0]['id'] if accepted else None
@@ -689,6 +708,19 @@ def same_point(point, candidate):
     p = candidate['parameters']
     return (abs(math.log(point.a / p['a_m'])) < 0.02 and abs(math.log(point.c / p['c_m'])) < 0.02
             and list(point.branch) == p['branch'])
+
+
+def relabel_nonparaxial(accepted):
+    """The coarse screen picks a concept; the role goes to the best fully checked non-paraxial overlap."""
+    checked = [c for c in accepted if (c.get('nonparaxial_check') or {}).get('status') == 'Computed']
+    if not checked:
+        return
+    for c in accepted:
+        if 'best_nonparaxial' in c['roles']:
+            c['roles'].remove('best_nonparaxial')
+            if not c['roles']:
+                c['roles'].append('pareto_alternative')
+    max(checked, key=lambda c: c['nonparaxial_check']['normalized_mode_overlap'])['roles'].append('best_nonparaxial')
 
 
 def add_tolerance_roles(accepted):

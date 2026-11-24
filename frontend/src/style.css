@@ -101,3 +101,4 @@ details ul { margin: 6px 0 0; padding-left: 18px; color: var(--muted); font-size
 .field .pair { display: grid; grid-template-columns: 110px 1fr; gap: 4px; }
 .card .media { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0; }
 .card .media .chip { background: #eef6fa; color: #0a5a75; }
+td.warn { color: var(--warn); font-size: inherit; margin: 0; font-weight: 600; }

@@ -132,6 +132,7 @@ export interface Candidate {
   role_labels: string[];
   family: 'exact' | 'near_match';
   model?: 'separable' | 'qtensor';
+  nonparaxial_check?: { status: string; normalized_mode_overlap?: number; grid_change?: number; clipped_power_fraction?: number; method?: string; omits?: string } | null;
   ray_transfer_check?: { q_tensor_relative_difference: number; symplectic_error: number; method: string } | null;
   parameters_mm: { a?: number; b?: number; c?: number };
   metrics: {
@@ -140,6 +141,7 @@ export interface Candidate {
     total_path_mm: number;
     ambient_path_mm?: number;
     normalized_mode_overlap: number | null;
+    nonparaxial_overlap?: number | null;
     mode_mismatch_db: number | null;
     max_projected_beam_radius_um: number;
     max_3w_footprint_curvature: number;
@@ -153,7 +155,13 @@ export interface Candidate {
 
 export interface Issue { path: string; message: string }
 
-export interface Guidance { kind: string; phase?: string; port?: string; message: string; values?: Record<string, unknown> }
+export interface Guidance { kind: string; phase?: string; port?: string; level?: 'info' | 'warning'; message: string; values?: Record<string, unknown> }
+
+export interface StudyCase {
+  a_mm: number; c_mm: number; total_path_mm: number; max_3w_footprint_curvature: number; max_divergence_rad: number;
+  incidence_deg: number[]; paraxial_overlap: number; nonparaxial_overlap: number; nonparaxial_status: string; clipped_power_fraction: number;
+}
+export interface NonparaxialStudy { status: string; cases: StudyCase[]; meaning?: string; message?: string; reason?: string }
 
 export interface SearchMap {
   a_mm: number[];
@@ -188,6 +196,7 @@ export interface Result {
   relay_medium?: Medium;
   crossing?: Crossing | null;
   guidance?: Guidance[];
+  nonparaxial_study?: NonparaxialStudy | null;
   search?: {
     status?: string; reason?: string; grid_points?: number; exact_feasible?: number; near_match_feasible?: number;
     screening_counts?: Record<string, number>; elapsed_seconds?: number; policy?: string; map?: SearchMap | null;

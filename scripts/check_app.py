@@ -11,6 +11,7 @@ Starts the packaged server, drives Chromium with Playwright and checks:
   * P3 glass scenarios: block card, hatched surface band, crossing record, TIR column,
     Fold surface marker at the air-gap distance, reflectors below the surface, 3D slab,
     turning the block off, and the shallow-guide region guidance
+  * P3 non-paraxial check: η column and guidance on S1, beyond-guard study card on S3
   * P3 q-tensor: S4 (non-coplanar) gives verified candidates, the q-tensor note and guidance,
     beam ellipses in the scene and 2D mirror positions equal to the scene vertices (1 nm)
   * Design Document export round-trips
@@ -137,6 +138,10 @@ def main():
         summary['S1_status'] = status
         check(status == 'Computed', f'S1 status {status}', failures)
         check(page.locator('[data-candidate]').count() >= 1, 'S1 candidate table empty', failures)
+        np_cells = page.evaluate("""() => [...document.querySelectorAll('[data-nonparaxial]')].map(td => Number(td.dataset.nonparaxial))""")
+        summary['S1_nonparaxial'] = np_cells
+        check(np_cells and all(0 < v <= 1 for v in np_cells) and page.locator('[data-guidance="nonparaxial"]').count() == 1,
+              f'S1 non-paraxial column/guidance: {np_cells}', failures)
         page.screenshot(path=str(out / 'p1_S1_auto.png'))
         for view in ('all', 'xz', 'fold'):
             page.click(f'.tab[data-view="{view}"]')
@@ -264,6 +269,9 @@ def main():
               f'S3 failure view: {status} {text[:80]}', failures)
         page.screenshot(path=str(out / 'p1_S3.png'))
         check(page.locator('[data-guard="source"].fail').count() == 1, 'S3 source guard not shown as Fail', failures)
+        check(page.locator('[data-card="nonparaxial-study"] [data-study]').count() >= 1
+              and page.locator('[data-guidance="nonparaxial_study"]').count() == 1, 'S3 non-paraxial study missing', failures)
+        page.locator('[data-card="nonparaxial-study"]').screenshot(path=str(out / 'p3_S3_study.png'))
         check(not errors, f'page errors: {errors}', failures)
         summary['page_errors'] = errors
 

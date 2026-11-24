@@ -105,6 +105,12 @@ Envelope·Keep-out은 엔진 입력의 `package`(available_volume, keepout_bodie
 | `constraints` | 적용된 제약(SI 단위) |
 | `candidates[].scene` | 반사면(Vertex, Normal, 축, 곡률, Aperture, Beam Footprint, 13×13 표면 Grid), 경로 점, 구간별 Beam 반경 샘플. Glass를 통과하면 외부 구간이 경로 앞(Source 쪽) 또는 뒤(Target 쪽)에 붙고, 구간·샘플마다 `medium`이 있다 |
 | `search` | 정책 `P3-CONTINUOUS-2`(P2-CONTINUOUS-1 + Glass 영역·Beam 여유·자세 여유), 격자 수, Exact/Near-match 가능 배치 수, 판정별 개수, 가장 가까운 Exact 해, 계산 시간 |
+| `candidates[].model` | `separable`(동일평면, 기존 엔진 Adapter 검산) 또는 `qtensor`(비동일평면·축 회전, Ray-transfer 검산) |
+| `candidates[].ray_transfer_check` | q-tensor 후보: 실제 곡면 광선의 4×4 행렬로 재현한 Q의 상대차, Symplectic 오차 |
+| `candidates[].nonparaxial_check`, `metrics.nonparaxial_overlap` | 비근축 Scalar 검산: η, 격자 수렴(129²→257² 변화), Aperture 밖 Power 비율, 방법과 제외 항목 |
+| `candidates[].roles`의 `best_nonparaxial` | 후보 중 비근축 η가 가장 높은 후보(탐색 단계에서 최대 400개 배치를 65² 격자로 순위화) |
+| `nonparaxial_study` | Port 발산각이 Guard를 넘을 때만: Guard를 끈 근축 Exact 설계의 비근축 η(후보 아님) |
+| `candidates[].scene.beam.samples[].ellipse` | q-tensor 후보: 1/e² 강도 타원의 장·단반경과 구간 t축 기준 장축 각도 |
 | `relay_medium` | `ambient` 또는 `block`(Relay를 푼 매질) |
 | `crossing` | 외부 Port가 있을 때: 통과 쪽(`source`/`target`), 상면 통과점, 외부 구간 길이, 입사·굴절각, Coddington q 배율 t/s, 무코팅 평면파 Fresnel 투과(참고값, η에 포함 안 함) |
 | `candidates[].metrics.ambient_path_mm` | 총 광경로 중 외부 매질 구간 |
