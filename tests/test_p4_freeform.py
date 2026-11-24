@@ -135,6 +135,16 @@ class CorrectionTest(unittest.TestCase):
         again = freeform.correct_candidate(S.raw, engine)
         self.assertAlmostEqual(again['normalized_mode_overlap'], S.raw['freeform']['normalized_mode_overlap'], places=12)
 
+    def test_corrected_pose_loss_matches_the_paraxial_tolerance(self):
+        """Once the aberration is removed, the non-paraxial pose loss agrees with the paraxial pointing study."""
+        result = api.design(load('S2a-1550'))
+        for c in result['candidates']:
+            pose = c['freeform']['pose']
+            self.assertAlmostEqual(pose['corrected_worst_loss_db'], c['metrics']['worst_pose_mismatch_db'], delta=0.1)
+            for r in c['freeform']['reflectors']:
+                size = r['correction_size']
+                self.assertLessEqual(size['footprint']['pv_um'], size['aperture']['pv_um'])
+
     def test_corrected_surface_constraints_are_checked(self):
         from photonic_architecture_explorer.search import Constraints
         points = freeform.surface_points((0, 0, 0), (0, 0, 1), (1, 0, 0), (0, 1, 0), (0, 0), (1e-3, 1e-3), ((3, 0, 1e5),))

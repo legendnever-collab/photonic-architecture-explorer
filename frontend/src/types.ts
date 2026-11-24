@@ -136,7 +136,9 @@ export interface Candidate {
   model?: 'separable' | 'qtensor';
   freeform?: {
     status: string; normalized_mode_overlap?: number; grid_change?: number; constraint?: string | null; reason?: string;
-    reflectors?: { id: string; max_sag_change_um: number; terms: { u_power: number; v_power: number; coefficient_si: number }[] }[];
+    reflectors?: { id: string; max_sag_change_um: number; terms: { u_power: number; v_power: number; coefficient_si: number }[];
+      correction_size?: Record<'footprint' | 'aperture', { pv_um: number; rms_um: number; max_slope_mrad: number }> }[];
+    pose?: { quadric_worst_loss_db: number | null; corrected_worst_loss_db: number | null; cases: string };
     surface?: string; meaning?: string;
   } | null;
   nonparaxial_check?: { status: string; normalized_mode_overlap?: number; grid_change?: number; clipped_power_fraction?: number; method?: string; omits?: string } | null;

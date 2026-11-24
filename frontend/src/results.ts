@@ -93,15 +93,21 @@ export class ResultsPanel {
     const f = c.freeform!;
     const names = (t: { u_power: number; v_power: number }) => `u${sup(t.u_power)}v${sup(t.v_power)}`;
     const rows = (f.reflectors ?? []).map((r) => el('tr', {},
-      el('td', {}, r.id), el('td', {}, fmt(r.max_sag_change_um, 2)),
+      el('td', {}, r.id),
+      el('td', {}, r.correction_size ? `${fmt(r.correction_size.footprint.pv_um, 3)} / ${fmt(r.correction_size.footprint.rms_um, 3)}` : '—'),
+      el('td', {}, r.correction_size ? fmt(r.correction_size.footprint.max_slope_mrad, 2) : '—'),
+      el('td', {}, fmt(r.max_sag_change_um, 1)),
       el('td', { class: 'mono' }, r.terms.filter((t) => t.coefficient_si !== 0)
         .map((t) => `${names(t)} ${t.coefficient_si.toExponential(3)}`).join(' · '))));
     return el('div', { 'data-freeform': f.status },
       el('div', { class: 'muted' }, `보정 곡면(P4): 비근축 η ${fmt(c.metrics.nonparaxial_overlap ?? null, 4)} → ${fmt(f.normalized_mode_overlap ?? null, 4)}`
         + (f.status !== 'Computed' ? ` (${f.status})` : '') + (f.constraint ? ` · 제약 위반: ${reasonLabel(f.constraint)}` : '')
         + ' · h = ½(κ₁u² + κ₂v²) + Σ c·uᵐvⁿ (u = t축, v = s축, SI 단위)'),
-      el('table', { class: 'grid-table' }, el('thead', {}, el('tr', {}, ...['반사면', '최대 Sag 변화 [µm]', '3·4차 계수'].map((h) => el('th', {}, h)))),
-        el('tbody', {}, ...rows)));
+      el('table', { class: 'grid-table' }, el('thead', {}, el('tr', {}, ...['반사면', 'Footprint 안 보정 PV / RMS [µm]', '최대 기울기 변화 [mrad]', 'Aperture 모서리 Sag [µm]', '3·4차 계수'].map((h) => el('th', {}, h)))),
+        el('tbody', {}, ...rows)),
+      ...(f.pose ? [el('div', { class: 'muted', 'data-freeform-pose': '' },
+        `비근축 정렬 민감도(반사면 하나씩 ±5 µm·두 주축 ±1 mrad, 최악 손실): 이차곡면 ${fmt(f.pose.quadric_worst_loss_db, 2)} dB · 보정 곡면 ${fmt(f.pose.corrected_worst_loss_db, 2)} dB. `
+        + 'Footprint 값은 1/e² 발자국 타원 안, 가장자리 값은 처방 Aperture(4w) 모서리까지입니다. 빛이 거의 없는 가장자리 Sag는 Aperture를 줄이면 작아집니다.')] : []));
   }
 
   private table(candidates: Candidate[]) {

@@ -169,8 +169,71 @@ def correct_mirrors(ports, mirrors, aperture_factor):
         'id': f'M{j + 1}', 'principal_axes': [list(t[2]), list(t[3])],
         'terms': [{'u_power': m, 'v_power': n, 'coefficient_si': c} for m, n, c in poly],
         'max_sag_change_um': max_sag(poly, m.half_aperture) * 1e6,
-    } for j, (m, t, poly) in enumerate(zip(mirrors, tuples, result['poly']))]
+        'correction_size': fabrication(poly, m.curvatures, m.half_aperture, fp),
+    } for j, (m, t, poly, fp) in enumerate(zip(mirrors, tuples, result['poly'], footprints))]
+    corrected = [nonparaxial.mirror_tuple(t[0], t[1], t[3], (t[4], t[5]), (t[6], t[7]), p) for t, p in zip(tuples, result['poly'])]
+    result['pose'] = {'quadric_worst_loss_db': pose_loss(args, tuples), 'corrected_worst_loss_db': pose_loss(args, corrected),
+                      'cases': '±5 µm along X, Y, Z and ±1 mrad about both principal axes, one reflector at a time',
+                      'grid': POSE_GRID, 'meaning': 'Non-paraxial overlap loss relative to the nominal of the same surface'}
     return result
+
+
+POSE_GRID = 65
+
+
+def _rotate(vector, axis, angle):
+    e = np.asarray(axis, float)
+    v = np.asarray(vector, float)
+    return v * math.cos(angle) + np.cross(e, v) * math.sin(angle) + e * (e @ v) * (1 - math.cos(angle))
+
+
+def poses(mirrors):
+    """±5 µm along X, Y, Z and ±1 mrad about both principal axes, one reflector at a time (mirror tuples)."""
+    from .placement import ROTATION_RAD, TRANSLATION_M
+    for index, m in enumerate(mirrors):
+        vertex, n, e1, e2 = m[:4]
+        for axis in range(3):
+            for delta in (-TRANSLATION_M, TRANSLATION_M):
+                shifted = np.array(vertex, float)
+                shifted[axis] += delta
+                changed = list(mirrors)
+                changed[index] = (shifted, *m[1:])
+                yield changed
+        for pivot in (e1, e2):
+            for angle in (-ROTATION_RAD, ROTATION_RAD):
+                changed = list(mirrors)
+                changed[index] = (m[0], _rotate(n, pivot, angle), _rotate(e1, pivot, angle), _rotate(e2, pivot, angle), *m[4:])
+                yield changed
+
+
+def pose_loss(args, mirrors):
+    """Worst non-paraxial overlap loss [dB] over the one-at-a-time pose cases (same grid for all cases)."""
+    def eta(ms):
+        f = nonparaxial.field(*args[:8], ms, *args[8:], grid=POSE_GRID)
+        return abs((f['amplitude'] * np.exp(1j * f['phase'])).sum()) ** 2 / f['norm']
+    nominal = eta(mirrors)
+    worst = 0.0
+    for changed in poses(mirrors):
+        try:
+            value = eta(changed)
+        except DomainError:
+            return None
+        worst = max(worst, -10 * math.log10(max(value, 1e-300) / nominal))
+    return worst
+
+
+def fabrication(poly, curvatures, half_aperture, footprint, n=SAG_GRID):
+    """Size of the correction: sag and slope departure from the quadric, over the 1/e² footprint and the aperture."""
+    def stats(extent):
+        u = np.linspace(-extent[0], extent[0], n)
+        v = np.linspace(-extent[1], extent[1], n)
+        uu, vv = np.meshgrid(u, v, indexing='ij')
+        value, du, dv = nonparaxial._poly(poly, uu, vv)
+        inside = (uu / extent[0]) ** 2 + (vv / extent[1]) ** 2 <= 1
+        sag = value[inside]
+        return {'pv_um': float(sag.max() - sag.min()) * 1e6, 'rms_um': float(np.sqrt(((sag - sag.mean()) ** 2).mean())) * 1e6,
+                'max_slope_mrad': float(np.hypot(du, dv)[inside].max()) * 1e3}
+    return {'footprint': stats(footprint), 'aperture': stats(half_aperture)}
 
 
 def surface_points(vertex, normal, first_axis, second_axis, curvatures, half_aperture, poly, n=SAG_GRID):
@@ -237,7 +300,7 @@ def correct_candidate(candidate, engine_document, constraints=None):
             mirror.vertex, mirror.normal, first / np.linalg.norm(first), axis, mirror.curvatures, mirror.half_aperture, poly))
     return {'status': check['status'], 'constraint': violation, 'normalized_mode_overlap': check['normalized_mode_overlap'],
             'grid_change': check['grid_change'], 'clipped_power_fraction': check['clipped_power_fraction'],
-            'reflectors': result['reflectors'], 'fit_history': result['history'],
+            'reflectors': result['reflectors'], 'fit_history': result['history'], 'pose': result['pose'],
             'surface': ('h = ½(κ1 u² + κ2 v²) + Σ c·u^m·v^n (m + n = 3, 4) in each reflector\'s principal axes '
                         '(u along t_axis, v along s_axis of the scene); coefficients in SI units (m^(1−m−n))'),
             'meaning': ('Third/fourth-order sag added to the paraxial prescription to maximise the non-paraxial '
