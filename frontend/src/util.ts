@@ -48,6 +48,10 @@ export const STATUS_LABEL: Record<string, string> = {
 };
 
 const REASONS: [RegExp, string][] = [
+  [/beyond a single aspheric singlet \(limit ([0-9.]+)/, 'Port 발산각이 단일 비구면 Lens 한계를 넘음 (두 Lens 또는 고굴절률 Lens 필요)'],
+  [/lens body inside a keep-out/, 'Lens 몸체가 Keep-out 여유 안에 들어감'],
+  [/lens body outside the package envelope/, 'Lens 몸체가 Package Envelope 밖'],
+  [/direction mapping of the uncorrected relay is folded/, '보정 전 Relay의 방향 Mapping이 접힘 (Caustic)'],
   [/unintended reflector interception/, '경로가 다른 반사면에 걸림'],
   [/incidence exceeds 70/, '입사각 70° 초과'],
   [/footprint\/curvature exceeds 0\.15/, '3w·|κ| > 0.15 (반사면 곡률 대비 Beam이 큼)'],

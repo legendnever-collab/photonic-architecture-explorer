@@ -17,7 +17,7 @@ export interface PortSpec {
   medium?: Medium;
 }
 
-export type Medium = 'ambient' | 'block';
+export type Medium = 'ambient' | 'block' | 'lens';
 
 /** One glass block bounded by a planar top surface (and an optional parallel bottom). */
 export interface MediumBlock {
@@ -120,7 +120,18 @@ export interface Segment { start_mm: Vec3; end_mm: Vec3; length_mm: number; dire
 export interface BeamEllipse { major_um: number; minor_um: number; angle_rad: number }
 export interface BeamSample { segment: number; distance_mm: number; point_mm: Vec3; radius_t_um: number; radius_s_um: number; medium?: Medium; ellipse?: BeamEllipse }
 
+/** P4 Lens Family: a rotationally symmetric two-asphere micro-lens (outline polylines in mm). */
+export interface LensScene {
+  id: string; side: PortName; flat_vertex_mm: Vec3; curved_vertex_mm: Vec3; axis: Vec3; focal_length_um: number;
+  thickness_um: number; clear_radius_um: number; port_distance_um: number; relative_index: number; outline_mm: Vec3[][];
+}
+export interface LensCheck {
+  max_direction_rad: number; max_sine_condition_error_m: number; rays_alive: boolean; checked_to_angle_rad: number;
+  fitted_to_angle_rad: number; clear_radius_m: number;
+}
+
 export interface CandidateScene {
+  lenses?: LensScene[];
   mirrors: MirrorScene[];
   path: { points_mm: Vec3[]; segments: Segment[]; total_length_mm: number; surface_point_mm?: Vec3 };
   beam: { definition: string; samples: BeamSample[]; model?: 'qtensor' };
@@ -132,7 +143,13 @@ export interface Candidate {
   role: string | null;
   roles: string[];
   role_labels: string[];
-  family: 'exact' | 'near_match';
+  family: 'exact' | 'near_match' | 'lens_two_reflector';
+  review?: boolean;          // P4 Lens Family review candidate: never counted as Computed
+  review_status?: string;
+  theta_out_rad?: number;
+  lens_checks?: LensCheck[];
+  lens_constraint?: string | null;
+  fit_history?: { step: string; eta: number }[];
   model?: 'separable' | 'qtensor';
   freeform?: {
     status: string; normalized_mode_overlap?: number; grid_change?: number; constraint?: string | null; reason?: string;
@@ -207,6 +224,7 @@ export interface Result {
   crossing?: Crossing | null;
   guidance?: Guidance[];
   nonparaxial_study?: NonparaxialStudy | null;
+  lens_review?: { status: string; candidates: Candidate[]; fail_reasons?: string[]; meaning?: string; counted_as_computed?: boolean } | null;
   search?: {
     status?: string; reason?: string; grid_points?: number; exact_feasible?: number; near_match_feasible?: number;
     screening_counts?: Record<string, number>; elapsed_seconds?: number; policy?: string; map?: SearchMap | null;

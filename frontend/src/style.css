@@ -74,6 +74,8 @@ aside.right { border-left: 1px solid var(--line); }
 .status { font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 12px; }
 .status.Computed { background: #eefbf1; color: var(--pass); }
 .status.Fail, .status.Invalid { background: #fff1ef; color: var(--fail); }
+.status.Review { background: #eef6ff; color: #0969da; }
+.scene-label.lens-label { color: #1a7f37; }
 .grid-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 4px 0; }
 .grid-table th, .grid-table td { border: 1px solid var(--line); padding: 3px 5px; text-align: left; }
 .grid-table th { background: var(--soft); font-weight: 600; }

@@ -40,10 +40,20 @@ export class Store {
     return this.resultIsCurrent ? this.state.result : null;
   }
 
+  /** Candidates drawn in 3D/2D: the Computed ones, plus a selected Lens Family review candidate. */
+  get drawnCandidates() {
+    const result = this.currentResult;
+    if (!result) return [];
+    const selected = this.selectedCandidate;
+    return selected?.review ? [...result.candidates, selected] : result.candidates;
+  }
+
   get selectedCandidate() {
     const result = this.currentResult;
     if (!result) return null;
-    return result.candidates.find((c) => c.id === this.state.selected) ?? result.candidates[0] ?? null;
+    const review = result.lens_review?.candidates ?? [];
+    return result.candidates.find((c) => c.id === this.state.selected) ?? review.find((c) => c.id === this.state.selected)
+      ?? result.candidates[0] ?? review[0] ?? null;
   }
 }
 

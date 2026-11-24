@@ -123,12 +123,29 @@ h(u, v) = ½(κ₁u² + κ₂v²) + Σ c_mn u^m v^n,  m + n = 3, 4 (반사면당
 
 보정 곡면은 공간 제약(Port 뒤 공간, Glass 영역, Envelope, Keep-out)을 Patch 41×41 점에서 다시 검사한다.
 
-## 굴절 비구면 (P4, 연구 중)
+## 굴절 비구면 (P4)
 
 비근축 추적은 회전대칭 비구면 굴절면도 지난다: z(r) = c r²/(1 + √(1 − (1+κ)c²r²)) + Σ a_i r^(2i). 교점은 꼭짓점 평면 교점에서 시작한
 Newton 반복, 굴절은 벡터 Snell 법칙(전반사 광선 제거), 광경로는 매질 굴절률을 곱해 누적한다. 검증: 평행 평판은 입사 방향을 보존하고
 측면 이동이 해석식과 일치(1e-12), 렌즈 근축 행렬이 광선 중앙 차분과 일치(1e-5), 등광로(Cartesian oval) Collimator 근사 비구면은
 ±0.6 rad 광선을 2e-4 rad 이내로 평행하게 만든다. 렌즈는 Port의 원거리(Rayleigh 거리 10배 이상)에 두어 광선 대응 가정을 지킨다.
+
+### Lens Family (P4 2단계, 검토 후보)
+
+발산각 Guard를 넘는 Port 앞에 두 면 비구면 Micro-lens(Silica, 평평한 쪽이 Port)를 둔다.
+
+1. 근축 설계: 출사 발산각 θ'(기본 0.005 rad)에서 w' = λ/(πθ'), f = π w₀ w'/λ. Port는 앞 초점(FFD d)에 놓고 중심 두께는 0.5 f.
+2. Aplanatic 맞춤: Port 점에서 나간 자오면 광선이 축과 평행하게(등광로) 그리고 높이 h = f sin α(Abbe 사인 조건)로 나오도록
+   두 면의 비구면 계수(곡면 쪽 Conic + r⁴…r¹⁰, Port 쪽 r⁴…r¹⁰)와 Bending을 최소제곱으로 맞춘다. Bending은 EFL과 FFD를 유지한다
+   (φ₂ = (1 − φ₁d)/f, t = n(1 − d/f)/φ₂). 사인 조건을 지키면 Port의 Gaussian 각스펙트럼이 출사면에서 Gaussian 높이 분포가 된다.
+   맞춤 범위는 1/e² 각의 2.6배(|A|² ≈ 1e-6)라서 Beam 안에서 방향 대응이 접히지 않는다. Clear 반경은 맞춘 광선 높이의 1.1배.
+3. 등가 Port: Lens 직후의 근축 q로 등가 Port를 만들어 기존 두 반사면 탐색으로 Relay를 설계한다.
+4. 판정: Lens·반사면(·Lens) 전체를 Port에서 Port까지 비근축 Scalar로 계산하고, 반사면에는 3·4차 Sag 보정을 더한다.
+   Port 양 끝이 원거리 조건을 만족하므로 각스펙트럼 + 광선 대응 방법이 유효하다(Lens만 따로 근거리에서 평가하면 유효하지 않다).
+5. 한계: 단일 비구면 Lens가 받을 수 있는 Port 발산각은 sin(2.6 θ) ≤ 0.85, 즉 θ ≤ 0.39 rad. 넘으면 Fail(S5 Laser 0.556 rad).
+   Lens 몸체의 Keep-out·Envelope 검사는 하지만, Lens와 다른 구간 Beam의 가림, Lens 공차, 코팅, 분산은 계산하지 않는다.
+
+결과는 `lens_review`로 따로 낸다. 비근축 검산으로만 채택되는 Family라서 Computed 후보로 세지 않으며 시나리오 상태는 Fail 그대로다.
 
 ## Mode Overlap
 

@@ -98,7 +98,7 @@ export class Drawings {
     const [a, b] = spec.axes;
     const state = this.store.state;
     const result = this.store.currentResult;
-    const candidates = result?.candidates ?? [];
+    const candidates = this.store.drawnCandidates;
     const selected = this.store.selectedCandidate;
     const extent = sceneExtent(state, candidates);
     const k = niceScale(extent.size, extent.maxRadiusUm) * 1e-3;
@@ -164,6 +164,12 @@ export class Drawings {
         root.append(svg('text', { x: X(m[0]) + nrm[0] * 14, y: Y(m[1]) - nrm[1] * 14, 'text-anchor': 'middle', 'font-size': 12, fill: '#b42318', 'data-kind': 'segment', 'data-length-mm': segment.length_mm },
           `L${j + 1} ${fmt(segment.length_mm, 3)}`));
       });
+      for (const lens of selected.scene.lenses ?? []) {
+        for (const line of lens.outline_mm.slice(0, 2)) root.append(svg('polygon', { points: line.map((q) => xy(project(q))).join(' '),
+          fill: '#1a7f37', 'fill-opacity': 0.12, stroke: '#1a7f37', 'stroke-width': 0.9, 'data-kind': 'lens', 'data-id': lens.id }));
+        const p = project(lens.curved_vertex_mm);
+        root.append(svg('text', { x: X(p[0]) + 8, y: Y(p[1]) - 10, 'font-size': 12, fill: '#1a7f37' }, `${lens.id} f ${fmt(lens.focal_length_um, 0)} µm`));
+      }
       selected.scene.mirrors.forEach((mirror, index) => {
         const g = mirror.surface_grid_corrected_mm ?? mirror.surface_grid_mm, n = g.length;
         const border = [...g[0], ...g.map((r) => r[n - 1]), ...[...g[n - 1]].reverse(), ...g.map((r) => r[0]).reverse()];
@@ -378,6 +384,12 @@ export class Drawings {
     segments.forEach((segment, j) => {
       const start = travelled;
       travelled += segment.length_mm;
+      if (segment.medium === 'lens') {
+        const lens = (selected.scene.lenses ?? []).find((l) => (j === 1) === (l.side === 'source'));
+        bands.append(svg('rect', { x: X(start), y: yc - half, width: Math.max(X(travelled) - X(start), 2), height: 2 * half, fill: '#e6f4ea', 'data-kind': 'fold-lens' }));
+        root.append(svg('text', { x: X(start) + (j === 1 ? 4 : -4), y: yc + half - 6, 'text-anchor': j === 1 ? 'start' : 'end', 'font-size': 12, fill: '#1a7f37' },
+          `${lens?.id ?? 'Lens'} f ${fmt(lens?.focal_length_um ?? null, 0)} µm`));
+      }
       if (segment.medium === 'ambient') {
         bands.append(svg('rect', { x: X(start), y: yc - half, width: X(travelled) - X(start), height: 2 * half, fill: '#eef6fa', 'data-kind': 'fold-ambient' }));
         const at = j === 0 ? travelled : start;

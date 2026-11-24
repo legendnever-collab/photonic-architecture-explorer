@@ -3,6 +3,15 @@
 새 항목을 위에 추가한다. 항목당 10줄 이내: 새로 가능해진 설계 판단, 주요 기술 선택, 남은 한계.
 2026-11-24 이전의 Milestone 기록(M1~M7-R28)은 [history/](history/)에 있다.
 
+## 2026-11-24 · P4 2단계: Lens Family 검토 후보 (`phase/p4-coma-correction`)
+
+- **가능해진 판단**: S3처럼 발산각 Guard를 넘는 Port에서 두 면 비구면 Micro-lens + 두 반사면 배치와 그 비근축 η를 3D/2D로 본다.
+  S3 비근축 η 0.984~0.997(3개 모두 수렴). 결과 상태는 Fail 그대로이며 후보는 `lens_review`에만 있다(사용자 결정: 검토 후보로 둠).
+- **원리**: Aplanatic 맞춤(평행 출사 + Abbe 사인 조건, EFL·FFD 유지 Bending), 1/e² 각 2.6배까지 맞춰 방향 대응이 접히지 않게 함.
+  θ'는 0.005 rad(Lens가 Port에서 Rayleigh 거리 36배). 반사면은 P4 1단계 보정 곡면을 그대로 씀.
+- **고친 것**: 비근축 접힘 판정이 잘린 광선 경계의 차분을 접힘으로 세던 문제. 자오면 추적이 Bending을 빠뜨리던 버그.
+- **한계**: S5(0.556 rad)는 단일 Lens 한계(0.39 rad) 밖. Lens와 다른 구간 Beam의 가림, Lens 공차·코팅·분산 미계산. S3 Design 시간 약 22 s.
+
 ## 2026-11-24 · P4 2단계 착수: Micro-lens 변환기 (연구 중, 화면 미연결)
 
 - **목표**: 발산각 Guard를 넘는 Port(S3 SSC, S5 Laser)를 평볼록 비구면 Micro-lens로 확대해 Guard 안의 등가 Port를 만들고, 기존 두 반사면 탐색으로 Relay를 설계.

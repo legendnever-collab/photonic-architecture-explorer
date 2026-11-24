@@ -6,7 +6,7 @@ import { clone, type AppState, type Store } from './state';
 import type { BeamSample, Candidate, MediumBlock, PortName, PortScene, Segment, Vec3 } from './types';
 import { cross, el, fmt, unit } from './util';
 
-const COLOR = { source: 0x1f6feb, target: 0xd9480f, path: 0xb42318, beam: 0xe5484d, mirror: 0x8b95a1, faint: 0x9aa5b1, glass: 0x0a7ea4 };
+const COLOR = { lens: 0x1a7f37, source: 0x1f6feb, target: 0xd9480f, path: 0xb42318, beam: 0xe5484d, mirror: 0x8b95a1, faint: 0x9aa5b1, glass: 0x0a7ea4 };
 const v3 = (p: Vec3) => new THREE.Vector3(p[0], p[1], p[2]);
 
 /** Choose a display magnification so beam radii are visible next to mm-scale geometry. */
@@ -163,7 +163,7 @@ export class Viewer3D {
     if (!this.ok) return;
     const state = this.store.state;
     const result = this.store.currentResult;
-    const candidates = result?.candidates ?? [];
+    const candidates = this.store.drawnCandidates;
     const extent = sceneExtent(state, candidates);
     this.beamScale = this.scaleMode === 'true' ? 1 : niceScale(extent.size, extent.maxRadiusUm);
     this.badge.textContent = this.beamScale === 1 ? 'Beam·Mode 실제 크기' : `Beam·Mode 반경 ×${this.beamScale} 확대 표시 (Geometry는 실제 크기)`;
@@ -342,6 +342,12 @@ export class Viewer3D {
         const roc = mirror.radius_of_curvature_ts_mm.map((r) => (r === null ? '∞' : fmt(r, 2))).join(' / ');
         group.add(this.label(`${mirror.id} · R ${roc} mm · ${fmt(mirror.incidence_deg, 1)}°${mirror.tir_possible === undefined ? '' : mirror.tir_possible ? ' · TIR 가능' : ' · 반사 Coating 필요'}`, v3(mirror.vertex_mm).addScaledVector(v3(mirror.normal), mirror.half_aperture_ts_mm[0] * 1.6)));
       }
+    }
+    for (const lens of c.scene.lenses ?? []) {
+      const material = new THREE.LineBasicMaterial({ color: COLOR.lens, transparent: !selected, opacity });
+      for (const line of lens.outline_mm) group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(line.map(v3)), material));
+      if (selected) group.add(this.label(`${lens.id} · f ${fmt(lens.focal_length_um, 0)} µm · Ø ${fmt(2 * lens.clear_radius_um, 0)} µm`,
+        v3(lens.curved_vertex_mm).add(new THREE.Vector3(...lens.axis).multiplyScalar(lens.clear_radius_um * 2e-3)), 'scene-label lens-label'));
     }
     if (selected) group.add(this.beamTube(c));
     return group;

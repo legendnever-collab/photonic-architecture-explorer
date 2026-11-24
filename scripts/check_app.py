@@ -13,6 +13,7 @@ Starts the packaged server, drives Chromium with Playwright and checks:
     turning the block off, and the shallow-guide region guidance
   * P4 coma correction: S1 corrected non-paraxial η ≥ 0.95, coefficient table and guidance
   * P3 non-paraxial check: η column and guidance on S1, beyond-guard study card on S3
+  * P4 Lens Family review candidates on S3 (card, detail, lens drawn in 2D and the unfolded view; status stays Fail)
   * P3 q-tensor: S4 (non-coplanar) gives verified candidates, the q-tensor note and guidance,
     beam ellipses in the scene and 2D mirror positions equal to the scene vertices (1 nm)
   * Design Document export round-trips
@@ -93,7 +94,7 @@ def canvas_ink(page):
 
 def design(page):
     page.click('#design')
-    page.wait_for_selector('[data-result-status]', timeout=60000)
+    page.wait_for_selector('[data-result-status]', timeout=240000)  # S3 runs the P4 Lens Family (~20–60 s)
     page.wait_for_timeout(500)
     return page.get_attribute('[data-result-status]', 'data-result-status')
 
@@ -277,6 +278,21 @@ def main():
         check(page.locator('[data-card="nonparaxial-study"] [data-study]').count() >= 1
               and page.locator('[data-guidance="nonparaxial_study"]').count() == 1, 'S3 non-paraxial study missing', failures)
         page.locator('[data-card="nonparaxial-study"]').screenshot(path=str(out / 'p3_S3_study.png'))
+        rows = page.locator('[data-card="lens-review"] [data-lens-candidate]')
+        check(rows.count() >= 1 and page.locator('[data-guidance="lens_review"]').count() == 1, 'S3 lens review card missing', failures)
+        etas = [float(v) for v in page.eval_on_selector_all('[data-lens-eta]', 'els => els.map(e => e.dataset.lensEta)') if v]
+        summary['S3_lens_review_eta'] = etas
+        check(status == 'Fail' and etas and max(etas) >= 0.95, f'S3 lens review η {etas} (status must stay Fail)', failures)
+        if rows.count():
+            rows.first.click()
+            page.wait_for_timeout(400)
+            check(page.locator('[data-lens-detail]').count() == 1, 'S3 lens detail missing', failures)
+            page.click('.tab[data-view="all"]')
+            page.wait_for_timeout(300)
+            check(page.locator('[data-kind="lens"]').count() >= 2 and page.locator('[data-kind="fold-lens"]').count() == 1,
+                  'S3 lens not drawn in 2D / unfolded view', failures)
+            page.screenshot(path=str(out / 'p4_S3_lens_review.png'))
+            page.locator('[data-card="lens-review"]').screenshot(path=str(out / 'p4_S3_lens_card.png'))
         check(not errors, f'page errors: {errors}', failures)
         summary['page_errors'] = errors
 

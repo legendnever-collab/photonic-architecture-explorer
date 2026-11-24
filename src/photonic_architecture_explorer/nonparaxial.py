@@ -237,7 +237,13 @@ def field(source_q, source_basis, source_position, source_direction, target_q, t
     a = _spectrum(source_q, k, np.stack([uu, vv], -1))
     power = np.where(alive, abs(a) ** 2, 0.0)
     centre = np.sign(signed[grid // 2, grid // 2]) or 1.0
-    fold = float(power[np.sign(signed) != centre].sum() / max(power.sum(), 1e-300))  # direction mapping folded (caustic)
+    # direction mapping folded (caustic); differences that reach a dead (clipped) ray are not folds
+    interior = alive.copy()
+    interior[1:] &= alive[:-1]
+    interior[:-1] &= alive[1:]
+    interior[:, 1:] &= alive[:, :-1]
+    interior[:, :-1] &= alive[:, 1:]
+    fold = float(power[interior & (np.sign(signed) != centre)].sum() / max(power.sum(), 1e-300))
     b = _spectrum(target_q, k, uq)
     weight = np.where(alive, np.sqrt(np.nan_to_num(jac) * kz / qz), 0.0)
     arriving = (np.where(alive, abs(a) ** 2 * kz / qz, 0.0)).sum() * step * step

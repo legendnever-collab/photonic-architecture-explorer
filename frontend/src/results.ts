@@ -1,5 +1,7 @@
 import type { Store } from './state';
 import type { Candidate, NonparaxialStudy, Result } from './types';
+
+type LensReview = NonNullable<Result['lens_review']>;
 import { STATUS_LABEL, el, fmt, nextStep, reasonLabel } from './util';
 
 const TITLES: Record<string, string> = {
@@ -40,6 +42,9 @@ export class ResultsPanel {
       const selected = this.store.selectedCandidate;
       if (selected) this.root.append(this.detail(selected));
     }
+    if (current.lens_review) this.root.append(this.lensReview(current.lens_review));
+    const chosen = this.store.selectedCandidate;
+    if (chosen?.review) this.root.append(this.lensDetail(chosen));
     if (current.nonparaxial_study?.cases?.length) this.root.append(this.study(current.nonparaxial_study));
     if (current.search?.screening_counts) {
       this.root.append(this.rejections(current.search.screening_counts, current.search.grid_points, current.search.elapsed_seconds));
@@ -87,6 +92,58 @@ export class ResultsPanel {
       el('table', { class: 'grid-table' }, el('thead', {}, head), el('tbody', {}, ...rows)),
       el('div', { class: 'muted' }, 'Frozen Guard를 끈 근축 Exact 설계를 비근축 Scalar로 다시 계산했습니다. Aperture는 1e-6 Power 꼬리 반경(2.63 w)입니다. '
         + '후보로 채택하지 않으며, 다른 Family나 Guard 재검토(사용자 승인)를 판단하는 근거입니다.'));
+  }
+
+  /** P4 Lens Family: shown and drawable, never counted as Computed candidates. */
+  private lensReview(review: LensReview) {
+    const selected = this.store.selectedCandidate;
+    const head = el('tr', {}, ...['#', '비근축 η', '수렴', 'Lens f / Ø [µm]', '광경로 [mm]', '입사각 [°]', '제약'].map((h) => el('th', {}, h)));
+    const rows = review.candidates.map((c) => {
+      const lenses = c.scene.lenses ?? [];
+      const ok = c.review_status === 'Computed' && !c.lens_constraint;
+      const row = el('tr', { class: c.id === selected?.id ? 'selected' : '', 'data-lens-candidate': c.id, title: c.id },
+        el('td', {}, String(c.rank)),
+        el('td', { class: ok ? 'good' : 'warn', 'data-lens-eta': String(c.metrics.nonparaxial_overlap ?? '') }, fmt(c.metrics.nonparaxial_overlap ?? null, 4)),
+        el('td', {}, c.review_status === 'Computed' ? '예' : c.review_status === 'Unconverged' ? '미수렴' : c.review_status ?? '—'),
+        el('td', {}, lenses.map((l) => `${l.id} ${fmt(l.focal_length_um, 0)} / ${fmt(2 * l.clear_radius_um, 0)}`).join(' · ')),
+        el('td', {}, fmt(c.metrics.total_path_mm, 3)),
+        el('td', {}, c.metrics.incidence_deg.map((v) => fmt(v, 1)).join(' / ')),
+        el('td', { class: c.lens_constraint ? 'warn' : '' }, c.lens_constraint ? reasonLabel(c.lens_constraint) : '통과'));
+      row.addEventListener('click', () => this.store.set({ selected: c.id }));
+      return row;
+    });
+    const reasons = review.fail_reasons ?? [];
+    return el('section', { class: 'card', 'data-card': 'lens-review' },
+      el('div', { class: 'card-head' }, el('h3', {}, `Lens Family 검토 후보 (${review.candidates.length})`), el('span', { class: 'status Review' }, '검토 후보 · Computed 아님')),
+      ...(review.candidates.length ? [el('table', { class: 'grid-table' }, el('thead', {}, head), el('tbody', {}, ...rows))] : []),
+      ...(reasons.length && !review.candidates.length ? [el('div', { class: 'issue' }, reasons.map((r) => reasonLabel(r)).join(' / '))] : []),
+      el('div', { class: 'muted' }, `Port 바로 앞에 두 면 비구면 Micro-lens(Silica, 평평한 쪽이 Port)를 두어 출사 발산각을 θ' ${fmt(review.candidates[0]?.theta_out_rad ?? null, 3)} rad로 줄인 뒤`
+        + ', 등가 Port 사이에서 두 반사면 Relay를 근축으로 설계했습니다. '
+        + 'Lens는 Aplanatic(평행 출사 + Abbe 사인 조건)으로 맞추고, Lens·반사면 전체를 비근축 η로만 판정하며 반사면은 3·4차 Sag로 보정합니다. '
+        + '이 Family를 Computed 후보로 올릴지는 사용자 결정입니다. 행을 누르면 3D/2D에 Lens와 Beam이 그려집니다. Lens 몸체와 Beam 사이 가림, Lens 공차·코팅은 아직 계산하지 않았습니다.'));
+  }
+
+  private lensDetail(c: Candidate) {
+    const lenses = c.scene.lenses ?? [];
+    const checks = c.lens_checks ?? [];
+    const head = el('tr', {}, ...['Lens', 'f [µm]', '중심 두께 [µm]', 'Clear Ø [µm]', 'Port→Lens [µm]', 'n (상대)', '출사 방향 잔차 [mrad]', '사인 조건 오차 [nm]', '맞춘 광선각 [rad]'].map((h) => el('th', {}, h)));
+    const rows = lenses.map((l, i) => {
+      const k = checks[i];
+      return el('tr', {}, el('td', {}, `${l.id} (${l.side === 'source' ? 'Source' : 'Target'})`), el('td', {}, fmt(l.focal_length_um, 1)),
+        el('td', {}, fmt(l.thickness_um, 1)), el('td', {}, fmt(2 * l.clear_radius_um, 0)), el('td', {}, fmt(l.port_distance_um, 2)),
+        el('td', {}, fmt(l.relative_index, 4)), el('td', {}, k ? fmt(k.max_direction_rad * 1e3, 3) : '—'),
+        el('td', {}, k ? fmt(k.max_sine_condition_error_m * 1e9, 1) : '—'), el('td', {}, k ? fmt(k.fitted_to_angle_rad, 3) : '—'));
+    });
+    const mirrors = c.scene.mirrors.map((m) => el('tr', {}, el('td', {}, m.id), el('td', { class: 'mono' }, m.vertex_mm.map((v) => fmt(v, 4)).join(', ')),
+      el('td', {}, m.radius_of_curvature_ts_mm.map((r) => (r === null ? '∞' : fmt(r, 3))).join(' / ')), el('td', {}, fmt(m.incidence_deg, 2))));
+    const history = (c.fit_history ?? []).map((h) => `${h.step} ${fmt(h.eta, 4)}`).join(' → ');
+    return el('section', { class: 'card', 'data-detail': c.id, 'data-lens-detail': '' }, el('h3', {}, `${c.id} 상세 (검토 후보)`),
+      el('table', { class: 'grid-table' }, el('thead', {}, head), el('tbody', {}, ...rows)),
+      el('table', { class: 'grid-table' }, el('thead', {}, el('tr', {}, ...['반사면', 'Vertex [mm]', 'R t / s [mm]', '입사각 [°]'].map((h) => el('th', {}, h)))), el('tbody', {}, ...mirrors)),
+      el('div', { class: 'muted' }, `비근축 η ${fmt(c.metrics.nonparaxial_overlap ?? null, 4)} (${c.review_status}) · 격자 변화 ${(c.nonparaxial_check?.grid_change ?? 0).toExponential(1)} · `
+        + `Aperture 밖 Power ${(c.nonparaxial_check?.clipped_power_fraction ?? 0).toExponential(1)} · 등가 Port 사이 근축 η ${fmt(c.metrics.normalized_mode_overlap, 4)}`),
+      el('div', { class: 'muted' }, `맞춤 과정: ${history}`),
+      el('div', { class: 'muted' }, '방향 잔차와 사인 조건 오차는 Port 1/e² 각의 1.5배까지 자오면 광선으로 확인한 값입니다. Lens 계수와 반사면 보정 계수는 결과 JSON(lens_review)에 있습니다.'));
   }
 
   private freeform(c: Candidate) {

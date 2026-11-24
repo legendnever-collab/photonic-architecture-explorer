@@ -17,6 +17,7 @@ family are therefore accepted only on the non-paraxial check, which is reported 
 paraxial family (the frozen guards still govern the paraxial model).
 """
 
+import dataclasses
 import math
 from dataclasses import dataclass, field
 
@@ -27,7 +28,7 @@ from . import nonparaxial
 from .gaussian import DomainError, Gaussian
 from .geometry import add, mul, unit
 
-LENS_EXPANSION_OPTIONS = (0.01, 0.02)  # output divergence θ' [rad]; small θ' puts the lens ≥ 10 Rayleigh ranges from the Port
+LENS_EXPANSION_OPTIONS = (0.005,)  # output divergence θ' [rad]; small θ' puts the lens ≥ 10 Rayleigh ranges from the Port
 THICKNESS_FRACTION = 0.5               # centre thickness as a fraction of the EFL
 APERTURE_MARGIN = 1.6                  # clear radius = margin × 2.63 w at the curved surface
 LENS_FIT_GRID = 65
@@ -43,6 +44,8 @@ class Lens:
     curvature: float          # curved side, sag along `axis` measured from the flat side outwards
     conic: float = 0.0
     aspheric: tuple = (0.0, 0.0)
+    flat_aspheric: tuple = ()     # even terms on the Port-side face
+    flat_curvature: float = 0.0   # Port-side face curvature (0 = plano-convex); EFL and FFD are kept
     radius: float = 1e-3
     focal_length: float = 0.0
     port_distance: float = 0.0
@@ -54,7 +57,7 @@ class Lens:
 
     def surfaces(self, forward=True):
         """Refracting surfaces in propagation order (forward = Source → Target)."""
-        flat = (self.vertex, 0.0, 0.0, ())
+        flat = (self.vertex, self.flat_curvature, 0.0, self.flat_aspheric)
         curved = (self.curved_vertex, self.curvature, self.conic, self.aspheric)
         if self.side == 'source':
             order = [(flat, 1.0, self.index), (curved, self.index, 1.0)]
@@ -73,7 +76,7 @@ class Lens:
 def _reduced_matrix(lens):
     """Port-side reduced ray matrix of the lens from the flat vertex to the curved vertex."""
     n0, nl = 1.0, lens.index
-    flat = np.eye(2)
+    flat = np.array([[1.0, 0.0], [-(nl - n0) * lens.flat_curvature, 1.0]])
     inside = np.array([[1.0, lens.thickness / nl], [0.0, 1.0]])
     curved = np.array([[1.0, 0.0], [-(n0 - nl) * lens.curvature, 1.0]])
     return curved @ inside @ flat
@@ -88,6 +91,11 @@ def transform(q, lens):
 def design(port, theta_out, lens_index, side='source', label='Micro-lens'):
     """Paraxial plano-convex converter for one Port (`port` from external.adapt_ports, ambient medium)."""
     mode = port.mode
+    theta = max(p['divergence_rad'] for p in mode.parameters())
+    if theta > MAX_PORT_DIVERGENCE:
+        raise DomainError(f'Port divergence {theta:.3f} rad is beyond a single aspheric singlet '
+                          f'(limit {MAX_PORT_DIVERGENCE:.2f} rad: rays to {APLANATIC_FAN} × the 1/e² angle must stay '
+                          f'below sin = {MAX_RAY_SINE})')
     lam_m = mode.wavelength / mode.index
     w0 = min(p['waist_radius_m'] for p in mode.parameters())
     w_out = lam_m / (math.pi * theta_out)
@@ -101,6 +109,7 @@ def design(port, theta_out, lens_index, side='source', label='Micro-lens'):
     axis = port.direction if side == 'source' else mul(port.direction, -1.0)
     vertex = add(port.position, mul(axis, d))
     lens = Lens(side, vertex, unit(axis), t, n_rel, curvature, focal_length=f, port_distance=d)
+    set_bending(lens, 0.0)
     q_end = equivalent_q(port, lens)
     widest = max(math.sqrt(-lam_m / (math.pi * (1 / q).imag)) for q in q_end)
     lens.radius = APERTURE_MARGIN * math.sqrt(math.log(1e6) / 2) * widest
@@ -178,6 +187,89 @@ def fit_collimator(lens):
     return float(np.abs(residual(run.x)).max() * scale)
 
 
+APLANATIC_TERMS = 4      # even aspheric terms per face (r⁴ … r¹⁰)
+APLANATIC_FAN = 2.6      # fitted ray fan in units of the Port 1/e² half-angle (|A|² ≈ 1e-6 at the edge)
+MAX_RAY_SINE = 0.85      # steepest ray a single aspheric singlet is asked to bend
+MAX_PORT_DIVERGENCE = math.asin(MAX_RAY_SINE) / APLANATIC_FAN  # ≈ 0.39 rad
+APLANATIC_RAYS = 48
+
+
+def meridional(lens, alphas, plane_offset=1e-4):
+    """Exit height and direction sine of meridional rays leaving the Port point at angles α."""
+    axis = np.array(lens.axis)
+    side = np.array([0.0, 0.0, 1.0]) if abs(axis[2]) < 0.9 else np.array([1.0, 0.0, 0.0])
+    side = side - (side @ axis) * axis
+    side /= np.linalg.norm(side)
+    other = np.cross(axis, side)
+    port = np.array(lens.vertex) - axis * lens.port_distance
+    dirs = np.cos(alphas)[:, None] * axis + np.sin(alphas)[:, None] * side
+    plane = np.array(lens.curved_vertex) + axis * plane_offset
+    flipped = dataclasses.replace(lens, side='source')  # trace from the Port whichever end it serves
+    ray = nonparaxial.trace_bundle(port, dirs, flipped.surfaces(), plane, np.array([side, other]).T, axis)
+    return ray['alive'], ray['x'][:, 0], ray['u'][:, 0]
+
+
+def set_bending(lens, flat_curvature):
+    """Change the Port-side curvature keeping the EFL f and the Port at the front focal point (distance d):
+    φ₂ = (1 − φ₁d)/f and t = n(1 − d/f)/φ₂ (reduced thick-lens relations)."""
+    n, f, d = lens.index, lens.focal_length, lens.port_distance
+    phi1 = (n - 1) * flat_curvature
+    phi2 = (1 - phi1 * d) / f
+    thickness = n * (1 - d / f) / phi2
+    if phi2 <= 0 or thickness <= 0:
+        raise DomainError('lens bending out of range')
+    lens.flat_curvature, lens.curvature, lens.thickness = flat_curvature, phi2 / (1 - n), thickness
+
+
+def fit_aplanatic(lens, angle):
+    """Both faces aspheric so that the lens is aplanatic for the Port point: rays leave parallel to the
+    axis (equal path) and at height f·sin α (Abbe sine condition), which keeps a Gaussian angular
+    spectrum Gaussian across the aperture. Least squares on meridional rays up to 2.6 × the 1/e² angle (|A|² ≈ 1e-6), so the mapping does not fold inside the beam.
+    Returns the largest residual direction [rad] and height error [m]."""
+    from scipy.optimize import least_squares
+    fit_collimator(lens)
+    top = min(math.asin(MAX_RAY_SINE), APLANATIC_FAN * angle)
+    alphas = np.linspace(-top, top, 2 * APLANATIC_RAYS + 1)
+    weight = np.exp(-(np.sin(alphas) / max(angle, 1e-9)) ** 2) + 0.05
+    scale = lens.radius
+    f = lens.focal_length
+    curved = list(lens.aspheric) + [0.0] * (APLANATIC_TERMS - len(lens.aspheric))
+    start = [0.0, lens.conic, *(a * scale ** (2 * i + 1) for i, a in enumerate(curved[:APLANATIC_TERMS], start=1)),
+             *([0.0] * APLANATIC_TERMS)]
+
+    def apply(x):
+        set_bending(lens, x[0] / f)
+        lens.conic = x[1]
+        lens.aspheric = tuple(a / scale ** (2 * i + 1) for i, a in enumerate(x[2:2 + APLANATIC_TERMS], start=1))
+        lens.flat_aspheric = tuple(a / scale ** (2 * i + 1) for i, a in enumerate(x[2 + APLANATIC_TERMS:], start=1))
+
+    def residual(x):
+        try:
+            apply(x)
+        except DomainError:
+            return np.ones(2 * len(alphas)) * 10
+        alive, height, direction = meridional(lens, alphas)
+        r = np.concatenate([direction * f, height - f * np.sin(alphas)]) / scale
+        r = np.where(np.concatenate([alive, alive]), r, 1.0)
+        return r * np.concatenate([weight, weight])
+    best = None
+    for bend in (0.0, 0.3, -0.3, 0.6):  # Port-side curvature × f; the plano-convex start is the collimator
+        trial = [bend, *start[1:]]
+        run = least_squares(residual, trial, method='trf', x_scale='jac', max_nfev=600)
+        if best is None or run.cost < best.cost:
+            best = run
+    run = best
+    apply(run.x)
+    alive, height, direction = meridional(lens, alphas)
+    # clear aperture: the fitted fan plus 10 %; rays outside it are clipped (reported by the check)
+    lens.radius = min(lens.radius, 1.1 * float(np.abs(height[alive]).max()))
+    core = np.abs(np.sin(alphas)) <= 1.5 * angle  # carries all but ~1e-2 of the power
+    return {'max_direction_rad': float(np.abs(direction[alive & core]).max()),
+            'max_sine_condition_error_m': float(np.abs(height - f * np.sin(alphas))[alive & core].max()),
+            'rays_alive': bool(alive[core].all()), 'checked_to_angle_rad': float(1.5 * angle),
+            'fitted_to_angle_rad': float(top), 'clear_radius_m': lens.radius}
+
+
 def far_zone_ratio(port, lens):
     """Port-to-lens distance in Rayleigh ranges (the ray mapping needs the lens in the Port's far zone)."""
     return lens.port_distance / min(p['rayleigh_range_m'] for p in port.mode.parameters())
@@ -193,7 +285,10 @@ def system_args(ports):
             ports.target.position, ports.target.direction, k, angle)
 
 
-def fit_system(ports, lenses, mirror_tuples, footprints):
+LENS_ROUNDS = 1
+
+
+def fit_system(ports, lenses, mirror_tuples, footprints, refit_lenses=False):
     """Lens aspheres and reflector sag terms that maximise the non-paraxial overlap of the whole relay.
 
     Valid because both ends are true Port waists (point-like emitter and focus in the far zone of
@@ -241,12 +336,15 @@ def fit_system(ports, lenses, mirror_tuples, footprints):
                 l.conic, l.aspheric = kappa, asph
 
     history = [{'step': 'spherical lens, quadric reflectors', 'eta': eta()}]
-    for l in lenses:  # start from the exact equal-path collimator, fitted as an even asphere
-        fit_collimator(l)
-    history.append({'step': 'equal-path collimator lens', 'eta': eta()})
-    for round_ in range(2):
-        fit_lenses()
-        history.append({'step': f'lens asphere {round_ + 1}', 'eta': eta()})
+    lens_checks = []
+    for l in lenses:  # aplanatic two-asphere lens for the Port point (equal path + sine condition)
+        port = getattr(ports, l.side)
+        lens_checks.append(fit_aplanatic(l, max(p['divergence_rad'] for p in port.mode.parameters())))
+    history.append({'step': 'aplanatic lens, quadric reflectors', 'eta': eta()})
+    for round_ in range(LENS_ROUNDS):
+        if refit_lenses:
+            fit_lenses()
+            history.append({'step': f'lens asphere {round_ + 1}', 'eta': eta()})
         prefix, _, suffix = surfaces([()] * len(mirror_tuples))
         result = freeform.correct(args, mirror_tuples, footprints, wavelength, prefix=prefix, suffix=suffix)
         if result['check'].get('status') != 'Invalid':
@@ -254,7 +352,7 @@ def fit_system(ports, lenses, mirror_tuples, footprints):
         history.append({'step': f'reflector correction {round_ + 1}', 'eta': eta()})
     prefix, middle, suffix = surfaces(poly)
     check = nonparaxial.check(*args[:8], [*prefix, *middle, *suffix], *args[8:])
-    return {'check': check, 'poly': poly, 'history': history}
+    return {'check': check, 'poly': poly, 'history': history, 'lens_checks': lens_checks}
 
 
 def lens_family(engine_document, constraints, guard=0.1, options=LENS_EXPANSION_OPTIONS, cases=3):
@@ -293,6 +391,7 @@ def lens_family(engine_document, constraints, guard=0.1, options=LENS_EXPANSION_
                 rows.append({'id': candidate['id'], 'status': 'Fail', 'reason': str(exc)})
                 continue
             rows.append({'id': candidate['id'], 'equivalent_candidate': candidate, 'status': fit['check']['status'],
+                         'lens_checks': fit['lens_checks'], 'lens_objects': fitted, 'equivalent_document': equivalent,
                          'nonparaxial_check': fit['check'], 'fit_history': fit['history'],
                          'lenses': [lens_record(l, getattr(ports, l.side)) for l in fitted],
                          'reflector_terms': [[{'u_power': m, 'v_power': n, 'coefficient_si': c} for m, n, c in p] for p in fit['poly']]})
@@ -307,8 +406,102 @@ def lens_family(engine_document, constraints, guard=0.1, options=LENS_EXPANSION_
 
 def lens_record(lens, port):
     return {'side': lens.side, 'flat_vertex_m': list(lens.vertex), 'axis': list(lens.axis),
+            'port_side_curvature_per_m': lens.flat_curvature,
             'curved_vertex_m': list(lens.curved_vertex), 'thickness_m': lens.thickness,
             'relative_index': lens.index, 'curvature_per_m': lens.curvature, 'conic': lens.conic,
-            'aspheric_even_si': list(lens.aspheric), 'clear_radius_m': lens.radius,
+            'aspheric_even_si': list(lens.aspheric), 'flat_face_aspheric_even_si': list(lens.flat_aspheric), 'clear_radius_m': lens.radius,
             'focal_length_m': lens.focal_length, 'port_distance_m': lens.port_distance,
             'far_zone_rayleigh_ranges': far_zone_ratio(port, lens)}
+
+
+def outline(lens, samples=24):
+    """Lens edges for drawing [mm]: two meridional sections (closed) and the two rim circles."""
+    axis = np.array(lens.axis)
+    side = np.array([0.0, 0.0, 1.0]) if abs(axis[2]) < 0.9 else np.array([1.0, 0.0, 0.0])
+    side = side - (side @ axis) * axis
+    side /= np.linalg.norm(side)
+    other = np.cross(axis, side)
+    flat, curved = np.array(lens.vertex), np.array(lens.curved_vertex)
+    r = np.linspace(-lens.radius, lens.radius, 2 * samples + 1)
+    z1, _ = nonparaxial.asphere_sag(r ** 2, lens.flat_curvature, 0.0, lens.flat_aspheric)
+    z2, _ = nonparaxial.asphere_sag(r ** 2, lens.curvature, lens.conic, lens.aspheric)
+    lines = []
+    for radial in (side, other):
+        front = flat + np.outer(z1, axis) + np.outer(r, radial)
+        back = curved + np.outer(z2, axis) + np.outer(r, radial)
+        lines.append(np.vstack([front, back[::-1], front[:1]]) * 1e3)
+    phi = np.linspace(0, 2 * math.pi, 4 * samples + 1)
+    ring = np.outer(np.cos(phi), side) + np.outer(np.sin(phi), other)
+    for vertex, z in ((flat, z1[-1]), (curved, z2[-1])):
+        lines.append((vertex + z * axis + lens.radius * ring) * 1e3)
+    return [line.tolist() for line in lines]
+
+
+def extend_scene(scene, lens, port, samples=12):
+    """Add the Port → lens (Source) or lens → Port (Target) segments to a relay scene whose end is the
+    equivalent Port at the lens curved vertex. Beam radii: Port mode in the gap (paraxial), linear inside the lens."""
+    from .scene import _t_axis
+    d, t = lens.port_distance, lens.thickness
+    axis = lens.axis
+    s_axis = list(port.sagittal)
+    t_axis = _t_axis(port.sagittal, axis)
+    relay = scene['beam']['samples']
+    path = scene['path']
+
+    def radii(z):  # Port mode at distance z downstream (Source) or upstream (Target) of the Port
+        return [p['radius_m'] * 1e6 for p in port.mode.propagate(z if lens.side == 'source' else -z).parameters()]
+
+    def seg(start, end, medium):
+        return {'start_mm': list(np.array(start) * 1e3), 'end_mm': list(np.array(end) * 1e3),
+                'length_mm': float(np.linalg.norm(np.subtract(end, start)) * 1e3),
+                'direction': list(axis if lens.side == 'source' else mul(axis, -1.0)),
+                't_axis': t_axis, 's_axis': s_axis, **({'medium': medium} if medium else {})}
+    if lens.side == 'source':
+        gap, glass = seg(port.position, lens.vertex, None), seg(lens.vertex, lens.curved_vertex, 'lens')
+        end_gap, start_relay = radii(d), [relay[0]['radius_t_um'], relay[0]['radius_s_um']]
+        new = []
+        for k in range(samples + 1):
+            z = d * k / samples
+            r = radii(z)
+            new.append({'segment': 0, 'distance_mm': z * 1e3, 'point_mm': list(np.add(port.position, np.multiply(axis, z)) * 1e3),
+                        'radius_t_um': r[0], 'radius_s_um': r[1]})
+        for k in range(samples + 1):
+            f = k / samples
+            new.append({'segment': 1, 'distance_mm': (d + f * t) * 1e3,
+                        'point_mm': list(np.add(lens.vertex, np.multiply(axis, f * t)) * 1e3),
+                        'radius_t_um': (1 - f) * end_gap[0] + f * start_relay[0],
+                        'radius_s_um': (1 - f) * end_gap[1] + f * start_relay[1], 'medium': 'lens'})
+        for sample in relay:
+            sample['segment'] += 2
+            sample['distance_mm'] += (d + t) * 1e3
+        path['points_mm'] = [list(np.array(port.position) * 1e3), list(np.array(lens.vertex) * 1e3), *path['points_mm']]
+        path['segments'] = [gap, glass, *path['segments']]
+        scene['beam']['samples'] = new + relay
+    else:
+        glass, gap = seg(lens.curved_vertex, lens.vertex, 'lens'), seg(lens.vertex, port.position, None)
+        start_gap, end_relay = radii(d), [relay[-1]['radius_t_um'], relay[-1]['radius_s_um']]
+        n, offset = len(path['segments']), path['total_length_mm']
+        new = []
+        for k in range(samples + 1):
+            f = k / samples
+            new.append({'segment': n, 'distance_mm': offset + f * t * 1e3,
+                        'point_mm': list(np.add(lens.curved_vertex, np.multiply(axis, -f * t)) * 1e3),
+                        'radius_t_um': (1 - f) * end_relay[0] + f * start_gap[0],
+                        'radius_s_um': (1 - f) * end_relay[1] + f * start_gap[1], 'medium': 'lens'})
+        for k in range(samples + 1):
+            z = d * k / samples
+            r = radii(d - z)
+            new.append({'segment': n + 1, 'distance_mm': offset + (t + z) * 1e3,
+                        'point_mm': list(np.add(lens.vertex, np.multiply(axis, -z)) * 1e3),
+                        'radius_t_um': r[0], 'radius_s_um': r[1]})
+        path['points_mm'] = [*path['points_mm'], list(np.array(lens.vertex) * 1e3), list(np.array(port.position) * 1e3)]
+        path['segments'] = [*path['segments'], glass, gap]
+        scene['beam']['samples'] = relay + new
+    path['total_length_mm'] += (d + t) * 1e3
+    scene.setdefault('lenses', []).append({
+        'id': 'L1' if lens.side == 'source' else 'L2', 'side': lens.side,
+        'flat_vertex_mm': list(np.array(lens.vertex) * 1e3), 'curved_vertex_mm': list(np.array(lens.curved_vertex) * 1e3),
+        'axis': list(lens.axis), 'focal_length_um': lens.focal_length * 1e6, 'thickness_um': lens.thickness * 1e6,
+        'clear_radius_um': lens.radius * 1e6, 'port_distance_um': d * 1e6, 'relative_index': lens.index,
+        'outline_mm': outline(lens)})
+    return scene

@@ -10,6 +10,8 @@ from dataclasses import replace
 
 import numpy as np
 
+from .freeform import surface_violation
+
 from .design import review_snapshot
 from .design_document import (DocumentError, document_sha256, search_constraints, to_engine_problem,
                               validate_document)
@@ -152,7 +154,7 @@ def _candidate(rank, candidate, problem=None, ambient_ports=None):
     }
 
 
-def design_guidance(report, ports, ambient_index, medium='ambient'):
+def design_guidance(report, ports, ambient_index, medium='ambient', lens_review=None):
     out = port_guidance(ports, ambient_index) if ports else []
     search = report.get('search', {})
     counts = search.get('screening_counts', {})
@@ -207,12 +209,80 @@ def design_guidance(report, ports, ambient_index, medium='ambient'):
     if study:
         out.append({'kind': 'nonparaxial_study', 'phase': 'P3', 'level': 'info', 'values': study.get('summary'),
                     'message': study.get('message', '')})
+    if lens_review:
+        values = [c['metrics']['nonparaxial_overlap'] for c in lens_review['candidates']
+                  if c['review_status'] == 'Computed' and not c['lens_constraint']]
+        out.append({'kind': 'lens_review', 'phase': 'P4', 'level': 'info',
+                    'values': {'count': len(values), 'eta_min': min(values) if values else None,
+                               'eta_max': max(values) if values else None},
+                    'message': (f'Micro-lens + 두 반사면 검토 후보 {len(values)}개: 비근축 η {min(values):.3f}~{max(values):.3f}. '
+                                'Lens가 Port Mode를 Guard 안으로 키운 뒤 Relay를 설계하고, Lens·반사면 전체를 비근축 η로만 확인했습니다. '
+                                'Computed 후보로 세지 않으며 결과 상태는 Fail 그대로입니다. 아래 "Lens Family 검토 후보"에서 3D/2D로 볼 수 있습니다.'
+                                if values else 'Micro-lens + 두 반사면 Family도 비근축 확인을 통과한 후보가 없습니다. '
+                                + ' '.join(lens_reason_label(r) for r in sorted(set(lens_review.get('fail_reasons', []))))[:400])})
     if report.get('status') == 'Fail' and search.get('status') == 'Completed':
         top = sorted(counts.items(), key=lambda kv: -kv[1])[:3]
         out.append({'kind': 'no_candidate', 'phase': 'P4',
                     'message': '두 반사면 Family 안에서 Guard와 제약을 모두 만족하는 배치가 없습니다(물리적 불가능의 증명은 아님). '
                                '주요 사유: ' + ', '.join(f'{k} ({v})' for k, v in top)})
     return out
+
+
+def lens_reason_label(reason):
+    import re
+    found = re.match(r'Port divergence ([0-9.]+) rad is beyond a single aspheric singlet \(limit ([0-9.]+) rad', reason or '')
+    if found:
+        return (f'Port 발산각 {found.group(1)} rad는 단일 비구면 Lens 하나로 받을 수 있는 범위({found.group(2)} rad)를 넘습니다 '
+                '(1/e² 각의 2.6배 광선까지 sin 0.85 이하로 꺾어야 함). 두 Lens 또는 고굴절률 Lens가 필요합니다.')
+    return reason or ''
+
+
+def lens_family_review(engine_input, constraints, problem, ports):
+    """P4 Lens Family (Micro-lens + two reflectors) as review candidates: never counted as Computed."""
+    from . import lens as lens_module
+    if problem['block'] is not None:
+        return {'status': 'Uncomputed', 'candidates': [], 'runs': [],
+                'meaning': 'Lens Family는 아직 공기(주변 매질) Relay만 다룹니다. Glass Block 문제에는 적용하지 않았습니다.'}
+    family = lens_module.lens_family(engine_input, constraints)
+    if family is None:
+        return None
+    real = adapt_ports(engine_input)
+    candidates, reasons, runs = [], [], []
+    for run in family['runs']:
+        runs.append({'theta_out_rad': run['theta_out_rad'], 'status': run['status'], 'reason': run.get('reason'),
+                     'lenses': run.get('lenses', [])})
+        if run['status'] != 'Computed':
+            reasons.append(run.get('reason') or run['status'])
+        for row in run['candidates']:
+            if 'equivalent_candidate' not in row:
+                reasons.append(row.get('reason') or row['status'])
+                continue
+            record = _candidate(len(candidates) + 1, row['equivalent_candidate'])
+            constraint = None
+            for lens_object in row['lens_objects']:
+                lens_module.extend_scene(record['scene'], lens_object, getattr(real, lens_object.side))
+                points = np.array([q for line in record['scene']['lenses'][-1]['outline_mm'] for q in line]) * 1e-3
+                found = surface_violation(real, replace(constraints, port_halfspace=False), points)
+                if found and constraint is None:
+                    constraint = found.replace('corrected surface', 'lens body')
+            check = row['nonparaxial_check']
+            record.update({
+                'id': 'L-' + row['id'], 'review': True, 'role': 'lens_review', 'roles': ['lens_review'],
+                'role_labels': ['Lens Family 검토 후보'], 'family': 'lens_two_reflector', 'review_status': row['status'],
+                'theta_out_rad': run['theta_out_rad'], 'lenses': row['lenses'], 'lens_checks': row['lens_checks'],
+                'lens_constraint': constraint,
+                'nonparaxial_check': check, 'fit_history': row['fit_history'],
+                'reflector_terms': row['reflector_terms'], 'freeform': None,
+            })
+            record['metrics'].update({'nonparaxial_overlap': check.get('normalized_mode_overlap'),
+                                      'corrected_nonparaxial_overlap': None,
+                                      'paraxial_equivalent_overlap': record['metrics']['normalized_mode_overlap']})
+            candidates.append(record)
+    order = sorted(candidates, key=lambda c: -(c['metrics']['nonparaxial_overlap'] or 0) if c['review_status'] == 'Computed' else 1)
+    for rank, c in enumerate(order, start=1):
+        c['rank'] = rank
+    return {'status': 'Review', 'sides': family['sides'], 'runs': runs, 'candidates': order, 'fail_reasons': reasons,
+            'counted_as_computed': False, 'meaning': family['meaning']}
 
 
 def _map(search):
@@ -244,6 +314,9 @@ def design(document):
     if report['status'] == 'Fail' and 'divergence' in (report.get('reason') or ''):
         from .nonparaxial import guard_study
         report['nonparaxial_study'] = guard_study(engine_input, constraints)
+    lens_review = None
+    if report['status'] == 'Fail' and 'divergence' in (report.get('reason') or ''):
+        lens_review = lens_family_review(engine_input, constraints, problem, ports)
     if report['candidates'] and report.get('model') != 'qtensor':  # sensitivity/placement studies are separable-engine tools
         report = review_snapshot(report)
     search = report.get('search', {})
@@ -264,8 +337,9 @@ def design(document):
         'crossing': crossing_record(problem),
         'candidates': [_candidate(i + 1, c, problem, ambient_ports) for i, c in enumerate(report['candidates'])],
         'search': {**summary, 'policy': report.get('search_policy', {}).get('id'), 'map': _map(search)},
-        'guidance': design_guidance(report, ports, document['ambient_index'], problem['medium']),
+        'guidance': design_guidance(report, ports, document['ambient_index'], problem['medium'], lens_review),
         'nonparaxial_study': report.get('nonparaxial_study'),
+        'lens_review': lens_review,
         'limitations': report.get('limitations', []),
         'uncomputed': UNCOMPUTED,
         'engine_report': {**report, 'search': {k: v for k, v in search.items() if k != 'map'}},
