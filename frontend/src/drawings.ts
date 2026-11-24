@@ -247,7 +247,11 @@ export class Drawings {
       const upper: P2[] = [], lower: P2[] = [];
       for (const sample of samples) {
         const p = project(sample.point_mm);
-        const w = Math.hypot(sample.radius_t_um * tn, sample.radius_s_um * sn) * k;
+        const e = sample.ellipse;
+        const w = (e
+          ? Math.hypot(e.major_um * (Math.cos(e.angle_rad) * tn + Math.sin(e.angle_rad) * sn),
+            e.minor_um * (-Math.sin(e.angle_rad) * tn + Math.cos(e.angle_rad) * sn))
+          : Math.hypot(sample.radius_t_um * tn, sample.radius_s_um * sn)) * k;
         upper.push([p[0] + n[0] * w, p[1] + n[1] * w]);
         lower.push([p[0] - n[0] * w, p[1] - n[1] * w]);
       }

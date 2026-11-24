@@ -114,12 +114,14 @@ export interface MirrorScene {
 }
 
 export interface Segment { start_mm: Vec3; end_mm: Vec3; length_mm: number; direction: Vec3; t_axis: Vec3; s_axis: Vec3; medium?: Medium }
-export interface BeamSample { segment: number; distance_mm: number; point_mm: Vec3; radius_t_um: number; radius_s_um: number; medium?: Medium }
+/** General astigmatic beams (q-tensor): true 1/e² semi-axes; angle of the major axis from the segment t axis. */
+export interface BeamEllipse { major_um: number; minor_um: number; angle_rad: number }
+export interface BeamSample { segment: number; distance_mm: number; point_mm: Vec3; radius_t_um: number; radius_s_um: number; medium?: Medium; ellipse?: BeamEllipse }
 
 export interface CandidateScene {
   mirrors: MirrorScene[];
   path: { points_mm: Vec3[]; segments: Segment[]; total_length_mm: number; surface_point_mm?: Vec3 };
-  beam: { definition: string; samples: BeamSample[] };
+  beam: { definition: string; samples: BeamSample[]; model?: 'qtensor' };
 }
 
 export interface Candidate {
@@ -129,6 +131,8 @@ export interface Candidate {
   roles: string[];
   role_labels: string[];
   family: 'exact' | 'near_match';
+  model?: 'separable' | 'qtensor';
+  ray_transfer_check?: { q_tensor_relative_difference: number; symplectic_error: number; method: string } | null;
   parameters_mm: { a?: number; b?: number; c?: number };
   metrics: {
     max_abs_curvature_per_m: number | null;

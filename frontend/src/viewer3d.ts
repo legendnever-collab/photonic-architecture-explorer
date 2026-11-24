@@ -3,7 +3,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js';
 import { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 import { clone, type AppState, type Store } from './state';
-import type { Candidate, MediumBlock, PortName, PortScene, Vec3 } from './types';
+import type { BeamSample, Candidate, MediumBlock, PortName, PortScene, Segment, Vec3 } from './types';
 import { cross, el, fmt, unit } from './util';
 
 const COLOR = { source: 0x1f6feb, target: 0xd9480f, path: 0xb42318, beam: 0xe5484d, mirror: 0x8b95a1, faint: 0x9aa5b1, glass: 0x0a7ea4 };
@@ -357,9 +357,8 @@ export class Viewer3D {
       const base = positions.length / 3;
       for (const sample of samples) for (let i = 0; i < sides; i++) {
         const a = (i / sides) * Math.PI * 2;
-        const p = v3(sample.point_mm)
-          .addScaledVector(v3(segment.t_axis), Math.cos(a) * sample.radius_t_um * k)
-          .addScaledVector(v3(segment.s_axis), Math.sin(a) * sample.radius_s_um * k);
+        const [u, v, ru, rv] = beamAxes(segment, sample);
+        const p = v3(sample.point_mm).addScaledVector(u, Math.cos(a) * ru * k).addScaledVector(v, Math.sin(a) * rv * k);
         positions.push(p.x, p.y, p.z);
       }
       for (let r = 0; r < samples.length - 1; r++) for (let i = 0; i < sides; i++) {
@@ -384,4 +383,14 @@ export class Viewer3D {
       if (node instanceof CSS2DObject) node.element.remove();
     });
   }
+}
+
+/** Ellipse axes of one beam sample: the true semi-axes for q-tensor beams, else the segment t/s axes. */
+function beamAxes(segment: Segment, sample: BeamSample): [THREE.Vector3, THREE.Vector3, number, number] {
+  const t = v3(segment.t_axis), s = v3(segment.s_axis);
+  if (!sample.ellipse) return [t, s, sample.radius_t_um, sample.radius_s_um];
+  const { major_um, minor_um, angle_rad } = sample.ellipse;
+  const u = t.clone().multiplyScalar(Math.cos(angle_rad)).addScaledVector(s, Math.sin(angle_rad));
+  const v = t.clone().multiplyScalar(-Math.sin(angle_rad)).addScaledVector(s, Math.cos(angle_rad));
+  return [u, v, major_um, minor_um];
 }

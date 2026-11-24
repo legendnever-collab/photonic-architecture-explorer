@@ -94,7 +94,7 @@ def crossing_record(problem):
 
 def _candidate(rank, candidate, problem=None, ambient_ports=None):
     evaluation, ranking = candidate['evaluation'], candidate['ranking']
-    scene = candidate_scene(candidate['prescription'])
+    scene = candidate.get('scene') or candidate_scene(candidate['prescription'])  # q-tensor candidates carry their scene
     crossing = problem['crossing'] if problem else None
     if crossing is not None:
         original = getattr(ambient_ports, crossing.side)
@@ -115,6 +115,8 @@ def _candidate(rank, candidate, problem=None, ambient_ports=None):
         'roles': roles,
         'role_labels': [OBJECTIVES.get(r, (None, None, r))[2] for r in roles],
         'family': candidate.get('family', 'exact'),
+        'model': candidate.get('model', 'separable'),
+        'ray_transfer_check': evaluation.get('ray_transfer_check'),
         'parameters_mm': {k[:-2]: v * 1e3 for k, v in candidate.get('parameters', {}).items() if k.endswith('_m')},
         'metrics': {
             'total_path_mm': scene['path']['total_length_mm'],
@@ -136,13 +138,13 @@ def _candidate(rank, candidate, problem=None, ambient_ports=None):
 
 def design_guidance(report, ports, ambient_index, medium='ambient'):
     out = port_guidance(ports, ambient_index) if ports else []
-    reason = report.get('reason') or ''
     search = report.get('search', {})
     counts = search.get('screening_counts', {})
-    if 'noncoplanar' in reason:
-        out.append({'kind': 'noncoplanar', 'phase': 'P3',
-                    'message': '두 Port가 한 평면에 있지 않습니다. 평면 밖으로 꺾이는 경로는 3D q-tensor 모델(P3)에서 다룹니다. '
-                               '지금은 두 Port를 한 평면에 두면 계산할 수 있습니다.'})
+    if report.get('model') == 'qtensor':
+        out.append({'kind': 'qtensor', 'phase': 'P3',
+                    'message': '두 Port가 한 평면에 있지 않거나 축이 돌아가 있어, 반사마다 Beam 축이 회전하는 일반 비점수차 '
+                               'q-tensor 모델(2×2 복소 q)로 계산했습니다. 반사면 곡률 축은 Port 축과 다르며, 후보마다 실제 '
+                               '곡면을 지나는 광선으로 만든 4×4 Ray-transfer 행렬로 따로 검산합니다.'})
     closest = search.get('closest_exact')
     if closest and report.get('candidates'):
         out.append({'kind': 'exact_outside_guard', 'phase': 'P3',
@@ -199,7 +201,7 @@ def design(document):
     except (DocumentError, InputIssue, DomainError) as exc:
         return _invalid(document, [{'path': getattr(exc, 'path', '$'), 'message': getattr(exc, 'reason', str(exc))}])
     report = design_continuous(engine_input, constraints)
-    if report['candidates']:
+    if report['candidates'] and report.get('model') != 'qtensor':  # sensitivity/placement studies are separable-engine tools
         report = review_snapshot(report)
     search = report.get('search', {})
     summary = {k: search.get(k) for k in ('status', 'reason', 'grid_points', 'exact_feasible', 'near_match_feasible',

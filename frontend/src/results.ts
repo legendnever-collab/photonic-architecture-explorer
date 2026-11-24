@@ -97,7 +97,8 @@ export class ResultsPanel {
 
   private detail(c: Candidate) {
     const glass = c.scene.mirrors.some((m) => m.tir_possible !== undefined);
-    const head = el('tr', {}, ...['반사면', 'Vertex [mm]', 'R t / s [mm]', '입사각 [°]', 'Aperture 반폭 t / s [mm]', 'Footprint w t / s [µm]', ...(glass ? ['반사 방식'] : [])].map((h) => el('th', {}, h)));
+    const tensor = c.model === 'qtensor';
+    const head = el('tr', {}, ...['반사면', 'Vertex [mm]', tensor ? 'R 주곡률 1 / 2 [mm]' : 'R t / s [mm]', '입사각 [°]', tensor ? 'Aperture 반폭 1 / 2 [mm]' : 'Aperture 반폭 t / s [mm]', tensor ? 'Footprint w 1 / 2 [µm]' : 'Footprint w t / s [µm]', ...(glass ? ['반사 방식'] : [])].map((h) => el('th', {}, h)));
     const rows = c.scene.mirrors.map((m) => el('tr', {},
       el('td', {}, m.id), el('td', { class: 'mono' }, m.vertex_mm.map((v) => fmt(v, 4)).join(', ')),
       el('td', {}, m.radius_of_curvature_ts_mm.map((r) => (r === null ? '∞' : fmt(r, 3))).join(' / ')),
@@ -108,6 +109,9 @@ export class ResultsPanel {
       el('span', { class: `chip st-${value}` }, `${STATUS_LABEL[key] ?? key}: ${value}`)));
     return el('section', { class: 'card', 'data-detail': c.id }, el('h3', {}, `${c.id} 상세`),
       el('table', { class: 'grid-table' }, el('thead', {}, head), el('tbody', {}, ...rows)), chips,
+      ...(tensor && c.ray_transfer_check ? [el('div', { class: 'muted', 'data-model': 'qtensor' },
+        `q-tensor 모델(평면 밖 경로): 반사면 곡률 축은 각 반사면의 주곡률 방향입니다(3D에서 확인). Ray-transfer 검산 상대차 `
+        + `${c.ray_transfer_check.q_tensor_relative_difference.toExponential(1)}, Symplectic 오차 ${c.ray_transfer_check.symplectic_error.toExponential(1)}`)] : []),
       el('div', { class: 'muted' }, `총 광경로 ${fmt(c.metrics.total_path_mm, 4)} mm${c.metrics.ambient_path_mm ? ` (외부 ${fmt(c.metrics.ambient_path_mm, 4)} mm 포함)` : ''} · 최대 투영 Beam 반경 ${fmt(c.metrics.max_projected_beam_radius_um, 2)} µm · Mode mismatch ${fmt(c.metrics.mode_mismatch_db, 4)} dB`));
   }
 

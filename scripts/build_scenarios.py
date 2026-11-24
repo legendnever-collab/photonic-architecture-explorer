@@ -46,10 +46,10 @@ GLASS = {
 
 
 def glass_doc(scenario, title, wavelength, glass, thickness, source_preset, target_preset, depth, description,
-              lateral=2.0, gap=0.1):
+              lateral=2.0, gap=0.1, lateral_y=0):
     """Vertical fiber above a glass top surface (z = 0, normal +Z) feeding a buried guide that runs +X."""
     label, index, provenance, citation = GLASS[glass]
-    target = port(target_preset, [lateral, 0, -depth], X)
+    target = port(target_preset, [lateral, lateral_y, -depth], X)
     target['medium'] = 'block'
     return {**doc(scenario, title, wavelength, port(source_preset, [0, 0, gap], [0.0, 0.0, -1.0]), target, description),
             'medium_block': {'label': label, 'index': index, 'surface_point_mm': [0.0, 0.0, 0.0],
@@ -136,7 +136,15 @@ SCENARIOS = [
                         note='Synthetic SMF-sized edge mode to isolate the geometric limitation'),
          port('smf28-ultra-1310', [2.0, 1.0, 1.5], Z, sagittal=Y),
          'The fiber is offset sideways, so no single fold plane contains both Ports.'),
-     {'status': 'Fail', 'reason_contains': 'noncoplanar', 'target': {'status': 'Computed', 'phase': 'P3'}}),
+     {'status': 'Computed', 'min_candidates': 3, 'family': 'near_match', 'reason_contains': 'Near-match',
+      'target': {'status': 'Computed', 'phase': 'P3'}}),
+    ('S4-glass', 'S4 · 수직 SMF → Glass 상면 → 옆으로 비켜 선 매립 LDW (평면 밖, 1550 nm)', 'S4-glass.json',
+     'Out-of-plane turn inside glass: q-tensor relay after the surface crossing',
+     glass_doc('S4-glass', 'S4 · vertical SMF-28 → fused-silica top → buried LDW offset 1 mm sideways, 1550 nm', 1550.0,
+               'silica-1550', 2.0, 'smf28-ultra-1550', 'desmet-fldw-1550', 0.5,
+               'Same as S2a-1550-glass but the guide is 1 mm to the side (Y), so the fiber and guide axes are skew '
+               '(placement assumed).', lateral_y=1.0),
+     {'status': 'Computed', 'min_candidates': 3, 'family': 'exact', 'target': {'status': 'Computed', 'phase': 'P3'}}),
     ('S5', 'S5 · Laser → PIC SSC', 'S5.json', 'Elliptical laser mode conversion (needs P4)',
      doc('S5', 'S5 · DFB laser class (1.5 × 3.5 µm) → SSC class (3 µm), 1310 nm', 1310.0,
          synthetic_port('DFB laser class (Synthetic)', [1.5, 3.5], [0, 0, 0], X,

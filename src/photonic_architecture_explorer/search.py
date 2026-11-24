@@ -50,7 +50,8 @@ POLICY = {
     'beam_clearance': ('fold-plane beam edges at 2.63 w (1e-6 power tail), 16 samples per segment, must miss the '
                        'illuminated 2.63 w region of the reflector the segment does not end on'),
     'near_match_geometries': ('the 64 grid points closest to the 3w|κ| guard plus up to 32 without a real exact branch; '
-                              'if none of these is feasible, further guard-limited points up to 256 trials'),
+                              'if none of these is feasible, further guard-limited points up to 256 trials; '
+                              'q-tensor: at most 24 optimisations, skipping seeds whose exact-solution patches violate a space constraint'),
     'acceptance': 'unchanged external Adapter evaluation (geometry, domain, interception, aperture tail)',
     'guards': 'frozen: divergence 0.1 rad, 3w|κ| 0.15, incidence 70°, aperture tail 1e-6',
     'aperture_projected_radius_factor': APERTURE_FACTOR,
@@ -72,6 +73,7 @@ CLEARANCE_SAMPLES = 16
 POSE_PATCH_MARGIN = (10e-6, 0.02)  # m, fraction: chief-ray obstruction margin around each prescribed patch
 NEAR_MATCH_FIRST_TRIALS = 96
 NEAR_MATCH_MAX_TRIALS = 256
+NEAR_MATCH_TENSOR_TRIALS = 24  # each q-tensor Near-match is a 6-parameter optimisation (~0.3 s)
 LIMITS = ['Conceptual Geometry; prescribed aperture is not fabrication capability',
           'Scalar paraxial normalized overlap is not Total Coupling',
           'Finite-field aberration, coating, interface and polarization losses Uncomputed',
@@ -199,6 +201,7 @@ def constraint_violation(ports, constraints, vertices, mirrors):
     """First violated user/package constraint for a fully specified candidate, else None."""
     source, target, sagittal = ports.source, ports.target, ports.source.sagittal
     for mirror in mirrors:
+        sagittal = getattr(mirror, 'axis', None) or ports.source.sagittal  # q-tensor reflectors carry their own axes
         violation = block_violation(constraints, mirror, sagittal)
         if violation:
             return violation
@@ -280,6 +283,25 @@ def intercepted(ports, vertices, lengths, mirrors, chains, lam_n):
     return None
 
 
+def prescreen(ports, constraints, a, c, geometry):
+    """Geometry-only tests shared by the separable and q-tensor screens; a rejected Point or None."""
+    vertices, _, _, cosines = geometry
+    if min(cosines) < constraints.min_cosine:
+        return Point(a, c, 'geometry', 'incidence exceeds limit')
+    if constraints.port_halfspace:  # vertex-level test first; the patch extent is checked later
+        if dot(sub(vertices[1], ports.source.position), ports.source.direction) < 0:
+            return Point(a, c, 'constraint', 'reflector enters the Source body half-space')
+        if dot(sub(vertices[0], ports.target.position), ports.target.direction) > 0:
+            return Point(a, c, 'constraint', 'reflector enters the Target body half-space')
+    if constraints.block is not None:
+        inside = [constraints.block.contains(v) for v in vertices]
+        if constraints.block_side == 'inside' and not all(inside):
+            return Point(a, c, 'constraint', 'reflector crosses the block surface')
+        if constraints.block_side == 'outside' and any(inside):
+            return Point(a, c, 'constraint', 'reflector enters the block')
+    return None
+
+
 def evaluate_point(ports, constraints, a, c, lam_n, *, branch=None, kappas=None):
     """Screen one (a, c): exact branches (or given curvatures) through guards and constraints."""
     try:
@@ -287,19 +309,9 @@ def evaluate_point(ports, constraints, a, c, lam_n, *, branch=None, kappas=None)
     except (DomainError, ZeroDivisionError, ValueError, ArithmeticError):
         return [Point(a, c, 'geometry', 'zero/short middle segment')]
     vertices, normals, lengths, cosines = geometry
-    if min(cosines) < constraints.min_cosine:
-        return [Point(a, c, 'geometry', 'incidence exceeds limit')]
-    if constraints.port_halfspace:  # vertex-level test first; the patch extent is checked later
-        if dot(sub(vertices[1], ports.source.position), ports.source.direction) < 0:
-            return [Point(a, c, 'constraint', 'reflector enters the Source body half-space')]
-        if dot(sub(vertices[0], ports.target.position), ports.target.direction) > 0:
-            return [Point(a, c, 'constraint', 'reflector enters the Target body half-space')]
-    if constraints.block is not None:
-        inside = [constraints.block.contains(v) for v in vertices]
-        if constraints.block_side == 'inside' and not all(inside):
-            return [Point(a, c, 'constraint', 'reflector crosses the block surface')]
-        if constraints.block_side == 'outside' and any(inside):
-            return [Point(a, c, 'constraint', 'reflector enters the block')]
+    rejected = prescreen(ports, constraints, a, c, geometry)
+    if rejected:
+        return [rejected]
     qs, qt = ports.source.mode.q, ports.target.mode.q
     if kappas is not None:
         options = [(('NM', 'NM'), kappas)]
@@ -444,10 +456,12 @@ def grid_values(scale):
     return [lo * (hi / lo) ** (i / (n - 1)) for i in range(n)]
 
 
-def refine(ports, constraints, lam_n, point, metric):
+def refine(ports, constraints, lam_n, point, metric, evaluator=None):
     """Continuous improvement of one objective on the feasible set, branch pair fixed."""
+    evaluator = evaluator or evaluate_point
+
     def cost(x):
-        found = evaluate_point(ports, constraints, math.exp(x[0]), math.exp(x[1]), lam_n, branch=point.branch)
+        found = evaluator(ports, constraints, math.exp(x[0]), math.exp(x[1]), lam_n, branch=point.branch)
         if not found or found[0].status != 'ok':
             return 1e9
         return found[0].metrics[metric]
@@ -455,7 +469,7 @@ def refine(ports, constraints, lam_n, point, metric):
     run = minimize(cost, start, method='Nelder-Mead',
                    options={'xatol': 1e-4, 'fatol': 1e-12, 'maxiter': 160, 'initial_simplex': [
                        start, [start[0] + 0.05, start[1]], [start[0], start[1] + 0.05]]})
-    better = evaluate_point(ports, constraints, math.exp(run.x[0]), math.exp(run.x[1]), lam_n, branch=point.branch)
+    better = evaluator(ports, constraints, math.exp(run.x[0]), math.exp(run.x[1]), lam_n, branch=point.branch)
     if better and better[0].status == 'ok' and better[0].metrics[metric] <= point.metrics[metric]:
         return better[0]
     return point
@@ -491,15 +505,18 @@ def design_continuous(document, constraints=Constraints(), *, include_map=True):
         ports = adapt_ports(document)
         result['input_contract'] = {'status': 'Pass', 'scope': 'explicit two-Port subset of M3A contract'}
         source, target = ports.source, ports.target
-        if norm(sub(source.sagittal, target.sagittal)) > 1e-10:
-            raise DomainError('rolled Target axes unsupported')
-        if abs(dot(source.sagittal, target.direction)) > 1e-10:
-            raise DomainError('noncoplanar Target direction')
         scale = norm(sub(target.position, source.position))
         if scale < 1e-9:
             raise DomainError('coincident/near-coincident Ports outside the two-reflector family')
-        if abs(dot(source.sagittal, sub(target.position, source.position))) / scale > 1e-10:
-            raise DomainError('noncoplanar Port positions')
+        tensor = (norm(sub(source.sagittal, target.sagittal)) > 1e-10
+                  or abs(dot(source.sagittal, target.direction)) > 1e-10
+                  or abs(dot(source.sagittal, sub(target.position, source.position))) / scale > 1e-10)
+        if tensor:  # non-coplanar or rolled axes: general astigmatic q-tensor screen and ray-transfer check
+            from . import qtensor
+            evaluator, checker = qtensor.evaluate_point, qtensor.verify
+        else:
+            evaluator, checker = evaluate_point, verify
+        result['model'] = 'qtensor' if tensor else 'separable'
         if any(p['divergence_rad'] > MAX_DIVERGENCE for port in (source, target) for p in port.mode.parameters()):
             raise DomainError('Gaussian divergence exceeds 0.1 rad')
         lam_n = source.mode.wavelength / (math.pi * source.mode.index)
@@ -508,7 +525,7 @@ def design_continuous(document, constraints=Constraints(), *, include_map=True):
         grid, counts = [], Counter()
         for a in values:
             for c in values:
-                found = evaluate_point(ports, constraints, a, c, lam_n)
+                found = evaluator(ports, constraints, a, c, lam_n)
                 feasible = [p for p in found if p.status == 'ok']
                 chosen = min(feasible, key=lambda p: p.metrics['max_footprint_slope']) if feasible else (
                     min((p for p in found if p.metrics), key=lambda p: p.metrics['max_footprint_slope'], default=found[0]))
@@ -517,17 +534,26 @@ def design_continuous(document, constraints=Constraints(), *, include_map=True):
         exact = [p for p in grid if p.status == 'ok']
         family = 'exact'
         pool = exact
-        near_matches = []
+        near_matches, optimised = [], 0
         if not exact:
             for tried, point in enumerate(near_match_seeds(grid)):
                 if tried >= NEAR_MATCH_MAX_TRIALS or (tried >= NEAR_MATCH_FIRST_TRIALS and near_matches):
                     break
-                try:
-                    vertices, normals, lengths, cosines = fold(ports, point.a, point.c)
-                except (DomainError, ZeroDivisionError, ValueError, ArithmeticError):
-                    continue
-                kappas, _ = near_match_curvatures(ports, lengths, cosines, lam_n)
-                found = evaluate_point(ports, constraints, point.a, point.c, lam_n, kappas=kappas)
+                if tensor:
+                    if optimised >= NEAR_MATCH_TENSOR_TRIALS:
+                        break
+                    found, ran = qtensor.near_match_point(ports, constraints, point, lam_n)
+                    optimised += ran
+                    if found is None:
+                        continue
+                    found = [found]
+                else:
+                    try:
+                        vertices, normals, lengths, cosines = fold(ports, point.a, point.c)
+                    except (DomainError, ZeroDivisionError, ValueError, ArithmeticError):
+                        continue
+                    kappas, _ = near_match_curvatures(ports, lengths, cosines, lam_n)
+                    found = evaluate_point(ports, constraints, point.a, point.c, lam_n, kappas=kappas)
                 if found[0].status == 'ok':
                     near_matches.append(found[0])
             family = 'near_match'
@@ -548,11 +574,11 @@ def design_continuous(document, constraints=Constraints(), *, include_map=True):
                 result['search']['closest_exact'] = {'a_m': closest.a, 'c_m': closest.c, 'reason': closest.reason,
                                                      'max_footprint_slope': closest.metrics['max_footprint_slope'],
                                                      'limit': MAX_FOOTPRINT_SLOPE}
-        plan, front = select(ports, constraints, lam_n, pool, family)
+        plan, front = select(ports, constraints, lam_n, pool, family, evaluator=evaluator)
         accepted, ledger = [], []
 
         def attempt(point, role):
-            candidate = verify(document, ports, point, role, family)
+            candidate = checker(document, ports, point, role, family)
             ledger.append({'role': role, 'a_m': point.a, 'c_m': point.c, 'status': candidate['status'],
                            'reason': candidate.get('reason')})
             if candidate['status'] == 'Accepted':
@@ -604,7 +630,7 @@ ROLES = {'exact': ('short_path', 'model_margin', 'small_beam', 'gentle_curvature
          'near_match': ('best_overlap', 'short_path', 'small_beam', 'gentle_curvature')}
 
 
-def select(ports, constraints, lam_n, pool, family, tries=6):
+def select(ports, constraints, lam_n, pool, family, tries=6, evaluator=None):
     """Per objective, a short ranked list of Pareto points (refined first choice, then runners-up)."""
     if not pool:
         return [], []
@@ -623,7 +649,7 @@ def select(ports, constraints, lam_n, pool, family, tries=6):
         metric = 'mismatch' if role == 'best_overlap' else OBJECTIVES[role][0]
         ranked = sorted(front, key=lambda p: (p.metrics[metric], p.metrics['total_path_m']))[:tries]
         if family == 'exact' and ranked:
-            ranked[0] = refine(ports, constraints, lam_n, ranked[0], metric)
+            ranked[0] = refine(ports, constraints, lam_n, ranked[0], metric, evaluator or evaluate_point)
         plan.append((role, ranked))
     return plan, front
 

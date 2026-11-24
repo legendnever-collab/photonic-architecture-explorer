@@ -11,6 +11,8 @@ Starts the packaged server, drives Chromium with Playwright and checks:
   * P3 glass scenarios: block card, hatched surface band, crossing record, TIR column,
     Fold surface marker at the air-gap distance, reflectors below the surface, 3D slab,
     turning the block off, and the shallow-guide region guidance
+  * P3 q-tensor: S4 (non-coplanar) gives verified candidates, the q-tensor note and guidance,
+    beam ellipses in the scene and 2D mirror positions equal to the scene vertices (1 nm)
   * Design Document export round-trips
   * without WebGL the 2D drawings still work
 Screenshots and a JSON summary go to the output directory.
@@ -238,6 +240,21 @@ def main():
         check(status == 'Fail' and page.locator('[data-guidance="block_region"]').count() == 1,
               f'shallow IOX guidance missing: {status}', failures)
         page.screenshot(path=str(out / 'p3_S2b-1550-glass.png'))
+
+        load_scenario(page, 'S4')
+        status = design(page)
+        summary['S4_status'] = status
+        check(status == 'Computed' and page.locator('[data-model="qtensor"]').count() == 1
+              and page.locator('[data-guidance="qtensor"]').count() == 1, f'S4 q-tensor view: {status}', failures)
+        s4 = page.evaluate("""() => window.__paeStore.selectedCandidate.scene.beam.samples
+          .every(s => s.ellipse && s.ellipse.major_um >= s.ellipse.minor_um)""")
+        check(s4, 'S4 beam samples lack ellipses', failures)
+        page.click('.tab[data-view="all"]')
+        page.wait_for_timeout(200)
+        gate = coordinate_gate(page)
+        summary['S4_coordinate_gate_all'] = gate
+        check(gate['count'] > 0 and gate['worst'] <= NM, f'S4 coordinate gate: {gate}', failures)
+        page.screenshot(path=str(out / 'p3_S4_qtensor.png'))
 
         load_scenario(page, 'S3')
         status = design(page)

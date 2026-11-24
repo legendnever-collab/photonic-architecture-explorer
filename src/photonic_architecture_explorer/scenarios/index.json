@@ -145,8 +145,25 @@
       "file": "S4.json",
       "decision": "Out-of-plane turn (needs 3D q-tensor, P3)",
       "expect": {
-        "status": "Fail",
-        "reason_contains": "noncoplanar",
+        "status": "Computed",
+        "min_candidates": 3,
+        "family": "near_match",
+        "reason_contains": "Near-match",
+        "target": {
+          "status": "Computed",
+          "phase": "P3"
+        }
+      }
+    },
+    {
+      "id": "S4-glass",
+      "title": "S4 · 수직 SMF → Glass 상면 → 옆으로 비켜 선 매립 LDW (평면 밖, 1550 nm)",
+      "file": "S4-glass.json",
+      "decision": "Out-of-plane turn inside glass: q-tensor relay after the surface crossing",
+      "expect": {
+        "status": "Computed",
+        "min_candidates": 3,
+        "family": "exact",
         "target": {
           "status": "Computed",
           "phase": "P3"
